@@ -3,6 +3,11 @@ package com.asdflj.ae2thing.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import net.minecraft.world.WorldSavedData;
+import net.minecraft.world.storage.MapStorage;
 
 import appeng.api.storage.IMEInventory;
 import appeng.me.storage.MEInventoryHandler;
@@ -13,11 +18,15 @@ public class Ae2Reflect {
 
     private static final Field fAEPass_internal;
     private static final Field fAEInv_partitionList;
+    private static final Field fMapStorage_loadedDataMap;
+    private static final Field fMapStorage_loadedDataList;
 
     static {
         try {
             fAEPass_internal = reflectField(MEPassThrough.class, "internal");
             fAEInv_partitionList = reflectField(MEInventoryHandler.class, "myPartitionList");
+            fMapStorage_loadedDataMap = reflectField(MapStorage.class, "loadedDataMap");
+            fMapStorage_loadedDataList = reflectField(MapStorage.class, "loadedDataList");
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -68,6 +77,14 @@ public class Ae2Reflect {
 
     public static IMEInventory<?> getInternal(MEPassThrough<?> me) {
         return Ae2Reflect.readField(me, fAEPass_internal);
+    }
+
+    public static Map<String, WorldSavedData> getLoadedDataMap(MapStorage map) {
+        return Ae2Reflect.readField(map, fMapStorage_loadedDataMap);
+    }
+
+    public static List<WorldSavedData> getLoadedDataList(MapStorage list) {
+        return Ae2Reflect.readField(list, fMapStorage_loadedDataList);
     }
 
 }

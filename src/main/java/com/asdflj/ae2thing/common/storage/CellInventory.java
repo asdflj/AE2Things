@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.common.item.ItemBackpackManager;
+import com.asdflj.ae2thing.common.item.ItemInfinityCell;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.darkona.adventurebackpack.inventory.InventoryBackpack;
 import com.darkona.adventurebackpack.item.ItemAdventureBackpack;
@@ -102,6 +103,8 @@ public class CellInventory implements ITCellInventory {
         try {
             if (o.getItem() instanceof ItemBackpackManager) {
                 return new CellInventoryHandler(new CellInventory(o, container, player));
+            } else if (o.getItem() instanceof ItemInfinityCell) {
+                return new CellInventoryHandler(new InfinityCellInventory(o, container, player));
             }
         } catch (final AppEngException ignored) {
 

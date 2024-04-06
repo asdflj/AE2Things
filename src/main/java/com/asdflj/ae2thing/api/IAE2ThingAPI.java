@@ -4,6 +4,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import com.asdflj.ae2thing.common.storage.StorageManager;
+
 @SuppressWarnings("unused")
 public interface IAE2ThingAPI {
 
@@ -22,4 +24,8 @@ public interface IAE2ThingAPI {
     IInventory getBackpackInv(ItemStack is);
 
     boolean isBackpackItemInv(ItemStack is);
+
+    StorageManager getStorageManager();
+
+    void setStorageManager(StorageManager manager);
 }
