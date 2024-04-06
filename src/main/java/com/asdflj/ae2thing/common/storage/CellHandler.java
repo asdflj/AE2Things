@@ -4,6 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
+import com.asdflj.ae2thing.common.item.ItemInfinityCell;
+
 import appeng.api.implementations.tiles.IChestOrDrive;
 import appeng.api.storage.ICellHandler;
 import appeng.api.storage.IMEInventory;
@@ -16,7 +18,7 @@ public class CellHandler implements ICellHandler {
 
     @Override
     public boolean isCell(ItemStack is) {
-        return false;
+        return is != null && is.getItem() instanceof ItemInfinityCell;
     }
 
     @Override

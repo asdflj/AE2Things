@@ -37,6 +37,15 @@ public class Util {
         return result;
     }
 
+    public static int getItemInSlot(ItemStack is, EntityPlayer player) {
+        for (int x = 0; x < player.inventory.mainInventory.length; x++) {
+            ItemStack i = player.inventory.mainInventory[x];
+            if (i == null) continue;
+            if (Platform.isSameItemPrecise(is, i)) return x;
+        }
+        return -1;
+    }
+
     public static void writeItemStackToNBT(ItemStack itemStack, NBTTagCompound tag) {
         itemStack.writeToNBT(tag);
         tag.setInteger("Count", itemStack.stackSize);

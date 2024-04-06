@@ -9,12 +9,15 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import com.asdflj.ae2thing.common.storage.StorageManager;
+
 public final class AE2ThingAPI implements IAE2ThingAPI {
 
     private static final AE2ThingAPI API = new AE2ThingAPI();
 
     private final Set<Class<? extends Item>> backpackItems = new HashSet<>();
     private final HashMap<Class<? extends Item>, Class<? extends IInventory>> backpacks = new HashMap<>();
+    private StorageManager storageManager = null;
 
     public static AE2ThingAPI instance() {
         return API;
@@ -77,6 +80,16 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
             is.getItem()
                 .getClass())
             != null;
+    }
+
+    @Override
+    public StorageManager getStorageManager() {
+        return storageManager;
+    }
+
+    @Override
+    public void setStorageManager(StorageManager manager) {
+        storageManager = manager;
     }
 
 }

@@ -21,10 +21,9 @@ import com.asdflj.ae2thing.util.Util;
 
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.data.IAEItemStack;
-import appeng.items.AEBaseItem;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class ItemBackpackManager extends AEBaseItem
+public class ItemBackpackManager extends BaseItem
     implements IRegister<ItemBackpackManager>, IItemInventory, IStorageItemCell {
 
     public ItemBackpackManager() {
@@ -61,18 +60,6 @@ public class ItemBackpackManager extends AEBaseItem
 
     private GuiType guiGuiType(ItemStack item) {
         return GuiType.BACKPACK_MANAGER;
-    }
-
-    public ItemStack stack(int size, int meta) {
-        return new ItemStack(this, size, meta);
-    }
-
-    public ItemStack stack(int size) {
-        return new ItemStack(this, size);
-    }
-
-    public ItemStack stack() {
-        return new ItemStack(this, 1);
     }
 
     @Override

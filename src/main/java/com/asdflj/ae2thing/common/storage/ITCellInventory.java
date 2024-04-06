@@ -97,4 +97,8 @@ public interface ITCellInventory extends IMEInventory<IAEItemStack> {
     int getStatusForCell();
 
     String getOreFilter();
+
+    default String getUUID() {
+        return "";
+    }
 }
