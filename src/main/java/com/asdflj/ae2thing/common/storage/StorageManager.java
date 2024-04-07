@@ -55,6 +55,8 @@ public class StorageManager extends WorldSavedData {
     public void writeToNBT(NBTTagCompound data) {
         NBTTagList diskList = new NBTTagList();
         for (Map.Entry<UUID, DataStorage> entry : disks.entrySet()) {
+            if (entry.getValue()
+                .isEmpty()) continue;
             NBTTagCompound disk = new NBTTagCompound();
 
             disk.setString(
