@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.common.storage.Constants;
 
 import appeng.util.Platform;
 
@@ -37,24 +38,15 @@ public class Util {
         return result;
     }
 
-    public static int getItemInSlot(ItemStack is, EntityPlayer player) {
-        for (int x = 0; x < player.inventory.mainInventory.length; x++) {
-            ItemStack i = player.inventory.mainInventory[x];
-            if (i == null) continue;
-            if (Platform.isSameItemPrecise(is, i)) return x;
-        }
-        return -1;
-    }
-
     public static void writeItemStackToNBT(ItemStack itemStack, NBTTagCompound tag) {
         itemStack.writeToNBT(tag);
-        tag.setInteger("Count", itemStack.stackSize);
+        tag.setInteger(Constants.COUNT, itemStack.stackSize);
     }
 
     public static ItemStack loadItemStackFromNBT(NBTTagCompound tag) {
         ItemStack itemStack = ItemStack.loadItemStackFromNBT(tag);
         if (itemStack == null) return null;
-        itemStack.stackSize = tag.getInteger("Count");
+        itemStack.stackSize = tag.getInteger(Constants.COUNT);
         return itemStack;
     }
 }

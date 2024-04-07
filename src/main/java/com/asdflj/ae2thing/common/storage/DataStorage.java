@@ -11,7 +11,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.item.AEItemStack;
 
-public class DataStorage {
+public class DataStorage implements IDataStorage {
 
     private final IItemList<IAEItemStack> items = AEApi.instance()
         .storage()
@@ -22,10 +22,17 @@ public class DataStorage {
         this.uuid = uuid;
     }
 
+    @Override
     public IItemList<IAEItemStack> getItems() {
         return items;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
+
+    @Override
     public String getUUID() {
         return this.uuid.toString();
     }
@@ -36,6 +43,7 @@ public class DataStorage {
         return storage;
     }
 
+    @Override
     public void readFromNBT(NBTTagList data) {
         for (final IAEItemStack ais : this.readList(data)) {
             items.add(ais);
@@ -61,6 +69,7 @@ public class DataStorage {
         return out;
     }
 
+    @Override
     public NBTBase writeToNBT() {
         return writeList(items);
     }

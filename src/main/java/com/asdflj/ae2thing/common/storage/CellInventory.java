@@ -241,9 +241,7 @@ public class CellInventory implements ITCellInventory {
         }
 
         if (mode == Actionable.MODULATE) {
-            ItemStack is = this.injectItem(
-                input.getItemStack()
-                    .copy());
+            ItemStack is = this.injectItem(input.getItemStack());
             if (is.stackSize == 0) {
                 this.cellItems.add(input);
                 return null;
@@ -287,18 +285,14 @@ public class CellInventory implements ITCellInventory {
                 results.setStackSize(l.getStackSize());
 
                 if (mode == Actionable.MODULATE) {
-                    extractItems(
-                        request.copy()
-                            .getItemStack());
+                    extractItems(request.getItemStack());
                     l.setStackSize(0);
                 }
             } else {
                 results.setStackSize(size);
 
                 if (mode == Actionable.MODULATE) {
-                    extractItems(
-                        request.copy()
-                            .getItemStack());
+                    extractItems(request.getItemStack());
                     l.setStackSize(l.getStackSize() - size);
                 }
             }

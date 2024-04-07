@@ -35,13 +35,14 @@ public class InfinityCellInventory implements ITCellInventory {
     protected IItemList<IAEItemStack> cellItems = null;
     protected long storedItemTypes;
     protected long storedItemCount = 0;
+    protected final NBTTagCompound data;
 
     public InfinityCellInventory(ItemStack o, ISaveProvider c, EntityPlayer p) {
         cellItem = o;
         container = c;
         player = p;
         this.cellType = (ItemInfinityCell) this.cellItem.getItem();
-        NBTTagCompound data = Platform.openNbtData(this.cellItem);
+        this.data = Platform.openNbtData(this.cellItem);
         this.storedItemTypes = data.getLong(ITEM_TYPE_TAG);
         this.storedItemCount = data.getLong(ITEM_COUNT_TAG);
     }
@@ -53,13 +54,12 @@ public class InfinityCellInventory implements ITCellInventory {
 
     @Override
     public void loadCellItems() {
-        NBTTagCompound data = Platform.openNbtData(this.cellItem);
-        String s = data.getString(Constants.DISKUUID);
+        String uuid = this.getUUID();
         DataStorage storage = AE2ThingAPI.instance()
             .getStorageManager()
-            .getStorage(s);
+            .getStorage(uuid);
         this.cellItems = storage.getItems();
-        if (!s.equals(storage.getUUID())) {
+        if (!uuid.equals(storage.getUUID())) {
             data.setString(Constants.DISKUUID, storage.getUUID());
         }
     }
@@ -73,7 +73,6 @@ public class InfinityCellInventory implements ITCellInventory {
 
     @Override
     public String getUUID() {
-        NBTTagCompound data = Platform.openNbtData(this.cellItem);
         if (data.hasNoTags()) {
             return "";
         }
@@ -127,7 +126,7 @@ public class InfinityCellInventory implements ITCellInventory {
 
     @Override
     public long getTotalItemTypes() {
-        return Integer.MAX_VALUE;
+        return this.cellType.getTotalTypes(this.cellItem);
     }
 
     @Override
@@ -321,27 +320,19 @@ public class InfinityCellInventory implements ITCellInventory {
         AE2ThingAPI.instance()
             .getStorageManager()
             .setDirty(true);
-        IItemList<IAEItemStack> list = AEApi.instance()
-            .storage()
-            .createItemList();
-        long size = 0;
-        for (final IAEItemStack i : this.getCellItems()) {
-            list.add(i);
-            size += i.getStackSize();
-        }
-        this.storedItemTypes = list.size();
-        this.storedItemCount = size;
-        NBTTagCompound data = Platform.openNbtData(this.cellItem);
-        data.setLong(ITEM_TYPE_TAG, this.storedItemTypes);
-        data.setLong(ITEM_COUNT_TAG, this.storedItemCount);
     }
 
     @Override
     public IItemList<IAEItemStack> getAvailableItems(IItemList<IAEItemStack> out) {
+        long size = 0;
         for (final IAEItemStack i : this.getCellItems()) {
             out.add(i);
+            size += i.getStackSize();
         }
-
+        this.storedItemTypes = out.size();
+        this.storedItemCount = size;
+        data.setLong(ITEM_TYPE_TAG, this.storedItemTypes);
+        data.setLong(ITEM_COUNT_TAG, this.storedItemCount);
         return out;
     }
 
