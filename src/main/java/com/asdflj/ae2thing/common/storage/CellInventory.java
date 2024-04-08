@@ -13,8 +13,10 @@ import net.minecraft.item.ItemStack;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
 import com.asdflj.ae2thing.common.item.ItemInfinityCell;
+import com.asdflj.ae2thing.common.storage.backpack.AdventureBackpackHandler;
+import com.asdflj.ae2thing.common.storage.backpack.BackPackHandler;
+import com.asdflj.ae2thing.common.storage.backpack.FTRBackpackHandler;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
-import com.darkona.adventurebackpack.inventory.InventoryBackpack;
 import com.darkona.adventurebackpack.item.ItemAdventureBackpack;
 
 import appeng.api.AEApi;
@@ -29,8 +31,6 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
 import de.eydamos.backpack.item.ItemBackpackBase;
-import de.eydamos.backpack.saves.BackpackSave;
-import forestry.storage.inventory.ItemInventoryBackpack;
 import forestry.storage.items.ItemBackpack;
 
 public class CellInventory implements ITCellInventory {
@@ -39,7 +39,7 @@ public class CellInventory implements ITCellInventory {
     protected IStorageItemCell cellType;
     protected final ISaveProvider container;
     protected final EntityPlayer player;
-    protected final List<IInventory> modInv = new ArrayList<>();;
+    protected final List<IInventory> modInv = new ArrayList<>();
     protected IItemList<IAEItemStack> cellItems = AEApi.instance()
         .storage()
         .createItemList();
@@ -62,7 +62,7 @@ public class CellInventory implements ITCellInventory {
                 getModInv(
                     (player) -> Arrays.stream(player.inventory.mainInventory)
                         .filter(x -> x != null && x.getItem() instanceof ItemBackpack)
-                        .map(x -> new ItemInventoryBackpack(player, ((ItemBackpack) x.getItem()).getBackpackSize(), x))
+                        .map(x -> new FTRBackpackHandler(player, x))
                         .collect(Collectors.toList())));
         }
         if (ModAndClassUtil.ADVENTURE_BACKPACK) {
@@ -70,19 +70,16 @@ public class CellInventory implements ITCellInventory {
                 getModInv(
                     (player) -> Arrays.stream(player.inventory.mainInventory)
                         .filter(x -> x != null && x.getItem() instanceof ItemAdventureBackpack)
-                        .map(InventoryBackpack::new)
+                        .map(AdventureBackpackHandler::new)
                         .collect(Collectors.toList())));
         }
         if (ModAndClassUtil.BACKPACK) {
-            for (ItemStack item : Arrays.stream(player.inventory.mainInventory)
-                .filter(x -> x != null && x.getItem() instanceof ItemBackpackBase)
-                .collect(Collectors.toList())) {
-                IInventory inv = ItemBackpackBase.getInventory(item, player);
-                if (inv instanceof de.eydamos.backpack.inventory.InventoryBackpack ibp) {
-                    ibp.readFromNBT(new BackpackSave(item));
-                    this.modInv.add(inv);
-                }
-            }
+            this.modInv.addAll(
+                getModInv(
+                    (player) -> Arrays.stream(player.inventory.mainInventory)
+                        .filter(x -> x != null && x.getItem() instanceof ItemBackpackBase)
+                        .map(x -> new BackPackHandler(player, x))
+                        .collect(Collectors.toList())));
         }
         this.modInv.addAll(
             getModInv(
@@ -208,7 +205,7 @@ public class CellInventory implements ITCellInventory {
         ItemStack injectItem = is.copy();
         for (IInventory inv : this.modInv) {
             for (int i = 0; i < inv.getSizeInventory(); i++) {
-                if (inv.isItemValidForSlot(i, is)) {
+                if (inv.isItemValidForSlot(i, injectItem)) {
                     ItemStack added = injectItem.copy();
                     if (inv.getStackInSlot(i) == null) {
                         added.stackSize = Math.min(added.getMaxStackSize(), injectItem.stackSize);
