@@ -23,21 +23,21 @@ import appeng.api.config.FuzzyMode;
 import appeng.api.storage.data.IAEItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class ItemBackpackManager extends BaseItem
-    implements IRegister<ItemBackpackManager>, IItemInventory, IStorageItemCell {
+public class ItemBackpackTerminal extends BaseItem
+    implements IRegister<ItemBackpackTerminal>, IItemInventory, IStorageItemCell {
 
-    public ItemBackpackManager() {
+    public ItemBackpackTerminal() {
         super();
         this.setMaxStackSize(1);
-        this.setUnlocalizedName(NameConst.ITEM_BACKPACK_MANAGER);
+        this.setUnlocalizedName(NameConst.ITEM_BACKPACK_TERMINAL);
         this.setTextureName(
-            AE2Thing.resource(NameConst.ITEM_BACKPACK_MANAGER)
+            AE2Thing.resource(NameConst.ITEM_BACKPACK_TERMINAL)
                 .toString());
     }
 
     @Override
-    public ItemBackpackManager register() {
-        GameRegistry.registerItem(this, NameConst.ITEM_BACKPACK_MANAGER, AE2Thing.MODID);
+    public ItemBackpackTerminal register() {
+        GameRegistry.registerItem(this, NameConst.ITEM_BACKPACK_TERMINAL, AE2Thing.MODID);
         setCreativeTab(AE2ThingTabs.INSTANCE);
         return this;
     }
@@ -59,16 +59,14 @@ public class ItemBackpackManager extends BaseItem
     }
 
     private GuiType guiGuiType(ItemStack item) {
-        return GuiType.BACKPACK_MANAGER;
+        return GuiType.BACKPACK_TERMINAL;
     }
 
     @Override
     public boolean isBlackListed(ItemStack cellItem, IAEItemStack requestedAddition) {
         return requestedAddition == null || requestedAddition.getItem() == null
             || AE2ThingAPI.instance()
-                .isBlacklistedInStorage(
-                    requestedAddition.getItem()
-                        .getClass());
+                .isBlacklistedInStorage(requestedAddition.getItem());
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.asdflj.ae2thing.common.storage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,7 +11,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
-import com.asdflj.ae2thing.common.item.ItemBackpackManager;
+import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
 import com.asdflj.ae2thing.common.item.ItemInfinityCell;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.darkona.adventurebackpack.inventory.InventoryBackpack;
@@ -92,6 +93,7 @@ public class CellInventory implements ITCellInventory {
                     .map(
                         x -> AE2ThingAPI.instance()
                             .getBackpackInv(x))
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toList())));
     }
 
@@ -101,7 +103,7 @@ public class CellInventory implements ITCellInventory {
 
     public static IMEInventoryHandler getCell(ItemStack o, ISaveProvider container, EntityPlayer player) {
         try {
-            if (o.getItem() instanceof ItemBackpackManager) {
+            if (o.getItem() instanceof ItemBackpackTerminal) {
                 return new CellInventoryHandler(new CellInventory(o, container, player));
             } else if (o.getItem() instanceof ItemInfinityCell) {
                 return new CellInventoryHandler(new InfinityCellInventory(o, container, player));

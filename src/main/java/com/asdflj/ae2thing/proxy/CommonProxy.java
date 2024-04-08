@@ -71,7 +71,7 @@ public class CommonProxy {
         ModAndClassUtil.init();
         if (ModAndClassUtil.BACKPACK) {
             AE2ThingAPI.instance()
-                .addBackpackItem(de.eydamos.backpack.item.ItemBackpack.class);
+                .addBackpackItem(de.eydamos.backpack.item.ItemBackpackBase.class);
         }
         if (ModAndClassUtil.FTR) {
             AE2ThingAPI.instance()

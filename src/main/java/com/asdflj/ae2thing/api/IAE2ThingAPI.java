@@ -9,15 +9,13 @@ import com.asdflj.ae2thing.common.storage.StorageManager;
 @SuppressWarnings("unused")
 public interface IAE2ThingAPI {
 
-    boolean isBlacklistedInStorage(Class<? extends Item> item);
+    boolean isBlacklistedInStorage(Item item);
 
     void blacklistItemInStorage(Class<? extends Item> item);
 
     void addBackpackItem(Class<? extends Item> item);
 
-    void addBackpackItem(Class<? extends Item> item, Class<? extends IInventory> inv);
-
-    boolean isBackpackItem(Class<? extends Item> item);
+    boolean isBackpackItem(Item item);
 
     boolean isBackpackItem(ItemStack is);
 

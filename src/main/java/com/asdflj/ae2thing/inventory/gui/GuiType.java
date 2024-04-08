@@ -14,7 +14,7 @@ import appeng.api.storage.ITerminalHost;
 
 public enum GuiType {
 
-    BACKPACK_MANAGER(new ItemGuiFactory<>(ITerminalHost.class) {
+    BACKPACK_TERMINAL(new ItemGuiFactory<>(ITerminalHost.class) {
 
         @Override
         protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
