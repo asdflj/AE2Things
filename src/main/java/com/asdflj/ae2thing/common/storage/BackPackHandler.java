@@ -1,9 +1,9 @@
 package com.asdflj.ae2thing.common.storage;
 
-import appeng.util.Platform;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
+import appeng.util.Platform;
 import de.eydamos.backpack.item.ItemBackpackBase;
 import de.eydamos.backpack.saves.BackpackSave;
 
@@ -22,6 +22,7 @@ public class BackPackHandler extends BaseBackpackHandler {
         super.setInventorySlotContents(index, stack);
         this.save();
     }
+
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack is) {
         ItemStack slotItem = inv.getStackInSlot(slot);
