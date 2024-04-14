@@ -11,10 +11,11 @@ import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 
 @SuppressWarnings("unused")
-public class NEI_FC_Config implements IConfigureNEI {
+public class NEI_TH_Config implements IConfigureNEI {
 
     @Override
     public void loadConfig() {
+        API.registerNEIGuiHandler(new AE2TH_NEIGuiHandler());
         List<String> recipes = new ArrayList<>();
         recipes.add("crafting");
         recipes.add("crafting2x2");

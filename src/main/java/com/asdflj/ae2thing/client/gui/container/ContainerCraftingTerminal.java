@@ -55,7 +55,7 @@ import appeng.util.Platform;
 public class ContainerCraftingTerminal extends AEBaseContainer implements IConfigurableObject, IConfigManagerHost,
     IMEMonitorHandlerReceiver<IAEItemStack>, IAEAppEngInventory, IContainerCraftingPacket {
 
-    private final PortableItemInventory it;
+    protected final PortableItemInventory it;
     protected IConfigManagerHost gui;
     protected IConfigManager serverCM;
     protected final IConfigManager clientCM;

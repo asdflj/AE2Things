@@ -1,10 +1,13 @@
 package com.asdflj.ae2thing.client.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -14,6 +17,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
@@ -33,6 +38,7 @@ import appeng.api.util.IConfigurableObject;
 import appeng.client.gui.AEBaseMEGui;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiScrollbar;
+import appeng.client.gui.widgets.IDropToFillTextField;
 import appeng.client.gui.widgets.ISortSource;
 import appeng.client.me.InternalSlotME;
 import appeng.client.me.ItemRepo;
@@ -59,10 +65,12 @@ import appeng.integration.IntegrationRegistry;
 import appeng.integration.IntegrationType;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
+import codechicken.nei.LayoutManager;
+import codechicken.nei.util.TextHistory;
 
-public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHost, ISortSource {
+public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHost, ISortSource, IDropToFillTextField {
 
-    private GuiImgButton clearBtn;
+    protected GuiImgButton clearBtn;
     public static int craftingGridOffsetX;
     public static int craftingGridOffsetY;
     protected static String memoryText = "";
@@ -74,7 +82,6 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
     protected FCGuiTextField searchField;
     protected int perRow = 9;
     protected int reservedSpace = 0;
-    protected boolean customSortOrder = true;
     protected int rows = 0;
     protected int maxRows = Integer.MAX_VALUE;
     protected int standardSize;
@@ -85,6 +92,7 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
     protected GuiImgButton terminalStyleBox;
     protected GuiImgButton searchStringSave;
     protected boolean hasShiftKeyDown = false;
+    protected TextHistory history;
 
     public GuiCraftingTerminal(Container container) {
         super(container);
@@ -102,11 +110,25 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
         this.repo = new ItemRepo(getScrollBar(), this);
         this.repo.setPowered(true);
         this.reservedSpace = 73;
+        this.history = Ae2ReflectClient.getHistory(LayoutManager.searchField);
 
+    }
+
+    protected boolean isNEISearch() {
+        final Enum<?> s = AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE);
+        return s == SearchBoxMode.NEI_MANUAL_SEARCH || s == SearchBoxMode.NEI_AUTOSEARCH;
+    }
+
+    protected void saveSearchString() {
+        if (isNEISearch() && !this.searchField.getText()
+            .isEmpty()) {
+            this.history.add(this.searchField.getText());
+        }
     }
 
     @Override
     protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
+        saveSearchString();
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
         if (slot instanceof SlotFake) {
@@ -343,15 +365,13 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
 
         this.offsetY = this.guiTop + 8;
 
-        if (this.customSortOrder) {
-            this.buttonList.add(
-                this.SortByBox = new GuiImgButton(
-                    this.guiLeft - 18,
-                    this.offsetY,
-                    Settings.SORT_BY,
-                    this.configSrc.getSetting(Settings.SORT_BY)));
-            this.offsetY += 20;
-        }
+        this.buttonList.add(
+            this.SortByBox = new GuiImgButton(
+                this.guiLeft - 18,
+                this.offsetY,
+                Settings.SORT_BY,
+                this.configSrc.getSetting(Settings.SORT_BY)));
+        this.offsetY += 20;
 
         this.buttonList.add(
             this.SortDirBox = new GuiImgButton(
@@ -480,7 +500,97 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
             this.ySize - 96 + 1 - this.getReservedSpace(),
             GuiColors.CraftingTerminalTitle.getColor());
         this.fontRendererObj.drawString(this.getGuiDisplayName(GuiText.Terminal.getLocal()), 8, 6, 4210752);
+    }
 
+    protected void drawHistorySelection(final int x, final int y, String text, int width,
+        final List<String> searchHistory) {
+        final int maxRows = 5;
+        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        RenderHelper.disableStandardItemLighting();
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        String[] var4 = null;
+        final List<String> history = new ArrayList<>(searchHistory);
+        Collections.reverse(history);
+
+        if (history.size() > maxRows) {
+            for (int i = 1; i < history.size(); i++) {
+                if (text.equals(history.get(i))) {
+                    int max = Math.min(history.size(), i + maxRows - 1);
+                    int min = Math.max(0, max - maxRows);
+                    var4 = history.subList(min, max)
+                        .toArray(new String[0]);
+                    break;
+                }
+            }
+        }
+        if (var4 == null) {
+            var4 = history.subList(0, Math.min(history.size(), 5))
+                .toArray(new String[0]);
+        }
+        if (var4.length > 0) {
+            int var5 = width;
+            int var6;
+            int var7;
+
+            for (var6 = 0; var6 < var4.length; ++var6) {
+                var7 = this.fontRendererObj.getStringWidth(var4[var6]) + 8;
+
+                if (var7 > var5) {
+                    var5 = var7;
+                }
+            }
+
+            var6 = x + 3;
+            var7 = y + 15;
+            int var9 = 8;
+
+            if (var4.length > 1) {
+                var9 += 2 + (var4.length - 1) * 10;
+            }
+
+            if (this.guiTop + var7 + var9 + 6 > this.height) {
+                var7 = this.height - var9 - this.guiTop - 6;
+            }
+
+            this.zLevel = 300.0F;
+            itemRender.zLevel = 300.0F;
+            final int var10 = -267386864;
+            this.drawGradientRect(var6 - 3, var7 - 4, var6 + var5 + 3, var7 - 3, var10, var10);
+            this.drawGradientRect(var6 - 3, var7 + var9 + 3, var6 + var5 + 3, var7 + var9 + 4, var10, var10);
+            this.drawGradientRect(var6 - 3, var7 - 3, var6 + var5 + 3, var7 + var9 + 3, var10, var10);
+            this.drawGradientRect(var6 - 4, var7 - 3, var6 - 3, var7 + var9 + 3, var10, var10);
+            this.drawGradientRect(var6 + var5 + 3, var7 - 3, var6 + var5 + 4, var7 + var9 + 3, var10, var10);
+            final int var11 = 1347420415;
+            final int var12 = (var11 & 16711422) >> 1 | var11 & -16777216;
+            this.drawGradientRect(var6 - 3, var7 - 3 + 1, var6 - 3 + 1, var7 + var9 + 3 - 1, var11, var12);
+            this.drawGradientRect(var6 + var5 + 2, var7 - 3 + 1, var6 + var5 + 3, var7 + var9 + 3 - 1, var11, var12);
+            this.drawGradientRect(var6 - 3, var7 - 3, var6 + var5 + 3, var7 - 3 + 1, var11, var11);
+            this.drawGradientRect(var6 - 3, var7 + var9 + 2, var6 + var5 + 3, var7 + var9 + 3, var12, var12);
+
+            for (int var13 = 0; var13 < var4.length; ++var13) {
+                String var14 = var4[var13];
+                if (var14.equals(text)) {
+                    var14 = "> " + var14;
+                    var14 = '\u00a7' + Integer.toHexString(15) + var14;
+                } else {
+                    var14 = "\u00a77" + var14;
+                }
+
+                this.fontRendererObj.drawStringWithShadow(var14, var6, var7, -1);
+
+                if (var13 == 0) {
+                    var7 += 2;
+                }
+
+                var7 += 10;
+            }
+
+            this.zLevel = 0.0F;
+            itemRender.zLevel = 0.0F;
+        }
+        GL11.glPopAttrib();
     }
 
     @Override
@@ -557,6 +667,27 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
     }
 
     @Override
+    protected boolean mouseWheelEvent(int x, int y, int wheel) {
+        if (this.searchField.isMouseIn(x, y) && isNEISearch()) {
+            TextHistory.Direction direction;
+            switch (wheel) {
+                case -1:
+                    direction = TextHistory.Direction.PREVIOUS;
+                    break;
+                case 1:
+                    direction = TextHistory.Direction.NEXT;
+                    break;
+                default:
+                    return super.mouseWheelEvent(x, y, wheel);
+            }
+            this.history.get(direction, this.searchField.getText())
+                .ifPresent(t -> setSearchString(t, true));
+
+        }
+        return super.mouseWheelEvent(x, y, wheel);
+    }
+
+    @Override
     protected void actionPerformed(final GuiButton btn) {
         if (btn instanceof final GuiImgButton iBtn) {
             final boolean backwards = Mouse.isButtonDown(1);
@@ -627,5 +758,25 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
         super.drawScreen(mouseX, mouseY, btn);
         if (AEConfig.instance.preserveSearchBar && searchField != null)
             handleTooltip(mouseX, mouseY, searchField.new TooltipProvider());
+        if (this.searchField.isMouseIn(mouseX, mouseY)) {
+            // draw selection
+            List<String> list = Ae2ReflectClient.getHistoryList(this.history);
+            drawHistorySelection(
+                searchField.xPosition,
+                searchField.yPosition,
+                searchField.getText(),
+                searchField.width,
+                list);
+        }
+    }
+
+    @Override
+    public boolean isOverTextField(int mousex, int mousey) {
+        return searchField.isMouseIn(mousex, mousey);
+    }
+
+    @Override
+    public void setTextFieldValue(String displayName, int mousex, int mousey, ItemStack stack) {
+        setSearchString(displayName, true);
     }
 }
