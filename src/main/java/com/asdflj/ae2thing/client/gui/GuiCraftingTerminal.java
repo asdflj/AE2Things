@@ -23,6 +23,7 @@ import org.lwjgl.opengl.GL12;
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.widget.FCGuiTextField;
+import com.asdflj.ae2thing.client.me.AdvItemRepo;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 
 import appeng.api.config.ActionItems;
@@ -41,7 +42,6 @@ import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.client.gui.widgets.IDropToFillTextField;
 import appeng.client.gui.widgets.ISortSource;
 import appeng.client.me.InternalSlotME;
-import appeng.client.me.ItemRepo;
 import appeng.client.me.SlotDisconnected;
 import appeng.client.me.SlotME;
 import appeng.container.AEBaseContainer;
@@ -107,7 +107,7 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
         this.standardSize = this.xSize;
         this.configSrc = ((IConfigurableObject) this.inventorySlots).getConfigManager();
         (this.monitorableContainer = (ContainerCraftingTerminal) this.inventorySlots).setGui(this);
-        this.repo = new ItemRepo(getScrollBar(), this);
+        this.repo = new AdvItemRepo(getScrollBar(), this);
         this.repo.setPowered(true);
         this.reservedSpace = 73;
         this.history = Ae2ReflectClient.getHistory(LayoutManager.searchField);
@@ -251,15 +251,16 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
                 case 3: // creative dupe:
                     stack = ((SlotME) slot).getAEStack();
                     stack = transformItem(stack); // for fluid terminal
-                    if (stack != null && stack.isCraftable()) {
-                        action = InventoryAction.AUTO_CRAFT;
-                    } else if (player.capabilities.isCreativeMode) {
+                    if (player.capabilities.isCreativeMode) {
                         final IAEItemStack slotItem = ((SlotME) slot).getAEStack();
                         if (slotItem != null) {
                             action = InventoryAction.CREATIVE_DUPLICATE;
                         }
-                    }
-                    break;
+                    } else if (stack != null) {
+                        AdvItemRepo.addPinItems(stack);
+                        this.repo.updateView();
+                        return;
+                    } else break;
                 default:
                 case 4: // drop item:
                 case 6:
@@ -463,6 +464,14 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
 
     @Override
     protected void keyTyped(final char character, final int key) {
+        if (key == Keyboard.KEY_DELETE) {
+            String next = this.history.getNext(this.searchField.getText())
+                .orElse("");
+            Ae2ReflectClient.getHistoryList(this.history)
+                .removeIf(s -> s.equals(this.searchField.getText()));
+            setSearchString(next, true);
+            return;
+        }
         if (!this.checkHotbarKeys(key)) {
             if (character == ' ' && this.searchField.getText()
                 .isEmpty()) {
@@ -778,5 +787,6 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
     @Override
     public void setTextFieldValue(String displayName, int mousex, int mousey, ItemStack stack) {
         setSearchString(displayName, true);
+        this.saveSearchString();
     }
 }
