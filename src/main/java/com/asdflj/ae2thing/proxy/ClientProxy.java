@@ -2,7 +2,7 @@ package com.asdflj.ae2thing.proxy;
 
 import static codechicken.lib.gui.GuiDraw.getMousePosition;
 
-import java.awt.*;
+import java.awt.Point;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
