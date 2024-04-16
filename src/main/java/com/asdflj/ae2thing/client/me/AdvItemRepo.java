@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import net.minecraft.item.ItemStack;
 
+import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 
 import appeng.api.storage.data.IAEItemStack;
@@ -16,9 +17,8 @@ import appeng.client.me.ItemRepo;
 
 public class AdvItemRepo extends ItemRepo {
 
-    public static List<IAEItemStack> pinItems = new ArrayList<>();
     protected final ArrayList<IAEItemStack> view;
-    private final ArrayList<ItemStack> dsp;
+    protected final ArrayList<ItemStack> dsp;
 
     public AdvItemRepo(IScrollSource src, ISortSource sortSrc) {
         super(src, sortSrc);
@@ -31,18 +31,12 @@ public class AdvItemRepo extends ItemRepo {
         this.dsp.add(i, null);
     }
 
-    public static void addPinItems(IAEItemStack is) {
-        if (!pinItems.remove(is)) {
-            pinItems.add(is);
-            if (pinItems.size() > 9) {
-                pinItems = pinItems.subList(pinItems.size() - 9, pinItems.size());
-            }
-        }
-    }
-
     @Override
     public void postUpdate(IAEItemStack is) {
         super.postUpdate(is);
+        if (AE2ThingAPI.instance()
+            .getPinItems()
+            .isEmpty()) return;
         List<IAEItemStack> tmp = this.view.stream()
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
@@ -53,6 +47,8 @@ public class AdvItemRepo extends ItemRepo {
     @Override
     public void updateView() {
         super.updateView();
+        final List<IAEItemStack> pinItems = AE2ThingAPI.instance()
+            .getPinItems();
         if (!pinItems.isEmpty()) {
             for (int i = 0; i < 9; i++) {
                 if (i >= pinItems.size()) {

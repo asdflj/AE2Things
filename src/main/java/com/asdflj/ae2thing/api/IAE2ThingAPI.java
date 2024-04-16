@@ -1,10 +1,14 @@
 package com.asdflj.ae2thing.api;
 
+import java.util.List;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.common.storage.StorageManager;
+
+import appeng.api.storage.data.IAEItemStack;
 
 @SuppressWarnings("unused")
 public interface IAE2ThingAPI {
@@ -26,4 +30,10 @@ public interface IAE2ThingAPI {
     StorageManager getStorageManager();
 
     void setStorageManager(StorageManager manager);
+
+    List<IAEItemStack> getPinItems();
+
+    void setPinItems(List<IAEItemStack> items);
+
+    void togglePinItems(IAEItemStack stack);
 }

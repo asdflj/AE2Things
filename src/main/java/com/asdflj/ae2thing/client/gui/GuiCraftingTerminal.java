@@ -21,10 +21,12 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.widget.FCGuiTextField;
 import com.asdflj.ae2thing.client.me.AdvItemRepo;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
 
 import appeng.api.config.ActionItems;
 import appeng.api.config.SearchBoxMode;
@@ -120,8 +122,9 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
     }
 
     protected void saveSearchString() {
-        if (isNEISearch() && !this.searchField.getText()
-            .isEmpty()) {
+        if (ModAndClassUtil.NEI && isNEISearch()
+            && !this.searchField.getText()
+                .isEmpty()) {
             this.history.add(this.searchField.getText());
         }
     }
@@ -257,7 +260,8 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
                             action = InventoryAction.CREATIVE_DUPLICATE;
                         }
                     } else if (stack != null) {
-                        AdvItemRepo.addPinItems(stack);
+                        AE2ThingAPI.instance()
+                            .togglePinItems(stack);
                         this.repo.updateView();
                         return;
                     } else break;
@@ -464,7 +468,7 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
 
     @Override
     protected void keyTyped(final char character, final int key) {
-        if (key == Keyboard.KEY_DELETE) {
+        if (ModAndClassUtil.NEI && key == Keyboard.KEY_DELETE) {
             String next = this.history.getNext(this.searchField.getText())
                 .orElse("");
             Ae2ReflectClient.getHistoryList(this.history)
@@ -499,6 +503,11 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
             this.repo.updateView();
             this.setScrollBar();
         }
+    }
+
+    public void setSearchString(String memoryText, boolean updateView, int pos) {
+        this.setSearchString(memoryText, updateView);
+        this.searchField.setCursorPosition(pos);
     }
 
     @Override
@@ -677,7 +686,7 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
 
     @Override
     protected boolean mouseWheelEvent(int x, int y, int wheel) {
-        if (this.searchField.isMouseIn(x, y) && isNEISearch()) {
+        if (ModAndClassUtil.NEI && this.searchField.isMouseIn(x, y) && isNEISearch()) {
             TextHistory.Direction direction;
             switch (wheel) {
                 case -1:
@@ -767,7 +776,7 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
         super.drawScreen(mouseX, mouseY, btn);
         if (AEConfig.instance.preserveSearchBar && searchField != null)
             handleTooltip(mouseX, mouseY, searchField.new TooltipProvider());
-        if (this.searchField.isMouseIn(mouseX, mouseY)) {
+        if (ModAndClassUtil.NEI && this.searchField.isMouseIn(mouseX, mouseY)) {
             // draw selection
             List<String> list = Ae2ReflectClient.getHistoryList(this.history);
             drawHistorySelection(

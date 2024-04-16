@@ -1,6 +1,8 @@
 package com.asdflj.ae2thing.api;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.inventory.IInventory;
@@ -9,12 +11,15 @@ import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.common.storage.StorageManager;
 
+import appeng.api.storage.data.IAEItemStack;
+
 public final class AE2ThingAPI implements IAE2ThingAPI {
 
     private static final AE2ThingAPI API = new AE2ThingAPI();
 
     private final Set<Class<? extends Item>> backpackItems = new HashSet<>();
     private StorageManager storageManager = null;
+    private final List<IAEItemStack> pinItems = new ArrayList<>();
 
     public static AE2ThingAPI instance() {
         return API;
@@ -74,6 +79,29 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     @Override
     public void setStorageManager(StorageManager manager) {
         storageManager = manager;
+    }
+
+    @Override
+    public List<IAEItemStack> getPinItems() {
+        return this.pinItems;
+    }
+
+    @Override
+    public void setPinItems(List<IAEItemStack> items) {
+        this.pinItems.clear();
+        this.pinItems.addAll(items);
+    }
+
+    @Override
+    public void togglePinItems(IAEItemStack stack) {
+        if (stack == null || this.pinItems.remove(stack)) return;
+        this.pinItems.add(stack);
+        if (this.pinItems.size() > 9) {
+            List<IAEItemStack> tmp = new ArrayList<>(
+                this.pinItems.subList(this.pinItems.size() - 9, this.pinItems.size()));
+            this.pinItems.clear();
+            this.pinItems.addAll(tmp);
+        }
     }
 
 }
