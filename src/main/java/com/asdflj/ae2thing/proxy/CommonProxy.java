@@ -1,9 +1,5 @@
 package com.asdflj.ae2thing.proxy;
 
-import java.util.List;
-import java.util.Map;
-
-import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
@@ -13,7 +9,6 @@ import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.loader.Config;
 import com.asdflj.ae2thing.network.wrapper.AE2ThingNetworkWrapper;
-import com.asdflj.ae2thing.util.Ae2Reflect;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.darkona.adventurebackpack.item.ItemAdventureBackpack;
 
@@ -42,7 +37,6 @@ public class CommonProxy {
     @SubscribeEvent
     public void worldLoad(WorldEvent.Load event) {
         if (Platform.isServer() && event.world.provider.dimensionId == 0) {
-            removeMapStorage(event.world);
             WorldSavedData w = event.world.mapStorage.loadData(StorageManager.class, AE2Thing.MODID);
             if (w == null) {
                 AE2ThingAPI.instance()
@@ -52,16 +46,6 @@ public class CommonProxy {
                     AE2ThingAPI.instance()
                         .getStorageManager());
             }
-        }
-    }
-
-    private void removeMapStorage(World world) {
-        Map<String, WorldSavedData> m = Ae2Reflect.getLoadedDataMap(world.mapStorage);
-        List<WorldSavedData> s = Ae2Reflect.getLoadedDataList(world.mapStorage);
-        WorldSavedData w = m.get(AE2Thing.MODID);
-        if (w != null) {
-            m.remove(AE2Thing.MODID, w);
-            s.remove(w);
         }
     }
 

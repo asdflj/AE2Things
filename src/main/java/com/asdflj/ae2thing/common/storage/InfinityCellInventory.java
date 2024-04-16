@@ -325,11 +325,15 @@ public class InfinityCellInventory implements ITCellInventory {
     @Override
     public IItemList<IAEItemStack> getAvailableItems(IItemList<IAEItemStack> out) {
         long size = 0;
+        int count = 0;
         for (final IAEItemStack i : this.getCellItems()) {
             out.add(i);
-            size += i.getStackSize();
+            if (i.getStackSize() > 0) {
+                count++;
+                size += i.getStackSize();
+            }
         }
-        this.storedItemTypes = out.size();
+        this.storedItemTypes = count;
         this.storedItemCount = size;
         data.setLong(ITEM_TYPE_TAG, this.storedItemTypes);
         data.setLong(ITEM_COUNT_TAG, this.storedItemCount);
