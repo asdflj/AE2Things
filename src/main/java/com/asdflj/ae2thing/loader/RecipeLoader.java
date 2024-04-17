@@ -20,8 +20,7 @@ public class RecipeLoader implements Runnable {
     public static final ItemStack DIAMOND = new ItemStack(Items.diamond, 1);
     public static final ItemStack AE2_DIGITAL_SINGULARITY_CELL = new ItemStack(
         GameRegistry.findItem("appliedenergistics2", "item.ItemExtremeStorageCell.Singularity"),
-        1,
-        4133);
+        1);
 
     @Override
     public void run() {
