@@ -10,6 +10,8 @@ import net.minecraft.world.WorldSavedData;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 
+import appeng.api.storage.StorageChannel;
+
 public class StorageManager extends WorldSavedData {
 
     private Map<UUID, DataStorage> disks = new HashMap<>();
@@ -21,7 +23,7 @@ public class StorageManager extends WorldSavedData {
             .setStorageManager(this);
     }
 
-    public DataStorage getStorage(String uuid) {
+    public DataStorage getStorage(String uuid, StorageChannel channel) {
         UUID uid;
         DataStorage d;
         try {
@@ -33,7 +35,7 @@ public class StorageManager extends WorldSavedData {
         }
         d = disks.get(uid);
         if (d == null) {
-            d = new DataStorage(uid);
+            d = new DataStorage(uid, channel);
             disks.put(uid, d);
         }
         return d;
@@ -46,7 +48,15 @@ public class StorageManager extends WorldSavedData {
         for (int i = 0; i < diskList.tagCount(); i++) {
             NBTTagCompound disk = diskList.getCompoundTagAt(i);
             UUID uid = UUID.fromString(disk.getString(Constants.DISKUUID));
-            d.put(uid, DataStorage.readFromNBT(uid, disk.getTagList(Constants.DISKDATA, 10)));
+            d.put(uid, DataStorage.readFromNBT(uid, disk.getTagList(Constants.DISKDATA, 10), StorageChannel.ITEMS));
+        }
+        NBTTagList fluidDiskList = data.getTagList(Constants.FLUID_DISKLIST, 10);
+        for (int i = 0; i < fluidDiskList.tagCount(); i++) {
+            NBTTagCompound disk = fluidDiskList.getCompoundTagAt(i);
+            UUID uid = UUID.fromString(disk.getString(Constants.DISKUUID));
+            d.put(
+                uid,
+                DataStorage.readFromNBT(uid, disk.getTagList(Constants.FLUID_DISKLIST, 10), StorageChannel.FLUIDS));
         }
         disks = d;
     }
@@ -54,6 +64,7 @@ public class StorageManager extends WorldSavedData {
     @Override
     public void writeToNBT(NBTTagCompound data) {
         NBTTagList diskList = new NBTTagList();
+        NBTTagList fluidDiskList = new NBTTagList();
         for (Map.Entry<UUID, DataStorage> entry : disks.entrySet()) {
             if (entry.getValue()
                 .isEmpty()) continue;
@@ -63,12 +74,23 @@ public class StorageManager extends WorldSavedData {
                 Constants.DISKUUID,
                 entry.getKey()
                     .toString());
-            disk.setTag(
-                Constants.DISKDATA,
-                entry.getValue()
-                    .writeToNBT());
-            diskList.appendTag(disk);
+            if (entry.getValue()
+                .getChannel() == StorageChannel.ITEMS) {
+                disk.setTag(
+                    Constants.DISKDATA,
+                    entry.getValue()
+                        .writeToNBT());
+                diskList.appendTag(disk);
+            } else {
+                disk.setTag(
+                    Constants.FLUID_DISKLIST,
+                    entry.getValue()
+                        .writeToNBT());
+                fluidDiskList.appendTag(disk);
+            }
+
         }
         data.setTag(Constants.DISKLIST, diskList);
+        data.setTag(Constants.FLUID_DISKLIST, fluidDiskList);
     }
 }

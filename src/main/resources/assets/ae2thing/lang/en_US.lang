@@ -1,4 +1,5 @@
 item.backpack_terminal.name=Backpack Terminal
-item.infinity_cell.name=ME Infinity Cell 
+item.infinity_cell.name=ME Infinity Cell
+item.infinity_fluid_cell.name=ME Infinity Fluid Cell 
 
 itemGroup.ae2thing=AE2 Thing

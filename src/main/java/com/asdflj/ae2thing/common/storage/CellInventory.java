@@ -94,11 +94,11 @@ public class CellInventory implements ITCellInventory {
                     .collect(Collectors.toList())));
     }
 
-    private List<IInventory> getModInv(ModInv inv) {
+    private List<IInventory> getModInv(IModInv inv) {
         return inv.getInv(this.player);
     }
 
-    public static IMEInventoryHandler getCell(ItemStack o, ISaveProvider container, EntityPlayer player) {
+    public static IMEInventoryHandler<IAEItemStack> getCell(ItemStack o, ISaveProvider container, EntityPlayer player) {
         try {
             if (o.getItem() instanceof ItemBackpackTerminal) {
                 return new CellInventoryHandler(new CellInventory(o, container, player));

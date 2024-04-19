@@ -32,7 +32,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemInfinityCell extends BaseItem implements IStorageCell, IItemGroup, IRegister<ItemInfinityCell> {
+public class ItemInfinityCell extends BaseItem
+    implements IStorageCell, IItemGroup, IRegister<ItemInfinityCell>, IInfinityStorageCell {
 
     private final int perType = 1;
     private final double idleDrain = 2000D;

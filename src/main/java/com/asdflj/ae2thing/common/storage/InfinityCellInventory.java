@@ -14,6 +14,7 @@ import com.asdflj.ae2thing.common.item.ItemInfinityCell;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
+import appeng.api.exceptions.AppEngException;
 import appeng.api.implementations.items.IStorageCell;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IMEInventory;
@@ -37,7 +38,10 @@ public class InfinityCellInventory implements ITCellInventory {
     protected long storedItemCount = 0;
     protected final NBTTagCompound data;
 
-    public InfinityCellInventory(ItemStack o, ISaveProvider c, EntityPlayer p) {
+    public InfinityCellInventory(ItemStack o, ISaveProvider c, EntityPlayer p) throws AppEngException {
+        if (o == null) {
+            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
+        }
         cellItem = o;
         container = c;
         player = p;
@@ -57,7 +61,7 @@ public class InfinityCellInventory implements ITCellInventory {
         String uuid = this.getUUID();
         DataStorage storage = AE2ThingAPI.instance()
             .getStorageManager()
-            .getStorage(uuid);
+            .getStorage(uuid, this.getChannel());
         this.cellItems = storage.getItems();
         if (!uuid.equals(storage.getUUID())) {
             data.setString(Constants.DISKUUID, storage.getUUID());

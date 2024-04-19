@@ -18,6 +18,7 @@ public class FCGuiTextField extends GuiTextField {
     private final int _height;
     private int _border;
     private int _color;
+    private final TooltipProvider tooltipProvider = new TooltipProvider();
 
     /**
      * Uses the values to instantiate a padded version of a text field. Pays attention to the '_' caret.
@@ -42,6 +43,7 @@ public class FCGuiTextField extends GuiTextField {
         this._width = width;
         this._height = height;
         this._fontRender = fontRenderer;
+        this.tooltip = "";
     }
 
     @Override
@@ -135,6 +137,10 @@ public class FCGuiTextField extends GuiTextField {
 
     public String getMessage() {
         return tooltip;
+    }
+
+    public TooltipProvider getTooltipProvider() {
+        return this.tooltipProvider;
     }
 
     public class TooltipProvider implements ITooltip {

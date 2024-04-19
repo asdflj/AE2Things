@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 
 @FunctionalInterface
-public interface ModInv {
+public interface IModInv {
 
     List<IInventory> getInv(EntityPlayer player);
 }
