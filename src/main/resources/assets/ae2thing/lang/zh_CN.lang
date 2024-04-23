@@ -1,5 +1,6 @@
 item.backpack_terminal.name=背包终端
 item.infinity_cell.name=ME无限存储单元
 item.infinity_fluid_cell.name=ME无限流体存储单元
+tile.fishbig.name=鱼大
 
 itemGroup.ae2thing=AE2 Thing

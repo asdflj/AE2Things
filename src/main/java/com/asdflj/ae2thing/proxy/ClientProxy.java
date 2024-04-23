@@ -9,10 +9,12 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
+import com.asdflj.ae2thing.loader.RenderLoader;
 import com.asdflj.ae2thing.nei.recipes.DefaultExtractorLoader;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 
 import codechicken.nei.LayoutManager;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -30,6 +32,12 @@ public class ClientProxy extends CommonProxy {
         if (ModAndClassUtil.NEI) {
             new DefaultExtractorLoader().run();
         }
+    }
+
+    @Override
+    public void init(FMLInitializationEvent event) {
+        super.init(event);
+        (new RenderLoader()).run();
     }
 
     private ItemStack getStackMouseOver(GuiContainer window) {
