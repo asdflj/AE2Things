@@ -23,7 +23,7 @@ import org.lwjgl.opengl.GL12;
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
-import com.asdflj.ae2thing.client.gui.widget.FCGuiTextField;
+import com.asdflj.ae2thing.client.gui.widget.THGuiTextField;
 import com.asdflj.ae2thing.client.me.AdvItemRepo;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
@@ -81,7 +81,7 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
     public IConfigManager configSrc;
     public ContainerCraftingTerminal monitorableContainer;
     protected IDisplayRepo repo;
-    protected FCGuiTextField searchField;
+    protected THGuiTextField searchField;
     protected int perRow = 9;
     protected int reservedSpace = 0;
     protected int rows = 0;
@@ -420,7 +420,7 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
 
         // Right now 80 > offsetX, but that can be changed later.
         // noinspection DataFlowIssue
-        this.searchField = new FCGuiTextField(
+        this.searchField = new THGuiTextField(
             this.fontRendererObj,
             this.guiLeft + Math.max(80, this.offsetX),
             this.guiTop + 4,

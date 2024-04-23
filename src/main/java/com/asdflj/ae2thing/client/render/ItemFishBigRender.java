@@ -60,7 +60,7 @@ public class ItemFishBigRender implements IItemRenderer {
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
         GL11.glPushMatrix();
-        boolean renderHairs = true;
+        boolean renderHair = true;
         GL11.glScalef(1.1f, 1.1f, 1.1f);
         GL11.glRotated(180, 0, 1, 0);
         switch (type) {
@@ -69,19 +69,18 @@ public class ItemFishBigRender implements IItemRenderer {
                 GL11.glRotated(-90, 0, 1, 0);
                 break;
             case INVENTORY:
-                renderHairs = false;
-                // GL11.glTranslatef(0F, 0.3F, 0F);
+                renderHair = false;
                 break;
             default:
                 GL11.glTranslatef(0, 0.7F, -0.5F);
                 GL11.glRotated(-90, 0, 1, 0);
                 break;
         }
-        render(renderHairs);
+        render(renderHair);
         GL11.glPopMatrix();
     }
 
-    public static void render(boolean renderHairs) {
+    public static void render(boolean renderHair) {
         Minecraft.getMinecraft().renderEngine.bindTexture(hair2);
         modelFishBig.renderPart("hair2");
         Minecraft.getMinecraft().renderEngine.bindTexture(head);
@@ -96,7 +95,7 @@ public class ItemFishBigRender implements IItemRenderer {
         modelFishBig.renderPart("body");
         Minecraft.getMinecraft().renderEngine.bindTexture(button);
         modelFishBig.renderPart("button");
-        if (renderHairs) {
+        if (renderHair) {
             Minecraft.getMinecraft().renderEngine.bindTexture(hair);
             modelFishBig.renderPart("hair");
         }

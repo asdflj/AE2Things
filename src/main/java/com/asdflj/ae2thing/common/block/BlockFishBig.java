@@ -20,6 +20,8 @@ public class BlockFishBig extends BaseBlockContainer implements IRegister<BlockF
     public BlockFishBig() {
         super(Material.iron);
         this.setBlockName(NameConst.BLOCK_FISHBIG);
+        this.setHardness(2.0f);
+        this.setResistance(10.0F);
     }
 
     @Override

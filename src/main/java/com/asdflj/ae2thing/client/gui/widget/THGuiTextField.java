@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiTextField;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.ITooltip;
 
-public class FCGuiTextField extends GuiTextField {
+public class THGuiTextField extends GuiTextField {
 
     private static final int PADDING = 2;
     private final FontRenderer _fontRender;
@@ -29,7 +29,7 @@ public class FCGuiTextField extends GuiTextField {
      * @param width        absolute width
      * @param height       absolute height
      */
-    public FCGuiTextField(final FontRenderer fontRenderer, final int xPos, final int yPos, final int width,
+    public THGuiTextField(final FontRenderer fontRenderer, final int xPos, final int yPos, final int width,
         final int height) {
         super(
             fontRenderer,
