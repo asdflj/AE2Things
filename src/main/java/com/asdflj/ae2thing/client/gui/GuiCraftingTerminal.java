@@ -776,7 +776,7 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
         super.drawScreen(mouseX, mouseY, btn);
         if (AEConfig.instance.preserveSearchBar && searchField != null)
             handleTooltip(mouseX, mouseY, searchField.getTooltipProvider());
-        if (ModAndClassUtil.NEI && this.searchField.isMouseIn(mouseX, mouseY)) {
+        if (ModAndClassUtil.NEI && this.searchField.isMouseIn(mouseX, mouseY) && this.isNEISearch()) {
             // draw selection
             List<String> list = Ae2ReflectClient.getHistoryList(this.history);
             drawHistorySelection(
