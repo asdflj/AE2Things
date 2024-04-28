@@ -31,6 +31,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
 import de.eydamos.backpack.item.ItemBackpackBase;
+import de.eydamos.backpack.util.BackpackUtil;
 import forestry.storage.items.ItemBackpack;
 
 public class CellInventory implements ITCellInventory {
@@ -77,7 +78,9 @@ public class CellInventory implements ITCellInventory {
             this.modInv.addAll(
                 getModInv(
                     (player) -> Arrays.stream(player.inventory.mainInventory)
-                        .filter(x -> x != null && x.getItem() instanceof ItemBackpackBase)
+                        .filter(
+                            x -> x != null && x.getItem() instanceof ItemBackpackBase
+                                && !BackpackUtil.isEnderBackpack(x))
                         .map(x -> new BackPackHandler(player, x))
                         .collect(Collectors.toList())));
         }
@@ -141,6 +144,7 @@ public class CellInventory implements ITCellInventory {
         for (IInventory inv : this.modInv) {
             for (int i = 0; i < inv.getSizeInventory(); i++) {
                 if (inv.isItemValidForSlot(i, is)) return true;
+                else if (inv.getStackInSlot(i) == null) break;
             }
         }
         return false;
@@ -221,6 +225,8 @@ public class CellInventory implements ITCellInventory {
                     if (injectItem.stackSize <= 0) {
                         return injectItem;
                     }
+                } else if (inv.getStackInSlot(i) == null) {
+                    break;
                 }
             }
         }
