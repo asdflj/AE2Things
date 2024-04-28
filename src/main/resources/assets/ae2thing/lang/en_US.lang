@@ -3,4 +3,7 @@ item.infinity_cell.name=ME Infinity Cell
 item.infinity_fluid_cell.name=ME Infinity Fluid Cell 
 tile.fishbig.name=Fish Big
 
+ae2thing.tooltip.shift_for_more=§r> Hold §3Shift§r for more information
+ae2thing.tooltip.backpack_terminal.desc=uh a new terminal?
+
 itemGroup.ae2thing=AE2 Thing

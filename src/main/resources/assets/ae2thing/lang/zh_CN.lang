@@ -3,4 +3,7 @@ item.infinity_cell.name=ME无限存储单元
 item.infinity_fluid_cell.name=ME无限流体存储单元
 tile.fishbig.name=鱼大
 
+ae2thing.tooltip.shift_for_more=§r> 按 §3Shift§r 显示更多信息
+ae2thing.tooltip.backpack_terminal.desc=一个新终端?
+
 itemGroup.ae2thing=AE2 Thing

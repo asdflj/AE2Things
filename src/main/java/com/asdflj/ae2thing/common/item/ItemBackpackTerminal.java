@@ -1,5 +1,10 @@
 package com.asdflj.ae2thing.common.item;
 
+import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
+
+import java.util.List;
+
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -92,5 +97,16 @@ public class ItemBackpackTerminal extends BaseItem
     @Override
     public void setFuzzyMode(ItemStack is, FuzzyMode fzMode) {
 
+    }
+
+    @Override
+    protected void addCheckedInformation(ItemStack stack, EntityPlayer player, List<String> toolTip,
+        boolean displayMoreInfo) {
+        super.addCheckedInformation(stack, player, toolTip, displayMoreInfo);
+        if (isShiftKeyDown()) {
+            toolTip.add(I18n.format(NameConst.TT_BACKPACK_TERMINAL_DESC));
+        } else {
+            toolTip.add(I18n.format(NameConst.TT_SHIFT_FOR_MORE));
+        }
     }
 }
