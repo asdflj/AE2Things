@@ -35,11 +35,13 @@ public class PortableItemInventory extends MEMonitorHandler<IAEItemStack>
     private final ItemStack target;
     private final int inventorySlot;
     protected AppEngInternalInventory crafting;
+    protected EntityPlayer player;
 
     public PortableItemInventory(ItemStack is, int slot, EntityPlayer player) {
         super(Objects.requireNonNull(CellInventory.getCell(is, null, player)));
         this.target = is;
         this.inventorySlot = slot;
+        this.player = player;
         this.crafting = new ItemBiggerAppEngInventory(is, "crafting", 9, player, slot);
     }
 
@@ -63,11 +65,16 @@ public class PortableItemInventory extends MEMonitorHandler<IAEItemStack>
         return null;
     }
 
+    private void saveSettings() {
+        this.player.inventory.setInventorySlotContents(this.inventorySlot, this.target);
+    }
+
     @Override
     public IConfigManager getConfigManager() {
         final ConfigManager out = new ConfigManager((manager, settingName, newValue) -> {
             final NBTTagCompound data = Platform.openNbtData(this.target);
             manager.writeToNBT(data);
+            saveSettings();
         });
         out.registerSetting(Settings.SORT_BY, SortOrder.NAME);
         out.registerSetting(Settings.VIEW_MODE, ViewItems.ALL);
