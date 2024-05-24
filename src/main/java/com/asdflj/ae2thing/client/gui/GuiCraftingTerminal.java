@@ -93,7 +93,6 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
     protected GuiImgButton searchBoxSettings;
     protected GuiImgButton terminalStyleBox;
     protected GuiImgButton searchStringSave;
-    protected boolean hasShiftKeyDown = false;
     protected TextHistory history;
 
     public GuiCraftingTerminal(Container container) {
@@ -286,16 +285,6 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
 
     protected IAEItemStack transformItem(IAEItemStack stack) {
         return stack;
-    }
-
-    @Override
-    public void handleKeyboardInput() {
-        super.handleKeyboardInput();
-        hasShiftKeyDown |= isShiftKeyDown();
-        if (hasShiftKeyDown && !Keyboard.getEventKeyState()) { // keyup
-            this.repo.updateView();
-            hasShiftKeyDown = false;
-        }
     }
 
     protected int getMaxRows() {

@@ -20,6 +20,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     private final Set<Class<? extends Item>> backpackItems = new HashSet<>();
     private StorageManager storageManager = null;
     private final List<IAEItemStack> pinItems = new ArrayList<>();
+    public static int maxPinSize = 9;
 
     public static AE2ThingAPI instance() {
         return API;
@@ -96,9 +97,9 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     public void togglePinItems(IAEItemStack stack) {
         if (stack == null || this.pinItems.remove(stack)) return;
         this.pinItems.add(stack);
-        if (this.pinItems.size() > 9) {
+        if (this.pinItems.size() > maxPinSize) {
             List<IAEItemStack> tmp = new ArrayList<>(
-                this.pinItems.subList(this.pinItems.size() - 9, this.pinItems.size()));
+                this.pinItems.subList(this.pinItems.size() - maxPinSize, this.pinItems.size()));
             this.pinItems.clear();
             this.pinItems.addAll(tmp);
         }
