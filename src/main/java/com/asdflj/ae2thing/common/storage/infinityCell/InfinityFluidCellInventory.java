@@ -158,19 +158,9 @@ public class InfinityFluidCellInventory implements ITFluidCellInventory {
 
     @Override
     public IItemList<IAEFluidStack> getAvailableItems(IItemList<IAEFluidStack> out) {
-        long size = 0;
-        int count = 0;
         for (final IAEFluidStack i : this.getCellFluids()) {
             out.add(i);
-            if (i.getStackSize() > 0) {
-                count++;
-                size += i.getStackSize();
-            }
         }
-        this.storedFluids = count;
-        this.storedFluidCount = size;
-        data.setLong(FLUID_TYPE_TAG, this.storedFluids);
-        data.setLong(FLUID_COUNT_TAG, this.storedFluidCount);
         return out;
     }
 
@@ -189,7 +179,7 @@ public class InfinityFluidCellInventory implements ITFluidCellInventory {
                 .createFluidList();
         }
         this.cellFluids.resetStatus();
-        for (final IAEFluidStack i : this.cellFluids) {
+        for (final IAEFluidStack i : storage.getFluids()) {
             final IAEFluidStack ias = i.copy();
             if (ias.getStackSize() > 0) {
                 this.cellFluids.add(ias);
