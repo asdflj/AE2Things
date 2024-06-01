@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 import com.asdflj.ae2thing.common.item.IInfinityStorageCell;
+import com.asdflj.ae2thing.common.storage.infinityCell.InfinityFluidCellInventory;
 
 import appeng.api.implementations.tiles.IChestOrDrive;
 import appeng.api.storage.ICellHandler;
@@ -26,7 +27,7 @@ public class CellHandler implements ICellHandler {
         if (channel == StorageChannel.ITEMS) {
             return CellInventory.getCell(is, container, null);
         } else {
-            return FCellInventory.getCell(is, container, null);
+            return InfinityFluidCellInventory.getCell(is, container, null);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.common.storage;
+package com.asdflj.ae2thing.common.storage.infinityCell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +10,13 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.common.item.ItemInfinityFluidCell;
+import com.asdflj.ae2thing.common.storage.Constants;
+import com.asdflj.ae2thing.common.storage.DataStorage;
+import com.asdflj.ae2thing.common.storage.FluidCellInventoryHandler;
+import com.asdflj.ae2thing.common.storage.ITFluidCellInventory;
 import com.glodblock.github.common.storage.IStorageFluidCell;
 
+import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.AppEngException;
 import appeng.api.networking.security.BaseActionSource;
@@ -22,7 +27,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
 
-public class FCellInventory implements ITFluidCellInventory {
+public class InfinityFluidCellInventory implements ITFluidCellInventory {
 
     protected static final String FLUID_TYPE_TAG = "ft";
     protected static final String FLUID_COUNT_TAG = "fc";
@@ -34,7 +39,8 @@ public class FCellInventory implements ITFluidCellInventory {
     protected IItemList<IAEFluidStack> cellFluids = null;
     protected final NBTTagCompound data;
 
-    public FCellInventory(ItemStack o, ISaveProvider container, EntityPlayer player) throws AppEngException {
+    public InfinityFluidCellInventory(ItemStack o, ISaveProvider container, EntityPlayer player)
+        throws AppEngException {
         if (o == null) {
             throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
         }
@@ -50,7 +56,7 @@ public class FCellInventory implements ITFluidCellInventory {
         EntityPlayer player) {
         try {
             if (o.getItem() instanceof ItemInfinityFluidCell) {
-                return new FluidCellInventoryHandler(new FCellInventory(o, container, player));
+                return new FluidCellInventoryHandler(new InfinityFluidCellInventory(o, container, player));
             }
         } catch (final AppEngException ignored) {
 
@@ -129,6 +135,22 @@ public class FCellInventory implements ITFluidCellInventory {
     }
 
     private void saveChanges() {
+        long size = 0;
+        int count = 0;
+        IItemList<IAEFluidStack> fluidList = this.getStorage()
+            .getFluids();
+        fluidList.resetStatus();
+        for (final IAEFluidStack ias : this.getCellFluids()) {
+            if (ias.getStackSize() > 0) {
+                fluidList.add(ias);
+                count++;
+                size += ias.getStackSize();
+            }
+        }
+        this.storedFluids = count;
+        this.storedFluidCount = size;
+        data.setLong(FLUID_TYPE_TAG, this.storedFluids);
+        data.setLong(FLUID_COUNT_TAG, this.storedFluidCount);
         AE2ThingAPI.instance()
             .getStorageManager()
             .setDirty(true);
@@ -160,12 +182,21 @@ public class FCellInventory implements ITFluidCellInventory {
     }
 
     protected void loadCellFluids() {
-        String uuid = this.getUUID();
-        DataStorage storage = AE2ThingAPI.instance()
-            .getStorageManager()
-            .getStorage(uuid, this.getChannel());
-        this.cellFluids = storage.getFluids();
-        if (!uuid.equals(storage.getUUID())) {
+        DataStorage storage = this.getStorage();
+        if (this.cellFluids == null) {
+            this.cellFluids = AEApi.instance()
+                .storage()
+                .createFluidList();
+        }
+        this.cellFluids.resetStatus();
+        for (final IAEFluidStack i : this.cellFluids) {
+            final IAEFluidStack ias = i.copy();
+            if (ias.getStackSize() > 0) {
+                this.cellFluids.add(ias);
+            }
+        }
+        if (!this.getUUID()
+            .equals(storage.getUUID())) {
             data.setString(Constants.DISKUUID, storage.getUUID());
         }
     }

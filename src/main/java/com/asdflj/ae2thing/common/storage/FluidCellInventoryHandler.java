@@ -21,7 +21,7 @@ import appeng.util.prioitylist.PrecisePriorityList;
 public class FluidCellInventoryHandler extends MEInventoryHandler<IAEFluidStack>
     implements ITFluidCellInventoryHandler, ICellCacheRegistry {
 
-    protected FluidCellInventoryHandler(final IMEInventory<IAEFluidStack> c) {
+    public FluidCellInventoryHandler(final IMEInventory<IAEFluidStack> c) {
         super(c, StorageChannel.FLUIDS);
 
         final ITFluidCellInventory ci = this.getCellInv();

@@ -8,6 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.WorldSavedData;
 
+import com.asdflj.ae2thing.api.AE2ThingAPI;
+
 import appeng.api.storage.StorageChannel;
 
 public class StorageManager extends WorldSavedData {
@@ -17,6 +19,8 @@ public class StorageManager extends WorldSavedData {
     public StorageManager(String name) {
         super(name);
         this.setDirty(true);
+        AE2ThingAPI.instance()
+            .setStorageManager(this);
     }
 
     public DataStorage getStorage(String uuid, StorageChannel channel) {

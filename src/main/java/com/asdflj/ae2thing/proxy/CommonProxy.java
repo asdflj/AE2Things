@@ -39,8 +39,7 @@ public class CommonProxy {
         if (Platform.isServer() && event.world.provider.dimensionId == 0) {
             WorldSavedData w = event.world.mapStorage.loadData(StorageManager.class, AE2Thing.MODID);
             if (w == null) {
-                AE2ThingAPI.instance()
-                    .setStorageManager(new StorageManager(AE2Thing.MODID));
+                new StorageManager(AE2Thing.MODID);
                 event.world.mapStorage.setData(
                     AE2Thing.MODID,
                     AE2ThingAPI.instance()

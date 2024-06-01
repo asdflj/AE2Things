@@ -16,6 +16,7 @@ import com.asdflj.ae2thing.common.item.ItemInfinityCell;
 import com.asdflj.ae2thing.common.storage.backpack.AdventureBackpackHandler;
 import com.asdflj.ae2thing.common.storage.backpack.BackPackHandler;
 import com.asdflj.ae2thing.common.storage.backpack.FTRBackpackHandler;
+import com.asdflj.ae2thing.common.storage.infinityCell.InfinityItemCellInventory;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.darkona.adventurebackpack.item.ItemAdventureBackpack;
 
@@ -106,7 +107,7 @@ public class CellInventory implements ITCellInventory {
             if (o.getItem() instanceof ItemBackpackTerminal) {
                 return new CellInventoryHandler(new CellInventory(o, container, player));
             } else if (o.getItem() instanceof ItemInfinityCell) {
-                return new CellInventoryHandler(new InfinityCellInventory(o, container, player));
+                return new CellInventoryHandler(new InfinityItemCellInventory(o, container, player));
             }
         } catch (final AppEngException ignored) {
 

@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.common.storage;
+package com.asdflj.ae2thing.common.storage.infinityCell;
 
 import static appeng.me.storage.CellInventory.getCell;
 
@@ -10,6 +10,9 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.common.item.ItemInfinityCell;
+import com.asdflj.ae2thing.common.storage.Constants;
+import com.asdflj.ae2thing.common.storage.DataStorage;
+import com.asdflj.ae2thing.common.storage.ITCellInventory;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -25,7 +28,7 @@ import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 
-public class InfinityCellInventory implements ITCellInventory {
+public class InfinityItemCellInventory implements ITCellInventory {
 
     private static final String ITEM_TYPE_TAG = "it";
     private static final String ITEM_COUNT_TAG = "ic";
@@ -38,7 +41,7 @@ public class InfinityCellInventory implements ITCellInventory {
     protected long storedItemCount = 0;
     protected final NBTTagCompound data;
 
-    public InfinityCellInventory(ItemStack o, ISaveProvider c, EntityPlayer p) throws AppEngException {
+    public InfinityItemCellInventory(ItemStack o, ISaveProvider c, EntityPlayer p) throws AppEngException {
         if (o == null) {
             throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
         }
@@ -58,12 +61,21 @@ public class InfinityCellInventory implements ITCellInventory {
 
     @Override
     public void loadCellItems() {
-        String uuid = this.getUUID();
-        DataStorage storage = AE2ThingAPI.instance()
-            .getStorageManager()
-            .getStorage(uuid, this.getChannel());
-        this.cellItems = storage.getItems();
-        if (!uuid.equals(storage.getUUID())) {
+        DataStorage storage = this.getStorage();
+        if (this.cellItems == null) {
+            this.cellItems = AEApi.instance()
+                .storage()
+                .createPrimitiveItemList();
+        }
+        this.cellItems.resetStatus();
+        for (IAEItemStack stack : storage.getItems()) {
+            final IAEItemStack ias = stack.copy();
+            if (ias.getStackSize() > 0) {
+                this.cellItems.add(ias);
+            }
+        }
+        if (!this.getUUID()
+            .equals(storage.getUUID())) {
             data.setString(Constants.DISKUUID, storage.getUUID());
         }
     }
@@ -321,6 +333,23 @@ public class InfinityCellInventory implements ITCellInventory {
     }
 
     private void saveChanges() {
+        long size = 0;
+        int count = 0;
+        IItemList<IAEItemStack> itemList = this.getStorage()
+            .getItems();
+        itemList.resetStatus();
+        for (final IAEItemStack ias : this.getCellItems()) {
+            if (ias.getStackSize() > 0) {
+                itemList.add(ias);
+                count++;
+                size += ias.getStackSize();
+            }
+        }
+        this.storedItemTypes = count;
+        this.storedItemCount = size;
+        data.setLong(ITEM_TYPE_TAG, this.storedItemTypes);
+        data.setLong(ITEM_COUNT_TAG, this.storedItemCount);
+
         AE2ThingAPI.instance()
             .getStorageManager()
             .setDirty(true);
@@ -328,19 +357,9 @@ public class InfinityCellInventory implements ITCellInventory {
 
     @Override
     public IItemList<IAEItemStack> getAvailableItems(IItemList<IAEItemStack> out) {
-        long size = 0;
-        int count = 0;
         for (final IAEItemStack i : this.getCellItems()) {
             out.add(i);
-            if (i.getStackSize() > 0) {
-                count++;
-                size += i.getStackSize();
-            }
         }
-        this.storedItemTypes = count;
-        this.storedItemCount = size;
-        data.setLong(ITEM_TYPE_TAG, this.storedItemTypes);
-        data.setLong(ITEM_COUNT_TAG, this.storedItemCount);
         return out;
     }
 

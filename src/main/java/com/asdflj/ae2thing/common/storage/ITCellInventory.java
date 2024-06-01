@@ -3,11 +3,13 @@ package com.asdflj.ae2thing.common.storage;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
+import com.asdflj.ae2thing.common.storage.infinityCell.BaseInventory;
+
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.data.IAEItemStack;
 
-public interface ITCellInventory extends IMEInventory<IAEItemStack> {
+public interface ITCellInventory extends IMEInventory<IAEItemStack>, BaseInventory {
 
     /**
      * @return idle cost for this Storage Cell
@@ -97,8 +99,4 @@ public interface ITCellInventory extends IMEInventory<IAEItemStack> {
     int getStatusForCell();
 
     String getOreFilter();
-
-    default String getUUID() {
-        return "";
-    }
 }
