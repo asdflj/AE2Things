@@ -96,7 +96,6 @@ public class DataStorage implements IDataStorage {
                 out.add(ais);
             }
         }
-
         return out;
     }
 
@@ -132,7 +131,9 @@ public class DataStorage implements IDataStorage {
         final NBTTagList out = new NBTTagList();
 
         for (final IAEFluidStack ais : myList) {
-            out.appendTag(this.writeFluid(ais));
+            if (ais.getStackSize() > 0) {
+                out.appendTag(this.writeFluid(ais));
+            }
         }
 
         return out;
@@ -151,7 +152,9 @@ public class DataStorage implements IDataStorage {
         final NBTTagList out = new NBTTagList();
 
         for (final IAEItemStack ais : myList) {
-            out.appendTag(this.writeItem(ais));
+            if (ais.getStackSize() > 0) {
+                out.appendTag(this.writeItem(ais));
+            }
         }
 
         return out;

@@ -42,9 +42,7 @@ public class CellInventory implements ITCellInventory {
     protected final ISaveProvider container;
     protected final EntityPlayer player;
     protected final List<IInventory> modInv = new ArrayList<>();
-    protected IItemList<IAEItemStack> cellItems = AEApi.instance()
-        .storage()
-        .createItemList();
+    protected IItemList<IAEItemStack> cellItems = null;
 
     public CellInventory(final ItemStack o, final ISaveProvider c, final EntityPlayer p) throws AppEngException {
         if (o == null) {
@@ -55,7 +53,6 @@ public class CellInventory implements ITCellInventory {
         player = p;
         this.cellType = (IStorageItemCell) this.cellItem.getItem();
         this.getAllInv();
-        this.loadCellItems();
     }
 
     private void getAllInv() {
@@ -249,7 +246,8 @@ public class CellInventory implements ITCellInventory {
         if (mode == Actionable.MODULATE) {
             ItemStack is = this.injectItem(input.getItemStack());
             if (is.stackSize == 0) {
-                this.cellItems.add(input);
+                this.getCellItems()
+                    .add(input);
                 return null;
             } else {
                 IAEItemStack l = input.copy();
@@ -257,7 +255,8 @@ public class CellInventory implements ITCellInventory {
                     .storage()
                     .createItemStack(is);
                 l.decStackSize(noAdded.getStackSize());
-                this.cellItems.add(l);
+                this.getCellItems()
+                    .add(l);
                 return noAdded;
             }
         }
@@ -350,6 +349,11 @@ public class CellInventory implements ITCellInventory {
 
     @Override
     public void loadCellItems() {
+        if (this.cellItems == null) {
+            this.cellItems = AEApi.instance()
+                .storage()
+                .createPrimitiveItemList();
+        }
         cellItems.resetStatus();
         for (IInventory inv : this.modInv) {
             for (int i = 0; i < inv.getSizeInventory(); i++) {
