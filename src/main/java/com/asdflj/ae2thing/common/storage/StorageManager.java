@@ -56,7 +56,7 @@ public class StorageManager extends WorldSavedData {
     }
 
     private void addGrid(UUID uid, IGrid grid) {
-        if (!Config.cellLink || grid == null || grids.isEmpty()) return;
+        if (!Config.cellLink || grid == null || grid.isEmpty()) return;
         this.grids.putIfAbsent(uid, new HashSet<>());
         this.grids.get(uid)
             .add(grid);
