@@ -7,6 +7,6 @@ public interface Constants {
     String FLUID_DISKLIST = "fluid_disklist";
     String DISKLIST = "disklist";
     String COUNT = "count";
-    String COPY = "copy";
+    String LINKED = "linked";
 
 }

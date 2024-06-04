@@ -2,6 +2,7 @@ package com.asdflj.ae2thing;
 
 import net.minecraft.util.ResourceLocation;
 
+import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.storage.CellHandler;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.loader.ChannelLoader;
@@ -40,6 +41,7 @@ public class AE2Thing {
     // preInit "Run before anything else. Read your config, create blocks, items, etc, and register them with the
     // GameRegistry." (Remove if not needed)
     public void preInit(FMLPreInitializationEvent event) {
+        Config.run();
         ChannelLoader.INSTANCE.run();
         proxy.preInit(event);
     }

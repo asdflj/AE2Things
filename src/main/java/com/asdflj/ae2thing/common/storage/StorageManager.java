@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.WorldSavedData;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.item.BaseCellItem;
 
 import appeng.api.implementations.tiles.IChestOrDrive;
@@ -54,12 +55,16 @@ public class StorageManager extends WorldSavedData {
         return d;
     }
 
-    public void addGrid(String uuid, IGrid grid) {
-        if (grid.isEmpty()) return;
-        UUID uid = UUID.fromString(uuid);
+    private void addGrid(UUID uid, IGrid grid) {
+        if (!Config.cellLink || grid == null || grids.isEmpty()) return;
         this.grids.putIfAbsent(uid, new HashSet<>());
         this.grids.get(uid)
             .add(grid);
+    }
+
+    public void addGrid(String uuid, IGrid grid) {
+        UUID uid = UUID.fromString(uuid);
+        this.addGrid(uid, grid);
     }
 
     public void addGrid(String uuid, IChestOrDrive drive) {
@@ -92,12 +97,12 @@ public class StorageManager extends WorldSavedData {
 
     public void setStorage(String uuid, ItemStack item) {
         NBTTagCompound data = Platform.openNbtData(item);
-        if (!data.getBoolean(Constants.COPY) && !this.getStorage(item)
+        if (!data.getBoolean(Constants.LINKED) && !this.getStorage(item)
             .isEmpty()) return;
         String curUid = data.getString(Constants.DISKUUID);
         if (!curUid.isEmpty() && curUid.equals(uuid)) return;
         data.setString(Constants.DISKUUID, uuid);
-        data.setBoolean(Constants.COPY, true);
+        data.setBoolean(Constants.LINKED, true);
     }
 
     @Override
@@ -154,6 +159,7 @@ public class StorageManager extends WorldSavedData {
     }
 
     public void postChanges(final ItemStack cell, final DataStorage storage, IChestOrDrive drive) {
+        if (!Config.cellLink || drive == null) return;
         if (drive instanceof AENetworkInvTile ait) {
             try {
                 IGrid curGrid = ait.getProxy()

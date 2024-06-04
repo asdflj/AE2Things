@@ -4,9 +4,11 @@ item.infinity_fluid_cell.name=ME Infinity Fluid Cell
 tile.fishbig.name=FishBig
 
 ae2thing.tooltip.shift_for_more=§r> Hold §3Shift§r for more information
-ae2thing.tooltip.copy=copy
+ae2thing.tooltip.linked=Linked
 ae2thing.tooltip.backpack_terminal.desc=uh a new terminal?
-ae2thing.tooltip.disk_clone.desc=You can right click to open clone gui to clone disk,\nIt will link every same uuid cell,\nAbuse disk clone may lead to lag.
-ae2thing.gui.disk_clone=Disk Clone
+ae2thing.tooltip.cell_link.desc=You can right click to open link gui to link other disk,\nIt will link every same uuid cell,\nAbuse disk link may lead to lag.
+ae2thing.tooltip.cell_link.disable=Link cell is disable
+
+ae2thing.gui.cell_link=Cell Link
 
 itemGroup.ae2thing=AE2 Thing

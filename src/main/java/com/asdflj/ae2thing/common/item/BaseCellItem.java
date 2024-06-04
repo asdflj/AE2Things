@@ -11,9 +11,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.storage.Constants;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
-import com.asdflj.ae2thing.inventory.ItemDiskCloneInventory;
+import com.asdflj.ae2thing.inventory.ItemCellLinkInventory;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.inventory.item.IItemInventory;
 import com.asdflj.ae2thing.util.BlockPos;
@@ -26,18 +27,18 @@ public abstract class BaseCellItem extends BaseItem implements IItemInventory, I
 
     @Override
     public Object getInventory(ItemStack stack, World world, int x, int y, int z, EntityPlayer player) {
-        return new ItemDiskCloneInventory(player.inventory.mainInventory[x], "inv", player, x);
+        return new ItemCellLinkInventory(player.inventory.mainInventory[x], "inv", player, x);
     }
 
     @Override
     public ItemStack onItemRightClick(final ItemStack item, final World w, final EntityPlayer player) {
         if (player.isSneaking()) {
             NBTTagCompound data = Platform.openNbtData(item);
-            if (data.getBoolean(Constants.COPY)) {
+            if (data.getBoolean(Constants.LINKED)) {
                 item.setTagCompound(null);
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, item);
             }
-        } else {
+        } else if (Config.cellLink) {
             InventoryHandler.openGui(
                 player,
                 w,
@@ -49,7 +50,7 @@ public abstract class BaseCellItem extends BaseItem implements IItemInventory, I
     }
 
     private GuiType guiGuiType(ItemStack item) {
-        return GuiType.DISK_CLONE;
+        return GuiType.CELL_LINK;
     }
 
     public abstract StorageChannel getChannel();
@@ -66,11 +67,15 @@ public abstract class BaseCellItem extends BaseItem implements IItemInventory, I
 
     @Override
     public void addToolTips(ItemStack stack, EntityPlayer player, List<String> lines, boolean displayMoreInfo) {
+        if (!Config.cellLink) {
+            lines.add(I18n.format(NameConst.TT_CELL_LINK_DISABLE));
+            return;
+        }
         NBTTagCompound data = Platform.openNbtData(stack);
-        if (data.getBoolean(Constants.COPY)) lines.add(I18n.format(NameConst.TT_COPY));
+        if (data.getBoolean(Constants.LINKED)) lines.add(I18n.format(NameConst.TT_LINKED));
         lines.addAll(
             Arrays.asList(
-                I18n.format(NameConst.TT_DISK_CLONE_DESC)
+                I18n.format(NameConst.TT_CELL_LINK_DESC)
                     .split("\\\\n")));
     }
 }

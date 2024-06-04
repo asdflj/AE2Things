@@ -5,22 +5,22 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import com.asdflj.ae2thing.AE2Thing;
-import com.asdflj.ae2thing.client.gui.container.ContainerDiskClone;
-import com.asdflj.ae2thing.inventory.ItemDiskCloneInventory;
+import com.asdflj.ae2thing.client.gui.container.ContainerCellLink;
+import com.asdflj.ae2thing.inventory.ItemCellLinkInventory;
 import com.asdflj.ae2thing.util.NameConst;
 
 import appeng.client.gui.AEBaseGui;
 import appeng.core.localization.GuiText;
 
-public class GuiDiskClone extends AEBaseGui {
+public class GuiCellLink extends AEBaseGui {
 
-    public GuiDiskClone(InventoryPlayer inventory, ItemDiskCloneInventory inv) {
-        super(new ContainerDiskClone(inventory, inv));
+    public GuiCellLink(InventoryPlayer inventory, ItemCellLinkInventory inv) {
+        super(new ContainerCellLink(inventory, inv));
     }
 
     @Override
     public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
-        fontRendererObj.drawString(getGuiDisplayName(I18n.format(NameConst.GUI_DISK_CLONE)), 8, 6, 0x404040);
+        fontRendererObj.drawString(getGuiDisplayName(I18n.format(NameConst.GUI_CELL_LINK)), 8, 6, 0x404040);
         fontRendererObj.drawString(GuiText.inventory.getLocal(), 8, ySize - 94, 0x404040);
     }
 

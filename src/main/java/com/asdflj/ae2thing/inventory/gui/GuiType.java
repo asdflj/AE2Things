@@ -6,11 +6,11 @@ import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayer;
 
+import com.asdflj.ae2thing.client.gui.GuiCellLink;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
-import com.asdflj.ae2thing.client.gui.GuiDiskClone;
+import com.asdflj.ae2thing.client.gui.container.ContainerCellLink;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
-import com.asdflj.ae2thing.client.gui.container.ContainerDiskClone;
-import com.asdflj.ae2thing.inventory.ItemDiskCloneInventory;
+import com.asdflj.ae2thing.inventory.ItemCellLinkInventory;
 import com.google.common.collect.ImmutableList;
 
 import appeng.api.storage.ITerminalHost;
@@ -29,16 +29,16 @@ public enum GuiType {
             return new GuiCraftingTerminal(player.inventory, inv);
         }
     }),
-    DISK_CLONE(new ItemGuiFactory<>(ItemDiskCloneInventory.class) {
+    CELL_LINK(new ItemGuiFactory<>(ItemCellLinkInventory.class) {
 
         @Override
-        protected Object createServerGui(EntityPlayer player, ItemDiskCloneInventory inv) {
-            return new ContainerDiskClone(player.inventory, inv);
+        protected Object createServerGui(EntityPlayer player, ItemCellLinkInventory inv) {
+            return new ContainerCellLink(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, ItemDiskCloneInventory inv) {
-            return new GuiDiskClone(player.inventory, inv);
+        protected Object createClientGui(EntityPlayer player, ItemCellLinkInventory inv) {
+            return new GuiCellLink(player.inventory, inv);
         }
     });
 

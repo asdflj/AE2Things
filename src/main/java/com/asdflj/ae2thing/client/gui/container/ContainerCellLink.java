@@ -5,15 +5,15 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.common.item.BaseCellItem;
-import com.asdflj.ae2thing.inventory.ItemDiskCloneInventory;
+import com.asdflj.ae2thing.inventory.ItemCellLinkInventory;
 
 import appeng.api.implementations.guiobjects.IGuiItemObject;
 import appeng.container.AEBaseContainer;
 import appeng.container.slot.AppEngSlot;
 
-public class ContainerDiskClone extends AEBaseContainer {
+public class ContainerCellLink extends AEBaseContainer {
 
-    protected final ItemDiskCloneInventory it;
+    protected final ItemCellLinkInventory it;
 
     private static class CloneSlot extends AppEngSlot {
 
@@ -28,9 +28,9 @@ public class ContainerDiskClone extends AEBaseContainer {
 
     }
 
-    public ContainerDiskClone(InventoryPlayer ip, IGuiItemObject anchor) {
+    public ContainerCellLink(InventoryPlayer ip, IGuiItemObject anchor) {
         super(ip, anchor);
-        this.it = (ItemDiskCloneInventory) anchor;
+        this.it = (ItemCellLinkInventory) anchor;
         this.addSlotToContainer(new CloneSlot(it, 0, 80, 35));
         this.lockPlayerInventorySlot(it.getInventorySlot());
         this.bindPlayerInventory(ip, 0, 84);

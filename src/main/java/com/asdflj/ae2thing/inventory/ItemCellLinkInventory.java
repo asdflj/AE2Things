@@ -11,14 +11,14 @@ import appeng.container.interfaces.IInventorySlotAware;
 import appeng.tile.inventory.BiggerAppEngInventory;
 import appeng.util.Platform;
 
-public class ItemDiskCloneInventory extends BiggerAppEngInventory implements IGuiItemObject, IInventorySlotAware {
+public class ItemCellLinkInventory extends BiggerAppEngInventory implements IGuiItemObject, IInventorySlotAware {
 
     private final ItemStack is;
     private final String name;
     private final EntityPlayer player;
     private final int slot;
 
-    public ItemDiskCloneInventory(ItemStack is, String name, EntityPlayer player, int slot) {
+    public ItemCellLinkInventory(ItemStack is, String name, EntityPlayer player, int slot) {
         super(null, 1);
         this.name = name;
         this.is = is;
