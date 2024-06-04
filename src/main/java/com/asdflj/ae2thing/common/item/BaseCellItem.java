@@ -22,7 +22,7 @@ import com.asdflj.ae2thing.util.NameConst;
 import appeng.api.storage.StorageChannel;
 import appeng.util.Platform;
 
-public abstract class BaseCellItem extends BaseItem implements IItemInventory {
+public abstract class BaseCellItem extends BaseItem implements IItemInventory, IBaseCellItem {
 
     @Override
     public Object getInventory(ItemStack stack, World world, int x, int y, int z, EntityPlayer player) {
@@ -57,15 +57,20 @@ public abstract class BaseCellItem extends BaseItem implements IItemInventory {
     @Override
     protected void addCheckedInformation(ItemStack stack, EntityPlayer player, List<String> lines,
         boolean displayMoreInfo) {
-        NBTTagCompound data = Platform.openNbtData(stack);
-        if (data.getBoolean(Constants.COPY)) lines.add(I18n.format(NameConst.TT_COPY));
         if (GuiScreen.isShiftKeyDown()) {
-            lines.addAll(
-                Arrays.asList(
-                    I18n.format(NameConst.TT_DISK_CLONE_DESC)
-                        .split("\\\\n")));
+            addToolTips(stack, player, lines, displayMoreInfo);
         } else {
             lines.add(I18n.format(NameConst.TT_SHIFT_FOR_MORE));
         }
+    }
+
+    @Override
+    public void addToolTips(ItemStack stack, EntityPlayer player, List<String> lines, boolean displayMoreInfo) {
+        NBTTagCompound data = Platform.openNbtData(stack);
+        if (data.getBoolean(Constants.COPY)) lines.add(I18n.format(NameConst.TT_COPY));
+        lines.addAll(
+            Arrays.asList(
+                I18n.format(NameConst.TT_DISK_CLONE_DESC)
+                    .split("\\\\n")));
     }
 }

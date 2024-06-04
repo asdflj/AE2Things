@@ -8,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.common.storage.ITFluidCellInventory;
@@ -155,8 +154,6 @@ public class ItemInfinityFluidCell extends BaseCellItem
                         for (IAEFluidStack aeFluidStack : handler.getPartitionInv()) {
                             if (aeFluidStack != null) lines.add("  " + aeFluidStack.getFluidStack().getLocalizedName());
                         }
-                    } else {
-                        lines.add(StatCollector.translateToLocal(com.glodblock.github.util.NameConst.TT_SHIFT_FOR_MORE));
                     }
                 }
             }
