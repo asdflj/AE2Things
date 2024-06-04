@@ -7,7 +7,10 @@ import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayer;
 
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
+import com.asdflj.ae2thing.client.gui.GuiDiskClone;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerDiskClone;
+import com.asdflj.ae2thing.inventory.ItemDiskCloneInventory;
 import com.google.common.collect.ImmutableList;
 
 import appeng.api.storage.ITerminalHost;
@@ -24,6 +27,18 @@ public enum GuiType {
         @Override
         protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
             return new GuiCraftingTerminal(player.inventory, inv);
+        }
+    }),
+    DISK_CLONE(new ItemGuiFactory<>(ItemDiskCloneInventory.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ItemDiskCloneInventory inv) {
+            return new ContainerDiskClone(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ItemDiskCloneInventory inv) {
+            return new GuiDiskClone(player.inventory, inv);
         }
     });
 

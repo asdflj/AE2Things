@@ -2,6 +2,8 @@ package com.asdflj.ae2thing.common.storage.infinityCell;
 
 import static appeng.me.storage.CellInventory.getCell;
 
+import java.util.Objects;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -9,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.common.item.BaseCellItem;
 import com.asdflj.ae2thing.common.item.ItemInfinityCell;
 import com.asdflj.ae2thing.common.storage.Constants;
 import com.asdflj.ae2thing.common.storage.DataStorage;
@@ -19,6 +22,7 @@ import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
 import appeng.api.exceptions.AppEngException;
 import appeng.api.implementations.items.IStorageCell;
+import appeng.api.implementations.tiles.IChestOrDrive;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.ISaveProvider;
@@ -40,6 +44,7 @@ public class InfinityItemCellInventory implements ITCellInventory {
     protected long storedItemTypes;
     protected long storedItemCount = 0;
     protected final NBTTagCompound data;
+    protected final IChestOrDrive drive;
 
     public InfinityItemCellInventory(ItemStack o, ISaveProvider c, EntityPlayer p) throws AppEngException {
         if (o == null) {
@@ -48,6 +53,7 @@ public class InfinityItemCellInventory implements ITCellInventory {
         cellItem = o;
         container = c;
         player = p;
+        this.drive = c instanceof IChestOrDrive ? (IChestOrDrive) c : null;
         this.cellType = (ItemInfinityCell) this.cellItem.getItem();
         this.data = Platform.openNbtData(this.cellItem);
         this.storedItemTypes = data.getLong(ITEM_TYPE_TAG);
@@ -63,16 +69,7 @@ public class InfinityItemCellInventory implements ITCellInventory {
     public void loadCellItems() {
         DataStorage storage = this.getStorage();
         if (this.cellItems == null) {
-            this.cellItems = AEApi.instance()
-                .storage()
-                .createPrimitiveItemList();
-        }
-        this.cellItems.resetStatus();
-        for (IAEItemStack stack : storage.getItems()) {
-            final IAEItemStack ias = stack.copy();
-            if (ias.getStackSize() > 0) {
-                this.cellItems.add(ias);
-            }
+            this.cellItems = storage.getItems();
         }
         if (!this.getUUID()
             .equals(storage.getUUID())) {
@@ -333,22 +330,23 @@ public class InfinityItemCellInventory implements ITCellInventory {
     }
 
     private void saveChanges() {
-        long size = 0;
-        int count = 0;
-        IItemList<IAEItemStack> itemList = this.getStorage()
-            .getItems();
-        itemList.resetStatus();
+        long count = 0;
+        int types = 0;
         for (final IAEItemStack ias : this.getCellItems()) {
             if (ias.getStackSize() > 0) {
-                itemList.add(ias);
-                count++;
-                size += ias.getStackSize();
+                types++;
+                count += ias.getStackSize();
+            } else {
+                ias.reset();
             }
         }
-        this.storedItemTypes = count;
-        this.storedItemCount = size;
+        this.storedItemTypes = types;
+        this.storedItemCount = count;
         data.setLong(ITEM_TYPE_TAG, this.storedItemTypes);
         data.setLong(ITEM_COUNT_TAG, this.storedItemCount);
+        AE2ThingAPI.instance()
+            .getStorageManager()
+            .postChanges(this.cellItem, this.getStorage(), this.drive);
 
         AE2ThingAPI.instance()
             .getStorageManager()
@@ -357,6 +355,9 @@ public class InfinityItemCellInventory implements ITCellInventory {
 
     @Override
     public IItemList<IAEItemStack> getAvailableItems(IItemList<IAEItemStack> out) {
+        AE2ThingAPI.instance()
+            .getStorageManager()
+            .addGrid(this.getUUID(), this.drive);
         for (final IAEItemStack i : this.getCellItems()) {
             out.add(i);
         }
@@ -365,6 +366,6 @@ public class InfinityItemCellInventory implements ITCellInventory {
 
     @Override
     public StorageChannel getChannel() {
-        return StorageChannel.ITEMS;
+        return ((BaseCellItem) Objects.requireNonNull(this.cellItem.getItem())).getChannel();
     }
 }

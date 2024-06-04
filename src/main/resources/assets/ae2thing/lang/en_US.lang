@@ -1,9 +1,11 @@
 item.backpack_terminal.name=Backpack Terminal
 item.infinity_cell.name=ME Infinity Cell
 item.infinity_fluid_cell.name=ME Infinity Fluid Cell 
-tile.fishbig.name=Fish Big
+tile.fishbig.name=FishBig
 
 ae2thing.tooltip.shift_for_more=§r> Hold §3Shift§r for more information
 ae2thing.tooltip.backpack_terminal.desc=uh a new terminal?
+ae2thing.tooltip.disk_clone.desc=You can right click to open clone gui to clone disk,\nIt will link every same uuid cell,\nAbuse disk clone may lead to lag.
+ae2thing.gui.disk_clone=Disk Clone
 
 itemGroup.ae2thing=AE2 Thing

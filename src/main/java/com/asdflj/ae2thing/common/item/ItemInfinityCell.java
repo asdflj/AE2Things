@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.common.storage.ICellInventoryHandler;
@@ -32,7 +33,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemInfinityCell extends BaseItem
+public class ItemInfinityCell extends BaseCellItem
     implements IStorageCell, IItemGroup, IRegister<ItemInfinityCell>, IInfinityStorageCell {
 
     private final int perType = 1;
@@ -66,13 +67,17 @@ public class ItemInfinityCell extends BaseItem
 
             if (cellInventory != null) {
                 lines.add(
-                    NumberFormat.getInstance()
-                        .format(cellInventory.getStoredItemTypes()) + " "
+                    EnumChatFormatting.WHITE + NumberFormat.getInstance()
+                        .format(cellInventory.getStoredItemTypes())
+                        + EnumChatFormatting.GRAY
+                        + " "
                         + GuiText.Of.getLocal()
-                        + ' '
+                        + " "
+                        + EnumChatFormatting.DARK_GREEN
                         + NumberFormat.getInstance()
                             .format(cellInventory.getTotalItemTypes())
-                        + ' '
+                        + " "
+                        + EnumChatFormatting.GRAY
                         + GuiText.Types.getLocal());
                 String uid = cellInventory.getUUID();
                 if (!uid.isEmpty()) lines.add(uid);
@@ -107,6 +112,7 @@ public class ItemInfinityCell extends BaseItem
                 }
             }
         }
+        super.addCheckedInformation(stack, player, lines, displayMoreInfo);
     }
 
     @Override
@@ -187,4 +193,8 @@ public class ItemInfinityCell extends BaseItem
         return this;
     }
 
+    @Override
+    public StorageChannel getChannel() {
+        return StorageChannel.ITEMS;
+    }
 }

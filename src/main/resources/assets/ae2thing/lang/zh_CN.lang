@@ -5,5 +5,7 @@ tile.fishbig.name=鱼大
 
 ae2thing.tooltip.shift_for_more=§r> 按 §3Shift§r 显示更多信息
 ae2thing.tooltip.backpack_terminal.desc=一个新终端?
+ae2thing.tooltip.disk_clone.desc=你可以右键打开克隆GUI去克隆硬盘,\n它会链接所有相同uuid的元件,\n滥用硬盘克隆可能导致tps低下.
+ae2thing.gui.disk_clone=硬盘克隆
 
 itemGroup.ae2thing=AE2 Thing

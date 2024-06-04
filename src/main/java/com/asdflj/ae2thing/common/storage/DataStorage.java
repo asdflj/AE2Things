@@ -17,12 +17,8 @@ import appeng.util.item.AEItemStack;
 
 public class DataStorage implements IDataStorage {
 
-    private final IItemList<IAEItemStack> items = AEApi.instance()
-        .storage()
-        .createItemList();
-    private final IItemList<IAEFluidStack> fluids = AEApi.instance()
-        .storage()
-        .createFluidList();
+    private IItemList<IAEItemStack> items;
+    private IItemList<IAEFluidStack> fluids;
     private final UUID uuid;
     private final StorageChannel channel;
 
@@ -38,20 +34,32 @@ public class DataStorage implements IDataStorage {
 
     @Override
     public IItemList<IAEItemStack> getItems() {
+        if (this.items == null) {
+            this.items = AEApi.instance()
+                .storage()
+                .createPrimitiveItemList();
+        }
         return items;
     }
 
     @Override
     public IItemList<IAEFluidStack> getFluids() {
+        if (this.fluids == null) {
+            this.fluids = AEApi.instance()
+                .storage()
+                .createFluidList();
+        }
         return fluids;
     }
 
     @Override
     public boolean isEmpty() {
-        if (this.channel == StorageChannel.ITEMS) {
-            return this.items.isEmpty();
+        if (this.getChannel() == StorageChannel.ITEMS) {
+            return this.getItems()
+                .isEmpty();
         } else {
-            return this.fluids.isEmpty();
+            return this.getFluids()
+                .isEmpty();
         }
     }
 
@@ -72,13 +80,15 @@ public class DataStorage implements IDataStorage {
 
     @Override
     public void readFromNBT(NBTTagList data) {
-        if (this.channel == StorageChannel.ITEMS) {
+        if (this.getChannel() == StorageChannel.ITEMS) {
             for (final IAEItemStack ais : this.readList(data)) {
-                items.add(ais);
+                this.getItems()
+                    .add(ais);
             }
         } else {
             for (final IAEFluidStack ais : this.readFluidList(data)) {
-                fluids.add(ais);
+                this.getFluids()
+                    .add(ais);
             }
         }
     }
@@ -120,10 +130,10 @@ public class DataStorage implements IDataStorage {
 
     @Override
     public NBTBase writeToNBT() {
-        if (this.channel == StorageChannel.ITEMS) {
-            return writeList(items);
+        if (this.getChannel() == StorageChannel.ITEMS) {
+            return writeList(this.getItems());
         } else {
-            return writeFluidList(fluids);
+            return writeFluidList(this.getFluids());
         }
     }
 

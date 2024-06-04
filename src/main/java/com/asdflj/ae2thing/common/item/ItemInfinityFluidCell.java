@@ -31,7 +31,7 @@ import appeng.items.contents.CellUpgrades;
 import appeng.util.Platform;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class ItemInfinityFluidCell extends BaseItem
+public class ItemInfinityFluidCell extends BaseCellItem
     implements IStorageFluidCell, IRegister<ItemInfinityFluidCell>, IInfinityStorageCell {
 
     private final int perType = 1;
@@ -161,6 +161,11 @@ public class ItemInfinityFluidCell extends BaseItem
                 }
             }
         }
+        super.addCheckedInformation(stack, player, lines, displayMoreInfo);
+    }
 
+    @Override
+    public StorageChannel getChannel() {
+        return StorageChannel.FLUIDS;
     }
 }
