@@ -1,5 +1,7 @@
 package com.asdflj.ae2thing.common.storage;
 
+import java.util.UUID;
+
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 
@@ -21,6 +23,8 @@ public interface IDataStorage {
     boolean isEmpty();
 
     String getUUID();
+
+    UUID getRawUUID();
 
     StorageChannel getChannel();
 }

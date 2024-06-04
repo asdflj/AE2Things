@@ -12,6 +12,7 @@ public class NameConst {
 
     public static final String TT_KEY = AE2Thing.MODID + ".tooltip.";
     public static final String TT_SHIFT_FOR_MORE = TT_KEY + "shift_for_more";
+    public static final String TT_COPY = TT_KEY + "copy";
     public static final String TT_BACKPACK_TERMINAL = TT_KEY + "backpack_terminal.";
     public static final String TT_BACKPACK_TERMINAL_DESC = TT_BACKPACK_TERMINAL + "desc";
     public static final String TT_DISK_CLONE = TT_KEY + "disk_clone.";

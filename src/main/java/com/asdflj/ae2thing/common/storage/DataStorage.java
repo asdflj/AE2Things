@@ -68,6 +68,11 @@ public class DataStorage implements IDataStorage {
         return this.uuid.toString();
     }
 
+    @Override
+    public UUID getRawUUID() {
+        return this.uuid;
+    }
+
     public static DataStorage readFromNBT(UUID uuid, NBTTagList data) {
         return readFromNBT(uuid, data, StorageChannel.ITEMS);
     }

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -77,13 +78,26 @@ public class StorageManager extends WorldSavedData {
         return null;
     }
 
-    public void setStorage(String uuid, ItemStack target) {
-        NBTTagCompound data = Platform.openNbtData(target);
-        String curUid = data.getString(Constants.DISKUUID);
-        if (!curUid.isEmpty() && !curUid.equals(uuid)) {
-            this.disks.remove(UUID.fromString(curUid));
+    public DataStorage getStorage(ItemStack item, EntityPlayer player) {
+        DataStorage storage = this.getStorage(item);
+        if (storage == null) return null;
+        NBTTagCompound data = Platform.openNbtData(item);
+        String uuid = data.getString(Constants.DISKUUID);
+        if (uuid.isEmpty()) {
+            data.setString(Constants.DISKUUID, storage.getUUID());
+            player.inventory.setInventorySlotContents(player.inventory.currentItem, item.copy());
         }
+        return storage;
+    }
+
+    public void setStorage(String uuid, ItemStack item) {
+        NBTTagCompound data = Platform.openNbtData(item);
+        if (!data.getBoolean(Constants.COPY) && !this.getStorage(item)
+            .isEmpty()) return;
+        String curUid = data.getString(Constants.DISKUUID);
+        if (!curUid.isEmpty() && curUid.equals(uuid)) return;
         data.setString(Constants.DISKUUID, uuid);
+        data.setBoolean(Constants.COPY, true);
     }
 
     @Override
@@ -144,7 +158,7 @@ public class StorageManager extends WorldSavedData {
             try {
                 IGrid curGrid = ait.getProxy()
                     .getGrid();
-                UUID uid = UUID.fromString(storage.getUUID());
+                UUID uid = storage.getRawUUID();
                 if (curGrid.isEmpty()) return;
                 Set<IGrid> iGrids = this.grids.get(uid);
                 if (iGrids == null || iGrids.size() <= 1) return;

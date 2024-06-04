@@ -7,10 +7,11 @@ import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.common.storage.StorageManager;
 
 import appeng.api.implementations.guiobjects.IGuiItemObject;
+import appeng.container.interfaces.IInventorySlotAware;
 import appeng.tile.inventory.BiggerAppEngInventory;
 import appeng.util.Platform;
 
-public class ItemDiskCloneInventory extends BiggerAppEngInventory implements IGuiItemObject {
+public class ItemDiskCloneInventory extends BiggerAppEngInventory implements IGuiItemObject, IInventorySlotAware {
 
     private final ItemStack is;
     private final String name;
@@ -41,7 +42,7 @@ public class ItemDiskCloneInventory extends BiggerAppEngInventory implements IGu
                 .equals(is.getItem())) {
             StorageManager m = AE2ThingAPI.instance()
                 .getStorageManager();
-            String uid = m.getStorage(this.is)
+            String uid = m.getStorage(this.is, this.player)
                 .getUUID();
             m.setStorage(uid, disk);
         }
@@ -51,5 +52,10 @@ public class ItemDiskCloneInventory extends BiggerAppEngInventory implements IGu
     @Override
     public ItemStack getItemStack() {
         return this.is;
+    }
+
+    @Override
+    public int getInventorySlot() {
+        return this.slot;
     }
 }

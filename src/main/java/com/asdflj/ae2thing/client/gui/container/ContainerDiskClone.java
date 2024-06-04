@@ -32,6 +32,7 @@ public class ContainerDiskClone extends AEBaseContainer {
         super(ip, anchor);
         this.it = (ItemDiskCloneInventory) anchor;
         this.addSlotToContainer(new CloneSlot(it, 0, 80, 35));
+        this.lockPlayerInventorySlot(it.getInventorySlot());
         this.bindPlayerInventory(ip, 0, 84);
     }
 }
