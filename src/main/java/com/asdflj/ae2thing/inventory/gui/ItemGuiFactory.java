@@ -29,7 +29,7 @@ public abstract class ItemGuiFactory<T> implements IGuiFactory {
     @Nullable
     @Override
     public Object createServerGui(EntityPlayer player, World world, int x, int y, int z, ForgeDirection face) {
-        ItemStack item = player.getCurrentEquippedItem();
+        ItemStack item = getItem(player, x);
         if (item == null || !(item.getItem() instanceof IItemInventory)) {
             return null;
         }
@@ -50,13 +50,21 @@ public abstract class ItemGuiFactory<T> implements IGuiFactory {
         return gui;
     }
 
+    private ItemStack getItem(EntityPlayer player, int x) {
+        if (x == -1) {
+            return player.getCurrentEquippedItem();
+        } else {
+            return player.inventory.getStackInSlot(x);
+        }
+    }
+
     @Nullable
     protected abstract Object createServerGui(EntityPlayer player, T inv);
 
     @Nullable
     @Override
     public Object createClientGui(EntityPlayer player, World world, int x, int y, int z, ForgeDirection face) {
-        ItemStack item = player.getCurrentEquippedItem();
+        ItemStack item = getItem(player, x);
         if (item == null || !(item.getItem() instanceof IItemInventory)) {
             return null;
         }

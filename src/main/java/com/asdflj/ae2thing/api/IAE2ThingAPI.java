@@ -36,4 +36,6 @@ public interface IAE2ThingAPI {
     void setPinItems(List<IAEItemStack> items);
 
     void togglePinItems(IAEItemStack stack);
+
+    void openBackpackTerminal();
 }

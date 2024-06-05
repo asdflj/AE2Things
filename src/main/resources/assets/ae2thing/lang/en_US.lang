@@ -11,4 +11,6 @@ ae2thing.tooltip.cell_link.disable=Link cell is disable
 
 ae2thing.gui.cell_link=Cell Link
 
+ae2thing.key.open_terminal=Open Terminal
+
 itemGroup.ae2thing=AE2 Thing

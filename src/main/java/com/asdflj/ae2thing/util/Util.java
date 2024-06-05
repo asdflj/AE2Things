@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
 import com.asdflj.ae2thing.common.storage.Constants;
 
 import appeng.api.storage.data.IAEFluidStack;
@@ -22,6 +23,15 @@ import appeng.util.item.AEFluidStack;
 public class Util {
 
     private static int randTickSeed = 0;
+
+    public static int findBackPackTerminal(EntityPlayer player) {
+        for (int x = 0; x < player.inventory.mainInventory.length; x++) {
+            ItemStack item = player.inventory.mainInventory[x];
+            if (item == null || item.getItem() == null) continue;
+            if (item.getItem() instanceof ItemBackpackTerminal) return x;
+        }
+        return -1;
+    }
 
     public static int findItemStack(EntityPlayer player, ItemStack itemStack) {
         for (int x = 0; x < player.inventory.mainInventory.length; x++) {

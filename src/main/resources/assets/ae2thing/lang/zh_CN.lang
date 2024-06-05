@@ -11,4 +11,6 @@ ae2thing.tooltip.cell_link.disable=链接功能已禁用
 
 ae2thing.gui.cell_link=元件链接
 
+ae2thing.key.open_terminal=打开终端
+
 itemGroup.ae2thing=AE2 Thing

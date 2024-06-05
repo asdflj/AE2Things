@@ -22,7 +22,6 @@ import com.asdflj.ae2thing.inventory.item.PortableItemInventory;
 import com.asdflj.ae2thing.loader.IRegister;
 import com.asdflj.ae2thing.util.BlockPos;
 import com.asdflj.ae2thing.util.NameConst;
-import com.asdflj.ae2thing.util.Util;
 
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.data.IAEItemStack;
@@ -60,7 +59,7 @@ public class ItemBackpackTerminal extends BaseItem
 
     @Override
     public Object getInventory(ItemStack stack, World world, int x, int y, int z, EntityPlayer player) {
-        return new PortableItemInventory(stack, Util.findItemStack(player, stack), player);
+        return new PortableItemInventory(stack, x, player);
     }
 
     private GuiType guiGuiType(ItemStack item) {

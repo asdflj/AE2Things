@@ -9,7 +9,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.common.storage.StorageManager;
+import com.asdflj.ae2thing.inventory.gui.GuiType;
+import com.asdflj.ae2thing.network.CPacketSwitchGuis;
 
 import appeng.api.storage.data.IAEItemStack;
 
@@ -103,6 +106,11 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
             this.pinItems.clear();
             this.pinItems.addAll(tmp);
         }
+    }
+
+    @Override
+    public void openBackpackTerminal() {
+        AE2Thing.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.BACKPACK_TERMINAL));
     }
 
 }
