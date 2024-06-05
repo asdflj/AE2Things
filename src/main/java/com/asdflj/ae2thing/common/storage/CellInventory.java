@@ -314,7 +314,7 @@ public class CellInventory implements ITCellInventory {
                 if (Platform.isSameItemPrecise(is, extItem)) {
                     int size = is.stackSize;
                     if (size > extItem.stackSize) {
-                        inv.decrStackSize(i, extItem.stackSize);
+                        inv.setInventorySlotContents(i, inv.decrStackSize(i, extItem.stackSize));
                         return;
                     } else {
                         inv.setInventorySlotContents(i, null);
