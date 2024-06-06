@@ -27,7 +27,7 @@ import appeng.util.Platform;
 
 public class StorageManager extends WorldSavedData {
 
-    private Map<UUID, DataStorage> disks = new HashMap<>();
+    private final Map<UUID, DataStorage> disks = new HashMap<>();
     private final Map<UUID, Set<IGrid>> grids = new HashMap<>();
 
     public StorageManager(String name) {
@@ -122,7 +122,8 @@ public class StorageManager extends WorldSavedData {
                 uid,
                 DataStorage.readFromNBT(uid, disk.getTagList(Constants.FLUID_DISKLIST, 10), StorageChannel.FLUIDS));
         }
-        disks = d;
+        disks.clear();
+        disks.putAll(d);
     }
 
     @Override

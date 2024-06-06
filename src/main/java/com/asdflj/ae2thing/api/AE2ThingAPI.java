@@ -15,6 +15,8 @@ import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
 
 import appeng.api.storage.data.IAEItemStack;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public final class AE2ThingAPI implements IAE2ThingAPI {
 
@@ -108,6 +110,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void openBackpackTerminal() {
         AE2Thing.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.BACKPACK_TERMINAL));
