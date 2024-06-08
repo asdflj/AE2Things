@@ -19,6 +19,7 @@ import com.asdflj.ae2thing.common.storage.backpack.FTRBackpackHandler;
 import com.asdflj.ae2thing.common.storage.infinityCell.InfinityItemCellInventory;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.darkona.adventurebackpack.item.ItemAdventureBackpack;
+import com.darkona.adventurebackpack.util.Wearing;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -71,6 +72,10 @@ public class CellInventory implements ITCellInventory {
                         .filter(x -> x != null && x.getItem() instanceof ItemAdventureBackpack)
                         .map(AdventureBackpackHandler::new)
                         .collect(Collectors.toList())));
+            ItemStack wearingBackpack = Wearing.getWearingBackpack(player);
+            if (wearingBackpack != null) {
+                modInv.add(new AdventureBackpackHandler(wearingBackpack));
+            }
         }
         if (ModAndClassUtil.BACKPACK) {
             this.modInv.addAll(
