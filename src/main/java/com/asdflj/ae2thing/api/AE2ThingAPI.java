@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.Tags;
 import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
@@ -114,6 +115,11 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     @Override
     public void openBackpackTerminal() {
         AE2Thing.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.BACKPACK_TERMINAL));
+    }
+
+    @Override
+    public String getVersion() {
+        return Tags.VERSION;
     }
 
 }

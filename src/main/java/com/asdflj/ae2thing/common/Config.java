@@ -14,6 +14,7 @@ public class Config {
         new File(new File((File) FMLInjectionData.data()[6], "config"), AE2Thing.MODID + ".cfg"));
     public static boolean backPackTerminalFillItemName;
     public static boolean cellLink;
+    public static int magnetRange;
 
     public static void run() {
         loadCategory();
@@ -28,6 +29,8 @@ public class Config {
             AE2Thing.NAME,
             false,
             "The backpack terminal will automatically fill the search bar with items under the mouse on both sides of the NEI");
+        magnetRange = Config
+            .getInt("Backpack terminal magnet range", AE2Thing.NAME, 32, 8, 64, "Set backpack terminal magnet range");
         if (Config.hasChanged()) Config.save();
     }
 

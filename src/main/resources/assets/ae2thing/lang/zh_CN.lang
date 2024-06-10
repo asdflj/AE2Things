@@ -8,7 +8,9 @@ ae2thing.tooltip.linked=已链接
 ae2thing.tooltip.backpack_terminal.desc=一个新终端?
 ae2thing.tooltip.cell_link.desc=你可以右键打开GUI去链接其他硬盘,\n它会链接所有相同uuid的元件,\n滥用元件链接可能导致tps低下.
 ae2thing.tooltip.cell_link.disable=链接功能已禁用
-
+ae2thing.magnet.off=关闭
+ae2thing.magnet.inv=拾取到物品栏
+ae2thing.magnet.backpack=拾取到背包
 ae2thing.gui.cell_link=元件链接
 
 ae2thing.key.open_terminal=打开终端

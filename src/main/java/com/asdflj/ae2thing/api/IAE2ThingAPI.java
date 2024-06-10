@@ -38,4 +38,6 @@ public interface IAE2ThingAPI {
     void togglePinItems(IAEItemStack stack);
 
     void openBackpackTerminal();
+
+    String getVersion();
 }
