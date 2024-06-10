@@ -55,19 +55,23 @@ public class ItemBackpackTerminal extends BaseItem
         return !(new MagnetObject(itemStack)).isOff();
     }
 
+    private String getMagnetMode(MagnetObject object) {
+        String text;
+        switch (object.getMode()) {
+            case Inv -> text = I18n.format(NameConst.MAGNET_INV);
+            case BackPack -> text = I18n.format(NameConst.MAGNET_BACKPACK);
+            default -> text = I18n.format(NameConst.MAGNET_OFF);
+        }
+        return text;
+    }
+
     @Override
     public ItemStack onItemRightClick(ItemStack item, World w, EntityPlayer player) {
         if (player.isSneaking()) {
             MagnetObject object = new MagnetObject(item);
             object.setNextMode();
             if (Platform.isClient()) {
-                ChatComponentText text;
-                switch (object.getMode()) {
-                    case Inv -> text = new ChatComponentText(I18n.format(NameConst.MAGNET_INV));
-                    case BackPack -> text = new ChatComponentText(I18n.format(NameConst.MAGNET_BACKPACK));
-                    default -> text = new ChatComponentText(I18n.format(NameConst.MAGNET_OFF));
-                }
-                player.addChatMessage(text);
+                player.addChatMessage(new ChatComponentText(getMagnetMode(object)));
             }
         } else {
             InventoryHandler.openGui(
@@ -135,6 +139,8 @@ public class ItemBackpackTerminal extends BaseItem
     protected void addCheckedInformation(ItemStack stack, EntityPlayer player, List<String> toolTip,
         boolean displayMoreInfo) {
         super.addCheckedInformation(stack, player, toolTip, displayMoreInfo);
+        MagnetObject magnetObject = new MagnetObject(stack);
+        toolTip.add(I18n.format(NameConst.MAGNET_CURRENT_MODE) + " " + getMagnetMode(magnetObject));
         if (isShiftKeyDown()) {
             toolTip.add(I18n.format(NameConst.TT_BACKPACK_TERMINAL_DESC));
         } else {

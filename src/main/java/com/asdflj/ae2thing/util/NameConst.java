@@ -23,6 +23,7 @@ public class NameConst {
     public static final String MAGNET_OFF = MAGNET + "off";
     public static final String MAGNET_INV = MAGNET + "inv";
     public static final String MAGNET_BACKPACK = MAGNET + "backpack";
+    public static final String MAGNET_CURRENT_MODE = MAGNET + "current_mode";
 
     public static final String GUI_KEY = AE2Thing.MODID + ".gui.";
     public static final String GUI_CELL_LINK = GUI_KEY + "cell_link";
