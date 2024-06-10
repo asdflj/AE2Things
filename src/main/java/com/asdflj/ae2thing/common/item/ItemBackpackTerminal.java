@@ -59,7 +59,7 @@ public class ItemBackpackTerminal extends BaseItem
         String text;
         switch (object.getMode()) {
             case Inv -> text = I18n.format(NameConst.MAGNET_INV);
-            case BackPack -> text = I18n.format(NameConst.MAGNET_BACKPACK);
+            case Backpack -> text = I18n.format(NameConst.MAGNET_BACKPACK);
             default -> text = I18n.format(NameConst.MAGNET_OFF);
         }
         return text;

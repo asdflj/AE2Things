@@ -28,7 +28,7 @@ public class MagnetObject {
     public enum Mode {
         Off,
         Inv,
-        BackPack
+        Backpack
     }
 
     public static String modeKey = "MagnetMode";
@@ -178,7 +178,7 @@ public class MagnetObject {
     }
 
     public boolean isBackpack() {
-        return this.getMode() == Mode.BackPack;
+        return this.getMode() == Mode.Backpack;
     }
 
     public boolean isInv() {
