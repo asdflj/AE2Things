@@ -41,6 +41,7 @@ public class InfinityFluidCellInventory implements ITFluidCellInventory {
     protected long storedFluids;
     protected IItemList<IAEFluidStack> cellFluids = null;
     protected final NBTTagCompound data;
+    protected final DataStorage storage;
 
     public InfinityFluidCellInventory(ItemStack o, ISaveProvider c, EntityPlayer player) throws AppEngException {
         if (o == null) {
@@ -53,6 +54,7 @@ public class InfinityFluidCellInventory implements ITFluidCellInventory {
         this.data = Platform.openNbtData(o);
         this.storedFluids = this.data.getLong(FLUID_TYPE_TAG);
         this.storedFluidCount = this.data.getLong(FLUID_COUNT_TAG);
+        this.storage = this.getStorage();
     }
 
     public static IMEInventoryHandler<IAEFluidStack> getCell(ItemStack o, ISaveProvider container,
@@ -155,7 +157,7 @@ public class InfinityFluidCellInventory implements ITFluidCellInventory {
 
         AE2ThingAPI.instance()
             .getStorageManager()
-            .postChanges(this.cellItem, this.getStorage(), this.drive);
+            .postChanges(this.cellItem, this.storage, this.drive);
         AE2ThingAPI.instance()
             .getStorageManager()
             .setDirty(true);
@@ -180,13 +182,12 @@ public class InfinityFluidCellInventory implements ITFluidCellInventory {
     }
 
     protected void loadCellFluids() {
-        DataStorage storage = this.getStorage();
         if (this.cellFluids == null) {
-            this.cellFluids = storage.getFluids();
+            this.cellFluids = this.storage.getFluids();
         }
         if (!this.getUUID()
-            .equals(storage.getUUID())) {
-            data.setString(Constants.DISKUUID, storage.getUUID());
+            .equals(this.storage.getUUID())) {
+            data.setString(Constants.DISKUUID, this.storage.getUUID());
         }
     }
 

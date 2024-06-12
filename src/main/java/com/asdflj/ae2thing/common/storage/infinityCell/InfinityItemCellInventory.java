@@ -45,6 +45,7 @@ public class InfinityItemCellInventory implements ITCellInventory {
     protected long storedItemCount = 0;
     protected final NBTTagCompound data;
     protected final IChestOrDrive drive;
+    protected final DataStorage storage;
 
     public InfinityItemCellInventory(ItemStack o, ISaveProvider c, EntityPlayer p) throws AppEngException {
         if (o == null) {
@@ -58,6 +59,7 @@ public class InfinityItemCellInventory implements ITCellInventory {
         this.data = Platform.openNbtData(this.cellItem);
         this.storedItemTypes = data.getLong(ITEM_TYPE_TAG);
         this.storedItemCount = data.getLong(ITEM_COUNT_TAG);
+        this.storage = this.getStorage();
     }
 
     @Override
@@ -67,13 +69,12 @@ public class InfinityItemCellInventory implements ITCellInventory {
 
     @Override
     public void loadCellItems() {
-        DataStorage storage = this.getStorage();
         if (this.cellItems == null) {
-            this.cellItems = storage.getItems();
+            this.cellItems = this.storage.getItems();
         }
         if (!this.getUUID()
-            .equals(storage.getUUID())) {
-            data.setString(Constants.DISKUUID, storage.getUUID());
+            .equals(this.storage.getUUID())) {
+            data.setString(Constants.DISKUUID, this.storage.getUUID());
         }
     }
 
@@ -346,7 +347,7 @@ public class InfinityItemCellInventory implements ITCellInventory {
         data.setLong(ITEM_COUNT_TAG, this.storedItemCount);
         AE2ThingAPI.instance()
             .getStorageManager()
-            .postChanges(this.cellItem, this.getStorage(), this.drive);
+            .postChanges(this.cellItem, this.storage, this.drive);
 
         AE2ThingAPI.instance()
             .getStorageManager()
