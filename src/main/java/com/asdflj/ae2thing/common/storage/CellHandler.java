@@ -2,10 +2,14 @@ package com.asdflj.ae2thing.common.storage;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 
 import com.asdflj.ae2thing.common.item.IInfinityStorageCell;
 import com.asdflj.ae2thing.common.storage.infinityCell.InfinityFluidCellInventory;
+import com.glodblock.github.inventory.InventoryHandler;
+import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.util.BlockPos;
 
 import appeng.api.implementations.tiles.IChestOrDrive;
 import appeng.api.storage.ICellHandler;
@@ -14,6 +18,8 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.ISaveProvider;
 import appeng.api.storage.StorageChannel;
 import appeng.client.texture.ExtraBlockTextures;
+import appeng.core.sync.GuiBridge;
+import appeng.util.Platform;
 
 public class CellHandler implements ICellHandler {
 
@@ -48,7 +54,16 @@ public class CellHandler implements ICellHandler {
 
     @Override
     public void openChestGui(EntityPlayer player, IChestOrDrive chest, ICellHandler cellHandler,
-        IMEInventoryHandler inv, ItemStack is, StorageChannel chan) {}
+        IMEInventoryHandler inv, ItemStack is, StorageChannel chan) {
+        if (chest instanceof TileEntity te) {
+            if (chan == StorageChannel.FLUIDS) {
+                InventoryHandler
+                    .openGui(player, te.getWorldObj(), new BlockPos(te), chest.getUp(), GuiType.FLUID_TERMINAL);
+            } else {
+                Platform.openGUI(player, te, chest.getUp(), GuiBridge.GUI_ME);
+            }
+        }
+    }
 
     @Override
     public int getStatusForCell(final ItemStack is, final IMEInventory handler) {
