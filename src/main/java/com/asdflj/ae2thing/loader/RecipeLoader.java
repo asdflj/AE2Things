@@ -2,13 +2,18 @@ package com.asdflj.ae2thing.loader;
 
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BACKPACK_MANAGER;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BLOCK_FISH_BIG;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_CREATIVE_WATER_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_FLUID_CELL;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL_HOUSING;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
+
+import com.glodblock.github.common.storage.CellType;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -50,5 +55,7 @@ public class RecipeLoader implements Runnable {
                 'C',
                 AE2FC_DIGITAL_SINGULARITY_CELL));
         GameRegistry.addRecipe(new ShapedOreRecipe(BLOCK_FISH_BIG.stack(), "FFF", "F F", "FFF", 'F', FISH));
+        GameRegistry.addRecipe(
+            new ShapelessOreRecipe(ITEM_CREATIVE_WATER_CELL, CELL_HOUSING.stack(1, 1), CellType.Cell64kPart.stack(1)));
     }
 }

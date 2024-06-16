@@ -16,6 +16,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.MagnetObject;
+import com.asdflj.ae2thing.common.storage.CellInventory;
+import com.asdflj.ae2thing.common.storage.CellInventoryHandler;
 import com.asdflj.ae2thing.common.storage.IStorageItemCell;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
@@ -27,12 +29,16 @@ import com.asdflj.ae2thing.util.BlockPos;
 import com.asdflj.ae2thing.util.NameConst;
 
 import appeng.api.config.FuzzyMode;
+import appeng.api.exceptions.AppEngException;
+import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.ISaveProvider;
+import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.util.Platform;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ItemBackpackTerminal extends BaseItem
-    implements IRegister<ItemBackpackTerminal>, IItemInventory, IStorageItemCell {
+    implements IRegister<ItemBackpackTerminal>, IItemInventory, IStorageItemCell, IItemInventoryHandler {
 
     public ItemBackpackTerminal() {
         super();
@@ -96,7 +102,12 @@ public class ItemBackpackTerminal extends BaseItem
 
     @Override
     public Object getInventory(ItemStack stack, World world, int x, int y, int z, EntityPlayer player) {
-        return new PortableItemInventory(stack, x, player);
+        if (stack.getItem() instanceof IItemInventoryHandler iih) {
+            try {
+                return new PortableItemInventory(stack, x, player, iih.getInventoryHandler(stack, null, player));
+            } catch (AppEngException ignored) {}
+        }
+        return null;
     }
 
     private GuiType guiGuiType(ItemStack item) {
@@ -146,5 +157,16 @@ public class ItemBackpackTerminal extends BaseItem
         } else {
             toolTip.add(I18n.format(NameConst.TT_SHIFT_FOR_MORE));
         }
+    }
+
+    @Override
+    public IMEInventoryHandler<IAEItemStack> getInventoryHandler(ItemStack o, ISaveProvider container,
+        EntityPlayer player) throws AppEngException {
+        return new CellInventoryHandler(new CellInventory(o, container, player));
+    }
+
+    @Override
+    public StorageChannel getChannel() {
+        return StorageChannel.ITEMS;
     }
 }

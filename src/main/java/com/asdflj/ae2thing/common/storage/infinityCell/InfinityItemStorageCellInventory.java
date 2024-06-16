@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.common.item.BaseCellItem;
-import com.asdflj.ae2thing.common.item.ItemInfinityCell;
+import com.asdflj.ae2thing.common.item.ItemInfinityStorageCell;
 import com.asdflj.ae2thing.common.storage.Constants;
 import com.asdflj.ae2thing.common.storage.DataStorage;
 import com.asdflj.ae2thing.common.storage.ITCellInventory;
@@ -32,12 +32,12 @@ import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 
-public class InfinityItemCellInventory implements ITCellInventory {
+public class InfinityItemStorageCellInventory implements ITCellInventory {
 
     private static final String ITEM_TYPE_TAG = "it";
     private static final String ITEM_COUNT_TAG = "ic";
     protected final ItemStack cellItem;
-    protected ItemInfinityCell cellType;
+    protected ItemInfinityStorageCell cellType;
     protected final ISaveProvider container;
     protected final EntityPlayer player;
     protected IItemList<IAEItemStack> cellItems = null;
@@ -47,7 +47,7 @@ public class InfinityItemCellInventory implements ITCellInventory {
     protected final IChestOrDrive drive;
     protected final DataStorage storage;
 
-    public InfinityItemCellInventory(ItemStack o, ISaveProvider c, EntityPlayer p) throws AppEngException {
+    public InfinityItemStorageCellInventory(ItemStack o, ISaveProvider c, EntityPlayer p) throws AppEngException {
         if (o == null) {
             throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
         }
@@ -55,7 +55,7 @@ public class InfinityItemCellInventory implements ITCellInventory {
         container = c;
         player = p;
         this.drive = c instanceof IChestOrDrive ? (IChestOrDrive) c : null;
-        this.cellType = (ItemInfinityCell) this.cellItem.getItem();
+        this.cellType = (ItemInfinityStorageCell) this.cellItem.getItem();
         this.data = Platform.openNbtData(this.cellItem);
         this.storedItemTypes = data.getLong(ITEM_TYPE_TAG);
         this.storedItemCount = data.getLong(ITEM_COUNT_TAG);

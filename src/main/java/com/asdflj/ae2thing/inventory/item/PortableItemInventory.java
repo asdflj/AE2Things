@@ -1,13 +1,10 @@
 package com.asdflj.ae2thing.inventory.item;
 
-import java.util.Objects;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.asdflj.ae2thing.common.storage.CellInventory;
 import com.asdflj.ae2thing.inventory.ItemBiggerAppEngInventory;
 
 import appeng.api.config.Actionable;
@@ -18,6 +15,7 @@ import appeng.api.config.SortOrder;
 import appeng.api.config.ViewItems;
 import appeng.api.implementations.guiobjects.IGuiItemObject;
 import appeng.api.networking.energy.IEnergySource;
+import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.MEMonitorHandler;
@@ -37,8 +35,9 @@ public class PortableItemInventory extends MEMonitorHandler<IAEItemStack>
     protected AppEngInternalInventory crafting;
     protected EntityPlayer player;
 
-    public PortableItemInventory(ItemStack is, int slot, EntityPlayer player) {
-        super(Objects.requireNonNull(CellInventory.getCell(is, null, player)));
+    @SuppressWarnings("unchecked")
+    public PortableItemInventory(ItemStack is, int slot, EntityPlayer player, IMEInventoryHandler<?> monitor) {
+        super((IMEInventoryHandler<IAEItemStack>) monitor);
         this.target = is;
         this.inventorySlot = slot;
         this.player = player;

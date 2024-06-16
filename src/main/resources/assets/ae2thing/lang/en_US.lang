@@ -1,6 +1,8 @@
 item.backpack_terminal.name=Backpack Terminal
 item.infinity_cell.name=ME Infinity Cell
 item.infinity_fluid_cell.name=ME Infinity Fluid Cell 
+item.creative_fluid_cell.water.name=Creative ME Fluid Storage Cell (Water)
+item.creative_fluid_cell.lava.name=Creative ME Fluid Storage Cell (Lava)
 tile.fishbig.name=FishBig
 
 ae2thing.tooltip.shift_for_more=§r> Hold §3Shift§r for more information

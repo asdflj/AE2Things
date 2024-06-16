@@ -1,6 +1,7 @@
 package com.asdflj.ae2thing.common.item;
 
 import java.text.NumberFormat;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -11,8 +12,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.common.storage.CellInventoryHandler;
 import com.asdflj.ae2thing.common.storage.ICellInventoryHandler;
 import com.asdflj.ae2thing.common.storage.ITCellInventory;
+import com.asdflj.ae2thing.common.storage.infinityCell.InfinityItemStorageCellInventory;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
 import com.asdflj.ae2thing.loader.IRegister;
 import com.asdflj.ae2thing.util.NameConst;
@@ -20,11 +23,14 @@ import com.asdflj.ae2thing.util.NameConst;
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.IncludeExclude;
+import appeng.api.exceptions.AppEngException;
 import appeng.api.implementations.items.IItemGroup;
 import appeng.api.implementations.items.IStorageCell;
 import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.ISaveProvider;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.core.features.AEFeature;
 import appeng.core.localization.GuiText;
 import appeng.items.contents.CellConfig;
 import appeng.items.contents.CellUpgrades;
@@ -33,19 +39,20 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemInfinityCell extends BaseCellItem
-    implements IStorageCell, IItemGroup, IRegister<ItemInfinityCell>, IInfinityStorageCell {
+public class ItemInfinityStorageCell extends BaseCellItem
+    implements IStorageCell, IItemGroup, IRegister<ItemInfinityStorageCell>, IItemInventoryHandler {
 
     private final int perType = 1;
     private final double idleDrain = 2000D;
 
     @SuppressWarnings("Guava")
-    public ItemInfinityCell() {
+    public ItemInfinityStorageCell() {
         this.setMaxStackSize(1);
         this.setUnlocalizedName(NameConst.ITEM_INFINITY_CELL);
         this.setTextureName(
             AE2Thing.resource(NameConst.ITEM_INFINITY_CELL)
                 .toString());
+        this.setFeature(EnumSet.of(AEFeature.StorageCells));
     }
 
     @Override
@@ -187,7 +194,7 @@ public class ItemInfinityCell extends BaseCellItem
     }
 
     @Override
-    public ItemInfinityCell register() {
+    public ItemInfinityStorageCell register() {
         GameRegistry.registerItem(this, NameConst.ITEM_INFINITY_CELL, AE2Thing.MODID);
         setCreativeTab(AE2ThingTabs.INSTANCE);
         return this;
@@ -196,5 +203,11 @@ public class ItemInfinityCell extends BaseCellItem
     @Override
     public StorageChannel getChannel() {
         return StorageChannel.ITEMS;
+    }
+
+    @Override
+    public IMEInventoryHandler<IAEItemStack> getInventoryHandler(ItemStack o, ISaveProvider container,
+        EntityPlayer player) throws AppEngException {
+        return new CellInventoryHandler(new InfinityItemStorageCellInventory(o, container, player));
     }
 }

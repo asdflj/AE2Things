@@ -11,12 +11,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
-import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
-import com.asdflj.ae2thing.common.item.ItemInfinityCell;
 import com.asdflj.ae2thing.common.storage.backpack.AdventureBackpackHandler;
 import com.asdflj.ae2thing.common.storage.backpack.BackPackHandler;
 import com.asdflj.ae2thing.common.storage.backpack.FTRBackpackHandler;
-import com.asdflj.ae2thing.common.storage.infinityCell.InfinityItemCellInventory;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.darkona.adventurebackpack.item.ItemAdventureBackpack;
 import com.darkona.adventurebackpack.util.Wearing;
@@ -26,7 +23,6 @@ import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
 import appeng.api.exceptions.AppEngException;
 import appeng.api.networking.security.BaseActionSource;
-import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.ISaveProvider;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEItemStack;
@@ -102,19 +98,6 @@ public class CellInventory implements ITCellInventory {
 
     private List<IInventory> getModInv(IModInv inv) {
         return inv.getInv(this.player);
-    }
-
-    public static IMEInventoryHandler<IAEItemStack> getCell(ItemStack o, ISaveProvider container, EntityPlayer player) {
-        try {
-            if (o.getItem() instanceof ItemBackpackTerminal) {
-                return new CellInventoryHandler(new CellInventory(o, container, player));
-            } else if (o.getItem() instanceof ItemInfinityCell) {
-                return new CellInventoryHandler(new InfinityItemCellInventory(o, container, player));
-            }
-        } catch (final AppEngException ignored) {
-
-        }
-        return null;
     }
 
     @Override

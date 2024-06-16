@@ -1,6 +1,8 @@
 item.backpack_terminal.name=背包终端
 item.infinity_cell.name=ME无限存储单元
 item.infinity_fluid_cell.name=ME无限流体存储单元
+item.creative_fluid_cell.water.name=创造ME流体存储元件(水)
+item.creative_fluid_cell.lava.name=创造ME流体存储元件(岩浆)
 tile.fishbig.name=鱼大
 
 ae2thing.tooltip.shift_for_more=§r> 按 §3Shift§r 显示更多信息

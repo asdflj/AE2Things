@@ -1,6 +1,7 @@
 package com.asdflj.ae2thing.common.item;
 
 import java.text.NumberFormat;
+import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -10,8 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.common.storage.FluidCellInventoryHandler;
 import com.asdflj.ae2thing.common.storage.ITFluidCellInventory;
 import com.asdflj.ae2thing.common.storage.ITFluidCellInventoryHandler;
+import com.asdflj.ae2thing.common.storage.infinityCell.InfinityFluidStorageCellInventory;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
 import com.asdflj.ae2thing.loader.IRegister;
 import com.asdflj.ae2thing.util.NameConst;
@@ -21,31 +24,35 @@ import com.glodblock.github.common.storage.IStorageFluidCell;
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.IncludeExclude;
+import appeng.api.exceptions.AppEngException;
 import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.ISaveProvider;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.core.features.AEFeature;
 import appeng.core.localization.GuiText;
 import appeng.items.contents.CellConfig;
 import appeng.items.contents.CellUpgrades;
 import appeng.util.Platform;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class ItemInfinityFluidCell extends BaseCellItem
-    implements IStorageFluidCell, IRegister<ItemInfinityFluidCell>, IInfinityStorageCell {
+public class ItemInfinityStorageFluidCell extends BaseCellItem
+    implements IStorageFluidCell, IRegister<ItemInfinityStorageFluidCell>, IItemInventoryHandler {
 
     private final int perType = 1;
     private final double idleDrain = 2000D;
 
-    public ItemInfinityFluidCell() {
+    public ItemInfinityStorageFluidCell() {
         this.setMaxStackSize(1);
         this.setUnlocalizedName(NameConst.ITEM_INFINITY_FLUID_CELL);
         this.setTextureName(
             AE2Thing.resource(NameConst.ITEM_INFINITY_FLUID_CELL)
                 .toString());
+        this.setFeature(EnumSet.of(AEFeature.StorageCells));
     }
 
     @Override
-    public ItemInfinityFluidCell register() {
+    public ItemInfinityStorageFluidCell register() {
         GameRegistry.registerItem(this, NameConst.ITEM_INFINITY_FLUID_CELL, AE2Thing.MODID);
         setCreativeTab(AE2ThingTabs.INSTANCE);
         return this;
@@ -164,5 +171,11 @@ public class ItemInfinityFluidCell extends BaseCellItem
     @Override
     public StorageChannel getChannel() {
         return StorageChannel.FLUIDS;
+    }
+
+    @Override
+    public IMEInventoryHandler<IAEFluidStack> getInventoryHandler(ItemStack o, ISaveProvider container,
+        EntityPlayer player) throws AppEngException {
+        return new FluidCellInventoryHandler(new InfinityFluidStorageCellInventory(o, container, player));
     }
 }

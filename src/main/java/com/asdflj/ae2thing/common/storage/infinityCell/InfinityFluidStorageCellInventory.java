@@ -11,10 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.common.item.BaseCellItem;
-import com.asdflj.ae2thing.common.item.ItemInfinityFluidCell;
 import com.asdflj.ae2thing.common.storage.Constants;
 import com.asdflj.ae2thing.common.storage.DataStorage;
-import com.asdflj.ae2thing.common.storage.FluidCellInventoryHandler;
 import com.asdflj.ae2thing.common.storage.ITFluidCellInventory;
 import com.glodblock.github.common.storage.IStorageFluidCell;
 
@@ -22,14 +20,13 @@ import appeng.api.config.Actionable;
 import appeng.api.exceptions.AppEngException;
 import appeng.api.implementations.tiles.IChestOrDrive;
 import appeng.api.networking.security.BaseActionSource;
-import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.ISaveProvider;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
 
-public class InfinityFluidCellInventory implements ITFluidCellInventory {
+public class InfinityFluidStorageCellInventory implements ITFluidCellInventory {
 
     protected static final String FLUID_TYPE_TAG = "ft";
     protected static final String FLUID_COUNT_TAG = "fc";
@@ -43,7 +40,7 @@ public class InfinityFluidCellInventory implements ITFluidCellInventory {
     protected final NBTTagCompound data;
     protected final DataStorage storage;
 
-    public InfinityFluidCellInventory(ItemStack o, ISaveProvider c, EntityPlayer player) throws AppEngException {
+    public InfinityFluidStorageCellInventory(ItemStack o, ISaveProvider c, EntityPlayer player) throws AppEngException {
         if (o == null) {
             throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
         }
@@ -55,18 +52,6 @@ public class InfinityFluidCellInventory implements ITFluidCellInventory {
         this.storedFluids = this.data.getLong(FLUID_TYPE_TAG);
         this.storedFluidCount = this.data.getLong(FLUID_COUNT_TAG);
         this.storage = this.getStorage();
-    }
-
-    public static IMEInventoryHandler<IAEFluidStack> getCell(ItemStack o, ISaveProvider container,
-        EntityPlayer player) {
-        try {
-            if (o.getItem() instanceof ItemInfinityFluidCell) {
-                return new FluidCellInventoryHandler(new InfinityFluidCellInventory(o, container, player));
-            }
-        } catch (final AppEngException ignored) {
-
-        }
-        return null;
     }
 
     @Override

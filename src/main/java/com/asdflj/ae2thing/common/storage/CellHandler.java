@@ -5,8 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 
-import com.asdflj.ae2thing.common.item.IInfinityStorageCell;
-import com.asdflj.ae2thing.common.storage.infinityCell.InfinityFluidCellInventory;
+import com.asdflj.ae2thing.common.item.IItemInventoryHandler;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
@@ -25,16 +24,19 @@ public class CellHandler implements ICellHandler {
 
     @Override
     public boolean isCell(ItemStack is) {
-        return is != null && is.getItem() instanceof IInfinityStorageCell;
+        return is != null && is.getItem() instanceof IItemInventoryHandler;
     }
 
     @Override
     public IMEInventoryHandler getCellInventory(ItemStack is, ISaveProvider container, StorageChannel channel) {
-        if (channel == StorageChannel.ITEMS) {
-            return CellInventory.getCell(is, container, null);
-        } else {
-            return InfinityFluidCellInventory.getCell(is, container, null);
-        }
+        try {
+            if (is.getItem() instanceof IItemInventoryHandler iih) {
+                if (iih.getChannel() == channel) {
+                    return iih.getInventoryHandler(is, container, null);
+                }
+            }
+        } catch (Exception ignored) {}
+        return null;
     }
 
     @Override
