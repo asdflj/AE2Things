@@ -33,8 +33,7 @@ import appeng.items.contents.CellUpgrades;
 import appeng.tile.inventory.AppEngInternalInventory;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class ItemCreativeFluidCell extends BaseCellItem
-    implements IStorageFluidCell, IRegister<ItemCreativeFluidCell>, IItemInventoryHandler {
+public class ItemCreativeFluidCell extends BaseCellItem implements IStorageFluidCell, IRegister<ItemCreativeFluidCell> {
 
     public static final ItemStack water_bucket = new ItemStack(Items.water_bucket, 1);
     public static final ItemStack lava_bucket = new ItemStack(Items.lava_bucket, 1);

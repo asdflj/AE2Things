@@ -11,6 +11,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.common.item.IItemInventoryHandler;
 import com.asdflj.ae2thing.common.storage.backpack.AdventureBackpackHandler;
 import com.asdflj.ae2thing.common.storage.backpack.BackPackHandler;
 import com.asdflj.ae2thing.common.storage.backpack.FTRBackpackHandler;
@@ -327,7 +328,7 @@ public class CellInventory implements ITCellInventory {
 
     @Override
     public StorageChannel getChannel() {
-        return StorageChannel.ITEMS;
+        return ((IItemInventoryHandler) Objects.requireNonNull(this.cellItem.getItem())).getChannel();
     }
 
     @Override

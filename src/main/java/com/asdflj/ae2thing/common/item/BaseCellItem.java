@@ -20,10 +20,9 @@ import com.asdflj.ae2thing.inventory.item.IItemInventory;
 import com.asdflj.ae2thing.util.BlockPos;
 import com.asdflj.ae2thing.util.NameConst;
 
-import appeng.api.storage.StorageChannel;
 import appeng.util.Platform;
 
-public abstract class BaseCellItem extends BaseItem implements IItemInventory, IBaseCellItem {
+public abstract class BaseCellItem extends BaseItem implements IItemInventory, IBaseCellItem, IItemInventoryHandler {
 
     @Override
     public Object getInventory(ItemStack stack, World world, int x, int y, int z, EntityPlayer player) {
@@ -52,8 +51,6 @@ public abstract class BaseCellItem extends BaseItem implements IItemInventory, I
     private GuiType guiGuiType(ItemStack item) {
         return GuiType.CELL_LINK;
     }
-
-    public abstract StorageChannel getChannel();
 
     @Override
     protected void addCheckedInformation(ItemStack stack, EntityPlayer player, List<String> lines,

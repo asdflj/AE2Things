@@ -40,7 +40,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemInfinityStorageCell extends BaseCellItem
-    implements IStorageCell, IItemGroup, IRegister<ItemInfinityStorageCell>, IItemInventoryHandler {
+    implements IStorageCell, IItemGroup, IRegister<ItemInfinityStorageCell> {
 
     private final int perType = 1;
     private final double idleDrain = 2000D;

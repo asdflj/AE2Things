@@ -37,7 +37,7 @@ import appeng.util.Platform;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ItemInfinityStorageFluidCell extends BaseCellItem
-    implements IStorageFluidCell, IRegister<ItemInfinityStorageFluidCell>, IItemInventoryHandler {
+    implements IStorageFluidCell, IRegister<ItemInfinityStorageFluidCell> {
 
     private final int perType = 1;
     private final double idleDrain = 2000D;
