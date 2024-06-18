@@ -1,11 +1,11 @@
 package com.asdflj.ae2thing.loader;
 
-import com.asdflj.ae2thing.network.CPacketFluidUpdate;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.world.World;
 
 import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.network.CPacketFluidUpdate;
 import com.asdflj.ae2thing.network.CPacketNEIRecipe;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;

@@ -1,17 +1,18 @@
 package com.asdflj.ae2thing.network;
 
+import java.io.IOException;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+
+import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
+
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.util.item.AEFluidStack;
-import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
-import com.glodblock.github.client.gui.container.ContainerFluidMonitor;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-
-import java.io.IOException;
 
 public class CPacketFluidUpdate implements IMessage {
 
@@ -79,7 +80,8 @@ public class CPacketFluidUpdate implements IMessage {
             Container container = ctx.getServerHandler().playerEntity.openContainer;
             EntityPlayer player = ctx.getServerHandler().playerEntity;
             if (container instanceof ContainerCraftingTerminal) {
-                ((ContainerCraftingTerminal) container).postChange(message.fluid, player, message.slotIndex, message.shift);
+                ((ContainerCraftingTerminal) container)
+                    .postChange(message.fluid, player, message.slotIndex, message.shift);
             }
             return null;
         }

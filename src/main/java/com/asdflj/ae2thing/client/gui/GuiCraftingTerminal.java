@@ -5,12 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import appeng.api.AEApi;
-import appeng.api.storage.data.IAEFluidStack;
-import com.asdflj.ae2thing.network.CPacketFluidUpdate;
-import com.glodblock.github.common.item.ItemFluidDrop;
-import com.glodblock.github.util.Util;
-import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
@@ -22,9 +16,9 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -35,15 +29,21 @@ import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.widget.THGuiTextField;
 import com.asdflj.ae2thing.client.me.AdvItemRepo;
+import com.asdflj.ae2thing.network.CPacketFluidUpdate;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.util.Util;
+import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
 
+import appeng.api.AEApi;
 import appeng.api.config.ActionItems;
 import appeng.api.config.SearchBoxMode;
 import appeng.api.config.Settings;
 import appeng.api.config.TerminalStyle;
 import appeng.api.config.YesNo;
 import appeng.api.storage.ITerminalHost;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IDisplayRepo;
 import appeng.api.util.IConfigManager;
@@ -146,18 +146,22 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         if (slot instanceof SlotME sme) {
             ItemStack cs = player.inventory.getItemStack();
-            if(Util.FluidUtil.isFluidContainer(cs)){
-                if(ctrlDown == 0 && sme.getHasStack() && sme.getStack().getItem() instanceof ItemFluidDrop && Util.FluidUtil.isEmpty(cs)){
+            if (Util.FluidUtil.isFluidContainer(cs)) {
+                if (ctrlDown == 0 && sme.getHasStack()
+                    && sme.getStack()
+                        .getItem() instanceof ItemFluidDrop
+                    && Util.FluidUtil.isEmpty(cs)) {
                     IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(sme.getAEStack());
                     AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
                     return;
-                }else if(ctrlDown == 1 &&  Util.FluidUtil.isFilled(cs)){
+                } else if (ctrlDown == 1 && Util.FluidUtil.isFilled(cs)) {
                     AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(null, isShiftKeyDown()));
                     return;
                 }
-
             }
-            if(mouseButton == 3 && player.capabilities.isCreativeMode && sme.getStack().getItem() instanceof ItemFluidDrop){
+            if (mouseButton == 3 && player.capabilities.isCreativeMode
+                && sme.getStack()
+                    .getItem() instanceof ItemFluidDrop) {
                 return;
             }
         }
@@ -696,10 +700,13 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
 
     public void postUpdate(List<IAEItemStack> list) {
         for (IAEItemStack ias : list) {
-            if(ias.getItem() instanceof ItemFluidDrop){
+            if (ias.getItem() instanceof ItemFluidDrop) {
                 ItemStack fluidDrop = ItemFluidDrop.newDisplayStack(ItemFluidDrop.getFluidStack(ias.getItemStack()));
-                this.repo.postUpdate(AEApi.instance().storage().createItemStack(fluidDrop));
-            }else{
+                this.repo.postUpdate(
+                    AEApi.instance()
+                        .storage()
+                        .createItemStack(fluidDrop));
+            } else {
                 this.repo.postUpdate(ias);
             }
         }
@@ -846,6 +853,7 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
         }
         return true;
     }
+
     private void drawWidget(int posX, int posY, Fluid fluid) {
         if (fluid == null) return;
         IIcon icon = fluid.getIcon();
@@ -870,6 +878,7 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
     }
 
     public void setPlayerInv(ItemStack is) {
-        this.inv.getPlayerInv().setItemStack(is);
+        this.inv.getPlayerInv()
+            .setItemStack(is);
     }
 }

@@ -9,15 +9,19 @@ import java.util.stream.Collectors;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.common.item.IItemInventoryHandler;
 import com.asdflj.ae2thing.common.storage.backpack.AdventureBackpackHandler;
 import com.asdflj.ae2thing.common.storage.backpack.BackPackHandler;
+import com.asdflj.ae2thing.common.storage.backpack.BaseBackpackHandler;
 import com.asdflj.ae2thing.common.storage.backpack.FTRBackpackHandler;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.darkona.adventurebackpack.item.ItemAdventureBackpack;
 import com.darkona.adventurebackpack.util.Wearing;
+import com.glodblock.github.common.item.ItemFluidDrop;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -40,6 +44,7 @@ public class CellInventory implements ITCellInventory {
     protected final ISaveProvider container;
     protected final EntityPlayer player;
     protected final List<IInventory> modInv = new ArrayList<>();
+    protected final List<BaseBackpackHandler> fluidInv = new ArrayList<>();
     protected IItemList<IAEItemStack> cellItems = null;
 
     public CellInventory(final ItemStack o, final ISaveProvider c, final EntityPlayer p) throws AppEngException {
@@ -53,6 +58,7 @@ public class CellInventory implements ITCellInventory {
         this.getAllInv();
     }
 
+    @SuppressWarnings("unchecked")
     private void getAllInv() {
         if (ModAndClassUtil.FTR) {
             this.modInv.addAll(
@@ -95,6 +101,12 @@ public class CellInventory implements ITCellInventory {
                             .getBackpackInv(x))
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList())));
+
+        for (IInventory inv : this.modInv) {
+            if (inv instanceof BaseBackpackHandler bbh && bbh.hasFluidTank()) {
+                this.fluidInv.add((BaseBackpackHandler) inv);
+            }
+        }
     }
 
     private List<IInventory> getModInv(IModInv inv) {
@@ -192,6 +204,23 @@ public class CellInventory implements ITCellInventory {
         return null;
     }
 
+    private FluidStack injectFluid(FluidStack fs) {
+        FluidStack injectFluid = fs.copy();
+        for (BaseBackpackHandler inv : this.fluidInv) {
+            for (FluidTank ft : inv.getFluidTanks()) {
+                int added = ft.fill(injectFluid, true);
+                inv.markFluidAsDirty();
+                if (added > 0) {
+                    injectFluid.amount -= added;
+                }
+                if (injectFluid.amount <= 0) {
+                    return injectFluid;
+                }
+            }
+        }
+        return injectFluid;
+    }
+
     private ItemStack injectItem(ItemStack is) {
         ItemStack injectItem = is.copy();
         for (IInventory inv : this.modInv) {
@@ -233,8 +262,14 @@ public class CellInventory implements ITCellInventory {
         }
 
         if (mode == Actionable.MODULATE) {
-            ItemStack is = this.injectItem(input.getItemStack());
-            if (is.stackSize == 0) {
+            ItemStack is;
+            if (input.getItem() instanceof ItemFluidDrop) {
+                is = ItemFluidDrop.newStack(
+                    this.injectFluid(Objects.requireNonNull(ItemFluidDrop.getFluidStack(input.getItemStack()))));
+            } else {
+                is = this.injectItem(Objects.requireNonNull(input.getItemStack()));
+            }
+            if (is == null || is.stackSize == 0) {
                 this.getCellItems()
                     .add(input);
                 return null;
@@ -248,6 +283,7 @@ public class CellInventory implements ITCellInventory {
                     .add(l);
                 return noAdded;
             }
+
         }
         return null;
     }
@@ -279,14 +315,23 @@ public class CellInventory implements ITCellInventory {
                 results.setStackSize(l.getStackSize());
 
                 if (mode == Actionable.MODULATE) {
-                    extractItems(request.getItemStack());
+                    if (request.getItem() instanceof ItemFluidDrop) {
+                        extractFluid(Objects.requireNonNull(ItemFluidDrop.getFluidStack(request.getItemStack())));
+                    } else {
+                        extractItem(request.getItemStack());
+                    }
                     l.setStackSize(0);
                 }
             } else {
                 results.setStackSize(size);
 
                 if (mode == Actionable.MODULATE) {
-                    extractItems(request.getItemStack());
+                    if (request.getItem() instanceof ItemFluidDrop) {
+                        extractFluid(Objects.requireNonNull(ItemFluidDrop.getFluidStack(request.getItemStack())));
+                    } else {
+                        extractItem(request.getItemStack());
+                    }
+
                     l.setStackSize(l.getStackSize() - size);
                 }
             }
@@ -295,7 +340,25 @@ public class CellInventory implements ITCellInventory {
         return results;
     }
 
-    private void extractItems(ItemStack extractItem) {
+    private void extractFluid(FluidStack extractFluid) {
+        FluidStack extFluid = extractFluid.copy();
+        for (BaseBackpackHandler inv : this.fluidInv) {
+            for (FluidTank tank : inv.getFluidTanks()) {
+                if (extFluid.getFluid() == tank.getFluid()
+                    .getFluid()) {
+                    FluidStack result = tank.drain(extFluid.amount, true);
+                    extFluid.amount -= result.amount;
+                    inv.markFluidAsDirty();
+                    if (extFluid.amount <= 0) {
+                        return;
+                    }
+                }
+
+            }
+        }
+    }
+
+    private void extractItem(ItemStack extractItem) {
         ItemStack extItem = extractItem.copy();
         for (IInventory inv : this.modInv) {
             for (int i = 0; i < inv.getSizeInventory(); i++) {
@@ -352,6 +415,12 @@ public class CellInventory implements ITCellInventory {
                     AEApi.instance()
                         .storage()
                         .createItemStack(is));
+            }
+        }
+        for (BaseBackpackHandler inv : this.fluidInv) {
+            for (FluidTank tank : inv.getFluidTanks()) {
+                IAEItemStack is = ItemFluidDrop.newAeStack(tank.getFluid());
+                if (is != null) cellItems.add(is);
             }
         }
     }

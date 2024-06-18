@@ -5,13 +5,6 @@ import java.util.*;
 
 import javax.annotation.Nonnull;
 
-import appeng.api.config.Actionable;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.util.item.AEFluidStack;
-import com.glodblock.github.FluidCraft;
-import com.glodblock.github.common.item.ItemFluidDrop;
-import com.glodblock.github.common.item.ItemFluidPacket;
-import com.glodblock.github.network.SPacketFluidUpdate;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -20,13 +13,19 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.inventory.item.PortableItemInventory;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
 import com.asdflj.ae2thing.util.Util;
+import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.common.item.ItemFluidPacket;
 
 import appeng.api.AEApi;
+import appeng.api.config.Actionable;
 import appeng.api.config.Settings;
 import appeng.api.config.SortDir;
 import appeng.api.config.SortOrder;
@@ -39,6 +38,7 @@ import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.ITerminalHost;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.api.util.IConfigManager;
@@ -57,9 +57,7 @@ import appeng.tile.inventory.InvOperation;
 import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
+import appeng.util.item.AEFluidStack;
 
 public class ContainerCraftingTerminal extends AEBaseContainer implements IConfigurableObject, IConfigManagerHost,
     IMEMonitorHandlerReceiver<IAEItemStack>, IAEAppEngInventory, IContainerCraftingPacket {
@@ -356,12 +354,14 @@ public class ContainerCraftingTerminal extends AEBaseContainer implements IConfi
         is.stackSize = stackSize;
         this.dropItem(is);
     }
+
     protected void adjustStack(ItemStack stack) {
         if (stack != null && stack.stackSize > stack.getMaxStackSize()) {
             dropItem(stack, stack.stackSize - stack.getMaxStackSize());
             stack.stackSize = stack.getMaxStackSize();
         }
     }
+
     /**
      * The insert operation. For input, we have a filled container stack. For outputs, we have the following:
      * <ol>
@@ -433,6 +433,9 @@ public class ContainerCraftingTerminal extends AEBaseContainer implements IConfi
         if (notInserted != null && notInserted.getStackSize() > 0) {
             // User has a setup that causes discrepancy between simulation and modulation. Likely double storage bus.
             long total = totalFluid.getStackSize() - notInserted.getStackSize();
+            if (total == 0) {
+                return;
+            }
             if (partialInsertSupported) {
                 totalInserted = total;
             } else {
@@ -521,13 +524,14 @@ public class ContainerCraftingTerminal extends AEBaseContainer implements IConfi
                 shouldSendStack = false;
             }
         }
+        SPacketMEItemInvUpdate packet = new SPacketMEItemInvUpdate((byte) 1);
         if (shouldSendStack) {
-            FluidCraft.proxy.netHandler.sendTo(
-                new SPacketFluidUpdate(new HashMap<>(), player.inventory.getItemStack()),
-                (EntityPlayerMP) player);
-        } else {
-            FluidCraft.proxy.netHandler.sendTo(new SPacketFluidUpdate(new HashMap<>()), (EntityPlayerMP) player);
+            packet.appendItem(
+                AEApi.instance()
+                    .storage()
+                    .createItemStack(player.inventory.getItemStack()));
         }
+        AE2Thing.proxy.netHandler.sendTo(packet, (EntityPlayerMP) player);
     }
 
     /**
@@ -599,7 +603,8 @@ public class ContainerCraftingTerminal extends AEBaseContainer implements IConfi
             if (filledTanks > 0) {
                 filledTanksStack = targetStack.copy();
                 filledTanksStack.stackSize = 1;
-                FluidStack toInsert = extracted.getFluidStack().copy();
+                FluidStack toInsert = extracted.getFluidStack()
+                    .copy();
                 toInsert.amount = fluidPerContainer;
                 fcItem.fill(filledTanksStack, toInsert, true);
                 filledTanksStack.stackSize = filledTanks;
@@ -609,7 +614,8 @@ public class ContainerCraftingTerminal extends AEBaseContainer implements IConfi
             if (partialTanks > 0) {
                 partialTanksStack = targetStack.copy();
                 partialTanksStack.stackSize = 1;
-                FluidStack toInsert = extracted.getFluidStack().copy();
+                FluidStack toInsert = extracted.getFluidStack()
+                    .copy();
                 toInsert.amount = partialFill;
                 fcItem.fill(partialTanksStack, toInsert, true);
             } else {
@@ -617,7 +623,8 @@ public class ContainerCraftingTerminal extends AEBaseContainer implements IConfi
             }
         } else {
             if (filledTanks > 0) {
-                FluidStack toInsert = extracted.getFluidStack().copy();
+                FluidStack toInsert = extracted.getFluidStack()
+                    .copy();
                 toInsert.amount = fluidPerContainer;
                 filledTanksStack = FluidContainerRegistry.fillFluidContainer(toInsert, targetStack);
                 filledTanksStack.stackSize = filledTanks;
@@ -656,18 +663,23 @@ public class ContainerCraftingTerminal extends AEBaseContainer implements IConfi
         }
         SPacketMEItemInvUpdate packet = new SPacketMEItemInvUpdate((byte) 1);
         if (shouldSendStack) {
-            packet.appendItem(AEApi.instance().storage().createItemStack(player.inventory.getItemStack()));
+            packet.appendItem(
+                AEApi.instance()
+                    .storage()
+                    .createItemStack(player.inventory.getItemStack()));
         }
         AE2Thing.proxy.netHandler.sendTo(packet, (EntityPlayerMP) player);
     }
 
-    private IAEFluidStack extractFluids(IAEFluidStack ifs, Actionable mode){
-        IAEItemStack extracted = this.host.getItemInventory().extractItems(ItemFluidDrop.newAeStack(ifs),mode,this.getActionSource());
+    private IAEFluidStack extractFluids(IAEFluidStack ifs, Actionable mode) {
+        IAEItemStack extracted = this.host.getItemInventory()
+            .extractItems(ItemFluidDrop.newAeStack(ifs), mode, this.getActionSource());
         return ItemFluidDrop.getAeFluidStack(extracted);
     }
 
-    private IAEFluidStack injectFluids(IAEFluidStack ifs,Actionable mode){
-        IAEItemStack injected =  this.host.getItemInventory().injectItems(ItemFluidDrop.newAeStack(ifs),mode,this.getActionSource());
+    private IAEFluidStack injectFluids(IAEFluidStack ifs, Actionable mode) {
+        IAEItemStack injected = this.host.getItemInventory()
+            .injectItems(ItemFluidDrop.newAeStack(ifs), mode, this.getActionSource());
         return ItemFluidDrop.getAeFluidStack(injected);
     }
 

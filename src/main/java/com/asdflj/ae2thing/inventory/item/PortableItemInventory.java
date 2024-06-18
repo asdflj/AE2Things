@@ -1,10 +1,5 @@
 package com.asdflj.ae2thing.inventory.item;
 
-import appeng.api.config.AccessRestriction;
-import appeng.api.networking.security.BaseActionSource;
-import appeng.api.storage.IMEMonitorHandlerReceiver;
-import appeng.api.storage.StorageChannel;
-import appeng.api.storage.data.IItemList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -20,6 +15,7 @@ import appeng.api.config.SortOrder;
 import appeng.api.config.ViewItems;
 import appeng.api.implementations.guiobjects.IGuiItemObject;
 import appeng.api.networking.energy.IEnergySource;
+import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.ITerminalHost;
@@ -101,6 +97,7 @@ public class PortableItemInventory extends MEMonitorHandler<IAEItemStack>
         amt = usePowerMultiplier.multiply(amt);
         return usePowerMultiplier.divide(amt);
     }
+
     private class Wapper extends MEMonitorHandler<IAEFluidStack> {
 
         public Wapper(IMEInventoryHandler<IAEFluidStack> t) {
