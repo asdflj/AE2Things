@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 
@@ -43,7 +44,17 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
         public IMessage onMessage(SPacketMEItemInvUpdate message, MessageContext ctx) {
             final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
             if (gs instanceof GuiCraftingTerminal gct) {
-                gct.postUpdate((List) message.list);
+                if (message.ref == 0) {
+                    gct.postUpdate((List) message.list);
+                } else if (message.ref == 1) {
+                    ItemStack is = null;
+                    if (!message.isEmpty()) {
+                        is = ((IAEItemStack) message.list.get(0)).getItemStack();
+                    }
+                    gct.setPlayerInv(is);
+
+                }
+
             }
             return null;
         }

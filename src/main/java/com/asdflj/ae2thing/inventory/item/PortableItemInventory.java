@@ -15,6 +15,7 @@ import appeng.api.config.SortOrder;
 import appeng.api.config.ViewItems;
 import appeng.api.implementations.guiobjects.IGuiItemObject;
 import appeng.api.networking.energy.IEnergySource;
+import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.ITerminalHost;
@@ -95,5 +96,22 @@ public class PortableItemInventory extends MEMonitorHandler<IAEItemStack>
     public double extractAEPower(double amt, Actionable mode, PowerMultiplier usePowerMultiplier) {
         amt = usePowerMultiplier.multiply(amt);
         return usePowerMultiplier.divide(amt);
+    }
+
+    private class Wapper extends MEMonitorHandler<IAEFluidStack> {
+
+        public Wapper(IMEInventoryHandler<IAEFluidStack> t) {
+            super(t);
+        }
+
+        @Override
+        public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, BaseActionSource src) {
+            return super.injectItems(input, mode, src);
+        }
+
+        @Override
+        public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode, BaseActionSource src) {
+            return super.extractItems(request, mode, src);
+        }
     }
 }
