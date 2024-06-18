@@ -672,6 +672,7 @@ public class ContainerCraftingTerminal extends AEBaseContainer implements IConfi
     }
 
     private IAEFluidStack extractFluids(IAEFluidStack ifs, Actionable mode) {
+        if (ifs.getStackSize() == 0) return ifs;
         IAEItemStack extracted = this.host.getItemInventory()
             .extractItems(ItemFluidDrop.newAeStack(ifs), mode, this.getActionSource());
         return ItemFluidDrop.getAeFluidStack(extracted);
