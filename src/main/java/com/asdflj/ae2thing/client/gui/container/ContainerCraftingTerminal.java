@@ -1,9 +1,7 @@
 package com.asdflj.ae2thing.client.gui.container;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import javax.annotation.Nonnull;
 
@@ -11,6 +9,7 @@ import appeng.api.config.Actionable;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.util.item.AEFluidStack;
 import com.glodblock.github.FluidCraft;
+import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.network.SPacketFluidUpdate;
 import net.minecraft.entity.player.EntityPlayer;
@@ -412,8 +411,7 @@ public class ContainerCraftingTerminal extends AEBaseContainer implements IConfi
         final IAEFluidStack totalFluid = AEFluidStack.create(fluidStackPerContainer);
         totalFluid.setStackSize((long) fluidPerContainer * containersRequestedToInsert);
 
-        final IAEFluidStack notInsertable = this.host.getFluidInventory()
-            .injectItems(totalFluid, Actionable.SIMULATE, this.getActionSource());
+        final IAEFluidStack notInsertable = this.injectFluids(totalFluid, Actionable.SIMULATE);
 
         final long insertableFluid;
         if (notInsertable == null || notInsertable.getStackSize() == 0) {
@@ -431,8 +429,7 @@ public class ContainerCraftingTerminal extends AEBaseContainer implements IConfi
 
         // Step 3: perform insert
         final long totalInserted;
-        final IAEFluidStack notInserted = this.host.getFluidInventory()
-            .injectItems(totalFluid, Actionable.MODULATE, this.getActionSource());
+        final IAEFluidStack notInserted = this.injectFluids(totalFluid, Actionable.MODULATE);
         if (notInserted != null && notInserted.getStackSize() > 0) {
             // User has a setup that causes discrepancy between simulation and modulation. Likely double storage bus.
             long total = totalFluid.getStackSize() - notInserted.getStackSize();
@@ -575,8 +572,7 @@ public class ContainerCraftingTerminal extends AEBaseContainer implements IConfi
         final IAEFluidStack totalRequestedFluid = clientRequestedFluid.copy();
         totalRequestedFluid.setStackSize((long) fluidPerContainer * containersRequestedToExtract);
 
-        final IAEFluidStack availableFluid = this.host.getFluidInventory()
-            .extractItems(totalRequestedFluid, Actionable.SIMULATE, this.getActionSource());
+        final IAEFluidStack availableFluid = this.extractFluids(totalRequestedFluid, Actionable.SIMULATE);
         if (availableFluid == null || availableFluid.getStackSize() == 0) {
             return;
         }
@@ -586,8 +582,7 @@ public class ContainerCraftingTerminal extends AEBaseContainer implements IConfi
         }
 
         // Step 3: perform extract
-        final IAEFluidStack extracted = this.host.getFluidInventory()
-            .extractItems(availableFluid, Actionable.MODULATE, this.getActionSource());
+        final IAEFluidStack extracted = this.extractFluids(availableFluid, Actionable.MODULATE);
         final long totalExtracted = extracted != null ? extracted.getStackSize() : 0;
 
         // Step 4: calculate outputs
@@ -659,13 +654,21 @@ public class ContainerCraftingTerminal extends AEBaseContainer implements IConfi
             player.inventory.setItemStack(null);
             shouldSendStack = false;
         }
+        SPacketMEItemInvUpdate packet = new SPacketMEItemInvUpdate((byte) 1);
         if (shouldSendStack) {
-            FluidCraft.proxy.netHandler.sendTo(
-                new SPacketFluidUpdate(new HashMap<>(), player.inventory.getItemStack()),
-                (EntityPlayerMP) player);
-        } else {
-            FluidCraft.proxy.netHandler.sendTo(new SPacketFluidUpdate(new HashMap<>()), (EntityPlayerMP) player);
+            packet.appendItem(AEApi.instance().storage().createItemStack(player.inventory.getItemStack()));
         }
+        AE2Thing.proxy.netHandler.sendTo(packet, (EntityPlayerMP) player);
+    }
+
+    private IAEFluidStack extractFluids(IAEFluidStack ifs, Actionable mode){
+        IAEItemStack extracted = this.host.getItemInventory().extractItems(ItemFluidDrop.newAeStack(ifs),mode,this.getActionSource());
+        return ItemFluidDrop.getAeFluidStack(extracted);
+    }
+
+    private IAEFluidStack injectFluids(IAEFluidStack ifs,Actionable mode){
+        IAEItemStack injected =  this.host.getItemInventory().injectItems(ItemFluidDrop.newAeStack(ifs),mode,this.getActionSource());
+        return ItemFluidDrop.getAeFluidStack(injected);
     }
 
 }

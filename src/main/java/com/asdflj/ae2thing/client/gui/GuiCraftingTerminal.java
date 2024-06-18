@@ -104,6 +104,7 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
     protected GuiImgButton terminalStyleBox;
     protected GuiImgButton searchStringSave;
     protected TextHistory history;
+    protected ContainerCraftingTerminal inv;
 
     public GuiCraftingTerminal(Container container) {
         super(container);
@@ -122,6 +123,7 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
         this.repo.setPowered(true);
         this.reservedSpace = 73;
         this.history = Ae2ReflectClient.getHistory(LayoutManager.searchField);
+        this.inv = (ContainerCraftingTerminal) this.inventorySlots;
 
     }
 
@@ -142,10 +144,18 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
     protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
         saveSearchString();
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        if (slot instanceof SlotME sme && sme.getHasStack()) {
-            if(Util.FluidUtil.isFluidContainer(player.inventory.getItemStack())){
-                IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(sme.getAEStack());
-                AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
+        if (slot instanceof SlotME sme) {
+            ItemStack cs = player.inventory.getItemStack();
+            if(Util.FluidUtil.isFluidContainer(cs)){
+                if(ctrlDown == 0 && sme.getHasStack() && sme.getStack().getItem() instanceof ItemFluidDrop && Util.FluidUtil.isEmpty(cs)){
+                    IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(sme.getAEStack());
+                    AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
+                    return;
+                }else if(ctrlDown == 1 &&  Util.FluidUtil.isFilled(cs)){
+                    AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(null, isShiftKeyDown()));
+                    return;
+                }
+
             }
             if(mouseButton == 3 && player.capabilities.isCreativeMode && sme.getStack().getItem() instanceof ItemFluidDrop){
                 return;
@@ -859,4 +869,7 @@ public class GuiCraftingTerminal extends AEBaseMEGui implements IConfigManagerHo
         GL11.glColor3f(1, 1, 1);
     }
 
+    public void setPlayerInv(ItemStack is) {
+        this.inv.getPlayerInv().setItemStack(is);
+    }
 }
