@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.loader;
 
+import com.asdflj.ae2thing.network.CPacketFluidUpdate;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.world.World;
@@ -24,6 +25,7 @@ public class ChannelLoader implements Runnable {
             .registerMessage(new SPacketMEItemInvUpdate.Handler(), SPacketMEItemInvUpdate.class, id++, Side.CLIENT);
         netHandler.registerMessage(new CPacketNEIRecipe.Handler(), CPacketNEIRecipe.class, id++, Side.SERVER);
         netHandler.registerMessage(new CPacketSwitchGuis.Handler(), CPacketSwitchGuis.class, id++, Side.SERVER);
+        netHandler.registerMessage(new CPacketFluidUpdate.Handler(), CPacketFluidUpdate.class, id++, Side.SERVER);
     }
 
     public static void sendPacketToAllPlayers(Packet packet, World world) {
