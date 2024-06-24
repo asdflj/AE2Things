@@ -55,7 +55,6 @@ public class CellInventory implements ITCellInventory {
         container = c;
         player = p;
         this.cellType = (IStorageItemCell) this.cellItem.getItem();
-        this.getAllInv();
     }
 
     @SuppressWarnings("unchecked")
@@ -402,6 +401,7 @@ public class CellInventory implements ITCellInventory {
     @Override
     public void loadCellItems() {
         if (this.cellItems == null) {
+            this.getAllInv();
             this.cellItems = AEApi.instance()
                 .storage()
                 .createPrimitiveItemList();
