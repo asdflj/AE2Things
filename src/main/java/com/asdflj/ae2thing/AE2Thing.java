@@ -23,7 +23,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
     modid = AE2Thing.MODID,
     version = Tags.VERSION,
     name = AE2Thing.NAME,
-    dependencies = "required-after:appliedenergistics2;required-after:ae2fc;")
+    dependencies = "required-after:appliedenergistics2;required-after:ae2fc;after:thaumicenergistics;")
 public class AE2Thing {
 
     public static final String MODID = "ae2thing";

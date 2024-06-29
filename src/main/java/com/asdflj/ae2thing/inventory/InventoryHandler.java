@@ -8,6 +8,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
+import com.asdflj.ae2thing.network.CPacketSwitchGuis;
 import com.asdflj.ae2thing.util.BlockPos;
 
 import appeng.util.Platform;
@@ -28,6 +29,10 @@ public class InventoryHandler implements IGuiHandler {
             pos.getX(),
             pos.getY(),
             pos.getZ());
+    }
+
+    public static void switchGui(GuiType guiType) {
+        AE2Thing.proxy.netHandler.sendToServer(new CPacketSwitchGuis(guiType));
     }
 
     @Nullable

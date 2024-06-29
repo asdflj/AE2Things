@@ -30,6 +30,7 @@ public class CommonProxy {
         FMLCommonHandler.instance()
             .bus()
             .register(this);
+        ModAndClassUtil.init();
     }
 
     @SubscribeEvent
@@ -46,7 +47,6 @@ public class CommonProxy {
     public void init(FMLInitializationEvent event) {}
 
     public void postInit(FMLPostInitializationEvent event) {
-        ModAndClassUtil.init();
         if (ModAndClassUtil.BACKPACK) {
             AE2ThingAPI.instance()
                 .addBackpackItem(de.eydamos.backpack.item.ItemBackpackBase.class);

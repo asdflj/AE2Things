@@ -37,6 +37,6 @@ public class GuiCellLink extends AEBaseGui {
     }
 
     protected String getBackground() {
-        return "gui/disk_clone.png";
+        return "gui/cell_link.png";
     }
 }

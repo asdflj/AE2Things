@@ -8,10 +8,13 @@ import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
 import com.asdflj.ae2thing.common.item.ItemCreativeFluidCell;
 import com.asdflj.ae2thing.common.item.ItemInfinityStorageCell;
 import com.asdflj.ae2thing.common.item.ItemInfinityStorageFluidCell;
+import com.asdflj.ae2thing.common.item.ItemPartDistillationPatternTerminal;
 import com.asdflj.ae2thing.util.NameConst;
 
 public class ItemAndBlockHolder {
 
+    public static ItemPartDistillationPatternTerminal DISTILLATION_PATTERN_TERMINAL = new ItemPartDistillationPatternTerminal()
+        .register();
     public static ItemBackpackTerminal BACKPACK_MANAGER = new ItemBackpackTerminal().register();
     public static ItemInfinityStorageCell ITEM_INFINITY_CELL = new ItemInfinityStorageCell().register();
     public static ItemInfinityStorageFluidCell ITEM_INFINITY_FLUID_CELL = new ItemInfinityStorageFluidCell().register();

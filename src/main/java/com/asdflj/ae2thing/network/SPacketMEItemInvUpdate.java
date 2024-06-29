@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
+import com.asdflj.ae2thing.client.gui.GuiDistillationPatternTerminal;
 
 import appeng.api.storage.data.IAEItemStack;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -54,7 +55,8 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
                     gct.setPlayerInv(is);
 
                 }
-
+            } else if (gs instanceof GuiDistillationPatternTerminal gpt) {
+                gpt.postUpdate((List) message.list);
             }
             return null;
         }

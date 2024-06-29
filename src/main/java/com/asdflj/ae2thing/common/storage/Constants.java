@@ -6,7 +6,7 @@ public interface Constants {
     String DISKDATA = "diskdata";
     String FLUID_DISKLIST = "fluid_disklist";
     String DISKLIST = "disklist";
-    String COUNT = "count";
+    String COUNT = "Count";
     String LINKED = "linked";
 
 }

@@ -343,6 +343,7 @@ public class CellInventory implements ITCellInventory {
         FluidStack extFluid = extractFluid.copy();
         for (BaseBackpackHandler inv : this.fluidInv) {
             for (FluidTank tank : inv.getFluidTanks()) {
+                if (tank.getFluid() == null) continue;
                 if (extFluid.getFluid() == tank.getFluid()
                     .getFluid()) {
                     FluidStack result = tank.drain(extFluid.amount, true);

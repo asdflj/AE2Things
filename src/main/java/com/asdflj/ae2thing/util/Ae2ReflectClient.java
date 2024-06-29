@@ -11,6 +11,8 @@ import net.minecraft.item.ItemStack;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
+import appeng.client.gui.implementations.GuiCraftingStatus;
+import appeng.client.gui.widgets.GuiTabButton;
 import appeng.client.me.ItemRepo;
 import codechicken.nei.SearchField;
 import codechicken.nei.util.TextHistory;
@@ -24,6 +26,8 @@ public class Ae2ReflectClient {
     private static final Method mGuiPatternTerm_inventorySlots;
     private static final Field fSearchField_history;
     private static final Field fTextHistory_history;
+    private static final Field fGuiCPUStatus_icon;
+    private static final Field fGuiCraftingStatus_originalGuiBtn;
     private static final Field fItemRepo_view;
     private static final Field fItemRepo_dsp;
 
@@ -33,6 +37,8 @@ public class Ae2ReflectClient {
             mGuiPatternTerm_inventorySlots = Ae2Reflect.reflectMethod(AEBaseGui.class, "getInventorySlots");
             fSearchField_history = Ae2Reflect.reflectField(SearchField.class, "history");
             fTextHistory_history = Ae2Reflect.reflectField(TextHistory.class, "history");
+            fGuiCPUStatus_icon = Ae2Reflect.reflectField(GuiCraftingStatus.class, "myIcon");
+            fGuiCraftingStatus_originalGuiBtn = Ae2Reflect.reflectField(GuiCraftingStatus.class, "originalGuiBtn");
             fItemRepo_view = Ae2Reflect.reflectField(ItemRepo.class, "view");
             fItemRepo_dsp = Ae2Reflect.reflectField(ItemRepo.class, "dsp");
         } catch (NoSuchFieldException | NoSuchMethodException e) {
@@ -47,6 +53,14 @@ public class Ae2ReflectClient {
         } catch (Exception e) {
             throw new IllegalStateException("Failed to invoke method: " + mGuiPatternTerm_inventorySlots, e);
         }
+    }
+
+    public static void rewriteIcon(GuiCraftingStatus gui, ItemStack icon) {
+        Ae2Reflect.writeField(gui, fGuiCPUStatus_icon, icon);
+    }
+
+    public static GuiTabButton getOriginalGuiButton(GuiCraftingStatus gui) {
+        return Ae2Reflect.readField(gui, fGuiCraftingStatus_originalGuiBtn);
     }
 
     public static Set<Slot> getDragClick(AEBaseGui gui) {

@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 
-import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
+import com.asdflj.ae2thing.client.gui.GuiItemMonitor;
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.loader.KeybindLoader;
 import com.asdflj.ae2thing.loader.RenderLoader;
@@ -59,14 +59,14 @@ public class ClientProxy extends CommonProxy {
     public void tickEvent(TickEvent.PlayerTickEvent event) {
         if (Config.backPackTerminalFillItemName && refreshTick + 500 < System.currentTimeMillis()
             && ModAndClassUtil.NEI) {
-            if (Minecraft.getMinecraft().currentScreen instanceof GuiCraftingTerminal gct) {
+            if (Minecraft.getMinecraft().currentScreen instanceof GuiItemMonitor gim) {
                 refreshTick = System.currentTimeMillis();
-                hoveredStack[1] = this.getStackMouseOver(gct);
+                hoveredStack[1] = this.getStackMouseOver(gim);
                 if (hoveredStack[1] == null) return;
                 if (hoveredStack[0] != hoveredStack[1]) {
                     hoveredStack[0] = hoveredStack[1];
                 } else {
-                    gct.setSearchString(hoveredStack[0].getDisplayName(), true, 0);
+                    gim.setSearchString(hoveredStack[0].getDisplayName(), true, 0);
                 }
             }
         }
