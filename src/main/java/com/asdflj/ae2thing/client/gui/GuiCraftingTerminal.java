@@ -39,7 +39,6 @@ import appeng.core.localization.GuiText;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
-import codechicken.nei.util.TextHistory;
 
 public class GuiCraftingTerminal extends GuiItemMonitor {
 
@@ -177,27 +176,6 @@ public class GuiCraftingTerminal extends GuiItemMonitor {
         }
         this.repo.updateView();
         this.setScrollBar();
-    }
-
-    @Override
-    protected boolean mouseWheelEvent(int x, int y, int wheel) {
-        if (ModAndClassUtil.NEI && this.searchField.isMouseIn(x, y) && isNEISearch()) {
-            TextHistory.Direction direction;
-            switch (wheel) {
-                case -1:
-                    direction = TextHistory.Direction.PREVIOUS;
-                    break;
-                case 1:
-                    direction = TextHistory.Direction.NEXT;
-                    break;
-                default:
-                    return super.mouseWheelEvent(x, y, wheel);
-            }
-            this.history.get(direction, this.searchField.getText())
-                .ifPresent(t -> setSearchString(t, true));
-
-        }
-        return super.mouseWheelEvent(x, y, wheel);
     }
 
     @Override

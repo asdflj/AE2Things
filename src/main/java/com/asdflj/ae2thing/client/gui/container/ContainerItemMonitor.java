@@ -225,6 +225,22 @@ public abstract class ContainerItemMonitor extends AEBaseContainer implements IC
     }
 
     @Override
+    public void removeCraftingFromCrafters(final ICrafting c) {
+        super.removeCraftingFromCrafters(c);
+        if (this.crafters.isEmpty() && this.monitor != null) {
+            this.monitor.removeListener(this);
+        }
+    }
+
+    @Override
+    public void onContainerClosed(final EntityPlayer player) {
+        super.onContainerClosed(player);
+        if (this.monitor != null) {
+            this.monitor.removeListener(this);
+        }
+    }
+
+    @Override
     public void onListUpdate() {
         for (final Object c : this.crafters) {
             if (c instanceof final ICrafting cr) {

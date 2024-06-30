@@ -2,9 +2,7 @@ package com.asdflj.ae2thing.client.gui;
 
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -59,7 +57,6 @@ public class GuiDistillationPatternTerminal extends GuiItemMonitor {
 
     @Override
     protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
-        final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         if (mouseButton == 3) {
             if (slot instanceof OptionalSlotFake || slot instanceof SlotFakeCraftingMatrix) {
                 if (slot.getHasStack()) {
@@ -75,13 +72,7 @@ public class GuiDistillationPatternTerminal extends GuiItemMonitor {
                 }
             }
         }
-
         super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
-
-        if (ctrlDown != 1 && slot instanceof SlotFakeCraftingMatrix sfcm
-            && (sfcm.getHasStack() || player.inventory.getItemStack() != null)) {
-            AE2Thing.proxy.netHandler.sendToServer(new CPacketTerminalBtns("PatternTerminal.ScanSourceItem", 1));
-        }
 
     }
 

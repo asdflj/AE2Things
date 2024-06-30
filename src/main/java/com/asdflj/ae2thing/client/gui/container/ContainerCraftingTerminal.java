@@ -3,7 +3,6 @@ package com.asdflj.ae2thing.client.gui.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -74,14 +73,6 @@ public class ContainerCraftingTerminal extends ContainerItemMonitor {
         this.monitor.addListener(this, null);
         this.setCellInventory(this.monitor);
         this.setPowerSource((IEnergySource) this.host);
-    }
-
-    @Override
-    public void removeCraftingFromCrafters(final ICrafting c) {
-        super.removeCraftingFromCrafters(c);
-        if (this.crafters.isEmpty() && this.monitor != null) {
-            this.monitor.removeListener(this);
-        }
     }
 
     public IInventory getInventoryByName(String name) {

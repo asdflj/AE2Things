@@ -31,7 +31,6 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyGrid;
-import appeng.api.networking.energy.IEnergySource;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.ITerminalHost;
 import appeng.container.guisync.GuiSync;
@@ -73,6 +72,7 @@ public class ContainerDistillationPatternTerminal extends ContainerItemMonitor i
     @GuiSync(99)
     public boolean canAccessViewCells;
     private final PartDistillationPatternTerminal it;
+    private ItemStack lastScanItem = null;
 
     public ContainerDistillationPatternTerminal(InventoryPlayer ip, ITerminalHost monitorable) {
         super(ip, monitorable);
@@ -119,15 +119,8 @@ public class ContainerDistillationPatternTerminal extends ContainerItemMonitor i
         for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
             for (int y = 0; y < CRAFTING_GRID_HEIGHT; y++) {
                 this.addSlotToContainer(
-                    this.outputSlots[x * CRAFTING_GRID_HEIGHT + y] = new SlotPatternOutputs(
-                        output,
-                        this,
-                        x * CRAFTING_GRID_HEIGHT + y,
-                        58,
-                        -83,
-                        x,
-                        y,
-                        x + 4));
+                    this.outputSlots[x * CRAFTING_GRID_HEIGHT
+                        + y] = new SlotPatternOutputs(output, this, x * CRAFTING_GRID_HEIGHT + y, 58, -83, x, y, 1));
                 this.outputSlots[x * CRAFTING_GRID_HEIGHT + y].setRenderDisabled(false);
             }
         }
@@ -137,7 +130,7 @@ public class ContainerDistillationPatternTerminal extends ContainerItemMonitor i
 
     @Override
     public void onSlotChange(Slot s) {
-        if (s == this.patternSlotOUT && Platform.isServer()) {
+        if (s == this.patternSlotOUT || s == this.craftingSlots[0] && Platform.isServer()) {
             for (final Object crafter : this.crafters) {
                 final ICrafting icrafting = (ICrafting) crafter;
 
@@ -145,6 +138,9 @@ public class ContainerDistillationPatternTerminal extends ContainerItemMonitor i
                     if (g instanceof OptionalSlotFake || g instanceof SlotFakeCraftingMatrix) {
                         final Slot sri = (Slot) g;
                         icrafting.sendSlotContents(this, sri.slotNumber, sri.getStack());
+                        if (g instanceof SlotFakeCraftingMatrix) {
+                            this.scanSourceItem();
+                        }
                     }
                 }
                 ((EntityPlayerMP) icrafting).isChangingQuantityOnly = false;
@@ -169,13 +165,14 @@ public class ContainerDistillationPatternTerminal extends ContainerItemMonitor i
     }
 
     public void scanSourceItem() {
-        ItemStack is = this.crafting.getStackInSlot(0);
+        ItemStack is = this.craftingSlots[0].getStack();
+        if (this.lastScanItem != null && Platform.isSameItemPrecise(is, lastScanItem)) return;
         this.clearAspectSlots();
         if (is == null) return;
+        this.lastScanItem = is;
         AspectList itemAspects = ThaumcraftApiHelper.getObjectAspects(is);
         itemAspects = ThaumcraftApiHelper.getBonusObjectTags(is, itemAspects);
         Aspect[] sortedAspects = null;
-
         // Does the item have any aspects?
         if ((itemAspects == null) || (itemAspects.size() == 0)) {
             // Done
@@ -218,7 +215,6 @@ public class ContainerDistillationPatternTerminal extends ContainerItemMonitor i
                 // Set the size
                 aspectItem.stackSize = itemAspects.getAmount(aspect);
             }
-
             // Put into slot
             this.outputSlots[i].putStack(aspectItem);
         }
@@ -238,6 +234,7 @@ public class ContainerDistillationPatternTerminal extends ContainerItemMonitor i
         return this.networkNode;
     }
 
+    @Override
     public IInventory getInventoryByName(String name) {
         if (name.equals("player")) {
             return this.getInventoryPlayer();
@@ -250,6 +247,7 @@ public class ContainerDistillationPatternTerminal extends ContainerItemMonitor i
         return false;
     }
 
+    @Override
     public ItemStack[] getViewCells() {
         final ItemStack[] list = new ItemStack[this.cellView.length];
         for (int x = 0; x < this.cellView.length; x++) {
@@ -309,11 +307,6 @@ public class ContainerDistillationPatternTerminal extends ContainerItemMonitor i
             } else {
                 this.setValidContainer(false);
             }
-        } else {
-            this.monitor = this.host.getItemInventory();
-            this.monitor.addListener(this, null);
-            this.setCellInventory(this.monitor);
-            this.setPowerSource((IEnergySource) this.host);
         }
     }
 

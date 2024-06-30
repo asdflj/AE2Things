@@ -14,9 +14,9 @@ import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiDistillationPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiPatternValueAmount;
 import com.asdflj.ae2thing.client.gui.container.ContainerCellLink;
+import com.asdflj.ae2thing.client.gui.container.ContainerCraftConfirm;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerDistillationPatternTerminal;
-import com.asdflj.ae2thing.client.gui.container.ContainerFluidCraftConfirm;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
 import com.asdflj.ae2thing.common.parts.THPart;
 import com.asdflj.ae2thing.inventory.ItemCellLinkInventory;
@@ -27,6 +27,19 @@ import appeng.container.implementations.ContainerCraftAmount;
 import appeng.container.implementations.ContainerCraftingStatus;
 
 public enum GuiType {
+
+    BACKPACK_TERMINAL(new ItemGuiFactory<>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerCraftingTerminal(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiCraftingTerminal(player.inventory, inv);
+        }
+    }),
 
     DISTILLATION_PATTERN_TERMINAL(new PartGuiFactory<>(ITerminalHost.class) {
 
@@ -44,7 +57,7 @@ public enum GuiType {
 
         @Override
         protected Object createServerGui(EntityPlayer player, THPart inv) {
-            return new ContainerFluidCraftConfirm(player.inventory, inv);
+            return new ContainerCraftConfirm(player.inventory, inv);
         }
 
         @Override
@@ -87,19 +100,6 @@ public enum GuiType {
         @Override
         protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
             return new GuiCraftAmount(player.inventory, inv);
-        }
-    }),
-
-    BACKPACK_TERMINAL(new ItemGuiFactory<>(ITerminalHost.class) {
-
-        @Override
-        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
-            return new ContainerCraftingTerminal(player.inventory, inv);
-        }
-
-        @Override
-        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
-            return new GuiCraftingTerminal(player.inventory, inv);
         }
     }),
     CELL_LINK(new ItemGuiFactory<>(ItemCellLinkInventory.class) {

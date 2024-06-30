@@ -11,11 +11,10 @@ import com.asdflj.ae2thing.util.BlockPos;
 
 import appeng.api.networking.security.IActionHost;
 import appeng.api.storage.ITerminalHost;
-import appeng.container.implementations.ContainerCraftConfirm;
 
-public class ContainerFluidCraftConfirm extends ContainerCraftConfirm {
+public class ContainerCraftConfirm extends appeng.container.implementations.ContainerCraftConfirm {
 
-    public ContainerFluidCraftConfirm(final InventoryPlayer ip, final ITerminalHost te) {
+    public ContainerCraftConfirm(final InventoryPlayer ip, final ITerminalHost te) {
         super(ip, te);
     }
 
