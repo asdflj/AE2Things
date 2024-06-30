@@ -36,7 +36,6 @@ public class RecipeLoader implements Runnable {
         1);
     public static final ItemStack AE2FC_DIGITAL_SINGULARITY_CELL = com.glodblock.github.loader.ItemAndBlockHolder.SINGULARITY_CELL
         .stack();
-    public static final ItemStack THE_DISTILLATION_ENCODER = new ItemStack(DISTILLATION_ENCODER.getBlock(), 1);
 
     @Override
     public void run() {
@@ -63,6 +62,7 @@ public class RecipeLoader implements Runnable {
                 'C',
                 AE2FC_DIGITAL_SINGULARITY_CELL));
         if (ModAndClassUtil.THE) {
+            final ItemStack THE_DISTILLATION_ENCODER = new ItemStack(DISTILLATION_ENCODER.getBlock(), 1);
             GameRegistry.addShapelessRecipe(
                 DISTILLATION_PATTERN_TERMINAL.stack(),
                 AE2_PROCESS_PATTERN_TERM,
