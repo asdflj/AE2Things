@@ -8,10 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import com.asdflj.ae2thing.client.gui.GuiCellLink;
 import com.asdflj.ae2thing.client.gui.GuiCraftAmount;
+import com.asdflj.ae2thing.client.gui.GuiCraftConfirm;
 import com.asdflj.ae2thing.client.gui.GuiCraftingStatus;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiDistillationPatternTerminal;
-import com.asdflj.ae2thing.client.gui.GuiFluidCraftConfirm;
 import com.asdflj.ae2thing.client.gui.GuiPatternValueAmount;
 import com.asdflj.ae2thing.client.gui.container.ContainerCellLink;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
@@ -49,7 +49,7 @@ public enum GuiType {
 
         @Override
         protected Object createClientGui(EntityPlayer player, THPart inv) {
-            return new GuiFluidCraftConfirm(player.inventory, inv);
+            return new GuiCraftConfirm(player.inventory, inv);
         }
     }),
     CRAFTING_STATUS(new PartGuiFactory<>(ITerminalHost.class) {

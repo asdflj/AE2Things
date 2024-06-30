@@ -25,9 +25,12 @@ import com.glodblock.github.util.Util;
 import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
 
 import appeng.api.AEApi;
+import appeng.api.config.ActionItems;
+import appeng.api.config.Settings;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.me.SlotME;
 import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.SlotCraftingMatrix;
@@ -57,6 +60,18 @@ public class GuiCraftingTerminal extends GuiItemMonitor {
         (this.monitorableContainer = (ContainerCraftingTerminal) this.inventorySlots).setGui(this);
         this.reservedSpace = 73;
         this.inv = (ContainerCraftingTerminal) this.inventorySlots;
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        this.buttonList.add(
+            this.clearBtn = new GuiImgButton(
+                this.guiLeft + 92,
+                this.guiTop + this.ySize - 156,
+                Settings.ACTIONS,
+                ActionItems.STASH));
+        this.clearBtn.setHalfSize(true);
     }
 
     @Override

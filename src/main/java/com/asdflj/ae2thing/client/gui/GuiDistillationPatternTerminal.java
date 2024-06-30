@@ -106,7 +106,13 @@ public class GuiDistillationPatternTerminal extends GuiItemMonitor {
     @Override
     public void initGui() {
         super.initGui();
-        clearBtn.xPosition = this.guiLeft + 87 + 18 * -3;
+        this.buttonList.add(
+            this.clearBtn = new GuiImgButton(
+                this.guiLeft + 87 + 18 * -3,
+                this.guiTop + this.ySize - 156,
+                Settings.ACTIONS,
+                ActionItems.CLOSE));
+        this.clearBtn.setHalfSize(true);
         this.encodeBtn = new GuiImgButton(
             this.guiLeft + 147,
             this.guiTop + this.ySize - 142,

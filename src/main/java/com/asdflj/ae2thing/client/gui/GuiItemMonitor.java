@@ -29,7 +29,6 @@ import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 
-import appeng.api.config.ActionItems;
 import appeng.api.config.CraftingStatus;
 import appeng.api.config.SearchBoxMode;
 import appeng.api.config.Settings;
@@ -424,14 +423,6 @@ public abstract class GuiItemMonitor extends AEBaseMEGui
                 Settings.TERMINAL_STYLE,
                 AEConfig.instance.settings.getSetting(Settings.TERMINAL_STYLE)));
         this.offsetY += 20;
-
-        this.buttonList.add(
-            this.clearBtn = new GuiImgButton(
-                this.guiLeft + 92,
-                this.guiTop + this.ySize - 156,
-                Settings.ACTIONS,
-                ActionItems.STASH));
-        this.clearBtn.setHalfSize(true);
 
         // Right now 80 > offsetX, but that can be changed later.
         // noinspection DataFlowIssue
