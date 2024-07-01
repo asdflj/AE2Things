@@ -12,11 +12,13 @@ import com.asdflj.ae2thing.client.gui.container.ContainerDistillationPatternTerm
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.glodblock.github.common.item.ItemFluidDrop;
 
 import appeng.api.config.ActionItems;
 import appeng.api.config.Settings;
 import appeng.api.implementations.tiles.IViewCellStorage;
 import appeng.api.storage.ITerminalHost;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.container.AEBaseContainer;
@@ -29,7 +31,7 @@ import appeng.core.localization.GuiText;
 import appeng.helpers.InventoryAction;
 import appeng.util.item.AEItemStack;
 
-public class GuiDistillationPatternTerminal extends GuiItemMonitor {
+public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFluidTerminal {
 
     private final ContainerDistillationPatternTerminal container;
     protected final boolean viewCell;
@@ -197,6 +199,7 @@ public class GuiDistillationPatternTerminal extends GuiItemMonitor {
         }
     }
 
+    @Override
     public void postUpdate(List<IAEItemStack> list) {
         for (IAEItemStack ias : list) {
             this.repo.postUpdate(ias);
@@ -204,4 +207,13 @@ public class GuiDistillationPatternTerminal extends GuiItemMonitor {
         this.repo.updateView();
         this.setScrollBar();
     }
+
+    public void postFluidUpdate(List<IAEFluidStack> list) {
+        for (IAEFluidStack ias : list) {
+            this.repo.postUpdate(ItemFluidDrop.newAeStack(ias));
+        }
+        this.repo.updateView();
+        this.setScrollBar();
+    }
+
 }

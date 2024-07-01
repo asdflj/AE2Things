@@ -5,7 +5,7 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 
-import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerMonitor;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.util.item.AEFluidStack;
@@ -79,9 +79,8 @@ public class CPacketFluidUpdate implements IMessage {
         public IMessage onMessage(CPacketFluidUpdate message, MessageContext ctx) {
             Container container = ctx.getServerHandler().playerEntity.openContainer;
             EntityPlayer player = ctx.getServerHandler().playerEntity;
-            if (container instanceof ContainerCraftingTerminal) {
-                ((ContainerCraftingTerminal) container)
-                    .postChange(message.fluid, player, message.slotIndex, message.shift);
+            if (container instanceof ContainerMonitor) {
+                ((ContainerMonitor) container).postChange(message.fluid, player, message.slotIndex, message.shift);
             }
             return null;
         }
