@@ -161,4 +161,9 @@ public abstract class GuiAmount extends AEBaseGui implements IGuiDrawSlot {
     public float getzLevel() {
         return this.zLevel;
     }
+
+    @Override
+    public AEBaseGui getAEBaseGui() {
+        return this;
+    }
 }

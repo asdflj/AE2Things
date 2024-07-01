@@ -19,6 +19,7 @@ import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
 
 import appeng.api.storage.data.IAEItemStack;
+import appeng.client.gui.AEBaseGui;
 import appeng.client.me.SlotME;
 import appeng.container.slot.SlotInaccessible;
 import appeng.util.item.AEItemStack;
@@ -96,13 +97,13 @@ public interface IGuiDrawSlot {
             (fluid.getColor() >> 16 & 0xFF) / 255.0F,
             (fluid.getColor() >> 8 & 0xFF) / 255.0F,
             (fluid.getColor() & 0xFF) / 255.0F);
-        drawTexturedModelRectFromIcon(posX, posY, fluid.getIcon(), 16, 16);
+        getAEBaseGui().drawTexturedModelRectFromIcon(posX, posY, fluid.getIcon(), 16, 16);
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glColor3f(1, 1, 1);
     }
 
-    void drawTexturedModelRectFromIcon(int posX, int posY, IIcon icon, int i, int i1);
+    AEBaseGui getAEBaseGui();
 
     float getzLevel();
 }

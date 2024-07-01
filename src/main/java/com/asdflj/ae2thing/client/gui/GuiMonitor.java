@@ -51,6 +51,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IDisplayRepo;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
+import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.AEBaseMEGui;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiScrollbar;
@@ -870,4 +871,8 @@ public abstract class GuiMonitor extends AEBaseMEGui
         }
     }
 
+    @Override
+    public AEBaseGui getAEBaseGui() {
+        return this;
+    }
 }
