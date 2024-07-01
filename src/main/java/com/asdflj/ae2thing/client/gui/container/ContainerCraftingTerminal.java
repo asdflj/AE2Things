@@ -6,7 +6,6 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 
-import com.asdflj.ae2thing.client.gui.container.BaseMonitor.ItemMonitor;
 import com.asdflj.ae2thing.inventory.item.PortableItemInventory;
 import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidDrop;

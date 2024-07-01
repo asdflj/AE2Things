@@ -1,22 +1,24 @@
 package com.asdflj.ae2thing.client.gui;
 
+import static com.asdflj.ae2thing.util.NameConst.TT_FLUID_TERMINAL_AMOUNT;
+
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -35,13 +37,13 @@ import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 import com.glodblock.github.util.Util;
-import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
 
-import appeng.api.AEApi;
 import appeng.api.config.CraftingStatus;
 import appeng.api.config.SearchBoxMode;
 import appeng.api.config.Settings;
+import appeng.api.config.TerminalFontSize;
 import appeng.api.config.TerminalStyle;
 import appeng.api.config.YesNo;
 import appeng.api.storage.data.IAEFluidStack;
@@ -81,7 +83,8 @@ import appeng.util.Platform;
 import codechicken.nei.LayoutManager;
 import codechicken.nei.util.TextHistory;
 
-public abstract class GuiMonitor extends AEBaseMEGui implements IConfigManagerHost, ISortSource, IDropToFillTextField {
+public abstract class GuiMonitor extends AEBaseMEGui
+    implements IConfigManagerHost, ISortSource, IDropToFillTextField, IGuiDrawSlot {
 
     protected GuiImgButton clearBtn;
     public static int craftingGridOffsetX;
@@ -141,21 +144,22 @@ public abstract class GuiMonitor extends AEBaseMEGui implements IConfigManagerHo
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         if (slot instanceof SlotME sme) {
             ItemStack cs = player.inventory.getItemStack();
-            if (Util.FluidUtil.isFluidContainer(cs)) {
-                if (ctrlDown == 0 && sme.getHasStack()
-                    && sme.getStack()
-                        .getItem() instanceof ItemFluidDrop
-                    && Util.FluidUtil.isEmpty(cs)) {
-                    IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(sme.getAEStack());
-                    AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
-                    return;
-                } else if (ctrlDown == 1 && Util.FluidUtil.isFilled(cs)) {
-                    AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(null, isShiftKeyDown()));
-                    return;
-                }
+            if (ctrlDown == 0 && sme.getHasStack()
+                && sme.getStack()
+                    .getItem() instanceof ItemFluidDrop
+                && sme.getAEStack()
+                    .getStackSize() != 0) {
+                IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(sme.getAEStack());
+                AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
+                return;
+            } else if (ctrlDown == 1 && (Util.FluidUtil.isFilled(cs) || !AspectUtil.isEmptyEssentiaContainer(cs))) {
+                AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(null, isShiftKeyDown()));
+                return;
             }
             if (mouseButton == 3 && player.capabilities.isCreativeMode
                 && sme.getHasStack()
+                && !sme.getAEStack()
+                    .isCraftable()
                 && sme.getStack()
                     .getItem() instanceof ItemFluidDrop) {
                 return;
@@ -787,7 +791,14 @@ public abstract class GuiMonitor extends AEBaseMEGui implements IConfigManagerHo
 
     @Override
     public void setTextFieldValue(String displayName, int mousex, int mousey, ItemStack stack) {
-        setSearchString(displayName, true);
+        if (AspectUtil.getAspectFromJar(stack) != null) {
+            setSearchString(
+                Objects.requireNonNull(AspectUtil.getAspectFromJar(stack))
+                    .getName(),
+                true);
+        } else {
+            setSearchString(displayName, true);
+        }
         this.saveSearchString();
     }
 
@@ -814,71 +825,49 @@ public abstract class GuiMonitor extends AEBaseMEGui implements IConfigManagerHo
 
     @Override
     public void func_146977_a(final Slot s) {
-        if (drawFluidSlot(s)) super.func_146977_a(s);
+        if (drawSlot(s)) super.func_146977_a(s);
     }
 
-    public boolean drawFluidSlot(Slot slot) {
-        if (slot instanceof SlotME) {
-            IAEItemStack stack = ((SlotME) slot).getAEStack();
-            if (stack == null || stack.getItem() == null || !(stack.getItem() instanceof ItemFluidDrop)) return true;
-            FluidStack fluidStack = ItemFluidDrop.getFluidStack(slot.getStack());
-            this.drawWidget(slot.xDisplayPosition, slot.yDisplayPosition, fluidStack.getFluid());
-            aeRenderItem.setAeStack(stack);
-            GL11.glTranslatef(0.0f, 0.0f, 200.0f);
-            aeRenderItem.renderItemOverlayIntoGUI(
-                fontRendererObj,
-                mc.getTextureManager(),
-                stack.getItemStack(),
-                slot.xDisplayPosition,
-                slot.yDisplayPosition);
-            GL11.glTranslatef(0.0f, 0.0f, -200.0f);
-            return false;
-        }
-        return true;
+    @Override
+    public float getzLevel() {
+        return this.zLevel;
     }
 
-    private void drawWidget(int posX, int posY, Fluid fluid) {
-        if (fluid == null) return;
-        IIcon icon = fluid.getIcon();
-        if (icon == null) return;
-
-        if (ModAndClassUtil.HODGEPODGE && icon instanceof IPatchedTextureAtlasSprite) {
-            ((IPatchedTextureAtlasSprite) icon).markNeedsAnimationUpdate();
-        }
-
-        Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor3f(
-            (fluid.getColor() >> 16 & 0xFF) / 255.0F,
-            (fluid.getColor() >> 8 & 0xFF) / 255.0F,
-            (fluid.getColor() & 0xFF) / 255.0F);
-        drawTexturedModelRectFromIcon(posX, posY, fluid.getIcon(), 16, 16);
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glColor3f(1, 1, 1);
-    }
-
-    public void postUpdate(List<IAEItemStack> list) {
-        for (IAEItemStack ias : list) {
-            if (ias.getItem() instanceof ItemFluidDrop) {
-                ItemStack fluidDrop = ItemFluidDrop.newDisplayStack(ItemFluidDrop.getFluidStack(ias.getItemStack()));
-                this.repo.postUpdate(
-                    AEApi.instance()
-                        .storage()
-                        .createItemStack(fluidDrop));
-            } else {
-                this.repo.postUpdate(ias);
-            }
-        }
-        this.repo.updateView();
-        this.setScrollBar();
-    }
+    public abstract void postUpdate(List<IAEItemStack> list);
 
     public void setPlayerInv(ItemStack is) {
         this.container.getPlayerInv()
             .setItemStack(is);
+    }
+
+    @Override
+    public List<String> handleItemTooltip(final ItemStack stack, final int mouseX, final int mouseY,
+        final List<String> currentToolTip) {
+        if (stack != null && stack.getItem() instanceof ItemFluidDrop) {
+            if (isShiftKeyDown()) return currentToolTip;
+            final Slot s = this.getSlot(mouseX, mouseY);
+            if (s instanceof SlotME || s instanceof SlotFake) {
+                final int BigNumber = AEConfig.instance.getTerminalFontSize() == TerminalFontSize.SMALL ? 9999 : 999;
+
+                IAEItemStack myStack = null;
+
+                try {
+                    myStack = Platform.getAEStackInSlot(s);
+                } catch (final Throwable ignore) {}
+
+                if (myStack != null) {
+                    if (myStack.getStackSize() > BigNumber || (myStack.getStackSize() > 1)) {
+                        final String formattedAmount = NumberFormat.getNumberInstance(Locale.US)
+                            .format(myStack.getStackSize());
+                        final String format = I18n.format(TT_FLUID_TERMINAL_AMOUNT, formattedAmount);
+                        currentToolTip.add("\u00a77" + format);
+                    }
+                }
+            }
+            return currentToolTip;
+        } else {
+            return super.handleItemTooltip(stack, mouseX, mouseY, currentToolTip);
+        }
     }
 
 }

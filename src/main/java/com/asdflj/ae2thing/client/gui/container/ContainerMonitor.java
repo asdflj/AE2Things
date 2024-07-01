@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
-import com.asdflj.ae2thing.client.gui.container.BaseMonitor.FluidMonitor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -15,9 +14,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.client.gui.container.BaseMonitor.FluidMonitor;
 import com.asdflj.ae2thing.client.gui.container.BaseMonitor.ItemMonitor;
+import com.asdflj.ae2thing.loader.RecipeLoader;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
 import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -43,10 +45,13 @@ import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
+import appeng.util.item.AEItemStack;
 
 public abstract class ContainerMonitor extends AEBaseContainer
     implements IConfigurableObject, IConfigManagerHost, IAEAppEngInventory, IContainerCraftingPacket {
 
+    public static final ItemStack BUCKET = RecipeLoader.BUCKET;
+    public static final ItemStack PHIAL = AspectUtil.HELPER.createEmptyPhial();
     protected final IItemList<IAEItemStack> items = AEApi.instance()
         .storage()
         .createItemList();
@@ -56,7 +61,6 @@ public abstract class ContainerMonitor extends AEBaseContainer
     protected ITerminalHost host;
     protected IConfigManagerHost gui;
     protected IConfigManager serverCM;
-
 
     public ContainerMonitor(InventoryPlayer ip, ITerminalHost monitorable) {
         super(ip, monitorable);
@@ -121,7 +125,7 @@ public abstract class ContainerMonitor extends AEBaseContainer
     }
 
     protected boolean isInvalid() {
-        return this.monitor.isValid(null);
+        return !this.monitor.isValid(null);
     }
 
     protected void processItemList() {
@@ -193,27 +197,76 @@ public abstract class ContainerMonitor extends AEBaseContainer
     @Override
     public void onContainerClosed(final EntityPlayer player) {
         super.onContainerClosed(player);
-        if (this.monitor != null && this.monitor.getMonitor() != null) this.monitor.removeListener();
+        if (this.monitor.getMonitor() != null) this.monitor.removeListener();
+    }
+
+    private void extractPlayerInventoryItemStack(EntityPlayer player, ItemStack itemStack, int stackSize) {
+        for (int x = 0; x < player.inventory.mainInventory.length; x++) {
+            ItemStack is = player.inventory.mainInventory[x];
+            if (is == null) continue;
+            if (Platform.isSameItemPrecise(is, itemStack)) {
+                ItemStack tmp = is.copy();
+                if (is.stackSize < stackSize) {
+                    stackSize = is.stackSize;
+                }
+                is.stackSize -= stackSize;
+                tmp.stackSize = stackSize;
+                if (is.stackSize == 0) {
+                    player.inventory.setInventorySlotContents(x, null);
+                }
+                player.inventory.setItemStack(tmp);
+                player.inventory.markDirty();
+            }
+        }
+
     }
 
     public void postChange(IAEFluidStack fluid, EntityPlayer player, int slotIndex, boolean shift) {
-        ItemStack targetStack;
-        if (slotIndex == -1) {
-            targetStack = player.inventory.getItemStack();
-        } else {
-            targetStack = player.inventory.getStackInSlot(slotIndex);
+        ItemStack targetStack = getTargetStack(player, slotIndex);
+        if (targetStack == null) {
+            final IAEItemStack extractItem;
+            if (!AspectUtil.isEssentiaGas(fluid)) {
+                extractItem = this.monitor.getMonitor()
+                    .extractItems(AEItemStack.create(BUCKET), Actionable.MODULATE, this.getActionSource());
+            } else {
+                extractItem = this.monitor.getMonitor()
+                    .extractItems(AEItemStack.create(PHIAL), Actionable.MODULATE, this.getActionSource());
+            }
+            if (extractItem != null) {
+                player.inventory.setItemStack(extractItem.getItemStack());
+            } else {
+                if (!AspectUtil.isEssentiaGas(fluid)) {
+                    this.extractPlayerInventoryItemStack(player, BUCKET, 1);
+                } else {
+                    this.extractPlayerInventoryItemStack(player, PHIAL, 1);
+                }
+            }
+            targetStack = getTargetStack(player, slotIndex);
         }
+
+        if (targetStack == null) return;
         // The primary output itemstack
-        if (com.glodblock.github.util.Util.FluidUtil.isEmpty(targetStack) && fluid != null) {
+        if (fluid != null && (AspectUtil.isEmptyEssentiaContainer(targetStack)
+            || com.glodblock.github.util.Util.FluidUtil.isEmpty(targetStack))) {
             // Situation 1.a: Empty fluid container, and nonnull slot
             extractFluid(fluid, player, slotIndex, shift);
-        } else if (!com.glodblock.github.util.Util.FluidUtil.isEmpty(targetStack)) {
-            // Situation 2.a: We are holding a non-empty container.
-            insertFluid(player, slotIndex, shift);
-            // End of situation 2.a
-        }
+        } else if (!com.glodblock.github.util.Util.FluidUtil.isEmpty(targetStack)
+            || !AspectUtil.isEmptyEssentiaContainer(targetStack)) {
+                // Situation 2.a: We are holding a non-empty container.
+                insertFluid(player, slotIndex, shift);
+                // End of situation 2.a
+            }
         // No op (Any other situation)
+
         this.detectAndSendChanges();
+    }
+
+    private ItemStack getTargetStack(EntityPlayer player, int slotIndex) {
+        if (slotIndex == -1) {
+            return player.inventory.getItemStack();
+        } else {
+            return player.inventory.getStackInSlot(slotIndex);
+        }
     }
 
     /**
@@ -226,19 +279,22 @@ public abstract class ContainerMonitor extends AEBaseContainer
      * In order above, the itemstack at `slotIndex` is transformed into the output.
      */
     private void insertFluid(EntityPlayer player, int slotIndex, boolean shift) {
-        final ItemStack targetStack;
-        if (slotIndex == -1) {
-            targetStack = player.inventory.getItemStack();
-        } else {
-            targetStack = player.inventory.getStackInSlot(slotIndex);
-        }
+        ItemStack targetStack = getTargetStack(player, slotIndex);
         final int containersRequestedToInsert = shift ? targetStack.stackSize : 1;
 
         // Step 1: Determine container characteristics and verify fluid to be extractable
         final int fluidPerContainer;
         final FluidStack fluidStackPerContainer;
         final boolean partialInsertSupported;
-        if (targetStack.getItem() instanceof IFluidContainerItem fcItem) {
+        if (AspectUtil.isEssentiaContainer(targetStack)) {
+            ItemStack test = targetStack.copy();
+            test.stackSize = 1;
+            IAEFluidStack fs = AspectUtil.getAEGasFromContainer(test);
+            fluidPerContainer = AspectUtil.HELPER.getContainerStoredAmount(test) * AspectUtil.R;
+            if (fs == null || fluidPerContainer == 0) return;
+            fluidStackPerContainer = fs.getFluidStack();
+            partialInsertSupported = true;
+        } else if (targetStack.getItem() instanceof IFluidContainerItem fcItem) {
             ItemStack test = targetStack.copy();
             test.stackSize = 1;
             fluidStackPerContainer = fcItem.drain(test, Integer.MAX_VALUE, false);
@@ -253,7 +309,6 @@ public abstract class ContainerMonitor extends AEBaseContainer
             if (emptyTank == null) {
                 return;
             }
-
             fluidStackPerContainer = FluidContainerRegistry.getFluidForFilledItem(targetStack);
             fluidPerContainer = fluidStackPerContainer.amount;
             partialInsertSupported = false;
@@ -311,10 +366,26 @@ public abstract class ContainerMonitor extends AEBaseContainer
         final int usedTanks = emptiedTanks + partialTanks;
         final int untouchedTanks = targetStack.stackSize - usedTanks;
 
-        final ItemStack emptiedTanksStack;
+        ItemStack emptiedTanksStack;
         final ItemStack partialTanksStack;
 
-        if (targetStack.getItem() instanceof IFluidContainerItem fcItem) {
+        if (AspectUtil.isEssentiaContainer(targetStack)) {
+            if (emptiedTanks > 0) {
+                emptiedTanksStack = targetStack.copy();
+                emptiedTanksStack.stackSize = 1;
+                emptiedTanksStack = AspectUtil.drainEssentiaFromGas(emptiedTanksStack, fluidStackPerContainer).right;
+                emptiedTanksStack.stackSize = emptiedTanks;
+            } else {
+                emptiedTanksStack = null;
+            }
+            if (partialTanks > 0) {
+                partialTanksStack = targetStack.copy();
+                partialTanksStack.stackSize = 1;
+                emptiedTanksStack = AspectUtil.drainEssentiaFromGas(partialTanksStack, fluidStackPerContainer).right;
+            } else {
+                partialTanksStack = null;
+            }
+        } else if (targetStack.getItem() instanceof IFluidContainerItem fcItem) {
             if (emptiedTanks > 0) {
                 emptiedTanksStack = targetStack.copy();
                 emptiedTanksStack.stackSize = 1;
@@ -411,7 +482,15 @@ public abstract class ContainerMonitor extends AEBaseContainer
         // Step 1: Determine container characteristics and verify fluid to be insertable
         final int fluidPerContainer;
         final boolean partialInsertSupported;
-        if (targetStack.getItem() instanceof IFluidContainerItem fcItem) {
+        if (AspectUtil.isEssentiaContainer(targetStack)) {
+            ItemStack testStack = targetStack.copy();
+            testStack.stackSize = 1;
+            fluidPerContainer = AspectUtil.fillEssentiaFromGas(testStack, clientRequestedFluidStack).left;
+            if (fluidPerContainer == 0) {
+                return;
+            }
+            partialInsertSupported = true;
+        } else if (targetStack.getItem() instanceof IFluidContainerItem fcItem) {
             ItemStack testStack = targetStack.copy();
             testStack.stackSize = 1;
             fluidPerContainer = fcItem.fill(testStack, clientRequestedFluidStack, false);
@@ -450,10 +529,32 @@ public abstract class ContainerMonitor extends AEBaseContainer
         final int usedTanks = filledTanks + partialTanks;
         final int untouchedTanks = targetStack.stackSize - usedTanks;
 
-        final ItemStack filledTanksStack;
-        final ItemStack partialTanksStack;
+        ItemStack filledTanksStack;
+        ItemStack partialTanksStack;
 
-        if (targetStack.getItem() instanceof IFluidContainerItem fcItem) {
+        if (AspectUtil.isEssentiaContainer(targetStack)) {
+            if (filledTanks > 0) {
+                filledTanksStack = targetStack.copy();
+                filledTanksStack.stackSize = 1;
+                FluidStack toInsert = extracted.getFluidStack()
+                    .copy();
+                toInsert.amount = fluidPerContainer;
+                filledTanksStack = AspectUtil.fillEssentiaFromGas(filledTanksStack, toInsert).right;
+                filledTanksStack.stackSize = filledTanks;
+            } else {
+                filledTanksStack = null;
+            }
+            if (partialTanks > 0) {
+                partialTanksStack = targetStack.copy();
+                partialTanksStack.stackSize = 1;
+                FluidStack toInsert = extracted.getFluidStack()
+                    .copy();
+                toInsert.amount = partialFill;
+                partialTanksStack = AspectUtil.fillEssentiaFromGas(partialTanksStack, toInsert).right;
+            } else {
+                partialTanksStack = null;
+            }
+        } else if (targetStack.getItem() instanceof IFluidContainerItem fcItem) {
             if (filledTanks > 0) {
                 filledTanksStack = targetStack.copy();
                 filledTanksStack.stackSize = 1;

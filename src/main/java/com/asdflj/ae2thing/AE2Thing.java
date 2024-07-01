@@ -4,10 +4,12 @@ import net.minecraft.util.ResourceLocation;
 
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.storage.CellHandler;
+import com.asdflj.ae2thing.crossmod.waila.WailaInit;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.loader.ChannelLoader;
 import com.asdflj.ae2thing.loader.RecipeLoader;
 import com.asdflj.ae2thing.proxy.CommonProxy;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
 
 import appeng.api.AEApi;
 import cpw.mods.fml.common.Mod;
@@ -50,6 +52,9 @@ public class AE2Thing {
     // load "Do your mod setup. Build whatever data structures you care about. Register recipes." (Remove if not needed)
     public void init(FMLInitializationEvent event) {
         proxy.init(event);
+        if (ModAndClassUtil.WAILA) {
+            WailaInit.run();
+        }
     }
 
     @Mod.EventHandler

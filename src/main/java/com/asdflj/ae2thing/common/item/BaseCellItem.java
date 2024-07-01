@@ -11,8 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.common.Config;
-import com.asdflj.ae2thing.common.storage.Constants;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.ItemCellLinkInventory;
 import com.asdflj.ae2thing.inventory.gui.GuiType;

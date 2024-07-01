@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.common.storage;
+package com.asdflj.ae2thing.api;
 
 public interface Constants {
 
@@ -8,5 +8,5 @@ public interface Constants {
     String DISKLIST = "disklist";
     String COUNT = "Count";
     String LINKED = "linked";
-
+    String DISPLAY_ONLY = "DisplayOnly";
 }

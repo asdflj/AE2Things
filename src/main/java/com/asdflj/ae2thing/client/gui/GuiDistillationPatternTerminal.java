@@ -202,15 +202,20 @@ public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFl
     @Override
     public void postUpdate(List<IAEItemStack> list) {
         for (IAEItemStack ias : list) {
+            if (ias.getItem() instanceof ItemFluidDrop) continue;
             this.repo.postUpdate(ias);
         }
         this.repo.updateView();
         this.setScrollBar();
     }
 
+    @Override
     public void postFluidUpdate(List<IAEFluidStack> list) {
-        for (IAEFluidStack ias : list) {
-            this.repo.postUpdate(ItemFluidDrop.newAeStack(ias));
+        for (IAEFluidStack is : list) {
+            IAEItemStack stack = AEItemStack.create(ItemFluidDrop.newDisplayStack(is.getFluidStack()));
+            stack.setStackSize(is.getStackSize());
+            stack.setCraftable(is.isCraftable());
+            this.repo.postUpdate(stack);
         }
         this.repo.updateView();
         this.setScrollBar();

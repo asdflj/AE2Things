@@ -13,44 +13,42 @@ import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
 import appeng.api.AEApi;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IBaseMonitor;
-import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
+import thaumicenergistics.common.items.ItemCraftingAspect;
 
 public class ItemMonitor implements IMEMonitorHandlerReceiver<IAEItemStack>, IProcessItemList {
 
-    private IMEMonitor<IAEItemStack> monitor;
+    private IMEMonitor<IAEItemStack> itemMonitor;
     private final IItemList<IAEItemStack> items = AEApi.instance()
         .storage()
         .createItemList();
     private List<ICrafting> crafters = null;
-
-    public ItemMonitor(IMEMonitor<IAEItemStack> inv, List<ICrafting> crafters) {
-        this.monitor = inv;
-        this.crafters = crafters;
-    }
+    private FluidMonitor fluidMonitorObject = null;
 
     public ItemMonitor(List<ICrafting> crafters) {
         this.crafters = crafters;
     }
 
-
-    public void setMonitor(IMEMonitor<IAEItemStack> inv){
-        this.monitor = inv;
+    public void setMonitor(IMEMonitor<IAEItemStack> itemMonitor) {
+        this.itemMonitor = itemMonitor;
     }
 
+    public void setFluidMonitorObject(FluidMonitor objectMonitor) {
+        this.fluidMonitorObject = objectMonitor;
+    }
 
     @Override
     public void addListener() {
-        this.monitor.addListener(this, null);
+        this.itemMonitor.addListener(this, null);
     }
 
     @Override
     public boolean isValid(Object verificationToken) {
-        return this.monitor == null;
+        return this.itemMonitor != null;
     }
 
     @Override
@@ -70,14 +68,23 @@ public class ItemMonitor implements IMEMonitorHandlerReceiver<IAEItemStack>, IPr
         }
     }
 
+    private void fluidHandler(IAEItemStack send) {
+        if (this.fluidMonitorObject != null && send.getItem() instanceof ItemCraftingAspect) {
+            this.fluidMonitorObject.addItemCraftingAspect(send);
+        } else if (this.fluidMonitorObject != null && send.getItem() instanceof ItemCraftingAspect) {
+            this.fluidMonitorObject.addItemCraftingFluids(send);
+        }
+    }
+
     @Override
     public void processItemList() {
         if (!this.items.isEmpty()) {
-            final IItemList<IAEItemStack> monitorCache = this.monitor.getStorageList();
+            final IItemList<IAEItemStack> monitorCache = this.itemMonitor.getStorageList();
             List<IAEItemStack> toSend = new ArrayList<>();
             for (final IAEItemStack is : this.items) {
-                final IAEItemStack send = monitorCache.findPrecise(is);
+                IAEItemStack send = monitorCache.findPrecise(is);
                 if (send != null) {
+                    fluidHandler(send.copy());
                     toSend.add(send);
                 } else {
                     is.setStackSize(0);
@@ -97,10 +104,11 @@ public class ItemMonitor implements IMEMonitorHandlerReceiver<IAEItemStack>, IPr
 
     @Override
     public void queueInventory(ICrafting c) {
-        if (Platform.isServer() && c instanceof EntityPlayer && this.monitor != null) {
-            final IItemList<IAEItemStack> monitorCache = this.monitor.getStorageList();
+        if (Platform.isServer() && c instanceof EntityPlayer && this.itemMonitor != null) {
+            final IItemList<IAEItemStack> monitorCache = this.itemMonitor.getStorageList();
             List<IAEItemStack> toSend = new ArrayList<>();
             for (final IAEItemStack is : monitorCache) {
+                fluidHandler(is.copy());
                 toSend.add(is);
             }
             SPacketMEItemInvUpdate piu = new SPacketMEItemInvUpdate();
@@ -111,17 +119,17 @@ public class ItemMonitor implements IMEMonitorHandlerReceiver<IAEItemStack>, IPr
 
     @Override
     public void removeCraftingFromCrafters(ICrafting c) {
-        if (this.crafters.isEmpty() && this.monitor != null) {
-            this.monitor.removeListener(this);
+        if (this.crafters.isEmpty() && this.itemMonitor != null) {
+            this.itemMonitor.removeListener(this);
         }
     }
 
     @Override
     public void removeListener() {
-        if (this.monitor != null) this.monitor.removeListener(this);
+        if (this.itemMonitor != null) this.itemMonitor.removeListener(this);
     }
 
     public IMEMonitor<IAEItemStack> getMonitor() {
-        return this.monitor;
+        return this.itemMonitor;
     }
 }

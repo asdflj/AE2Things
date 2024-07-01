@@ -18,8 +18,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.asdflj.ae2thing.client.gui.container.BaseMonitor.FluidMonitor;
-import com.asdflj.ae2thing.client.gui.container.BaseMonitor.ItemMonitor;
 import com.asdflj.ae2thing.common.parts.PartDistillationPatternTerminal;
 import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
@@ -324,7 +322,8 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor imple
                     this.setPowerSource(new ChannelPowerSrc(this.networkNode, g.getCache(IEnergyGrid.class)));
                     IStorageGrid storageGrid = g.getCache(IStorageGrid.class);
                     this.monitor.setMonitor(storageGrid.getItemInventory());
-                    this.fluidMonitor.setMonitor(storageGrid.getFluidInventory());
+                    this.fluidMonitor.setMonitor(storageGrid.getFluidInventory(), storageGrid.getItemInventory());
+                    this.monitor.setFluidMonitorObject(this.fluidMonitor);
                     if (this.monitor.getMonitor() == null) {
                         this.setValidContainer(false);
                     } else {
@@ -467,6 +466,7 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor imple
 
         encodedValue.setTag("in", tagIn);
         encodedValue.setTag("out", tagOut);
+        encodedValue.setBoolean("crafting", false);
         output.setTagCompound(encodedValue);
         stampAuthor(output);
         this.patternSlotOUT.putStack(output);
@@ -487,6 +487,7 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor imple
         for (final Slot s : this.outputSlots) {
             s.putStack(null);
         }
+        this.lastScanItem = null;
         this.detectAndSendChanges();
     }
 

@@ -1,15 +1,20 @@
 package com.asdflj.ae2thing.client.gui;
 
+import java.util.List;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
+import com.glodblock.github.common.item.ItemFluidDrop;
 
 import appeng.api.config.ActionItems;
 import appeng.api.config.Settings;
 import appeng.api.storage.ITerminalHost;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.SlotCraftingMatrix;
@@ -18,6 +23,7 @@ import appeng.core.localization.GuiText;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
+import appeng.util.item.AEItemStack;
 
 public class GuiCraftingTerminal extends GuiMonitor {
 
@@ -115,6 +121,23 @@ public class GuiCraftingTerminal extends GuiMonitor {
         if (this.searchField != null) {
             this.searchField.drawTextBox();
         }
+    }
+
+    @Override
+    public void postUpdate(List<IAEItemStack> list) {
+        for (IAEItemStack ias : list) {
+            if (ias.getItem() instanceof ItemFluidDrop) {
+                ItemStack fluidDrop = ItemFluidDrop.newDisplayStack(ItemFluidDrop.getFluidStack(ias.getItemStack()));
+                AEItemStack is = AEItemStack.create(fluidDrop);
+                if (is == null) continue;
+                is.setStackSize(ias.getStackSize());
+                this.repo.postUpdate(is);
+            } else {
+                this.repo.postUpdate(ias);
+            }
+        }
+        this.repo.updateView();
+        this.setScrollBar();
     }
 
 }
