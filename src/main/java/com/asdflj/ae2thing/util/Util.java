@@ -13,8 +13,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
-import com.asdflj.ae2thing.common.storage.Constants;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.util.Platform;

@@ -12,6 +12,7 @@ import com.asdflj.ae2thing.network.CPacketNEIRecipe;
 import com.asdflj.ae2thing.network.CPacketPatternValueSet;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
+import com.asdflj.ae2thing.network.SPacketMEFluidInvUpdate;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
 import com.asdflj.ae2thing.network.SPacketSetItemAmount;
 import com.asdflj.ae2thing.network.wrapper.AE2ThingNetworkWrapper;
@@ -28,6 +29,8 @@ public class ChannelLoader implements Runnable {
         AE2ThingNetworkWrapper netHandler = AE2Thing.proxy.netHandler;
         netHandler
             .registerMessage(new SPacketMEItemInvUpdate.Handler(), SPacketMEItemInvUpdate.class, id++, Side.CLIENT);
+        netHandler
+            .registerMessage(new SPacketMEFluidInvUpdate.Handler(), SPacketMEFluidInvUpdate.class, id++, Side.CLIENT);
         netHandler.registerMessage(new SPacketSetItemAmount.Handler(), SPacketSetItemAmount.class, id++, Side.CLIENT);
         netHandler.registerMessage(new CPacketNEIRecipe.Handler(), CPacketNEIRecipe.class, id++, Side.SERVER);
         netHandler.registerMessage(new CPacketSwitchGuis.Handler(), CPacketSwitchGuis.class, id++, Side.SERVER);

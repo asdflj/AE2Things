@@ -21,6 +21,8 @@ public class NameConst {
     public static final String TT_CELL_LINK = TT_KEY + "cell_link.";
     public static final String TT_CELL_LINK_DISABLE = TT_CELL_LINK + "disable";
     public static final String TT_CELL_LINK_DESC = TT_CELL_LINK + "desc";
+    public static final String TT_FLUID_TERMINAL = TT_KEY + "fluid_terminal";
+    public static final String TT_FLUID_TERMINAL_AMOUNT = TT_FLUID_TERMINAL + ".amount";
 
     public static final String MAGNET = AE2Thing.MODID + ".magnet.";
     public static final String MAGNET_OFF = MAGNET + "off";

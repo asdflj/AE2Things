@@ -14,6 +14,7 @@ public final class ModAndClassUtil {
     public static boolean ADVENTURE_BACKPACK = false;
     public static boolean HODGEPODGE = false;
     public static boolean THE = false;
+    public static boolean WAILA = false;
 
     public static boolean isTypeFilter;
     public static boolean isCraftStatus;
@@ -47,5 +48,6 @@ public final class ModAndClassUtil {
         if (Loader.isModLoaded("adventurebackpack")) ADVENTURE_BACKPACK = true;
         if (Loader.isModLoaded("NotEnoughItems")) NEI = true;
         if (Loader.isModLoaded("hodgepodge")) HODGEPODGE = true;
+        if (Loader.isModLoaded("Waila")) WAILA = true;
     }
 }

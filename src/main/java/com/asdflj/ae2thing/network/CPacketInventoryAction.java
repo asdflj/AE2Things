@@ -1,11 +1,15 @@
 package com.asdflj.ae2thing.network;
 
+import static com.asdflj.ae2thing.api.Constants.DISPLAY_ONLY;
+
 import java.io.IOException;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
 import com.asdflj.ae2thing.AE2Thing;
@@ -14,7 +18,11 @@ import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.util.BlockPos;
+import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 
+import appeng.api.AEApi;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
@@ -25,6 +33,8 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import thaumcraft.api.aspects.Aspect;
+import thaumicenergistics.common.items.ItemCraftingAspect;
 
 public class CPacketInventoryAction implements IMessage {
 
@@ -98,6 +108,22 @@ public class CPacketInventoryAction implements IMessage {
                     if (context != null) {
                         final TileEntity te = context.getTile();
                         if (te != null) {
+                            if(message.stack.getItem() instanceof ItemFluidDrop){
+                                IAEFluidStack fs = ItemFluidDrop.getAeFluidStack(message.stack);
+                                if(AspectUtil.isEssentiaGas(fs)){
+                                    Aspect aspect = AspectUtil.getAspectFromGas(fs.getFluidStack());
+                                    IAEItemStack result = AEApi.instance().storage()
+                                        .createItemStack(ItemCraftingAspect.createStackForAspect(aspect, 1));
+                                    baseContainer.setTargetStack(result);
+                                }else{
+                                    ItemStack is = message.stack.getItemStack().copy();
+                                    NBTTagCompound data = is.getTagCompound();
+                                    data.removeTag(DISPLAY_ONLY);
+                                    is.setTagCompound(data);
+                                    baseContainer.setTargetStack(AEItemStack.create(is));
+                                }
+                            }
+
                             InventoryHandler.openGui(
                                     sender,
                                     te.getWorldObj(),

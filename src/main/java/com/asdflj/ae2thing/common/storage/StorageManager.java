@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.WorldSavedData;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.item.BaseCellItem;
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
@@ -51,7 +52,7 @@ import thaumcraft.common.lib.research.ScanManager;
 import thaumicenergistics.common.items.ItemCraftingAspect;
 import thaumicenergistics.common.items.ItemEnum;
 
-public class ContainerDistillationPatternTerminal extends ContainerItemMonitor implements IOptionalSlotHost {
+public class ContainerDistillationPatternTerminal extends ContainerMonitor implements IOptionalSlotHost {
 
     private static final int CRAFTING_GRID_WIDTH = 4;
     private static final int CRAFTING_GRID_HEIGHT = 4;
@@ -287,6 +288,30 @@ public class ContainerDistillationPatternTerminal extends ContainerItemMonitor i
     }
 
     @Override
+    public void processItemList() {
+        super.processItemList();
+        this.fluidMonitor.processItemList();
+    }
+
+    @Override
+    public void removeCraftingFromCrafters(ICrafting c) {
+        super.removeCraftingFromCrafters(c);
+        this.fluidMonitor.removeCraftingFromCrafters(c);
+    }
+
+    @Override
+    public void addCraftingToCrafters(ICrafting c) {
+        super.addCraftingToCrafters(c);
+        this.fluidMonitor.queueInventory(c);
+    }
+
+    @Override
+    public void onContainerClosed(EntityPlayer player) {
+        super.onContainerClosed(player);
+        if (this.fluidMonitor.getMonitor() != null) this.fluidMonitor.removeListener();
+    }
+
+    @Override
     void setMonitor() {
         if (this.host instanceof IGridHost) {
             final IGridNode node = ((IGridHost) this.host).getGridNode(ForgeDirection.UNKNOWN);
@@ -296,12 +321,15 @@ public class ContainerDistillationPatternTerminal extends ContainerItemMonitor i
                 if (g != null) {
                     this.setPowerSource(new ChannelPowerSrc(this.networkNode, g.getCache(IEnergyGrid.class)));
                     IStorageGrid storageGrid = g.getCache(IStorageGrid.class);
-                    this.monitor = storageGrid.getItemInventory();
-                    if (this.monitor == null) {
+                    this.monitor.setMonitor(storageGrid.getItemInventory());
+                    this.fluidMonitor.setMonitor(storageGrid.getFluidInventory(), storageGrid.getItemInventory());
+                    this.monitor.setFluidMonitorObject(this.fluidMonitor);
+                    if (this.monitor.getMonitor() == null) {
                         this.setValidContainer(false);
                     } else {
-                        this.monitor.addListener(this, null);
-                        this.setCellInventory(this.monitor);
+                        this.monitor.addListener();
+                        this.fluidMonitor.addListener();
+                        this.setCellInventory(this.monitor.getMonitor());
                     }
                 }
             } else {
@@ -438,6 +466,7 @@ public class ContainerDistillationPatternTerminal extends ContainerItemMonitor i
 
         encodedValue.setTag("in", tagIn);
         encodedValue.setTag("out", tagOut);
+        encodedValue.setBoolean("crafting", false);
         output.setTagCompound(encodedValue);
         stampAuthor(output);
         this.patternSlotOUT.putStack(output);
@@ -458,6 +487,7 @@ public class ContainerDistillationPatternTerminal extends ContainerItemMonitor i
         for (final Slot s : this.outputSlots) {
             s.putStack(null);
         }
+        this.lastScanItem = null;
         this.detectAndSendChanges();
     }
 

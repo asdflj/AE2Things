@@ -3,6 +3,7 @@ package com.asdflj.ae2thing.client.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Keyboard;
@@ -18,7 +19,7 @@ import appeng.core.localization.GuiText;
 import appeng.util.calculators.ArithHelper;
 import appeng.util.calculators.Calculator;
 
-public abstract class GuiAmount extends AEBaseGui {
+public abstract class GuiAmount extends AEBaseGui implements IGuiDrawSlot {
 
     protected GuiTextField amountBox;
     protected GuiTabButton originalGuiBtn;
@@ -149,5 +150,15 @@ public abstract class GuiAmount extends AEBaseGui {
         } catch (final NumberFormatException e) {
             return 0;
         }
+    }
+
+    @Override
+    public void func_146977_a(final Slot s) {
+        if (drawSlot(s)) super.func_146977_a(s);
+    }
+
+    @Override
+    public float getzLevel() {
+        return this.zLevel;
     }
 }

@@ -11,9 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.common.item.BaseCellItem;
 import com.asdflj.ae2thing.common.item.ItemInfinityStorageCell;
-import com.asdflj.ae2thing.common.storage.Constants;
 import com.asdflj.ae2thing.common.storage.DataStorage;
 import com.asdflj.ae2thing.common.storage.ITCellInventory;
 
