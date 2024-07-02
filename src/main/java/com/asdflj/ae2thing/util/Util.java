@@ -1,16 +1,21 @@
 package com.asdflj.ae2thing.util;
 
+import static net.minecraft.init.Items.glass_bottle;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
+
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
@@ -105,5 +110,18 @@ public class Util {
         if (itemStack == null) return null;
         itemStack.stackSize = tag.getInteger(Constants.COUNT);
         return itemStack;
+    }
+
+    public static final ItemStack glassBottle = new ItemStack(glass_bottle, 1);
+
+    public static ItemStack getPotion(FluidStack fs) {
+        if (fs == null) return null;
+        MutablePair<Integer, ItemStack> fillStack = com.glodblock.github.util.Util.FluidUtil.fillStack(glassBottle, fs);
+        if (fillStack != null && fillStack.getRight() != null
+            && fillStack.getRight()
+                .getItem() instanceof ItemPotion) {
+            return fillStack.right;
+        }
+        return null;
     }
 }

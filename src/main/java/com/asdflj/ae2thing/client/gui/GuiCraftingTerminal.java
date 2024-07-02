@@ -74,13 +74,6 @@ public class GuiCraftingTerminal extends GuiMonitor {
         super.actionPerformed(btn);
     }
 
-    @Override
-    protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
-        saveSearchString();
-
-        super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
-    }
-
     protected void repositionSlot(final AppEngSlot s) {
         s.yDisplayPosition = s.getY() + this.ySize - 78 - 5;
     }

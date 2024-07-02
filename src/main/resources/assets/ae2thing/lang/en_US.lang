@@ -19,6 +19,9 @@ ae2thing.magnet.backpack=Pickup to backpack
 ae2thing.magnet.current_mode=Magnet mode:
 
 ae2thing.gui.cell_link=Cell Link
+ae2thing.gui.terminal.store_action=%s: Store %s
+ae2thing.gui.terminal.left_click=Left-Click
+ae2thing.gui.terminal.right_click=Right-Click
 
 ae2thing.key.open_terminal=Open Terminal
 

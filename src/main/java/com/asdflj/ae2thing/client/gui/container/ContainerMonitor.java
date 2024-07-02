@@ -245,10 +245,7 @@ public abstract class ContainerMonitor extends AEBaseContainer
     public void postChange(IAEFluidStack fluid, EntityPlayer player, int slotIndex, boolean shift) {
         ItemStack targetStack = getTargetStack(player, slotIndex);
         if (targetStack == null) {
-            IAEFluidStack storedFluid = this.fluidMonitor.getMonitor()
-                .getStorageList()
-                .findPrecise(fluid);
-            if (!canFillDefaultContainer(storedFluid)) return;
+            if (!canFillDefaultContainer(fluid)) return;
             IAEItemStack extractItem = this.monitor.getMonitor()
                 .extractItems(
                     AEItemStack.create(getDefaultContainer(fluid)),
@@ -264,7 +261,7 @@ public abstract class ContainerMonitor extends AEBaseContainer
 
         if (targetStack == null) return;
         // The primary output itemstack
-        if (fluid != null && (AspectUtil.isEmptyEssentiaContainer(targetStack)
+        if (fluid != null && ((AspectUtil.isEmptyEssentiaContainer(targetStack) && AspectUtil.isEssentiaGas(fluid))
             || com.glodblock.github.util.Util.FluidUtil.isEmpty(targetStack))) {
             // Situation 1.a: Empty fluid container, and nonnull slot
             extractFluid(fluid, player, slotIndex, shift);

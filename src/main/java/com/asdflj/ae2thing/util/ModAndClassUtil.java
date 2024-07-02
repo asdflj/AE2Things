@@ -8,6 +8,8 @@ import cpw.mods.fml.common.Loader;
 
 public final class ModAndClassUtil {
 
+    public static boolean GT5NH = false;
+    public static boolean GT5 = false;
     public static boolean NEI = false;
     public static boolean FTR = false;
     public static boolean BACKPACK = false;
@@ -41,6 +43,14 @@ public final class ModAndClassUtil {
             isDoubleButton = true;
         } catch (NoSuchFieldException e) {
             isDoubleButton = false;
+        }
+        if (Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi")) {
+            try {
+                Class.forName("gregtech.api.recipe.RecipeMap");
+                GT5NH = true;
+            } catch (ClassNotFoundException e) {
+                GT5 = true;
+            }
         }
         if (Loader.isModLoaded("thaumicenergistics")) THE = true;
         if (Loader.isModLoaded("Forestry")) FTR = true;

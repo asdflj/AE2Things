@@ -12,13 +12,16 @@ import java.util.Objects;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -36,6 +39,7 @@ import com.asdflj.ae2thing.network.CPacketFluidUpdate;
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.NameConst;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 import com.glodblock.github.util.Util;
@@ -83,6 +87,7 @@ import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import codechicken.nei.LayoutManager;
 import codechicken.nei.util.TextHistory;
+import thaumcraft.api.aspects.Aspect;
 
 public abstract class GuiMonitor extends AEBaseMEGui
     implements IConfigManagerHost, ISortSource, IDropToFillTextField, IGuiDrawSlot {
@@ -142,6 +147,7 @@ public abstract class GuiMonitor extends AEBaseMEGui
 
     @Override
     protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
+        saveSearchString();
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         if (slot instanceof SlotME sme) {
             ItemStack cs = player.inventory.getItemStack();
@@ -777,6 +783,43 @@ public abstract class GuiMonitor extends AEBaseMEGui
                 searchField.width,
                 list);
         }
+        EntityPlayer player = this.mc.thePlayer;
+        ItemStack is = player.inventory.getItemStack();
+        if (isFilledContainer(is)) {
+            Slot s = this.getSlot(mouseX, mouseY);
+            if (s instanceof SlotME) {
+                List<String> message = new ArrayList<>();
+                message.add(
+                    "\u00a77" + I18n.format(
+                        NameConst.GUI_TERMINAL_STORE_ACTION,
+                        I18n.format(NameConst.GUI_TERMINAL_LEFT_CLICK),
+                        EnumChatFormatting.WHITE + is.getDisplayName() + EnumChatFormatting.RESET));
+                message.add(
+                    "\u00a77" + I18n.format(
+                        NameConst.GUI_TERMINAL_STORE_ACTION,
+                        I18n.format(NameConst.GUI_TERMINAL_RIGHT_CLICK),
+                        EnumChatFormatting.WHITE + getContainerDisplayName(is) + EnumChatFormatting.RESET));
+                drawContainerActionTooltip(mouseX, mouseY, String.join("\n", message));
+            }
+        }
+    }
+
+    private String getContainerDisplayName(ItemStack is) {
+        if (AspectUtil.isEssentiaContainer(is)) {
+            Aspect aspect = AspectUtil.getAspectFromJar(is);
+            return aspect.getName();
+        } else if (Util.FluidUtil.isFluidContainer(is)) {
+            FluidStack fs = Util.FluidUtil.getFluidFromContainer(is);
+            return fs.getLocalizedName();
+        } else {
+            return is.getDisplayName();
+        }
+    }
+
+    private boolean isFilledContainer(ItemStack is) {
+        if (is == null) return false;
+        return (AspectUtil.isEssentiaContainer(is) && !AspectUtil.isEmptyEssentiaContainer(is))
+            || (Util.FluidUtil.isFluidContainer(is) && Util.FluidUtil.isFilled(is));
     }
 
     public void bindTextureBack(final String file) {
@@ -839,6 +882,87 @@ public abstract class GuiMonitor extends AEBaseMEGui
     public void setPlayerInv(ItemStack is) {
         this.container.getPlayerInv()
             .setItemStack(is);
+    }
+
+    private void drawContainerActionTooltip(int x, int y, String message) {
+        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        RenderHelper.disableStandardItemLighting();
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        final String[] lines = message.split("\n");
+
+        if (lines.length > 0) {
+            int width = 0;
+            int left;
+            int top;
+
+            for (left = 0; left < lines.length; ++left) {
+                top = this.fontRendererObj.getStringWidth(lines[left]);
+
+                if (top > width) {
+                    width = top;
+                }
+            }
+
+            left = x + 12;
+            top = y - 12;
+            int height = 8;
+
+            if (lines.length > 1) {
+                height += 2 + (lines.length - 1) * 10;
+            }
+
+            ScaledResolution scaledresolution = new ScaledResolution(
+                this.mc,
+                this.mc.displayWidth,
+                this.mc.displayHeight);
+
+            if (top + height + 6 > scaledresolution.getScaledHeight()) {
+                top = scaledresolution.getScaledHeight() - height - 6;
+            }
+
+            if (left + width + 6 > scaledresolution.getScaledWidth()) {
+                left = scaledresolution.getScaledWidth() - width - 6;
+            }
+
+            this.zLevel = 300.0F;
+            itemRender.zLevel = 300.0F;
+            final int color1 = 0xF0100010;
+            this.drawGradientRect(left - 3, top - 4, left + width + 3, top - 3, color1, color1);
+            this.drawGradientRect(left - 3, top + height + 3, left + width + 3, top + height + 4, color1, color1);
+            this.drawGradientRect(left - 3, top - 3, left + width + 3, top + height + 3, color1, color1);
+            this.drawGradientRect(left - 4, top - 3, left - 3, top + height + 3, color1, color1);
+            this.drawGradientRect(left + width + 3, top - 3, left + width + 4, top + height + 3, color1, color1);
+            final int color2 = 0x505000FF;
+            final int color3 = 0x5028007F; // (color2 & 16711422) >> 1 | color2 & -16777216;
+            this.drawGradientRect(left - 3, top - 3 + 1, left - 3 + 1, top + height + 3 - 1, color2, color3);
+            this.drawGradientRect(
+                left + width + 2,
+                top - 3 + 1,
+                left + width + 3,
+                top + height + 3 - 1,
+                color2,
+                color3);
+            this.drawGradientRect(left - 3, top - 3, left + width + 3, top - 3 + 1, color2, color2);
+            this.drawGradientRect(left - 3, top + height + 2, left + width + 3, top + height + 3, color3, color3);
+
+            for (int var13 = 0; var13 < lines.length; ++var13) {
+                String var14 = lines[var13];
+
+                this.fontRendererObj.drawStringWithShadow(var14, left, top, -1);
+
+                if (var13 == 0) {
+                    top += 2;
+                }
+
+                top += 10;
+            }
+
+            this.zLevel = 0.0F;
+            itemRender.zLevel = 0.0F;
+        }
+        GL11.glPopAttrib();
     }
 
     @Override

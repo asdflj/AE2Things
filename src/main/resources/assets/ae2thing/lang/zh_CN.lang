@@ -18,6 +18,9 @@ ae2thing.magnet.backpack=拾取到背包
 ae2thing.magnet.current_mode=磁铁模式:
 
 ae2thing.gui.cell_link=元件链接
+ae2thing.gui.terminal.store_action=%s：存入 %s
+ae2thing.gui.terminal.left_click=左键点击
+ae2thing.gui.terminal.right_click=右键点击
 
 ae2thing.key.open_terminal=打开终端
 

@@ -32,5 +32,9 @@ public class NameConst {
 
     public static final String GUI_KEY = AE2Thing.MODID + ".gui.";
     public static final String GUI_CELL_LINK = GUI_KEY + "cell_link";
+    public static final String GUI_TERMINAL = GUI_KEY + "terminal.";
+    public static final String GUI_TERMINAL_STORE_ACTION = GUI_TERMINAL + "store_action";
+    public static final String GUI_TERMINAL_LEFT_CLICK = GUI_TERMINAL + "left_click";
+    public static final String GUI_TERMINAL_RIGHT_CLICK = GUI_TERMINAL + "right_click";
 
 }
