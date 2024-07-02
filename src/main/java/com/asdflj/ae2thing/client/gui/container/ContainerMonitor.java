@@ -55,6 +55,7 @@ public abstract class ContainerMonitor extends AEBaseContainer
 
     public static final ItemStack BUCKET = RecipeLoader.BUCKET;
     public static final ItemStack PHIAL = AspectUtil.HELPER.createEmptyPhial();
+    public static final ItemStack GLASS_BOTTLE = com.asdflj.ae2thing.util.Util.GLASS_BOTTLE;
     protected final IItemList<IAEItemStack> items = AEApi.instance()
         .storage()
         .createItemList();
@@ -237,9 +238,16 @@ public abstract class ContainerMonitor extends AEBaseContainer
     private ItemStack getDefaultContainer(IAEFluidStack ifs) {
         if (AspectUtil.isEssentiaGas(ifs)) {
             return PHIAL;
-        } else {
+        } else if (canFillContainer(BUCKET, ifs)) {
             return BUCKET;
+        } else {
+            return GLASS_BOTTLE;
         }
+    }
+
+    private boolean canFillContainer(ItemStack is, IAEFluidStack ifs) {
+        MutablePair<Integer, ItemStack> result = Util.FluidUtil.fillStack(is, ifs.getFluidStack());
+        return result != null && result.left != 0;
     }
 
     public void postChange(IAEFluidStack fluid, EntityPlayer player, int slotIndex, boolean shift) {

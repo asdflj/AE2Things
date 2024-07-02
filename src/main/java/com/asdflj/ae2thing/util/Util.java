@@ -112,11 +112,12 @@ public class Util {
         return itemStack;
     }
 
-    public static final ItemStack glassBottle = new ItemStack(glass_bottle, 1);
+    public static final ItemStack GLASS_BOTTLE = new ItemStack(glass_bottle, 1);
 
     public static ItemStack getPotion(FluidStack fs) {
         if (fs == null) return null;
-        MutablePair<Integer, ItemStack> fillStack = com.glodblock.github.util.Util.FluidUtil.fillStack(glassBottle, fs);
+        MutablePair<Integer, ItemStack> fillStack = com.glodblock.github.util.Util.FluidUtil
+            .fillStack(GLASS_BOTTLE, fs);
         if (fillStack != null && fillStack.getRight() != null
             && fillStack.getRight()
                 .getItem() instanceof ItemPotion) {
