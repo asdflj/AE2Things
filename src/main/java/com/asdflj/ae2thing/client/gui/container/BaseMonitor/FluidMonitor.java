@@ -37,7 +37,6 @@ public class FluidMonitor implements IMEMonitorHandlerReceiver<IAEFluidStack>, I
         .storage()
         .createFluidList();
     private final Set<IAEItemStack> craftingAspects = new HashSet<>();
-    private final Set<IAEItemStack> craftingfluids = new HashSet<>();
     private final List<ICrafting> crafters;
     private final List<IAEFluidStack> toSend = new ArrayList<>();
 
@@ -58,10 +57,6 @@ public class FluidMonitor implements IMEMonitorHandlerReceiver<IAEFluidStack>, I
 
     public void addItemCraftingAspect(IAEItemStack is) {
         craftingAspects.add(is);
-    }
-
-    public void addItemCraftingFluids(IAEItemStack is) {
-        craftingfluids.add(is);
     }
 
     @Override
@@ -137,16 +132,6 @@ public class FluidMonitor implements IMEMonitorHandlerReceiver<IAEFluidStack>, I
             }
             piu.addAll(toSend);
             this.craftingAspects.clear();
-        }
-        if (!this.craftingfluids.isEmpty()) {
-            for (IAEItemStack is : this.craftingfluids) {
-                IAEFluidStack fs = ItemFluidDrop.getAeFluidStack(is);
-                if (fs == null) continue;
-                fs.setCraftable(is.isCraftable());
-                toSend.add(fs);
-            }
-            piu.addAll(toSend);
-            this.craftingfluids.clear();
         }
         if (!piu.isEmpty()) {
             for (final Object c : this.crafters) {

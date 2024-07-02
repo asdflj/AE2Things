@@ -1,13 +1,9 @@
 package com.asdflj.ae2thing.client.gui;
 
-import static com.asdflj.ae2thing.util.NameConst.TT_FLUID_TERMINAL_AMOUNT;
-
 import java.io.IOException;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import net.minecraft.client.Minecraft;
@@ -47,12 +43,10 @@ import com.glodblock.github.util.Util;
 import appeng.api.config.CraftingStatus;
 import appeng.api.config.SearchBoxMode;
 import appeng.api.config.Settings;
-import appeng.api.config.TerminalFontSize;
 import appeng.api.config.TerminalStyle;
 import appeng.api.config.YesNo;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
-import appeng.api.storage.data.IDisplayRepo;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
 import appeng.client.gui.AEBaseGui;
@@ -99,7 +93,7 @@ public abstract class GuiMonitor extends AEBaseMEGui
     protected final int offsetX = 9;
     protected final int lowerTextureOffset = 0;
     public IConfigManager configSrc;
-    protected IDisplayRepo repo;
+    protected AdvItemRepo repo;
     protected THGuiTextField searchField;
     protected int perRow = 9;
     protected int reservedSpace = 0;
@@ -126,10 +120,10 @@ public abstract class GuiMonitor extends AEBaseMEGui
         final GuiScrollbar scrollbar = new GuiScrollbar();
         this.setScrollBar(scrollbar);
         this.configSrc = ((IConfigurableObject) this.inventorySlots).getConfigManager();
-        this.repo = new AdvItemRepo(getScrollBar(), this);
-        this.repo.setPowered(true);
         this.history = Ae2ReflectClient.getHistory(LayoutManager.searchField);
         this.container = (ContainerMonitor) container;
+        this.repo = new AdvItemRepo(getScrollBar(), this);
+        this.repo.setPowered(true);
     }
 
     protected boolean isNEISearch() {
@@ -159,10 +153,11 @@ public abstract class GuiMonitor extends AEBaseMEGui
                 IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(sme.getAEStack());
                 AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
                 return;
-            } else if (ctrlDown == 1 && (Util.FluidUtil.isFilled(cs) || !AspectUtil.isEmptyEssentiaContainer(cs))) {
-                AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(null, isShiftKeyDown()));
-                return;
-            }
+            } else if (ctrlDown == 1 && (Util.FluidUtil.isFilled(cs)
+                || (AspectUtil.isEssentiaContainer(cs) && !AspectUtil.isEmptyEssentiaContainer(cs)))) {
+                    AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(null, isShiftKeyDown()));
+                    return;
+                }
             if (mouseButton == 3 && player.capabilities.isCreativeMode
                 && sme.getHasStack()
                 && !sme.getAEStack()
@@ -344,6 +339,11 @@ public abstract class GuiMonitor extends AEBaseMEGui
     }
 
     protected void setScrollBar() {
+        if (this.repo.hasCache()) return;
+        this.forceSetScrollBar();
+    }
+
+    public void forceSetScrollBar() {
         this.getScrollBar()
             .setTop(18)
             .setLeft(175)
@@ -770,6 +770,9 @@ public abstract class GuiMonitor extends AEBaseMEGui
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float btn) {
+        if (this.repo.flush()) {
+            this.forceSetScrollBar();
+        }
         super.drawScreen(mouseX, mouseY, btn);
         if (AEConfig.instance.preserveSearchBar && searchField != null)
             handleTooltip(mouseX, mouseY, searchField.getTooltipProvider());
@@ -963,36 +966,6 @@ public abstract class GuiMonitor extends AEBaseMEGui
             itemRender.zLevel = 0.0F;
         }
         GL11.glPopAttrib();
-    }
-
-    @Override
-    public List<String> handleItemTooltip(final ItemStack stack, final int mouseX, final int mouseY,
-        final List<String> currentToolTip) {
-        if (stack != null && stack.getItem() instanceof ItemFluidDrop) {
-            if (isShiftKeyDown()) return currentToolTip;
-            final Slot s = this.getSlot(mouseX, mouseY);
-            if (s instanceof SlotME || s instanceof SlotFake) {
-                final int BigNumber = AEConfig.instance.getTerminalFontSize() == TerminalFontSize.SMALL ? 9999 : 999;
-
-                IAEItemStack myStack = null;
-
-                try {
-                    myStack = Platform.getAEStackInSlot(s);
-                } catch (final Throwable ignore) {}
-
-                if (myStack != null) {
-                    if (myStack.getStackSize() > BigNumber || (myStack.getStackSize() > 1)) {
-                        final String formattedAmount = NumberFormat.getNumberInstance(Locale.US)
-                            .format(myStack.getStackSize());
-                        final String format = I18n.format(TT_FLUID_TERMINAL_AMOUNT, formattedAmount);
-                        currentToolTip.add("\u00a77" + format);
-                    }
-                }
-            }
-            return currentToolTip;
-        } else {
-            return super.handleItemTooltip(stack, mouseX, mouseY, currentToolTip);
-        }
     }
 
     @Override

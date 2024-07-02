@@ -9,6 +9,7 @@ import net.minecraft.inventory.ICrafting;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
+import com.glodblock.github.common.item.ItemFluidDrop;
 
 import appeng.api.AEApi;
 import appeng.api.networking.security.BaseActionSource;
@@ -71,8 +72,6 @@ public class ItemMonitor implements IMEMonitorHandlerReceiver<IAEItemStack>, IPr
     private void fluidHandler(IAEItemStack send) {
         if (this.fluidMonitorObject != null && send.getItem() instanceof ItemCraftingAspect) {
             this.fluidMonitorObject.addItemCraftingAspect(send);
-        } else if (this.fluidMonitorObject != null && send.getItem() instanceof ItemCraftingAspect) {
-            this.fluidMonitorObject.addItemCraftingFluids(send);
         }
     }
 
@@ -82,6 +81,7 @@ public class ItemMonitor implements IMEMonitorHandlerReceiver<IAEItemStack>, IPr
             final IItemList<IAEItemStack> monitorCache = this.itemMonitor.getStorageList();
             List<IAEItemStack> toSend = new ArrayList<>();
             for (final IAEItemStack is : this.items) {
+                if (is.getItem() instanceof ItemFluidDrop) continue;
                 IAEItemStack send = monitorCache.findPrecise(is);
                 if (send != null) {
                     fluidHandler(send.copy());
@@ -108,6 +108,7 @@ public class ItemMonitor implements IMEMonitorHandlerReceiver<IAEItemStack>, IPr
             final IItemList<IAEItemStack> monitorCache = this.itemMonitor.getStorageList();
             List<IAEItemStack> toSend = new ArrayList<>();
             for (final IAEItemStack is : monitorCache) {
+                if (is.getItem() instanceof ItemFluidDrop) continue;
                 fluidHandler(is.copy());
                 toSend.add(is);
             }

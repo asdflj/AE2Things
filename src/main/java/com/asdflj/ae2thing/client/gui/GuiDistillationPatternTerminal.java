@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerDistillationPatternTerminal;
+import com.asdflj.ae2thing.client.me.AdvItemRepo;
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
@@ -47,6 +48,7 @@ public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFl
         (this.container = (ContainerDistillationPatternTerminal) this.inventorySlots).setGui(this);
         this.reservedSpace = 81;
         this.viewCell = inv instanceof IViewCellStorage;
+        this.repo.setCache(new AdvItemRepo(this));
     }
 
     protected void repositionSlot(final AppEngSlot s) {
@@ -221,4 +223,8 @@ public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFl
         this.setScrollBar();
     }
 
+    @Override
+    protected boolean isPowered() {
+        return this.container.hasPower;
+    }
 }

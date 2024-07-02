@@ -2,10 +2,12 @@ package com.asdflj.ae2thing.util;
 
 import static net.minecraft.init.Items.glass_bottle;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
@@ -24,6 +26,8 @@ import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class Util {
 
@@ -110,6 +114,22 @@ public class Util {
         if (itemStack == null) return null;
         itemStack.stackSize = tag.getInteger(Constants.COUNT);
         return itemStack;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static int getLimitFPS() {
+        Minecraft mc = Minecraft.getMinecraft();
+        return mc.gameSettings.limitFramerate;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static int getCurrentFPS() {
+        try {
+            Field field = Minecraft.class.getDeclaredField("debugFPS");
+            field.setAccessible(true);
+            return field.getInt(Minecraft.getMinecraft());
+        } catch (Exception ignored) {}
+        return 0;
     }
 
     public static final ItemStack GLASS_BOTTLE = new ItemStack(glass_bottle, 1);

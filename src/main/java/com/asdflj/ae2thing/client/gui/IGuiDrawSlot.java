@@ -42,6 +42,7 @@ public interface IGuiDrawSlot {
         }
         if (stack == null || stack.getItem() == null || !(stack.getItem() instanceof ItemFluidDrop)) return true;
         FluidStack fluidStack = ItemFluidDrop.getFluidStack(slot.getStack());
+        if (fluidStack == null || fluidStack.getFluid() == null) return true;
         if (AspectUtil.isEssentiaGas(fluidStack)) {
             AspectRender.drawAspect(
                 mc.thePlayer,
