@@ -13,6 +13,8 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.BaseMonitor.FluidMonitor;
 import com.asdflj.ae2thing.client.gui.container.BaseMonitor.ItemMonitor;
@@ -20,6 +22,7 @@ import com.asdflj.ae2thing.loader.RecipeLoader;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
+import com.glodblock.github.util.Util;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -218,28 +221,43 @@ public abstract class ContainerMonitor extends AEBaseContainer
                 player.inventory.markDirty();
             }
         }
+    }
 
+    private boolean canFillDefaultContainer(IAEFluidStack ifs) {
+        if (ifs == null) return false;
+        MutablePair<Integer, ItemStack> result = null;
+        if (AspectUtil.isEssentiaGas(ifs.getFluidStack())) {
+            result = AspectUtil.fillEssentiaFromGas(getDefaultContainer(ifs), ifs.getFluidStack());
+        } else if (Util.FluidUtil.isFluidContainer(getDefaultContainer(ifs))) {
+            result = Util.FluidUtil.fillStack(getDefaultContainer(ifs), ifs.getFluidStack());
+        }
+        return result != null && result.left != 0;
+    }
+
+    private ItemStack getDefaultContainer(IAEFluidStack ifs) {
+        if (AspectUtil.isEssentiaGas(ifs)) {
+            return PHIAL;
+        } else {
+            return BUCKET;
+        }
     }
 
     public void postChange(IAEFluidStack fluid, EntityPlayer player, int slotIndex, boolean shift) {
         ItemStack targetStack = getTargetStack(player, slotIndex);
         if (targetStack == null) {
-            final IAEItemStack extractItem;
-            if (!AspectUtil.isEssentiaGas(fluid)) {
-                extractItem = this.monitor.getMonitor()
-                    .extractItems(AEItemStack.create(BUCKET), Actionable.MODULATE, this.getActionSource());
-            } else {
-                extractItem = this.monitor.getMonitor()
-                    .extractItems(AEItemStack.create(PHIAL), Actionable.MODULATE, this.getActionSource());
-            }
+            IAEFluidStack storedFluid = this.fluidMonitor.getMonitor()
+                .getStorageList()
+                .findPrecise(fluid);
+            if (!canFillDefaultContainer(storedFluid)) return;
+            IAEItemStack extractItem = this.monitor.getMonitor()
+                .extractItems(
+                    AEItemStack.create(getDefaultContainer(fluid)),
+                    Actionable.MODULATE,
+                    this.getActionSource());;
             if (extractItem != null) {
                 player.inventory.setItemStack(extractItem.getItemStack());
             } else {
-                if (!AspectUtil.isEssentiaGas(fluid)) {
-                    this.extractPlayerInventoryItemStack(player, BUCKET, 1);
-                } else {
-                    this.extractPlayerInventoryItemStack(player, PHIAL, 1);
-                }
+                this.extractPlayerInventoryItemStack(player, getDefaultContainer(fluid), 1);
             }
             targetStack = getTargetStack(player, slotIndex);
         }
