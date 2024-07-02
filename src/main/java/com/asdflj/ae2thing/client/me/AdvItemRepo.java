@@ -44,7 +44,7 @@ public class AdvItemRepo extends ItemRepo {
     }
 
     public boolean flush() {
-        if (hasCache() && OUT.isEmpty()) {
+        if (hasCache() && !OUT.isEmpty()) {
             OUT.poll();
             this.view.clear();
             this.dsp.clear();
