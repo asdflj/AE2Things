@@ -1,15 +1,24 @@
 package com.asdflj.ae2thing.client.me;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.client.gui.GuiMonitor;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 
 import appeng.api.storage.data.IAEItemStack;
@@ -17,14 +26,19 @@ import appeng.client.gui.widgets.IScrollSource;
 import appeng.client.gui.widgets.ISortSource;
 import appeng.client.me.ItemRepo;
 
-public class AdvItemRepo extends ItemRepo {
+public class AdvItemRepo extends ItemRepo implements Runnable {
 
-    private static final BlockingQueue<AdvItemRepo> IN = new LinkedBlockingQueue<>(1);
-    private static final BlockingQueue<Boolean> OUT = new LinkedBlockingQueue<>(1);
+    private static final int SIZE = 1;
+    private static final int DELAY = 3;
+
+    private static final BlockingQueue<Runnable> IN = new LinkedBlockingQueue<>(SIZE);
+    private static final ThreadPoolExecutor pool = new ThreadPoolExecutor(SIZE, SIZE, 60, TimeUnit.SECONDS, IN);
 
     protected final ArrayList<IAEItemStack> view = Ae2ReflectClient.getView(this);
     protected final ArrayList<ItemStack> dsp = Ae2ReflectClient.getDsp(this);
     protected AdvItemRepo repo;
+    protected final Set<IAEItemStack> cache = Collections.synchronizedSet(new HashSet<IAEItemStack>());
+    protected GuiMonitor gui;
 
     public AdvItemRepo(IScrollSource src, ISortSource sortSrc) {
         super(src, sortSrc);
@@ -34,27 +48,14 @@ public class AdvItemRepo extends ItemRepo {
         super(null, sortSrc);
     }
 
-    public void setCache(AdvItemRepo repo) {
-        this.repo = repo;
+    public void setCache(GuiMonitor gui) {
+        this.repo = new AdvItemRepo(gui);
         this.repo.setPowered(true);
+        this.gui = gui;
     }
 
     public boolean hasCache() {
         return repo != null;
-    }
-
-    public boolean flush() {
-        if (hasCache() && !OUT.isEmpty()) {
-            OUT.poll();
-            this.view.clear();
-            this.dsp.clear();
-            this.view.ensureCapacity(this.repo.view.size());
-            this.dsp.ensureCapacity(this.repo.dsp.size());
-            this.view.addAll(this.repo.view);
-            this.dsp.addAll(this.repo.dsp);
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -76,7 +77,10 @@ public class AdvItemRepo extends ItemRepo {
     @Override
     public void postUpdate(IAEItemStack is) {
         if (this.hasCache()) {
-            this.repo.postUpdate(is);
+            synchronized (this.cache) {
+                this.cache.remove(is);
+                this.cache.add(is);
+            }
         }
         super.postUpdate(is);
     }
@@ -89,28 +93,16 @@ public class AdvItemRepo extends ItemRepo {
     @Override
     public void updateView() {
         if (this.hasCache()) {
-            IN.offer(this.repo);
+            try {
+                pool.execute(this);
+            } catch (Exception ignored) {
+
+            }
         } else {
             super.updateView();
             this.setPinItems();
         }
     }
-
-    private static final Thread updateViewThread = new Thread(() -> {
-        while (true) {
-            if (!IN.isEmpty()) {
-                AdvItemRepo advItemRepo = IN.poll();
-                advItemRepo.updateView();
-                OUT.offer(true);
-            } else {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ignored) {
-
-                }
-            }
-        }
-    }, "updateViewThread");
 
     protected void setPinItems() {
         final List<IAEItemStack> pinItems = AE2ThingAPI.instance()
@@ -135,7 +127,35 @@ public class AdvItemRepo extends ItemRepo {
         }
     }
 
+    @Override
+    public void run() {
+        synchronized (this.cache) {
+            for (IAEItemStack is : this.cache) {
+                this.repo.postUpdate(is);
+            }
+            this.cache.clear();
+        }
+        this.repo.updateView();
+        synchronized (this) {
+            this.view.clear();
+            this.dsp.clear();
+            this.view.ensureCapacity(this.repo.view.size());
+            this.dsp.ensureCapacity(this.repo.dsp.size());
+            this.view.addAll(this.repo.view);
+            this.dsp.addAll(this.repo.dsp);
+            this.gui.setScrollBar();
+        }
+    }
+
     static {
-        updateViewThread.start();
+        pool.setRejectedExecutionHandler(new RejectedExecutionHandler() {
+
+            private static final ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(SIZE);
+
+            @Override
+            public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+                scheduledThreadPool.schedule(() -> pool.execute(r), DELAY, TimeUnit.SECONDS);
+            }
+        });
     }
 }

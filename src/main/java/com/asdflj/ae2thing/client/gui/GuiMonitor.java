@@ -338,12 +338,7 @@ public abstract class GuiMonitor extends AEBaseMEGui
             .getSetting(Settings.TERMINAL_STYLE) == TerminalStyle.SMALL ? 6 : Integer.MAX_VALUE;
     }
 
-    protected void setScrollBar() {
-        if (this.repo.hasCache()) return;
-        this.forceSetScrollBar();
-    }
-
-    public void forceSetScrollBar() {
+    public void setScrollBar() {
         this.getScrollBar()
             .setTop(18)
             .setLeft(175)
@@ -770,9 +765,6 @@ public abstract class GuiMonitor extends AEBaseMEGui
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float btn) {
-        if (this.repo.flush()) {
-            this.forceSetScrollBar();
-        }
         super.drawScreen(mouseX, mouseY, btn);
         if (AEConfig.instance.preserveSearchBar && searchField != null)
             handleTooltip(mouseX, mouseY, searchField.getTooltipProvider());
