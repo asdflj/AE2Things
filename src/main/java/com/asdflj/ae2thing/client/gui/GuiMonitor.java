@@ -145,14 +145,18 @@ public abstract class GuiMonitor extends AEBaseMEGui
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         if (slot instanceof SlotME sme) {
             ItemStack cs = player.inventory.getItemStack();
-            if (ctrlDown == 0 && sme.getHasStack()
-                && sme.getStack()
+            if (ctrlDown == 0) {
+                if (sme.getHasStack() && sme.getStack()
                     .getItem() instanceof ItemFluidDrop
-                && sme.getAEStack()
-                    .getStackSize() != 0) {
-                IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(sme.getAEStack());
-                AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
-                return;
+                    && sme.getAEStack()
+                        .getStackSize() != 0) {
+                    if ((Util.FluidUtil.isEmpty(cs)
+                        || (AspectUtil.isEssentiaContainer(cs) && AspectUtil.isEmptyEssentiaContainer(cs)))) {
+                        IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(sme.getAEStack());
+                        AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
+                        return;
+                    }
+                }
             } else if (ctrlDown == 1 && (Util.FluidUtil.isFilled(cs)
                 || (AspectUtil.isEssentiaContainer(cs) && !AspectUtil.isEmptyEssentiaContainer(cs)))) {
                     AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(null, isShiftKeyDown()));
@@ -315,6 +319,7 @@ public abstract class GuiMonitor extends AEBaseMEGui
                         0,
                         stack));
             } else if (action != null) {
+                if (stack != null && stack.getItem() instanceof ItemFluidDrop) stack = null;
                 ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
                 final PacketInventoryAction p = new PacketInventoryAction(
                     action,
