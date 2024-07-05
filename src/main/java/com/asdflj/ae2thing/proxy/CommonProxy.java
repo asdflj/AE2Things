@@ -22,6 +22,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import ic2.core.Ic2Items;
 
 public class CommonProxy {
 
@@ -62,6 +63,10 @@ public class CommonProxy {
                 .addBackpackItem(ItemAdventureBackpack.class);
         }
         Upgrades.PATTERN_REFILLER.registerItem(ItemAndBlockHolder.DISTILLATION_PATTERN_TERMINAL.stack(), 1);
+        if (ModAndClassUtil.IC2) {
+            AE2ThingAPI.instance()
+                .setDefaultFluidContainer(Ic2Items.cell);
+        }
     }
 
     public void onLoadComplete(FMLLoadCompleteEvent event) {

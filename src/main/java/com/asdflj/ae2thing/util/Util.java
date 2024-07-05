@@ -1,7 +1,5 @@
 package com.asdflj.ae2thing.util;
 
-import static net.minecraft.init.Items.glass_bottle;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
@@ -213,12 +211,10 @@ public class Util {
         return 0;
     }
 
-    public static final ItemStack GLASS_BOTTLE = new ItemStack(glass_bottle, 1);
-
     public static ItemStack getPotion(FluidStack fs) {
         if (fs == null) return null;
         MutablePair<Integer, ItemStack> fillStack = com.glodblock.github.util.Util.FluidUtil
-            .fillStack(GLASS_BOTTLE, fs);
+            .fillStack(AE2ThingAPI.GLASS_BOTTLE, fs);
         if (fillStack != null && fillStack.getRight() != null
             && fillStack.getRight()
                 .getItem() instanceof ItemPotion) {

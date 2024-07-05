@@ -17,6 +17,7 @@ public final class ModAndClassUtil {
     public static boolean HODGEPODGE = false;
     public static boolean THE = false;
     public static boolean WAILA = false;
+    public static boolean IC2 = false;
 
     public static boolean isTypeFilter;
     public static boolean isCraftStatus;
@@ -59,5 +60,6 @@ public final class ModAndClassUtil {
         if (Loader.isModLoaded("NotEnoughItems")) NEI = true;
         if (Loader.isModLoaded("hodgepodge")) HODGEPODGE = true;
         if (Loader.isModLoaded("Waila")) WAILA = true;
+        if (Loader.isModLoaded("IC2")) IC2 = true;
     }
 }

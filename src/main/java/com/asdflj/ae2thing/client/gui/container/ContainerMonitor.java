@@ -16,9 +16,9 @@ import net.minecraftforge.fluids.IFluidContainerItem;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.container.BaseMonitor.FluidMonitor;
 import com.asdflj.ae2thing.client.gui.container.BaseMonitor.ItemMonitor;
-import com.asdflj.ae2thing.loader.RecipeLoader;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
@@ -53,9 +53,6 @@ import appeng.util.item.AEItemStack;
 public abstract class ContainerMonitor extends AEBaseContainer
     implements IConfigurableObject, IConfigManagerHost, IAEAppEngInventory, IContainerCraftingPacket {
 
-    public static final ItemStack BUCKET = RecipeLoader.BUCKET;
-    public static final ItemStack PHIAL = AspectUtil.HELPER.createEmptyPhial();
-    public static final ItemStack GLASS_BOTTLE = com.asdflj.ae2thing.util.Util.GLASS_BOTTLE;
     protected final IItemList<IAEItemStack> items = AEApi.instance()
         .storage()
         .createItemList();
@@ -227,26 +224,15 @@ public abstract class ContainerMonitor extends AEBaseContainer
     private boolean canFillDefaultContainer(IAEFluidStack ifs) {
         if (ifs == null) return false;
         MutablePair<Integer, ItemStack> result = null;
+        ItemStack container = AE2ThingAPI.instance()
+            .getFluidContainer(ifs);
         if (AspectUtil.isEssentiaGas(ifs.getFluidStack())) {
-            result = AspectUtil.fillEssentiaFromGas(getDefaultContainer(ifs), ifs.getFluidStack());
-        } else if (Util.FluidUtil.isFluidContainer(getDefaultContainer(ifs))) {
-            result = Util.FluidUtil.fillStack(getDefaultContainer(ifs), ifs.getFluidStack());
-        }
-        return result != null && result.left != 0;
-    }
-
-    private ItemStack getDefaultContainer(IAEFluidStack ifs) {
-        if (AspectUtil.isEssentiaGas(ifs)) {
-            return PHIAL;
-        } else if (canFillContainer(BUCKET, ifs)) {
-            return BUCKET;
-        } else {
-            return GLASS_BOTTLE;
-        }
-    }
-
-    private boolean canFillContainer(ItemStack is, IAEFluidStack ifs) {
-        MutablePair<Integer, ItemStack> result = Util.FluidUtil.fillStack(is, ifs.getFluidStack());
+            result = AspectUtil.fillEssentiaFromGas(container, ifs.getFluidStack());
+        } else if (Util.FluidUtil.isFluidContainer(
+            AE2ThingAPI.instance()
+                .getFluidContainer(ifs))) {
+                    result = Util.FluidUtil.fillStack(container, ifs.getFluidStack());
+                }
         return result != null && result.left != 0;
     }
 
@@ -256,13 +242,19 @@ public abstract class ContainerMonitor extends AEBaseContainer
             if (!canFillDefaultContainer(fluid)) return;
             IAEItemStack extractItem = this.monitor.getMonitor()
                 .extractItems(
-                    AEItemStack.create(getDefaultContainer(fluid)),
+                    AEItemStack.create(
+                        AE2ThingAPI.instance()
+                            .getFluidContainer(fluid)),
                     Actionable.MODULATE,
                     this.getActionSource());;
             if (extractItem != null) {
                 player.inventory.setItemStack(extractItem.getItemStack());
             } else {
-                this.extractPlayerInventoryItemStack(player, getDefaultContainer(fluid), 1);
+                this.extractPlayerInventoryItemStack(
+                    player,
+                    AE2ThingAPI.instance()
+                        .getFluidContainer(fluid),
+                    1);
             }
             targetStack = getTargetStack(player, slotIndex);
         }

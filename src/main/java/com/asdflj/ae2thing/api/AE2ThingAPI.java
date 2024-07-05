@@ -1,32 +1,46 @@
 package com.asdflj.ae2thing.api;
 
+import static net.minecraft.init.Items.glass_bottle;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.Tags;
 import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
+import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
+import com.glodblock.github.util.Util;
 
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public final class AE2ThingAPI implements IAE2ThingAPI {
 
+    public static final ItemStack BUCKET = new ItemStack(Items.bucket, 1);
+    public static final ItemStack PHIAL = AspectUtil.HELPER.createEmptyPhial();
+    public static final ItemStack GLASS_BOTTLE = new ItemStack(glass_bottle, 1);
+    public static int maxPinSize = 9;
+
     private static final AE2ThingAPI API = new AE2ThingAPI();
 
     private final Set<Class<? extends Item>> backpackItems = new HashSet<>();
     private StorageManager storageManager = null;
     private final List<IAEItemStack> pinItems = new ArrayList<>();
-    public static int maxPinSize = 9;
+    private ItemStack fluidContainer = BUCKET;
 
     public static AE2ThingAPI instance() {
         return API;
@@ -115,6 +129,39 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     @Override
     public void openBackpackTerminal() {
         AE2Thing.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.BACKPACK_TERMINAL));
+    }
+
+    @Override
+    public ItemStack getFluidContainer(IAEFluidStack fluid) {
+        return getFluidContainer(fluid.getFluidStack());
+    }
+
+    @Override
+    public ItemStack getFluidContainer(FluidStack fluid) {
+        if (AspectUtil.isEssentiaGas(fluid)) {
+            return PHIAL;
+        } else if (getDefaultFluidContainer() != BUCKET && canFillContainer(getDefaultFluidContainer(), fluid)) {
+            return getDefaultFluidContainer();
+        } else if (canFillContainer(BUCKET, fluid)) {
+            return BUCKET;
+        } else {
+            return GLASS_BOTTLE;
+        }
+    }
+
+    @Override
+    public void setDefaultFluidContainer(ItemStack item) {
+        this.fluidContainer = item;
+    }
+
+    @Override
+    public ItemStack getDefaultFluidContainer() {
+        return this.fluidContainer;
+    }
+
+    private boolean canFillContainer(ItemStack is, FluidStack fluidStack) {
+        MutablePair<Integer, ItemStack> result = Util.FluidUtil.fillStack(is, fluidStack);
+        return result != null && result.left != 0;
     }
 
     @Override

@@ -5,9 +5,11 @@ import java.util.List;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import com.asdflj.ae2thing.common.storage.StorageManager;
 
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 
 @SuppressWarnings("unused")
@@ -38,6 +40,14 @@ public interface IAE2ThingAPI {
     void togglePinItems(IAEItemStack stack);
 
     void openBackpackTerminal();
+
+    ItemStack getFluidContainer(IAEFluidStack fluid);
+
+    ItemStack getFluidContainer(FluidStack fluid);
+
+    void setDefaultFluidContainer(ItemStack item);
+
+    ItemStack getDefaultFluidContainer();
 
     String getVersion();
 }

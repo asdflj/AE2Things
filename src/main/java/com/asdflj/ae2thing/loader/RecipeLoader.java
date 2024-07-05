@@ -27,7 +27,6 @@ public class RecipeLoader implements Runnable {
     public static final ItemStack CRAFTING_TABLE = new ItemStack(Blocks.crafting_table, 1);
     public static final ItemStack DIAMOND = new ItemStack(Items.diamond, 1);
     public static final ItemStack FISH = new ItemStack(Items.fish);
-    public static final ItemStack BUCKET = new ItemStack(Items.bucket, 1);
     public static final ItemStack AE2_PROCESS_PATTERN_TERM = new ItemStack(
         GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"),
         1,
