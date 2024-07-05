@@ -1,0 +1,49 @@
+package com.asdflj.ae2thing.coremod;
+
+import net.minecraft.launchwrapper.IClassTransformer;
+
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
+
+import com.asdflj.ae2thing.coremod.transform.CraftingCpuTransformer;
+import com.asdflj.ae2thing.coremod.transform.PlatformTransformer;
+
+public class ClassTransformer implements IClassTransformer {
+
+    @Override
+    public byte[] transform(String name, String transformedName, byte[] code) {
+        Transform tform;
+        switch (transformedName) {
+            case "appeng.me.cluster.implementations.CraftingCPUCluster" -> tform = CraftingCpuTransformer.INSTANCE;
+            case "appeng.client.me.ItemRepo" -> tform = PlatformTransformer.INSTANCE;
+            default -> {
+                return code;
+            }
+        }
+        System.out.println("[AE2TH] Transforming class: " + transformedName);
+        return tform.transformClass(code);
+    }
+
+    public interface Transform {
+
+        byte[] transformClass(byte[] code);
+    }
+
+    public abstract static class ClassMapper implements Transform {
+
+        @Override
+        public byte[] transformClass(byte[] code) {
+            ClassReader reader = new ClassReader(code);
+            ClassWriter writer = new ClassWriter(reader, getWriteFlags());
+            reader.accept(getClassMapper(writer), ClassReader.EXPAND_FRAMES);
+            return writer.toByteArray();
+        }
+
+        protected int getWriteFlags() {
+            return 0;
+        }
+
+        protected abstract ClassVisitor getClassMapper(ClassVisitor downstream);
+    }
+}

@@ -7,11 +7,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -22,12 +26,23 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
+import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 
+import appeng.api.AEApi;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridHost;
+import appeng.api.networking.IGridNode;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import thaumicenergistics.common.integration.tc.AspectHooks;
 
 public class Util {
 
@@ -40,6 +55,72 @@ public class Util {
             if (item.getItem() instanceof ItemBackpackTerminal) return x;
         }
         return -1;
+    }
+
+    public static IGrid getWirelessGrid(EntityPlayer player) {
+        for (int x = 0; x < player.inventory.mainInventory.length; x++) {
+            ItemStack item = player.inventory.mainInventory[x];
+            if (item == null || item.getItem() == null) continue;
+            IGridNode node = getWirelessGridNode(item);
+            if (node == null) continue;
+            return node.getGrid();
+        }
+        return null;
+    }
+
+    public static String getModId(IAEItemStack item) {
+        if (item.getItem() instanceof ItemFluidDrop) {
+            FluidStack fs = ItemFluidDrop.getFluidStack(item.getItemStack());
+            if (fs == null) return GameRegistry.findUniqueIdentifierFor(item.getItem()).modId;
+            if (AspectUtil.isEssentiaGas(fs)) {
+                ModContainer mod = AspectHooks.aspectToMod.getOrDefault(AspectUtil.getAspectFromGas(fs), null);
+                if (mod != null) return mod.getModId();
+            } else {
+                return getFluidModID(fs.getFluid());
+            }
+        }
+        return Platform.getModId(item);
+    }
+
+    public static String getFluidModID(Fluid fluid) {
+        String name = FluidRegistry.getDefaultFluidName(fluid);
+        try {
+            return name.split(":")[0];
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    @Nonnull
+    public static String getDisplayName(IAEItemStack item) {
+        if (item.getItem() instanceof ItemFluidDrop) {
+            FluidStack fs = ItemFluidDrop.getFluidStack(item.getItemStack());
+            if (fs == null) return Platform.getItemDisplayName(item);
+            if (AspectUtil.isEssentiaGas(fs)) {
+                return AspectUtil.getAspectFromGas(fs)
+                    .getName();
+            } else {
+                return fs.getLocalizedName();
+            }
+        }
+        return Platform.getItemDisplayName(item);
+    }
+
+    public static IGridHost getWirelessGridHost(ItemStack is) {
+        if (is.getItem() instanceof ToolWirelessTerminal) {
+            String key = ((ToolWirelessTerminal) is.getItem()).getEncryptionKey(is);
+            return (IGridHost) AEApi.instance()
+                .registries()
+                .locatable()
+                .getLocatableBy(Long.parseLong(key));
+        }
+        return null;
+    }
+
+    public static IGridNode getWirelessGridNode(ItemStack is) {
+        IGridHost host = getWirelessGridHost(is);
+        if (host == null) return null;
+        return host.getGridNode(ForgeDirection.UNKNOWN);
     }
 
     public static int findItemStack(EntityPlayer player, ItemStack itemStack) {

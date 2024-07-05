@@ -41,7 +41,12 @@ dependencies {
     api('com.github.GTNewHorizons:AE2FluidCraft-Rework:1.3.9-gtnh:dev') {
         exclude group: 'com.github.GTNewHorizons', module: 'Applied-Energistics-2-Unofficial'
     }
+//    compile('com.github.GTNewHorizons:Angelica:1.0.0-alpha52:dev')
 //    compileOnly('com.github.GTNewHorizons:Draconic-Evolution:1.3.5-GTNH:dev')
+    compileOnly('com.github.GTNewHorizons:GT5-Unofficial:5.09.45.15:dev') {
+        exclude group: 'com.github.GTNewHorizons', module: 'AE2FluidCraft-Rework'
+    }
+
     compile('com.github.GTNewHorizons:AdventureBackpack2:1.1.3-GTNH:dev')
     compile('com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.3.0-GTNH:dev')
     compile('com.github.GTNewHorizons:ForestryMC:4.8.1:dev')

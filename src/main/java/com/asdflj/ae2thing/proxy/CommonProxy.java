@@ -7,10 +7,12 @@ import net.minecraftforge.event.world.WorldEvent;
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.common.storage.StorageManager;
+import com.asdflj.ae2thing.loader.ItemAndBlockHolder;
 import com.asdflj.ae2thing.network.wrapper.AE2ThingNetworkWrapper;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.darkona.adventurebackpack.item.ItemAdventureBackpack;
 
+import appeng.api.config.Upgrades;
 import appeng.util.Platform;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -59,6 +61,7 @@ public class CommonProxy {
             AE2ThingAPI.instance()
                 .addBackpackItem(ItemAdventureBackpack.class);
         }
+        Upgrades.PATTERN_REFILLER.registerItem(ItemAndBlockHolder.DISTILLATION_PATTERN_TERMINAL.stack(), 1);
     }
 
     public void onLoadComplete(FMLLoadCompleteEvent event) {

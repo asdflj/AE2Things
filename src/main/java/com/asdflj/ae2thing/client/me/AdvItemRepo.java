@@ -12,6 +12,8 @@ import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.Nonnull;
 
@@ -32,13 +34,29 @@ public class AdvItemRepo extends ItemRepo implements Runnable {
     private static final int DELAY = 3;
 
     private static final BlockingQueue<Runnable> IN = new LinkedBlockingQueue<>(SIZE);
-    private static final ThreadPoolExecutor pool = new ThreadPoolExecutor(SIZE, SIZE, 60, TimeUnit.SECONDS, IN);
+    private static final ThreadPoolExecutor pool = new ThreadPoolExecutor(
+        SIZE,
+        SIZE,
+        60,
+        TimeUnit.SECONDS,
+        IN,
+        r -> new Thread(r, "AE2 Thing repo sort thread"),
+        new RejectedExecutionHandler() {
+
+            private static final ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(SIZE);
+
+            @Override
+            public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+                scheduledThreadPool.schedule(() -> pool.execute(r), DELAY, TimeUnit.SECONDS);
+            }
+        });
 
     protected final ArrayList<IAEItemStack> view = Ae2ReflectClient.getView(this);
     protected final ArrayList<ItemStack> dsp = Ae2ReflectClient.getDsp(this);
     protected AdvItemRepo repo;
     protected final Set<IAEItemStack> cache = Collections.synchronizedSet(new HashSet<IAEItemStack>());
     protected GuiMonitor gui;
+    private static final Lock lock = new ReentrantLock();
 
     public AdvItemRepo(IScrollSource src, ISortSource sortSrc) {
         super(src, sortSrc);
@@ -77,10 +95,10 @@ public class AdvItemRepo extends ItemRepo implements Runnable {
     @Override
     public void postUpdate(IAEItemStack is) {
         if (this.hasCache()) {
-            synchronized (this.cache) {
-                this.cache.remove(is);
-                this.cache.add(is);
-            }
+            lock.lock();
+            this.cache.remove(is);
+            this.cache.add(is);
+            lock.unlock();
         }
         super.postUpdate(is);
     }
@@ -129,33 +147,21 @@ public class AdvItemRepo extends ItemRepo implements Runnable {
 
     @Override
     public void run() {
-        synchronized (this.cache) {
-            for (IAEItemStack is : this.cache) {
-                this.repo.postUpdate(is);
-            }
-            this.cache.clear();
+        lock.lock();
+        for (IAEItemStack is : this.cache) {
+            this.repo.postUpdate(is);
         }
+        this.cache.clear();
+        lock.unlock();
         this.repo.updateView();
-        synchronized (this) {
-            this.view.clear();
-            this.dsp.clear();
-            this.view.ensureCapacity(this.repo.view.size());
-            this.dsp.ensureCapacity(this.repo.dsp.size());
-            this.view.addAll(this.repo.view);
-            this.dsp.addAll(this.repo.dsp);
-            this.gui.setScrollBar();
-        }
-    }
-
-    static {
-        pool.setRejectedExecutionHandler(new RejectedExecutionHandler() {
-
-            private static final ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(SIZE);
-
-            @Override
-            public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-                scheduledThreadPool.schedule(() -> pool.execute(r), DELAY, TimeUnit.SECONDS);
-            }
-        });
+        lock.lock();
+        this.view.clear();
+        this.dsp.clear();
+        this.view.ensureCapacity(this.repo.view.size());
+        this.dsp.ensureCapacity(this.repo.dsp.size());
+        this.view.addAll(this.repo.view);
+        this.dsp.addAll(this.repo.dsp);
+        lock.unlock();
+        this.gui.setScrollBar();
     }
 }

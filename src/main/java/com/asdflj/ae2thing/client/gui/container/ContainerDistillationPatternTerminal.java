@@ -27,6 +27,7 @@ import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.definitions.IDefinitions;
+import appeng.api.implementations.IUpgradeableHost;
 import appeng.api.implementations.tiles.IViewCellStorage;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
@@ -34,6 +35,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.ITerminalHost;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.container.guisync.GuiSync;
 import appeng.container.slot.IOptionalSlotHost;
 import appeng.container.slot.OptionalSlotFake;
@@ -44,6 +46,7 @@ import appeng.container.slot.SlotRestrictedInput;
 import appeng.me.helpers.ChannelPowerSrc;
 import appeng.tile.inventory.InvOperation;
 import appeng.util.Platform;
+import appeng.util.item.AEItemStack;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
@@ -52,7 +55,8 @@ import thaumcraft.common.lib.research.ScanManager;
 import thaumicenergistics.common.items.ItemCraftingAspect;
 import thaumicenergistics.common.items.ItemEnum;
 
-public class ContainerDistillationPatternTerminal extends ContainerMonitor implements IOptionalSlotHost {
+public class ContainerDistillationPatternTerminal extends ContainerMonitor
+    implements IOptionalSlotHost, IPatternContainer {
 
     private static final int CRAFTING_GRID_WIDTH = 4;
     private static final int CRAFTING_GRID_HEIGHT = 4;
@@ -63,6 +67,7 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor imple
     protected SlotPatternOutputs[] outputSlots = new SlotPatternOutputs[CRAFTING_GRID_SLOTS];
     protected final SlotRestrictedInput patternSlotIN;
     protected final SlotRestrictedInput patternSlotOUT;
+    protected SlotRestrictedInput patternRefiller;
 
     protected final IInventory crafting;
     protected final IInventory output;
@@ -125,8 +130,47 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor imple
                 this.outputSlots[x * CRAFTING_GRID_HEIGHT + y].setRenderDisabled(false);
             }
         }
+        if (this.isPatternTerminal()) {
+            this.addSlotToContainer(
+                this.patternRefiller = new SlotRestrictedInput(
+                    SlotRestrictedInput.PlacableItemType.UPGRADES,
+                    ((IUpgradeableHost) monitorable).getInventoryByName("upgrades"),
+                    0,
+                    206,
+                    5 * 18 + 11,
+                    this.getInventoryPlayer()));
+        }
+
+        if (this.hasRefillerUpgrade()) {
+            refillBlankPatterns(patternSlotIN);
+        }
 
         this.bindPlayerInventory(ip, 0, 0);
+    }
+
+    public void refillBlankPatterns(Slot slot) {
+        if (Platform.isServer()) {
+            ItemStack blanks = slot.getStack();
+            int blanksToRefill = 64;
+            if (blanks != null) blanksToRefill -= blanks.stackSize;
+            if (blanksToRefill <= 0) return;
+            final AEItemStack request = AEItemStack.create(
+                AEApi.instance()
+                    .definitions()
+                    .materials()
+                    .blankPattern()
+                    .maybeStack(blanksToRefill)
+                    .get());
+            final IAEItemStack extracted = Platform
+                .poweredExtraction(this.getPowerSource(), this.getCellInventory(), request, this.getActionSource());
+            if (extracted != null) {
+                if (blanks != null) blanks.stackSize += extracted.getStackSize();
+                else {
+                    blanks = extracted.getItemStack();
+                }
+                slot.putStack(blanks);
+            }
+        }
     }
 
     @Override
@@ -406,6 +450,7 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor imple
     }
 
     public void encode() {
+        refillBlankPatterns(this.patternSlotIN);
         ItemStack output = this.patternSlotOUT.getStack();
         final ItemStack[] in = this.getInputs();
         final ItemStack[] out = this.getOutputs();
@@ -541,6 +586,7 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor imple
             }
             this.patternSlotOUT.putStack(null);
         }
+        if (this.hasRefillerUpgrade()) refillBlankPatterns(patternSlotIN);
     }
 
     public void encodeAllItemAndMoveToInventory() {
@@ -554,10 +600,21 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor imple
             this.patternSlotOUT.putStack(null);
             this.patternSlotIN.putStack(null);
         }
+        if (this.hasRefillerUpgrade()) refillBlankPatterns(patternSlotIN);
     }
 
     @Override
     public boolean isSlotEnabled(int idx) {
         return true;
+    }
+
+    @Override
+    public boolean isPatternTerminal() {
+        return true;
+    }
+
+    @Override
+    public boolean hasRefillerUpgrade() {
+        return this.it.hasRefillerUpgrade();
     }
 }

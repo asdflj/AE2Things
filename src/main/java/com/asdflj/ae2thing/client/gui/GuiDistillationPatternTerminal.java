@@ -144,7 +144,7 @@ public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFl
         if (this.viewCell) {
             int rw = 33;
             int rh = 14 + myCurrentViewCells.length * 18;
-
+            if (this.container.isPatternTerminal()) rh += 18;
             if (tw <= 0 || th <= 0) {
                 return false;
             }

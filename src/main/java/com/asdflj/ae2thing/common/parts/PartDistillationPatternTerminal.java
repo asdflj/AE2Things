@@ -11,14 +11,33 @@ import net.minecraft.nbt.NBTTagCompound;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.glodblock.github.client.textures.FCPartsTexture;
 
+import appeng.api.AEApi;
 import appeng.api.implementations.ICraftingPatternItem;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.tile.inventory.BiggerAppEngInventory;
+import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
 
 public class PartDistillationPatternTerminal extends THPart {
+
+    public static class RefillerInventory extends AppEngInternalInventory {
+
+        public RefillerInventory(final IAEAppEngInventory parent) {
+            super(parent, 1, 1);
+            setTileEntity(parent);
+        }
+
+        public boolean isItemValidForSlot(final int i, final ItemStack itemstack) {
+            return i == 0 && getStackInSlot(0) == null
+                && AEApi.instance()
+                    .definitions()
+                    .materials()
+                    .cardPatternRefiller()
+                    .isSameAs(itemstack);
+        }
+    }
 
     private static final FCPartsTexture FRONT_BRIGHT_ICON = FCPartsTexture.PartFluidPatternTerminal_Bright;
     private static final FCPartsTexture FRONT_DARK_ICON = FCPartsTexture.PartFluidPatternTerminal_Colored;
@@ -27,6 +46,7 @@ public class PartDistillationPatternTerminal extends THPart {
     protected final AppEngInternalInventory pattern = new AppEngInternalInventory(this, 2);
     protected AppEngInternalInventory crafting = new BiggerAppEngInventory(this, 1);
     protected AppEngInternalInventory output = new BiggerAppEngInventory(this, 16);
+    private final AppEngInternalInventory upgrades = new RefillerInventory(this);
 
     public PartDistillationPatternTerminal(ItemStack is) {
         super(is, true);
@@ -42,6 +62,10 @@ public class PartDistillationPatternTerminal extends THPart {
         }
     }
 
+    public boolean hasRefillerUpgrade() {
+        return upgrades.getStackInSlot(0) != null;
+    }
+
     @Override
     public IInventory getInventoryByName(final String name) {
         if (name.equals("crafting")) {
@@ -50,6 +74,8 @@ public class PartDistillationPatternTerminal extends THPart {
             return output;
         } else if (name.equals("pattern")) {
             return this.pattern;
+        } else if (name.equals("upgrades")) {
+            return this.upgrades;
         }
         return null;
     }
@@ -118,6 +144,7 @@ public class PartDistillationPatternTerminal extends THPart {
         this.pattern.readFromNBT(data, "pattern");
         this.output.readFromNBT(data, "outputList");
         this.crafting.readFromNBT(data, "craftingGrid");
+        this.upgrades.readFromNBT(data, "upgrades");
     }
 
     @Override
@@ -126,5 +153,6 @@ public class PartDistillationPatternTerminal extends THPart {
         this.pattern.writeToNBT(data, "pattern");
         this.output.writeToNBT(data, "outputList");
         this.crafting.writeToNBT(data, "craftingGrid");
+        this.upgrades.writeToNBT(data, "upgrades");
     }
 }
