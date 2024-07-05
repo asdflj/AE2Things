@@ -450,7 +450,7 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
     }
 
     public void encode() {
-        refillBlankPatterns(this.patternSlotIN);
+        if(this.hasRefillerUpgrade()) refillBlankPatterns(this.patternSlotIN);
         ItemStack output = this.patternSlotOUT.getStack();
         final ItemStack[] in = this.getInputs();
         final ItemStack[] out = this.getOutputs();
