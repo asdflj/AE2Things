@@ -217,6 +217,7 @@ public abstract class ContainerMonitor extends AEBaseContainer
                 }
                 player.inventory.setItemStack(tmp);
                 player.inventory.markDirty();
+                return;
             }
         }
     }
