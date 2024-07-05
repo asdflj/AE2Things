@@ -150,7 +150,7 @@ public abstract class GuiMonitor extends AEBaseMEGui
                     .getItem() instanceof ItemFluidDrop
                     && sme.getAEStack()
                         .getStackSize() != 0) {
-                    if ((Util.FluidUtil.isEmpty(cs)
+                    if (cs == null || (Util.FluidUtil.isEmpty(cs)
                         || (AspectUtil.isEssentiaContainer(cs) && AspectUtil.isEmptyEssentiaContainer(cs)))) {
                         IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(sme.getAEStack());
                         AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
