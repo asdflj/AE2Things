@@ -140,10 +140,10 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     public ItemStack getFluidContainer(FluidStack fluid) {
         if (AspectUtil.isEssentiaGas(fluid)) {
             return PHIAL;
-        } else if (getDefaultFluidContainer() != BUCKET && canFillContainer(getDefaultFluidContainer(), fluid)) {
-            return getDefaultFluidContainer();
         } else if (canFillContainer(BUCKET, fluid)) {
             return BUCKET;
+        } else if (getDefaultFluidContainer() != BUCKET && canFillContainer(getDefaultFluidContainer(), fluid)) {
+            return getDefaultFluidContainer();
         } else {
             return GLASS_BOTTLE;
         }
