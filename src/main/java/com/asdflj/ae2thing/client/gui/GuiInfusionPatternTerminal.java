@@ -107,6 +107,8 @@ public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiFluidT
         this.fontRendererObj.drawString(this.getGuiDisplayName(GuiText.Terminal.getLocal()), 8, 6, 4210752);
         updateButton(this.tabCraftButton, this.container.isCraftingMode());
         updateButton(this.tabProcessButton, !this.container.isCraftingMode());
+        updateButton(this.combineEnableBtn, this.container.combine);
+        updateButton(this.combineDisableBtn, !this.container.combine);
         this.processingScrollBar.draw(this);
     }
 
