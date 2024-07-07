@@ -1,5 +1,7 @@
 package com.asdflj.ae2thing.client.gui.container;
 
+import static com.asdflj.ae2thing.api.Constants.TC_CRAFTING;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +20,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.asdflj.ae2thing.common.parts.PartDistillationPatternTerminal;
+import com.asdflj.ae2thing.common.parts.PartInfusionPatternTerminal;
 import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
 
@@ -55,16 +57,16 @@ import thaumcraft.common.lib.research.ScanManager;
 import thaumicenergistics.common.items.ItemCraftingAspect;
 import thaumicenergistics.common.items.ItemEnum;
 
-public class ContainerDistillationPatternTerminal extends ContainerMonitor
-    implements IOptionalSlotHost, IPatternContainer {
+public class ContainerInfusionPatternTerminal extends ContainerMonitor implements IOptionalSlotHost, IPatternContainer {
 
+    private static final int CRAFTING_GRID_PAGES = 2;
     private static final int CRAFTING_GRID_WIDTH = 4;
     private static final int CRAFTING_GRID_HEIGHT = 4;
     private static final int CRAFTING_GRID_SLOTS = CRAFTING_GRID_WIDTH * CRAFTING_GRID_HEIGHT;
     protected IGridNode networkNode;
     protected final SlotRestrictedInput[] cellView = new SlotRestrictedInput[5];
     protected SlotFakeCraftingMatrix[] craftingSlots = new SlotFakeCraftingMatrix[1];
-    protected SlotPatternOutputs[] outputSlots = new SlotPatternOutputs[CRAFTING_GRID_SLOTS];
+    protected SlotPatternOutputs[] outputSlots = new SlotPatternOutputs[CRAFTING_GRID_SLOTS * CRAFTING_GRID_PAGES];
     protected final SlotRestrictedInput patternSlotIN;
     protected final SlotRestrictedInput patternSlotOUT;
     protected SlotRestrictedInput patternRefiller;
@@ -77,12 +79,18 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
     public boolean hasPower = false;
     @GuiSync(99)
     public boolean canAccessViewCells;
-    private final PartDistillationPatternTerminal it;
+    @GuiSync(95)
+    public boolean combine = false;
+    @GuiSync(92)
+    public int activePage = 0;
+    @GuiSync(100)
+    public boolean craftingMode = true;
+    private final PartInfusionPatternTerminal it;
     private ItemStack lastScanItem = null;
 
-    public ContainerDistillationPatternTerminal(InventoryPlayer ip, ITerminalHost monitorable) {
+    public ContainerInfusionPatternTerminal(InventoryPlayer ip, ITerminalHost monitorable) {
         super(ip, monitorable);
-        this.it = (PartDistillationPatternTerminal) monitorable;
+        this.it = (PartInfusionPatternTerminal) monitorable;
         this.canAccessViewCells = false;
         this.crafting = this.it.getInventoryByName("crafting");
         this.output = this.it.getInventoryByName("output");
@@ -122,14 +130,24 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
 
         this.addSlotToContainer(this.craftingSlots[0] = new SlotFakeCraftingMatrix(this.crafting, 0, 12, -56));
 
-        for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
+        for (int page = 0; page < CRAFTING_GRID_PAGES; page++) {
             for (int y = 0; y < CRAFTING_GRID_HEIGHT; y++) {
-                this.addSlotToContainer(
-                    this.outputSlots[x * CRAFTING_GRID_HEIGHT
-                        + y] = new SlotPatternOutputs(output, this, x * CRAFTING_GRID_HEIGHT + y, 58, -83, x, y, 1));
-                this.outputSlots[x * CRAFTING_GRID_HEIGHT + y].setRenderDisabled(false);
+                for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
+                    this.addSlotToContainer(
+                        this.outputSlots[x + y * CRAFTING_GRID_WIDTH
+                            + page * CRAFTING_GRID_SLOTS] = new ProcessingSlotPattern(
+                                output,
+                                this,
+                                x + y * CRAFTING_GRID_WIDTH + page * CRAFTING_GRID_SLOTS,
+                                58,
+                                -83,
+                                x,
+                                y,
+                                x + 4));
+                }
             }
         }
+
         if (this.isPatternTerminal()) {
             this.addSlotToContainer(
                 this.patternRefiller = new SlotRestrictedInput(
@@ -146,6 +164,36 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
         }
 
         this.bindPlayerInventory(ip, 0, 0);
+    }
+
+    private void offsetSlots() {
+        for (int page = 0; page < CRAFTING_GRID_PAGES; page++) {
+            for (int y = 0; y < CRAFTING_GRID_HEIGHT; y++) {
+                for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
+                    ((ProcessingSlotPattern) this.outputSlots[x + y * CRAFTING_GRID_WIDTH + page * CRAFTING_GRID_SLOTS])
+                        .setHidden((page != activePage));
+                }
+            }
+        }
+    }
+
+    private static class ProcessingSlotPattern extends SlotPatternOutputs {
+
+        private static final int POSITION_SHIFT = 9000;
+        private boolean hidden = false;
+
+        public ProcessingSlotPattern(IInventory inv, IOptionalSlotHost containerBus, int idx, int x, int y, int offX,
+            int offY, int groupNum) {
+            super(inv, containerBus, idx, x, y, offX, offY, groupNum);
+            this.setRenderDisabled(false);
+        }
+
+        public void setHidden(boolean hide) {
+            if (this.hidden != hide) {
+                this.hidden = hide;
+                this.xDisplayPosition += (hide ? -1 : 1) * POSITION_SHIFT;
+            }
+        }
     }
 
     public void refillBlankPatterns(Slot slot) {
@@ -176,6 +224,11 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
     @Override
     public void onSlotChange(Slot s) {
         if (s == this.patternSlotOUT || s == this.craftingSlots[0] && Platform.isServer()) {
+            if (s == this.patternSlotOUT && s.getStack() != null) {
+                ItemStack is = s.getStack();
+                NBTTagCompound data = Platform.openNbtData(is);
+                this.setCrafting(data.getBoolean(TC_CRAFTING));
+            }
             for (final Object crafter : this.crafters) {
                 final ICrafting icrafting = (ICrafting) crafter;
 
@@ -183,7 +236,7 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
                     if (g instanceof OptionalSlotFake || g instanceof SlotFakeCraftingMatrix) {
                         final Slot sri = (Slot) g;
                         icrafting.sendSlotContents(this, sri.slotNumber, sri.getStack());
-                        if (g instanceof SlotFakeCraftingMatrix) {
+                        if (g instanceof SlotFakeCraftingMatrix && !this.isCraftingMode()) {
                             this.scanSourceItem();
                         }
                     }
@@ -194,19 +247,51 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
         }
     }
 
+    public PartInfusionPatternTerminal getPatternTerminal() {
+        return this.it;
+    }
+
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        this.updatePowerStatus();
-        final boolean oldAccessible = this.canAccessViewCells;
-        this.canAccessViewCells = this.hasAccess(SecurityPermissions.BUILD, false);
-        if (this.canAccessViewCells != oldAccessible) {
-            for (int y = 0; y < 5; y++) {
-                if (this.cellView[y] != null) {
-                    this.cellView[y].setAllowEdit(this.canAccessViewCells);
+        if (Platform.isServer()) {
+            this.combine = this.getPatternTerminal()
+                .shouldCombine();
+            if (activePage != this.getPatternTerminal()
+                .getActivePage()) {
+                activePage = this.getPatternTerminal()
+                    .getActivePage();
+                offsetSlots();
+            }
+            if (this.isCraftingMode() != this.getPatternTerminal()
+                .isCraftingRecipe()) {
+                this.setCraftingMode(
+                    this.getPatternTerminal()
+                        .isCraftingRecipe());
+                this.updateOrderOfOutputSlots();
+            }
+            this.updatePowerStatus();
+            final boolean oldAccessible = this.canAccessViewCells;
+            this.canAccessViewCells = this.hasAccess(SecurityPermissions.BUILD, false);
+            if (this.canAccessViewCells != oldAccessible) {
+                for (int y = 0; y < 5; y++) {
+                    if (this.cellView[y] != null) {
+                        this.cellView[y].setAllowEdit(this.canAccessViewCells);
+                    }
                 }
             }
         }
+    }
+
+    private void updateOrderOfOutputSlots() {
+        for (final Slot s : this.outputSlots) {
+            s.putStack(null);
+        }
+        this.lastScanItem = null;
+    }
+
+    private void setCraftingMode(boolean craftingRecipe) {
+        this.craftingMode = craftingRecipe;
     }
 
     public void scanSourceItem() {
@@ -284,7 +369,8 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
         if (name.equals("player")) {
             return this.getInventoryPlayer();
         }
-        return this.it.getInventoryByName(name);
+        return this.getPatternTerminal()
+            .getInventoryByName(name);
     }
 
     @Override
@@ -309,6 +395,9 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
                     this.cellView[y].setAllowEdit(this.canAccessViewCells);
                 }
             }
+        }
+        if (field.equals("activePage")) {
+            offsetSlots();
         }
         super.onUpdate(field, oldValue, newValue);
     }
@@ -508,10 +597,10 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
         for (final ItemStack i : out) {
             tagOut.appendTag(this.createItemTag(i));
         }
-
-        encodedValue.setTag("in", tagIn);
-        encodedValue.setTag("out", tagOut);
+        encodedValue.setTag("in", isCraftingMode() ? tagOut : tagIn);
+        encodedValue.setTag("out", isCraftingMode() ? tagIn : tagOut);
         encodedValue.setBoolean("crafting", false);
+        encodedValue.setBoolean(TC_CRAFTING, isCraftingMode());
         output.setTagCompound(encodedValue);
         stampAuthor(output);
         this.patternSlotOUT.putStack(output);
@@ -537,6 +626,7 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
     }
 
     public void doubleStacks(boolean isShift) {
+        if (isCraftingMode()) return;
         if (isShift) {
             if (canDouble(this.craftingSlots, 8) && canDouble(this.outputSlots, 8)) {
                 doubleStacksInternal(this.craftingSlots, 8);
@@ -615,6 +705,16 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
 
     @Override
     public boolean hasRefillerUpgrade() {
-        return this.it.hasRefillerUpgrade();
+        return this.getPatternTerminal()
+            .hasRefillerUpgrade();
+    }
+
+    public boolean isCraftingMode() {
+        return this.craftingMode;
+    }
+
+    public void setCrafting(boolean craftingMode) {
+        this.craftingMode = craftingMode;
+        this.it.setCraftingRecipe(craftingMode);
     }
 }

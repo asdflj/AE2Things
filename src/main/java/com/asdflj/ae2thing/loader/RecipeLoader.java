@@ -2,7 +2,9 @@ package com.asdflj.ae2thing.loader;
 
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BACKPACK_MANAGER;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BLOCK_FISH_BIG;
-import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.DISTILLATION_PATTERN_TERMINAL;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ESSENTIA_DISCRETIZER;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.INFUSION_INTERFACE;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.INFUSION_PATTERN_TERMINAL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_CREATIVE_WATER_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_FLUID_CELL;
@@ -15,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
+import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.storage.CellType;
 
@@ -64,9 +67,18 @@ public class RecipeLoader implements Runnable {
         if (ModAndClassUtil.THE) {
             final ItemStack THE_DISTILLATION_ENCODER = new ItemStack(DISTILLATION_ENCODER.getBlock(), 1);
             GameRegistry.addShapelessRecipe(
-                DISTILLATION_PATTERN_TERMINAL.stack(),
+                INFUSION_PATTERN_TERMINAL.stack(),
                 AE2_PROCESS_PATTERN_TERM,
                 THE_DISTILLATION_ENCODER);
+            GameRegistry.addShapelessRecipe(
+                INFUSION_INTERFACE.stack(),
+                com.glodblock.github.loader.ItemAndBlockHolder.INTERFACE,
+                AE2ThingAPI.PHIAL);
+            GameRegistry.addShapelessRecipe(
+                ESSENTIA_DISCRETIZER.stack(),
+                com.glodblock.github.loader.ItemAndBlockHolder.DISCRETIZER,
+                AE2ThingAPI.PHIAL);
+
         }
         GameRegistry.addRecipe(new ShapedOreRecipe(BLOCK_FISH_BIG.stack(), "FFF", "F F", "FFF", 'F', FISH));
         GameRegistry.addRecipe(

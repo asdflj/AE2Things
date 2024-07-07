@@ -4,14 +4,18 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import org.lwjgl.input.Mouse;
+
 import com.asdflj.ae2thing.AE2Thing;
-import com.asdflj.ae2thing.client.gui.container.ContainerDistillationPatternTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.glodblock.github.client.gui.GuiFCImgButton;
 import com.glodblock.github.common.item.ItemFluidDrop;
 
 import appeng.api.config.ActionItems;
@@ -21,6 +25,8 @@ import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.widgets.GuiImgButton;
+import appeng.client.gui.widgets.GuiScrollbar;
+import appeng.client.gui.widgets.GuiTabButton;
 import appeng.container.AEBaseContainer;
 import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.OptionalSlotFake;
@@ -31,23 +37,35 @@ import appeng.core.localization.GuiText;
 import appeng.helpers.InventoryAction;
 import appeng.util.item.AEItemStack;
 
-public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFluidTerminal {
+public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiFluidTerminal {
 
-    private final ContainerDistillationPatternTerminal container;
+    private final ContainerInfusionPatternTerminal container;
+    protected GuiTabButton tabCraftButton;
+    protected GuiTabButton tabProcessButton;
+    protected GuiFCImgButton combineEnableBtn;
+    protected GuiFCImgButton combineDisableBtn;
     protected final boolean viewCell;
     protected final ItemStack[] myCurrentViewCells = new ItemStack[5];
     protected GuiImgButton encodeBtn;
     protected GuiImgButton doubleBtn;
+    private static final int MODE_CRAFTING = 1;
+    private static final int MODE_PROCESSING = 0;
+    protected final GuiScrollbar processingScrollBar = new GuiScrollbar();
 
-    public GuiDistillationPatternTerminal(InventoryPlayer inventory, ITerminalHost inv) {
-        super(new ContainerDistillationPatternTerminal(inventory, inv));
+    public GuiInfusionPatternTerminal(InventoryPlayer inventory, ITerminalHost inv) {
+        super(new ContainerInfusionPatternTerminal(inventory, inv));
         this.xSize = 195;
         this.ySize = 204;
         this.standardSize = this.xSize;
-        (this.container = (ContainerDistillationPatternTerminal) this.inventorySlots).setGui(this);
+        (this.container = (ContainerInfusionPatternTerminal) this.inventorySlots).setGui(this);
         this.reservedSpace = 81;
         this.viewCell = inv instanceof IViewCellStorage;
         this.repo.setCache(this);
+        processingScrollBar.setHeight(70)
+            .setWidth(7)
+            .setLeft(6)
+            .setRange(0, 1, 1);
+        processingScrollBar.setTexture(AE2Thing.MODID, "gui/pattern.png", 242, 0);
     }
 
     protected void repositionSlot(final AppEngSlot s) {
@@ -87,6 +105,23 @@ public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFl
             this.ySize - 96 + 1 - this.getReservedSpace(),
             GuiColors.PatternTerminalEx.getColor());
         this.fontRendererObj.drawString(this.getGuiDisplayName(GuiText.Terminal.getLocal()), 8, 6, 4210752);
+        updateButton(this.tabCraftButton, this.container.isCraftingMode());
+        updateButton(this.tabProcessButton, !this.container.isCraftingMode());
+        updateButton(this.combineEnableBtn, this.container.combine);
+        updateButton(this.combineDisableBtn, !this.container.combine);
+        this.processingScrollBar.draw(this);
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float btn) {
+        processingScrollBar.setCurrentScroll(container.activePage);
+        super.drawScreen(mouseX, mouseY, btn);
+    }
+
+    protected void updateButton(GuiButton button, boolean vis) {
+        if (button != null) {
+            button.visible = vis;
+        }
     }
 
     public int getReservedSpace() {
@@ -100,6 +135,20 @@ public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFl
     @Override
     public void initGui() {
         super.initGui();
+        this.buttonList.add(
+            this.tabCraftButton = new GuiTabButton(
+                this.guiLeft + 173,
+                this.guiTop + this.ySize - 177,
+                new ItemStack(Blocks.crafting_table),
+                GuiText.CraftingPattern.getLocal(),
+                itemRender));
+        this.buttonList.add(
+            this.tabProcessButton = new GuiTabButton(
+                this.guiLeft + 173,
+                this.guiTop + this.ySize - 177,
+                new ItemStack(Blocks.furnace),
+                GuiText.ProcessingPattern.getLocal(),
+                itemRender));
         this.buttonList.add(
             this.clearBtn = new GuiImgButton(
                 this.guiLeft + 87 + 18 * -3,
@@ -122,6 +171,25 @@ public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFl
             this.doubleBtn.setHalfSize(true);
             this.buttonList.add(this.doubleBtn);
         }
+
+        this.combineEnableBtn = new GuiFCImgButton(
+            this.guiLeft + 87 + 18 * -3,
+            this.guiTop + this.ySize - 146,
+            "FORCE_COMBINE",
+            "DO_COMBINE");
+        this.combineEnableBtn.setHalfSize(true);
+        this.buttonList.add(this.combineEnableBtn);
+
+        this.combineDisableBtn = new GuiFCImgButton(
+            this.guiLeft + 87 + 18 * -3,
+            this.guiTop + this.ySize - 146,
+            "NOT_COMBINE",
+            "DONT_COMBINE");
+        this.combineDisableBtn.setHalfSize(true);
+        this.buttonList.add(this.combineDisableBtn);
+
+        processingScrollBar.setTop(this.ySize - 164);
+        processingScrollBar.setLeft(this.xSize - 64);
     }
 
     @Override
@@ -136,6 +204,14 @@ public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFl
         } else if (btn == doubleBtn) {
             AE2Thing.proxy.netHandler
                 .sendToServer(new CPacketTerminalBtns("PatternTerminal.Double", (isShiftKeyDown() ? 1 : 0)));
+        } else if (this.tabCraftButton == btn || this.tabProcessButton == btn) {
+            AE2Thing.proxy.netHandler.sendToServer(
+                new CPacketTerminalBtns(
+                    "PatternTerminal.CraftMode",
+                    this.tabProcessButton == btn ? MODE_CRAFTING : MODE_PROCESSING));
+        } else if (this.combineDisableBtn == btn || this.combineEnableBtn == btn) {
+            AE2Thing.proxy.netHandler
+                .sendToServer(new CPacketTerminalBtns("PatternTerminal.Combine", this.combineDisableBtn == btn));
         }
         super.actionPerformed(btn);
     }
@@ -209,6 +285,53 @@ public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFl
         this.repo.updateView();
         if (!this.repo.hasCache()) {
             this.setScrollBar();
+        }
+    }
+
+    @Override
+    protected void mouseClicked(final int xCoord, final int yCoord, final int btn) {
+        final int currentScroll = this.processingScrollBar.getCurrentScroll();
+        this.processingScrollBar.click(this, xCoord - this.guiLeft, yCoord - this.guiTop);
+        super.mouseClicked(xCoord, yCoord, btn);
+
+        if (currentScroll != this.processingScrollBar.getCurrentScroll()) {
+            changeActivePage();
+        }
+    }
+
+    @Override
+    public void handleMouseInput() {
+        super.handleMouseInput();
+        final int wheel = Mouse.getEventDWheel();
+
+        if (wheel != 0) {
+            final int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
+            final int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight;
+
+            if (this.processingScrollBar.contains(x - this.guiLeft, y - this.guiTop)) {
+                final int currentScroll = this.processingScrollBar.getCurrentScroll();
+                this.processingScrollBar.wheel(wheel);
+
+                if (currentScroll != this.processingScrollBar.getCurrentScroll()) {
+                    changeActivePage();
+                }
+            }
+        }
+    }
+
+    private void changeActivePage() {
+        AE2Thing.proxy.netHandler.sendToServer(
+            new CPacketTerminalBtns("PatternTerminal.ActivePage", this.processingScrollBar.getCurrentScroll()));
+    }
+
+    @Override
+    protected void mouseClickMove(final int x, final int y, final int c, final long d) {
+        final int currentScroll = this.processingScrollBar.getCurrentScroll();
+        this.processingScrollBar.click(this, x - this.guiLeft, y - this.guiTop);
+        super.mouseClickMove(x, y, c, d);
+
+        if (currentScroll != this.processingScrollBar.getCurrentScroll()) {
+            changeActivePage();
         }
     }
 

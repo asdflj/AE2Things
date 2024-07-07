@@ -1,7 +1,6 @@
 package com.asdflj.ae2thing.coremod.transform;
 
 import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -22,17 +21,6 @@ public class PlatformTransformer extends ClassTransformer.ClassMapper {
 
         public TransformPlatform(int api, ClassVisitor cv) {
             super(api, cv);
-        }
-
-        @Override
-        public void visit(int version, int access, String name, String signature, String superName,
-            String[] interfaces) {
-            super.visit(version, access, name, signature, superName, interfaces);
-        }
-
-        @Override
-        public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
-            return super.visitField(access, name, desc, signature, value);
         }
 
         @Override

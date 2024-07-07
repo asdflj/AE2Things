@@ -2,7 +2,7 @@ package com.asdflj.ae2thing.network;
 
 import net.minecraft.inventory.Container;
 
-import com.asdflj.ae2thing.client.gui.container.ContainerDistillationPatternTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -54,7 +54,7 @@ public class CPacketTerminalBtns implements IMessage {
             String name = message.name;
             int value = message.value;
             final Container c = ctx.getServerHandler().playerEntity.openContainer;
-            if (name.startsWith("PatternTerminal.") && c instanceof ContainerDistillationPatternTerminal cpt) {
+            if (name.startsWith("PatternTerminal.") && c instanceof ContainerInfusionPatternTerminal cpt) {
                 switch (name) {
                     case "PatternTerminal.Encode" -> {
                         switch (value) {
@@ -63,7 +63,13 @@ public class CPacketTerminalBtns implements IMessage {
                             case 3 -> cpt.encodeAllItemAndMoveToInventory();
                         }
                     }
+                    case "PatternTerminal.CraftMode" -> cpt.getPatternTerminal()
+                        .setCraftingRecipe(value == 1);
+                    case "PatternTerminal.Combine" -> cpt.getPatternTerminal()
+                        .setCombineMode(value == 1);
                     case "PatternTerminal.Clear" -> cpt.clear();
+                    case "PatternTerminal.ActivePage" -> cpt.getPatternTerminal()
+                        .setActivePage(value);
                     case "PatternTerminal.Double" -> cpt.doubleStacks(value == 1);
                 }
             }

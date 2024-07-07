@@ -1,8 +1,8 @@
 package com.asdflj.ae2thing.common.parts;
 
-import java.util.Arrays;
+import static com.asdflj.ae2thing.api.Constants.TC_CRAFTING;
+
 import java.util.List;
-import java.util.Objects;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -19,8 +19,29 @@ import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.tile.inventory.BiggerAppEngInventory;
 import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
+import appeng.util.Platform;
 
-public class PartDistillationPatternTerminal extends THPart {
+public class PartInfusionPatternTerminal extends THPart {
+
+    protected boolean craftingMode = true;
+    protected int activePage = 0;
+    protected boolean combine = false;
+
+    public void setActivePage(int value) {
+        this.activePage = value;
+    }
+
+    public int getActivePage() {
+        return this.activePage;
+    }
+
+    public boolean shouldCombine() {
+        return this.combine;
+    }
+
+    public void setCombineMode(boolean shouldCombine) {
+        this.combine = shouldCombine;
+    }
 
     public static class RefillerInventory extends AppEngInternalInventory {
 
@@ -45,10 +66,10 @@ public class PartDistillationPatternTerminal extends THPart {
 
     protected final AppEngInternalInventory pattern = new AppEngInternalInventory(this, 2);
     protected AppEngInternalInventory crafting = new BiggerAppEngInventory(this, 1);
-    protected AppEngInternalInventory output = new BiggerAppEngInventory(this, 16);
+    protected AppEngInternalInventory output = new BiggerAppEngInventory(this, 32);
     private final AppEngInternalInventory upgrades = new RefillerInventory(this);
 
-    public PartDistillationPatternTerminal(ItemStack is) {
+    public PartInfusionPatternTerminal(ItemStack is) {
         super(is, true);
     }
 
@@ -82,7 +103,7 @@ public class PartDistillationPatternTerminal extends THPart {
 
     @Override
     public GuiType getGui() {
-        return GuiType.DISTILLATION_PATTERN_TERMINAL;
+        return GuiType.INFUSION_PATTERN_TERMINAL;
     }
 
     @Override
@@ -104,8 +125,10 @@ public class PartDistillationPatternTerminal extends THPart {
                 final ICraftingPatternDetails details = craftingPatternItem
                     .getPatternForItem(is, this.getHost().getTile().getWorldObj());
                 if (details != null) {
-                    final IAEItemStack[] inItems = details.getInputs();
-                    final IAEItemStack[] outItems = details.getOutputs();
+                    NBTTagCompound data = Platform.openNbtData(is);
+                    this.craftingMode = data.getBoolean(TC_CRAFTING);
+                    final IAEItemStack[] inItems = isCraftingRecipe()? details.getOutputs(): details.getInputs();
+                    final IAEItemStack[] outItems = isCraftingRecipe()?details.getInputs(): details.getOutputs();
 
                     for (int i = 0; i < this.crafting.getSizeInventory(); i++) {
                         this.crafting.setInventorySlotContents(i, null);
@@ -115,7 +138,13 @@ public class PartDistillationPatternTerminal extends THPart {
                         this.output.setInventorySlotContents(i, null);
                     }
 
-                    Arrays.stream(inItems).filter(Objects::nonNull).findFirst().ifPresent(x->this.crafting.setInventorySlotContents(0,x.getItemStack()));
+                    for (int i = 0; i < this.crafting.getSizeInventory() && i < inItems.length; i++) {
+                        if (inItems[i] != null) {
+                            final IAEItemStack item = inItems[i];
+                            this.crafting.setInventorySlotContents(i, item == null ? null : item.getItemStack());
+                        }
+                    }
+
                     for (int i = 0; i < this.output.getSizeInventory() && i < outItems.length; i++) {
                         if (outItems[i] != null) {
                             final IAEItemStack item = outItems[i];
@@ -145,6 +174,17 @@ public class PartDistillationPatternTerminal extends THPart {
         this.output.readFromNBT(data, "outputList");
         this.crafting.readFromNBT(data, "craftingGrid");
         this.upgrades.readFromNBT(data, "upgrades");
+        this.craftingMode = data.getBoolean("craftingMode");
+        this.activePage = data.getInteger("activePage");
+        this.combine = data.getBoolean("combine");
+    }
+
+    public void setCraftingRecipe(final boolean craftingMode) {
+        this.craftingMode = craftingMode;
+    }
+
+    public boolean isCraftingRecipe() {
+        return this.craftingMode;
     }
 
     @Override
@@ -154,5 +194,8 @@ public class PartDistillationPatternTerminal extends THPart {
         this.output.writeToNBT(data, "outputList");
         this.crafting.writeToNBT(data, "craftingGrid");
         this.upgrades.writeToNBT(data, "upgrades");
+        data.setBoolean("craftingMode", this.craftingMode);
+        data.setInteger("activePage", this.activePage);
+        data.setBoolean("combine", this.combine);
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import com.asdflj.ae2thing.AE2Thing;
-import com.asdflj.ae2thing.common.parts.PartDistillationPatternTerminal;
+import com.asdflj.ae2thing.common.parts.PartInfusionPatternTerminal;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
 import com.asdflj.ae2thing.util.NameConst;
 import com.glodblock.github.loader.IRegister;
@@ -20,12 +20,12 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemPartDistillationPatternTerminal extends BaseItem
-    implements IPartItem, IRegister<ItemPartDistillationPatternTerminal> {
+public class ItemPartInfusionPatternTerminal extends BaseItem
+    implements IPartItem, IRegister<ItemPartInfusionPatternTerminal> {
 
-    public ItemPartDistillationPatternTerminal() {
+    public ItemPartInfusionPatternTerminal() {
         this.setMaxStackSize(64);
-        this.setUnlocalizedName(NameConst.ITEM_PART_DISTILLATION_PATTERN_TERMINAL);
+        this.setUnlocalizedName(NameConst.ITEM_PART_INFUSION_PATTERN_TERMINAL);
         AEApi.instance()
             .partHelper()
             .setItemBusRenderer(this);
@@ -42,15 +42,15 @@ public class ItemPartDistillationPatternTerminal extends BaseItem
     @Nullable
     @Override
     public IPart createPartFromItemStack(ItemStack is) {
-        return new PartDistillationPatternTerminal(is);
+        return new PartInfusionPatternTerminal(is);
     }
 
     @Override
     public void registerIcons(IIconRegister _iconRegister) {}
 
     @Override
-    public ItemPartDistillationPatternTerminal register() {
-        GameRegistry.registerItem(this, NameConst.ITEM_PART_DISTILLATION_PATTERN_TERMINAL, AE2Thing.MODID);
+    public ItemPartInfusionPatternTerminal register() {
+        GameRegistry.registerItem(this, NameConst.ITEM_PART_INFUSION_PATTERN_TERMINAL, AE2Thing.MODID);
         setCreativeTab(AE2ThingTabs.INSTANCE);
         return this;
     }

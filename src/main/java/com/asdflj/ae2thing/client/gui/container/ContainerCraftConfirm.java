@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import net.minecraft.entity.player.InventoryPlayer;
 
-import com.asdflj.ae2thing.common.parts.PartDistillationPatternTerminal;
+import com.asdflj.ae2thing.common.parts.PartInfusionPatternTerminal;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.util.BlockPos;
@@ -23,8 +23,8 @@ public class ContainerCraftConfirm extends appeng.container.implementations.Cont
         GuiType originalGui = null;
 
         final IActionHost ah = this.getActionHost();
-        if (ah instanceof PartDistillationPatternTerminal) {
-            originalGui = GuiType.DISTILLATION_PATTERN_TERMINAL;
+        if (ah instanceof PartInfusionPatternTerminal) {
+            originalGui = GuiType.INFUSION_PATTERN_TERMINAL;
         }
         if (this.getOpenContext() != null) {
             InventoryHandler.openGui(
