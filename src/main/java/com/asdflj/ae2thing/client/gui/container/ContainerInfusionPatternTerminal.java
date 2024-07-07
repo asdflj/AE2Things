@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminalEx;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -135,14 +134,14 @@ public class ContainerInfusionPatternTerminal extends ContainerMonitor implement
                     this.addSlotToContainer(
                         this.outputSlots[x + y * CRAFTING_GRID_WIDTH
                             + page * CRAFTING_GRID_SLOTS] = new ProcessingSlotPattern(
-                            crafting,
-                            this,
-                            x + y * CRAFTING_GRID_WIDTH + page * CRAFTING_GRID_SLOTS,
-                            15,
-                            -83,
-                            x,
-                            y,
-                            x + 4));
+                                output,
+                                this,
+                                x + y * CRAFTING_GRID_WIDTH + page * CRAFTING_GRID_SLOTS,
+                                58,
+                                -83,
+                                x,
+                                y,
+                                x + 4));
                 }
             }
         }
@@ -169,23 +168,24 @@ public class ContainerInfusionPatternTerminal extends ContainerMonitor implement
         for (int page = 0; page < CRAFTING_GRID_PAGES; page++) {
             for (int y = 0; y < CRAFTING_GRID_HEIGHT; y++) {
                 for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
-                    ((ProcessingSlotPattern) this.outputSlots[x * CRAFTING_GRID_HEIGHT + y + page * CRAFTING_GRID_SLOTS])
-                        .setHidden(page != activePage || x > 0 );
+                    ((ProcessingSlotPattern) this.outputSlots[x + y * CRAFTING_GRID_WIDTH + page * CRAFTING_GRID_SLOTS])
+                        .setHidden((page != activePage));
                 }
             }
         }
     }
-
 
     private static class ProcessingSlotPattern extends SlotPatternOutputs {
 
         private static final int POSITION_SHIFT = 9000;
         private boolean hidden = false;
 
-        public ProcessingSlotPattern(IInventory inv, IOptionalSlotHost containerBus, int idx, int x, int y, int offX, int offY, int groupNum) {
+        public ProcessingSlotPattern(IInventory inv, IOptionalSlotHost containerBus, int idx, int x, int y, int offX,
+            int offY, int groupNum) {
             super(inv, containerBus, idx, x, y, offX, offY, groupNum);
             this.setRenderDisabled(false);
         }
+
         public void setHidden(boolean hide) {
             if (this.hidden != hide) {
                 this.hidden = hide;
@@ -253,6 +253,12 @@ public class ContainerInfusionPatternTerminal extends ContainerMonitor implement
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
         if (Platform.isServer()) {
+            if (activePage != this.getPatternTerminal()
+                .getActivePage()) {
+                activePage = this.getPatternTerminal()
+                    .getActivePage();
+                offsetSlots();
+            }
             if (this.isCraftingMode() != this.getPatternTerminal()
                 .isCraftingRecipe()) {
                 this.setCraftingMode(
@@ -385,6 +391,9 @@ public class ContainerInfusionPatternTerminal extends ContainerMonitor implement
                     this.cellView[y].setAllowEdit(this.canAccessViewCells);
                 }
             }
+        }
+        if (field.equals("activePage")) {
+            offsetSlots();
         }
         super.onUpdate(field, oldValue, newValue);
     }

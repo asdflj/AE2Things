@@ -24,6 +24,15 @@ import appeng.util.Platform;
 public class PartInfusionPatternTerminal extends THPart {
 
     protected boolean craftingMode = true;
+    protected int activePage = 0;
+
+    public void setActivePage(int value) {
+        this.activePage = value;
+    }
+
+    public int getActivePage() {
+        return this.activePage;
+    }
 
     public static class RefillerInventory extends AppEngInternalInventory {
 
@@ -157,6 +166,7 @@ public class PartInfusionPatternTerminal extends THPart {
         this.crafting.readFromNBT(data, "craftingGrid");
         this.upgrades.readFromNBT(data, "upgrades");
         this.craftingMode = data.getBoolean("craftingMode");
+        this.activePage = data.getInteger("activePage");
     }
 
     public void setCraftingRecipe(final boolean craftingMode) {
@@ -175,5 +185,6 @@ public class PartInfusionPatternTerminal extends THPart {
         this.crafting.writeToNBT(data, "craftingGrid");
         this.upgrades.writeToNBT(data, "upgrades");
         data.setBoolean("craftingMode", this.craftingMode);
+        data.setInteger("activePage", this.activePage);
     }
 }

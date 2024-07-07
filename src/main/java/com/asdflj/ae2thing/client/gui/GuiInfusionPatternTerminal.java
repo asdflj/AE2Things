@@ -2,12 +2,13 @@ package com.asdflj.ae2thing.client.gui;
 
 import java.util.List;
 
-import appeng.client.gui.widgets.GuiScrollbar;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import org.lwjgl.input.Mouse;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
@@ -23,6 +24,7 @@ import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.widgets.GuiImgButton;
+import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.client.gui.widgets.GuiTabButton;
 import appeng.container.AEBaseContainer;
 import appeng.container.slot.AppEngSlot;
@@ -56,6 +58,11 @@ public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiFluidT
         this.reservedSpace = 81;
         this.viewCell = inv instanceof IViewCellStorage;
         this.repo.setCache(this);
+        processingScrollBar.setHeight(70)
+            .setWidth(7)
+            .setLeft(6)
+            .setRange(0, 1, 1);
+        processingScrollBar.setTexture(AE2Thing.MODID, "gui/pattern.png", 242, 0);
     }
 
     protected void repositionSlot(final AppEngSlot s) {
@@ -97,6 +104,7 @@ public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiFluidT
         this.fontRendererObj.drawString(this.getGuiDisplayName(GuiText.Terminal.getLocal()), 8, 6, 4210752);
         updateButton(this.tabCraftButton, this.container.isCraftingMode());
         updateButton(this.tabProcessButton, !this.container.isCraftingMode());
+        this.processingScrollBar.draw(this);
     }
 
     @Override
@@ -158,6 +166,8 @@ public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiFluidT
             this.doubleBtn.setHalfSize(true);
             this.buttonList.add(this.doubleBtn);
         }
+        processingScrollBar.setTop(this.ySize - 164);
+        processingScrollBar.setLeft(this.xSize - 64);
     }
 
     @Override
@@ -250,6 +260,53 @@ public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiFluidT
         this.repo.updateView();
         if (!this.repo.hasCache()) {
             this.setScrollBar();
+        }
+    }
+
+    @Override
+    protected void mouseClicked(final int xCoord, final int yCoord, final int btn) {
+        final int currentScroll = this.processingScrollBar.getCurrentScroll();
+        this.processingScrollBar.click(this, xCoord - this.guiLeft, yCoord - this.guiTop);
+        super.mouseClicked(xCoord, yCoord, btn);
+
+        if (currentScroll != this.processingScrollBar.getCurrentScroll()) {
+            changeActivePage();
+        }
+    }
+
+    @Override
+    public void handleMouseInput() {
+        super.handleMouseInput();
+        final int wheel = Mouse.getEventDWheel();
+
+        if (wheel != 0) {
+            final int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
+            final int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight;
+
+            if (this.processingScrollBar.contains(x - this.guiLeft, y - this.guiTop)) {
+                final int currentScroll = this.processingScrollBar.getCurrentScroll();
+                this.processingScrollBar.wheel(wheel);
+
+                if (currentScroll != this.processingScrollBar.getCurrentScroll()) {
+                    changeActivePage();
+                }
+            }
+        }
+    }
+
+    private void changeActivePage() {
+        AE2Thing.proxy.netHandler.sendToServer(
+            new CPacketTerminalBtns("PatternTerminal.ActivePage", this.processingScrollBar.getCurrentScroll()));
+    }
+
+    @Override
+    protected void mouseClickMove(final int x, final int y, final int c, final long d) {
+        final int currentScroll = this.processingScrollBar.getCurrentScroll();
+        this.processingScrollBar.click(this, x - this.guiLeft, y - this.guiTop);
+        super.mouseClickMove(x, y, c, d);
+
+        if (currentScroll != this.processingScrollBar.getCurrentScroll()) {
+            changeActivePage();
         }
     }
 
