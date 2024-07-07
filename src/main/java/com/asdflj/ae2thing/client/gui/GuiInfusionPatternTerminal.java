@@ -15,6 +15,7 @@ import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.glodblock.github.client.gui.GuiFCImgButton;
 import com.glodblock.github.common.item.ItemFluidDrop;
 
 import appeng.api.config.ActionItems;
@@ -41,6 +42,8 @@ public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiFluidT
     private final ContainerInfusionPatternTerminal container;
     protected GuiTabButton tabCraftButton;
     protected GuiTabButton tabProcessButton;
+    protected GuiFCImgButton combineEnableBtn;
+    protected GuiFCImgButton combineDisableBtn;
     protected final boolean viewCell;
     protected final ItemStack[] myCurrentViewCells = new ItemStack[5];
     protected GuiImgButton encodeBtn;
@@ -166,6 +169,23 @@ public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiFluidT
             this.doubleBtn.setHalfSize(true);
             this.buttonList.add(this.doubleBtn);
         }
+
+        this.combineEnableBtn = new GuiFCImgButton(
+            this.guiLeft + 87 + 18 * -3,
+            this.guiTop + this.ySize - 146,
+            "FORCE_COMBINE",
+            "DO_COMBINE");
+        this.combineEnableBtn.setHalfSize(true);
+        this.buttonList.add(this.combineEnableBtn);
+
+        this.combineDisableBtn = new GuiFCImgButton(
+            this.guiLeft + 87 + 18 * -3,
+            this.guiTop + this.ySize - 146,
+            "NOT_COMBINE",
+            "DONT_COMBINE");
+        this.combineDisableBtn.setHalfSize(true);
+        this.buttonList.add(this.combineDisableBtn);
+
         processingScrollBar.setTop(this.ySize - 164);
         processingScrollBar.setLeft(this.xSize - 64);
     }
@@ -187,6 +207,9 @@ public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiFluidT
                 new CPacketTerminalBtns(
                     "PatternTerminal.CraftMode",
                     this.tabProcessButton == btn ? MODE_CRAFTING : MODE_PROCESSING));
+        } else if (this.combineDisableBtn == btn || this.combineEnableBtn == btn) {
+            AE2Thing.proxy.netHandler
+                .sendToServer(new CPacketTerminalBtns("PatternTerminal.Combine", this.combineDisableBtn == btn));
         }
         super.actionPerformed(btn);
     }

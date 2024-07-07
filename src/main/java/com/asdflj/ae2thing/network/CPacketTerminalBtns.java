@@ -65,6 +65,8 @@ public class CPacketTerminalBtns implements IMessage {
                     }
                     case "PatternTerminal.CraftMode" -> cpt.getPatternTerminal()
                         .setCraftingRecipe(value == 1);
+                    case "PatternTerminal.Combine" -> cpt.getPatternTerminal()
+                        .setCombineMode(value == 1);
                     case "PatternTerminal.Clear" -> cpt.clear();
                     case "PatternTerminal.ActivePage" -> cpt.getPatternTerminal()
                         .setActivePage(value);

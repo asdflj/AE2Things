@@ -79,6 +79,8 @@ public class ContainerInfusionPatternTerminal extends ContainerMonitor implement
     public boolean hasPower = false;
     @GuiSync(99)
     public boolean canAccessViewCells;
+    @GuiSync(95)
+    public boolean combine = false;
     @GuiSync(92)
     public int activePage = 0;
     @GuiSync(100)
@@ -253,6 +255,8 @@ public class ContainerInfusionPatternTerminal extends ContainerMonitor implement
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
         if (Platform.isServer()) {
+            this.combine = this.getPatternTerminal()
+                .shouldCombine();
             if (activePage != this.getPatternTerminal()
                 .getActivePage()) {
                 activePage = this.getPatternTerminal()

@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerMonitor;
+import com.asdflj.ae2thing.nei.NEIUtils;
 import com.asdflj.ae2thing.nei.object.OrderStack;
 import com.glodblock.github.common.item.ItemFluidPacket;
 
@@ -92,7 +93,7 @@ public class CPacketTransferRecipe implements IMessage {
             if (c instanceof ContainerMonitor) {
                 if (c instanceof ContainerInfusionPatternTerminal ct) {
                     // pattern terminal only
-
+                    boolean combine = ct.combine;
                     ct.getPatternTerminal()
                         .setCraftingRecipe(true);
                     ct.setCrafting(true);
@@ -104,6 +105,12 @@ public class CPacketTransferRecipe implements IMessage {
                     for (int i = 0; i < outputSlot.getSizeInventory(); i++) {
                         outputSlot.setInventorySlotContents(i, null);
                     }
+                    if (combine) {
+                        message.inputs = NEIUtils.compress(message.inputs);
+                        message.outputs = NEIUtils.compress(message.outputs);
+                    }
+                    message.inputs = NEIUtils.clearNull(message.inputs);
+                    message.outputs = NEIUtils.clearNull(message.outputs);
                     transferPack(message.inputs, inputSlot);
                     transferPack(message.outputs, outputSlot);
                     c.onCraftMatrixChanged(inputSlot);

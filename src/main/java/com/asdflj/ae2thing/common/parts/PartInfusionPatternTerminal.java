@@ -25,6 +25,7 @@ public class PartInfusionPatternTerminal extends THPart {
 
     protected boolean craftingMode = true;
     protected int activePage = 0;
+    protected boolean combine = false;
 
     public void setActivePage(int value) {
         this.activePage = value;
@@ -32,6 +33,14 @@ public class PartInfusionPatternTerminal extends THPart {
 
     public int getActivePage() {
         return this.activePage;
+    }
+
+    public boolean shouldCombine() {
+        return this.combine;
+    }
+
+    public void setCombineMode(boolean shouldCombine) {
+        this.combine = shouldCombine;
     }
 
     public static class RefillerInventory extends AppEngInternalInventory {
@@ -167,6 +176,7 @@ public class PartInfusionPatternTerminal extends THPart {
         this.upgrades.readFromNBT(data, "upgrades");
         this.craftingMode = data.getBoolean("craftingMode");
         this.activePage = data.getInteger("activePage");
+        this.combine = data.getBoolean("combine");
     }
 
     public void setCraftingRecipe(final boolean craftingMode) {
@@ -186,5 +196,6 @@ public class PartInfusionPatternTerminal extends THPart {
         this.upgrades.writeToNBT(data, "upgrades");
         data.setBoolean("craftingMode", this.craftingMode);
         data.setInteger("activePage", this.activePage);
+        data.setBoolean("combine", this.combine);
     }
 }
