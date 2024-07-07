@@ -268,7 +268,7 @@ public class ContainerInfusionPatternTerminal extends ContainerMonitor implement
                 this.setCraftingMode(
                     this.getPatternTerminal()
                         .isCraftingRecipe());
-                this.updateOrderOfOutputSlots();
+                // this.updateOrderOfOutputSlots();
             }
             this.updatePowerStatus();
             final boolean oldAccessible = this.canAccessViewCells;
