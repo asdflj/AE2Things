@@ -25,17 +25,6 @@ public class PlatformTransformer extends ClassTransformer.ClassMapper {
         }
 
         @Override
-        public void visit(int version, int access, String name, String signature, String superName,
-            String[] interfaces) {
-            super.visit(version, access, name, signature, superName, interfaces);
-        }
-
-        @Override
-        public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
-            return super.visitField(access, name, desc, signature, value);
-        }
-
-        @Override
         public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
             if (name.equals("updateView")) {
                 return new TransformUpdateView(api, super.visitMethod(access, name, desc, signature, exceptions));

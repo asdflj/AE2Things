@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.coremod;
 
+import com.asdflj.ae2thing.coremod.transform.FluidConvertingInventoryAdaptorTransformer;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.objectweb.asm.ClassReader;
@@ -17,6 +18,7 @@ public class ClassTransformer implements IClassTransformer {
         switch (transformedName) {
             case "appeng.me.cluster.implementations.CraftingCPUCluster" -> tform = CraftingCpuTransformer.INSTANCE;
             case "appeng.client.me.ItemRepo" -> tform = PlatformTransformer.INSTANCE;
+            case "com.glodblock.github.inventory.FluidConvertingInventoryAdaptor" -> tform = FluidConvertingInventoryAdaptorTransformer.INSTANCE;
             default -> {
                 return code;
             }

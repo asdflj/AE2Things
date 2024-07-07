@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -21,6 +22,7 @@ import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.widgets.GuiImgButton;
+import appeng.client.gui.widgets.GuiTabButton;
 import appeng.container.AEBaseContainer;
 import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.OptionalSlotFake;
@@ -34,10 +36,14 @@ import appeng.util.item.AEItemStack;
 public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFluidTerminal {
 
     private final ContainerDistillationPatternTerminal container;
+    protected GuiTabButton tabCraftButton;
+    protected GuiTabButton tabProcessButton;
     protected final boolean viewCell;
     protected final ItemStack[] myCurrentViewCells = new ItemStack[5];
     protected GuiImgButton encodeBtn;
     protected GuiImgButton doubleBtn;
+    private static final int MODE_CRAFTING = 1;
+    private static final int MODE_PROCESSING = 0;
 
     public GuiDistillationPatternTerminal(InventoryPlayer inventory, ITerminalHost inv) {
         super(new ContainerDistillationPatternTerminal(inventory, inv));
@@ -87,6 +93,14 @@ public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFl
             this.ySize - 96 + 1 - this.getReservedSpace(),
             GuiColors.PatternTerminalEx.getColor());
         this.fontRendererObj.drawString(this.getGuiDisplayName(GuiText.Terminal.getLocal()), 8, 6, 4210752);
+        updateButton(this.tabCraftButton, this.container.isCraftingMode());
+        updateButton(this.tabProcessButton, !this.container.isCraftingMode());
+    }
+
+    protected void updateButton(GuiButton button, boolean vis) {
+        if (button != null) {
+            button.visible = vis;
+        }
     }
 
     public int getReservedSpace() {
@@ -100,6 +114,20 @@ public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFl
     @Override
     public void initGui() {
         super.initGui();
+        this.buttonList.add(
+            this.tabCraftButton = new GuiTabButton(
+                this.guiLeft + 173,
+                this.guiTop + this.ySize - 177,
+                new ItemStack(Blocks.crafting_table),
+                GuiText.CraftingPattern.getLocal(),
+                itemRender));
+        this.buttonList.add(
+            this.tabProcessButton = new GuiTabButton(
+                this.guiLeft + 173,
+                this.guiTop + this.ySize - 177,
+                new ItemStack(Blocks.furnace),
+                GuiText.ProcessingPattern.getLocal(),
+                itemRender));
         this.buttonList.add(
             this.clearBtn = new GuiImgButton(
                 this.guiLeft + 87 + 18 * -3,
@@ -136,6 +164,11 @@ public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFl
         } else if (btn == doubleBtn) {
             AE2Thing.proxy.netHandler
                 .sendToServer(new CPacketTerminalBtns("PatternTerminal.Double", (isShiftKeyDown() ? 1 : 0)));
+        } else if (this.tabCraftButton == btn || this.tabProcessButton == btn) {
+            AE2Thing.proxy.netHandler.sendToServer(
+                new CPacketTerminalBtns(
+                    "PatternTerminal.CraftMode",
+                    this.tabProcessButton == btn ? MODE_CRAFTING : MODE_PROCESSING));
         }
         super.actionPerformed(btn);
     }

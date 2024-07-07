@@ -77,6 +77,9 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
     public boolean hasPower = false;
     @GuiSync(99)
     public boolean canAccessViewCells;
+
+    @GuiSync(100)
+    public boolean craftingMode = true;
     private final PartDistillationPatternTerminal it;
     private ItemStack lastScanItem = null;
 
@@ -183,7 +186,7 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
                     if (g instanceof OptionalSlotFake || g instanceof SlotFakeCraftingMatrix) {
                         final Slot sri = (Slot) g;
                         icrafting.sendSlotContents(this, sri.slotNumber, sri.getStack());
-                        if (g instanceof SlotFakeCraftingMatrix) {
+                        if (g instanceof SlotFakeCraftingMatrix && !this.isCraftingMode()) {
                             this.scanSourceItem();
                         }
                     }
@@ -194,19 +197,43 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
         }
     }
 
+    public PartDistillationPatternTerminal getPatternTerminal() {
+        return this.it;
+    }
+
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        this.updatePowerStatus();
-        final boolean oldAccessible = this.canAccessViewCells;
-        this.canAccessViewCells = this.hasAccess(SecurityPermissions.BUILD, false);
-        if (this.canAccessViewCells != oldAccessible) {
-            for (int y = 0; y < 5; y++) {
-                if (this.cellView[y] != null) {
-                    this.cellView[y].setAllowEdit(this.canAccessViewCells);
+        if (Platform.isServer()) {
+            if (this.isCraftingMode() != this.getPatternTerminal()
+                .isCraftingRecipe()) {
+                this.setCraftingMode(
+                    this.getPatternTerminal()
+                        .isCraftingRecipe());
+                this.updateOrderOfOutputSlots();
+            }
+            this.updatePowerStatus();
+            final boolean oldAccessible = this.canAccessViewCells;
+            this.canAccessViewCells = this.hasAccess(SecurityPermissions.BUILD, false);
+            if (this.canAccessViewCells != oldAccessible) {
+                for (int y = 0; y < 5; y++) {
+                    if (this.cellView[y] != null) {
+                        this.cellView[y].setAllowEdit(this.canAccessViewCells);
+                    }
                 }
             }
         }
+    }
+
+    private void updateOrderOfOutputSlots() {
+        for (final Slot s : this.outputSlots) {
+            s.putStack(null);
+        }
+        this.lastScanItem = null;
+    }
+
+    private void setCraftingMode(boolean craftingRecipe) {
+        this.craftingMode = craftingRecipe;
     }
 
     public void scanSourceItem() {
@@ -284,7 +311,8 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
         if (name.equals("player")) {
             return this.getInventoryPlayer();
         }
-        return this.it.getInventoryByName(name);
+        return this.getPatternTerminal()
+            .getInventoryByName(name);
     }
 
     @Override
@@ -508,7 +536,6 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
         for (final ItemStack i : out) {
             tagOut.appendTag(this.createItemTag(i));
         }
-
         encodedValue.setTag("in", tagIn);
         encodedValue.setTag("out", tagOut);
         encodedValue.setBoolean("crafting", false);
@@ -537,6 +564,7 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
     }
 
     public void doubleStacks(boolean isShift) {
+        if (isCraftingMode()) return;
         if (isShift) {
             if (canDouble(this.craftingSlots, 8) && canDouble(this.outputSlots, 8)) {
                 doubleStacksInternal(this.craftingSlots, 8);
@@ -615,6 +643,11 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
 
     @Override
     public boolean hasRefillerUpgrade() {
-        return this.it.hasRefillerUpgrade();
+        return this.getPatternTerminal()
+            .hasRefillerUpgrade();
+    }
+
+    public boolean isCraftingMode() {
+        return this.craftingMode;
     }
 }

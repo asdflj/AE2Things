@@ -63,6 +63,8 @@ public class CPacketTerminalBtns implements IMessage {
                             case 3 -> cpt.encodeAllItemAndMoveToInventory();
                         }
                     }
+                    case "PatternTerminal.CraftMode" -> cpt.getPatternTerminal()
+                        .setCraftingRecipe(value == 1);
                     case "PatternTerminal.Clear" -> cpt.clear();
                     case "PatternTerminal.Double" -> cpt.doubleStacks(value == 1);
                 }
