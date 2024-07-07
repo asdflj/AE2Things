@@ -1,6 +1,5 @@
 package com.asdflj.ae2thing.coremod;
 
-import com.asdflj.ae2thing.coremod.transform.FluidConvertingInventoryAdaptorTransformer;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.objectweb.asm.ClassReader;
@@ -8,6 +7,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 
 import com.asdflj.ae2thing.coremod.transform.CraftingCpuTransformer;
+import com.asdflj.ae2thing.coremod.transform.FluidConvertingInventoryAdaptorTransformer;
 import com.asdflj.ae2thing.coremod.transform.PlatformTransformer;
 
 public class ClassTransformer implements IClassTransformer {

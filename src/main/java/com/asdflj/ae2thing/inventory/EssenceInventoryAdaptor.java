@@ -1,19 +1,20 @@
 package com.asdflj.ae2thing.inventory;
 
-import appeng.api.config.FuzzyMode;
-import appeng.util.InventoryAdaptor;
-import appeng.util.inv.AdaptorIInventory;
-import appeng.util.inv.IInventoryDestination;
-import appeng.util.inv.ItemSlot;
-import com.asdflj.ae2thing.common.tile.TileInfusionInterface;
-import net.minecraft.inventory.IInventory;
+import java.util.Iterator;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import org.jetbrains.annotations.NotNull;
-import thaumcraft.common.items.ItemEssence;
 
-import java.util.Iterator;
+import org.jetbrains.annotations.NotNull;
+
+import com.asdflj.ae2thing.common.item.ItemPhial;
+import com.asdflj.ae2thing.common.tile.TileInfusionInterface;
+
+import appeng.api.config.FuzzyMode;
+import appeng.util.InventoryAdaptor;
+import appeng.util.inv.IInventoryDestination;
+import appeng.util.inv.ItemSlot;
 
 public class EssenceInventoryAdaptor extends InventoryAdaptor {
 
@@ -27,18 +28,15 @@ public class EssenceInventoryAdaptor extends InventoryAdaptor {
     }
 
     public static InventoryAdaptor getAdaptor(TileEntity tile, final ForgeDirection d) {
-        InventoryAdaptor ad = InventoryAdaptor.getAdaptor(tile,d);
-        if(ad == null) return null;
-        TileEntity inter = tile.getWorldObj().getTileEntity(
-            tile.xCoord + d.offsetX,
-            tile.yCoord + d.offsetY,
-            tile.zCoord + d.offsetZ);
-        if(inter instanceof TileInfusionInterface t) {
+        InventoryAdaptor ad = InventoryAdaptor.getAdaptor(tile, d);
+        if (ad == null) return null;
+        TileEntity inter = tile.getWorldObj()
+            .getTileEntity(tile.xCoord + d.offsetX, tile.yCoord + d.offsetY, tile.zCoord + d.offsetZ);
+        if (inter instanceof TileInfusionInterface t) {
             return new EssenceInventoryAdaptor(ad, t);
         }
         return ad;
     }
-
 
     @Override
     public ItemStack removeItems(int amount, ItemStack filter, IInventoryDestination destination) {
@@ -51,25 +49,29 @@ public class EssenceInventoryAdaptor extends InventoryAdaptor {
     }
 
     @Override
-    public ItemStack removeSimilarItems(int amount, ItemStack filter, FuzzyMode fuzzyMode, IInventoryDestination destination) {
-        return adaptor.removeSimilarItems(amount,filter,fuzzyMode,destination);
+    public ItemStack removeSimilarItems(int amount, ItemStack filter, FuzzyMode fuzzyMode,
+        IInventoryDestination destination) {
+        return adaptor.removeSimilarItems(amount, filter, fuzzyMode, destination);
     }
 
     @Override
-    public ItemStack simulateSimilarRemove(int amount, ItemStack filter, FuzzyMode fuzzyMode, IInventoryDestination destination) {
-        return adaptor.simulateSimilarRemove(amount,filter,fuzzyMode,destination);
+    public ItemStack simulateSimilarRemove(int amount, ItemStack filter, FuzzyMode fuzzyMode,
+        IInventoryDestination destination) {
+        return adaptor.simulateSimilarRemove(amount, filter, fuzzyMode, destination);
     }
 
     @Override
     public ItemStack addItems(ItemStack toBeAdded) {
-        return adaptor.addItems(toBeAdded);
+        if (toBeAdded.getItem() instanceof ItemPhial) {
+            this.tile.setAspects(ItemPhial.getAspectList(toBeAdded));
+            return null;
+        } else {
+            return adaptor.addItems(toBeAdded);
+        }
     }
 
     @Override
     public ItemStack simulateAdd(ItemStack toBeSimulated) {
-        if(toBeSimulated.getItem() instanceof ItemEssence){
-
-        }
         return adaptor.simulateAdd(toBeSimulated);
     }
 

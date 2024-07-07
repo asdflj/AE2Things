@@ -73,6 +73,12 @@ public class ItemPhial extends ItemEssence implements IRegister<ItemPhial> {
         return newEssenceStack(aspect, item.getStackSize());
     }
 
+    public static FluidStack getEssenceStack(ItemStack item) {
+        Aspect aspect = getAspect(item);
+        if (aspect == null) return null;
+        return newEssenceStack(aspect, item.stackSize).getFluidStack();
+    }
+
     public static Aspect getAspect(IAEItemStack item) {
         return getAspect(item.getItemStack());
     }
@@ -108,6 +114,14 @@ public class ItemPhial extends ItemEssence implements IRegister<ItemPhial> {
             }
         }
         return null;
+    }
+
+    public static AspectList getAspectList(ItemStack item) {
+        Aspect aspect = getAspect(item);
+        AspectList aspects = new AspectList();
+        if (aspect == null) return aspects;
+        aspects.add(aspect, item.stackSize);
+        return aspects;
     }
 
     public static void setAspects(ItemStack item, Aspect aspect) {
