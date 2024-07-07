@@ -1,5 +1,7 @@
 package com.asdflj.ae2thing.common.parts;
 
+import static com.asdflj.ae2thing.api.Constants.TC_CRAFTING;
+
 import java.util.List;
 
 import net.minecraft.inventory.IInventory;
@@ -17,6 +19,7 @@ import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.tile.inventory.BiggerAppEngInventory;
 import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
+import appeng.util.Platform;
 
 public class PartDistillationPatternTerminal extends THPart {
 
@@ -104,8 +107,10 @@ public class PartDistillationPatternTerminal extends THPart {
                 final ICraftingPatternDetails details = craftingPatternItem
                     .getPatternForItem(is, this.getHost().getTile().getWorldObj());
                 if (details != null) {
-                    final IAEItemStack[] inItems = details.getInputs();
-                    final IAEItemStack[] outItems =details.getOutputs();
+                    NBTTagCompound data = Platform.openNbtData(is);
+                    this.craftingMode = data.getBoolean(TC_CRAFTING);
+                    final IAEItemStack[] inItems = isCraftingRecipe()? details.getOutputs(): details.getInputs();
+                    final IAEItemStack[] outItems = isCraftingRecipe()?details.getInputs(): details.getOutputs();
 
                     for (int i = 0; i < this.crafting.getSizeInventory(); i++) {
                         this.crafting.setInventorySlotContents(i, null);

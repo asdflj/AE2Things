@@ -57,15 +57,7 @@ public class ItemPhial extends ItemEssence implements IRegister<ItemPhial> {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubItems(Item par1, CreativeTabs tab, List par3List) {
-        // par3List.add(new ItemStack(this, 1, 0));
-        //
-        // for(Aspect tag : Aspect.aspects.values()) {
-        // ItemStack i = new ItemStack(this, 1, 1);
-        // this.setAspects(i, (new AspectList()).add(tag, 1));
-        // par3List.add(i);
-        // }
-    }
+    public void getSubItems(Item par1, CreativeTabs tab, List par3List) {}
 
     public static IAEFluidStack getAeEssenceStack(IAEItemStack item) {
         Aspect aspect = getAspect(item);
@@ -101,6 +93,12 @@ public class ItemPhial extends ItemEssence implements IRegister<ItemPhial> {
             return item;
         }
         return null;
+    }
+
+    public static ItemStack newStack(Aspect aspect, int size) {
+        ItemStack is = new ItemStack(ItemAndBlockHolder.PHIAL, size, 1);
+        setAspects(is, aspect, 1);
+        return is;
     }
 
     public static Aspect getAspect(ItemStack item) {

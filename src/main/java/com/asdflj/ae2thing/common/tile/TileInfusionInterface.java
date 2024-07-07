@@ -43,6 +43,27 @@ public class TileInfusionInterface extends TileFluidInterface implements IAspect
         aspects.add(var1);
     }
 
+    public ItemStack addAspects(ItemStack is) {
+        if (is.getItem() instanceof ItemPhial) {
+            Aspect aspect = ItemPhial.getAspect(is);
+            if (aspect == null) return is;
+            int size = is.stackSize;
+            long stored = aspects.getAmount(aspect);
+            if (stored + size > Integer.MAX_VALUE) {
+                return is;
+            } else {
+                aspects.add(aspect, size);
+                ItemStack out = is.copy();
+                out.stackSize -= size;
+                if (out.stackSize <= 0) {
+                    return null;
+                }
+                return out;
+            }
+        }
+        return is;
+    }
+
     @Override
     public boolean doesContainerAccept(Aspect aspect) {
         return aspects.getAmount(aspect) > 0;

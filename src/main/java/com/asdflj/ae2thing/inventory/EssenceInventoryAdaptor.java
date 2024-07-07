@@ -63,8 +63,7 @@ public class EssenceInventoryAdaptor extends InventoryAdaptor {
     @Override
     public ItemStack addItems(ItemStack toBeAdded) {
         if (toBeAdded.getItem() instanceof ItemPhial) {
-            this.tile.setAspects(ItemPhial.getAspectList(toBeAdded));
-            return null;
+            return this.tile.addAspects(toBeAdded);
         } else {
             return adaptor.addItems(toBeAdded);
         }

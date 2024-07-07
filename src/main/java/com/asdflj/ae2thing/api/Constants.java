@@ -9,4 +9,5 @@ public interface Constants {
     String COUNT = "Count";
     String LINKED = "linked";
     String DISPLAY_ONLY = "DisplayOnly";
+    String TC_CRAFTING = "tc_crafting";
 }

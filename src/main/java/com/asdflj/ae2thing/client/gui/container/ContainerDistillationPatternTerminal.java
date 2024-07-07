@@ -1,5 +1,7 @@
 package com.asdflj.ae2thing.client.gui.container;
 
+import static com.asdflj.ae2thing.api.Constants.TC_CRAFTING;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -179,6 +181,11 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
     @Override
     public void onSlotChange(Slot s) {
         if (s == this.patternSlotOUT || s == this.craftingSlots[0] && Platform.isServer()) {
+            if (s == this.patternSlotOUT && s.getStack() != null) {
+                ItemStack is = s.getStack();
+                NBTTagCompound data = Platform.openNbtData(is);
+                this.setCrafting(data.getBoolean(TC_CRAFTING));
+            }
             for (final Object crafter : this.crafters) {
                 final ICrafting icrafting = (ICrafting) crafter;
 
@@ -536,9 +543,10 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
         for (final ItemStack i : out) {
             tagOut.appendTag(this.createItemTag(i));
         }
-        encodedValue.setTag("in", tagIn);
-        encodedValue.setTag("out", tagOut);
+        encodedValue.setTag("in", isCraftingMode() ? tagOut : tagIn);
+        encodedValue.setTag("out", isCraftingMode() ? tagIn : tagOut);
         encodedValue.setBoolean("crafting", false);
+        encodedValue.setBoolean(TC_CRAFTING, isCraftingMode());
         output.setTagCompound(encodedValue);
         stampAuthor(output);
         this.patternSlotOUT.putStack(output);
@@ -649,5 +657,10 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
 
     public boolean isCraftingMode() {
         return this.craftingMode;
+    }
+
+    public void setCrafting(boolean craftingMode) {
+        this.craftingMode = craftingMode;
+        this.it.setCraftingRecipe(craftingMode);
     }
 }

@@ -15,6 +15,7 @@ import appeng.api.AEApi;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -55,6 +56,11 @@ public class AE2Thing {
         if (ModAndClassUtil.WAILA) {
             WailaInit.run();
         }
+    }
+
+    @Mod.EventHandler
+    public void onLoadComplete(FMLLoadCompleteEvent event) {
+        proxy.onLoadComplete(event);
     }
 
     @Mod.EventHandler

@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.common.block;
 
+import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
 import com.asdflj.ae2thing.common.tile.TileInfusionInterface;
 import com.asdflj.ae2thing.util.NameConst;
@@ -13,6 +14,8 @@ public class BlockInfusionInterface extends BlockFluidInterface {
     public BlockInfusionInterface() {
         super();
         setTileEntity(TileInfusionInterface.class);
+        this.setBlockName(NameConst.BLOCK_INFUSION_INTERFACE);
+        this.setBlockTextureName(AE2Thing.MODID + ":" + NameConst.BLOCK_INFUSION_INTERFACE);
     }
 
     @Override
@@ -22,4 +25,5 @@ public class BlockInfusionInterface extends BlockFluidInterface {
         setCreativeTab(AE2ThingTabs.INSTANCE);
         return this;
     }
+
 }

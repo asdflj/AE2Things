@@ -6,6 +6,7 @@ import java.util.List;
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.Tags;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
+import com.asdflj.ae2thing.client.gui.GuiDistillationPatternTerminal;
 
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
@@ -27,6 +28,12 @@ public class NEI_TH_Config implements IConfigureNEI {
                     FluidCraftingTransferHandler.INSTANCE,
                     identifier);
             }
+        }
+        if (!API.hasGuiOverlayHandler(GuiDistillationPatternTerminal.class, "infusionCrafting")) {
+            API.registerGuiOverlayHandler(
+                GuiDistillationPatternTerminal.class,
+                FluidPatternTerminalRecipeTransferHandler.INSTANCE,
+                "infusionCrafting");
         }
     }
 

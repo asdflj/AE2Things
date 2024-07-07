@@ -44,6 +44,10 @@ public class OrderStack<T> {
         this.RealStack = stack;
     }
 
+    public void putStack(ItemStack stack) {
+        this.RealStack = (T) stack;
+    }
+
     public void putItems(ItemStack[] items) {
         this.items = items;
     }

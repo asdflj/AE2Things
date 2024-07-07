@@ -5,6 +5,8 @@ item.creative_fluid_cell.water.name=Creative ME Fluid Storage Cell (Water)
 item.creative_fluid_cell.lava.name=Creative ME Fluid Storage Cell (Lava)
 item.part_distillation_terminal.name=Distillation Pattern Terminal
 tile.fishbig.name=FishBig
+tile.essence_discretizer.name=Essence Discretizer
+tile.infusion_interface.name=Infusion Interface
 
 ae2thing.tooltip.shift_for_more=§r> Hold §3Shift§r for more information
 ae2thing.tooltip.linked=Linked
