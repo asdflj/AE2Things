@@ -59,23 +59,23 @@ public class ItemPhial extends ItemEssence implements IRegister<ItemPhial> {
     @Override
     public void getSubItems(Item par1, CreativeTabs tab, List par3List) {}
 
-    public static IAEFluidStack getAeEssenceStack(IAEItemStack item) {
+    public static IAEFluidStack getAeEssentiaStack(IAEItemStack item) {
         Aspect aspect = getAspect(item);
         if (aspect == null) return null;
-        return newEssenceStack(aspect, item.getStackSize());
+        return newEssentiaStack(aspect, item.getStackSize());
     }
 
-    public static FluidStack getEssenceStack(ItemStack item) {
+    public static FluidStack getEssentiaStack(ItemStack item) {
         Aspect aspect = getAspect(item);
         if (aspect == null) return null;
-        return newEssenceStack(aspect, item.stackSize).getFluidStack();
+        return newEssentiaStack(aspect, item.stackSize).getFluidStack();
     }
 
     public static Aspect getAspect(IAEItemStack item) {
         return getAspect(item.getItemStack());
     }
 
-    public static IAEFluidStack newEssenceStack(Aspect aspect, long size) {
+    public static IAEFluidStack newEssentiaStack(Aspect aspect, long size) {
         FluidStack fs = new FluidStack(GaseousEssentia.getGasFromAspect(aspect), 1);
         IAEFluidStack ifs = AEFluidStack.create(fs);
         ifs.setStackSize(size * AspectUtil.R);

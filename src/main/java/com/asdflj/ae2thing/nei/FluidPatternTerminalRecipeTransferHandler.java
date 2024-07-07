@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.client.gui.inventory.GuiContainer;
 
 import com.asdflj.ae2thing.AE2Thing;
-import com.asdflj.ae2thing.client.gui.GuiDistillationPatternTerminal;
+import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.nei.object.OrderStack;
 import com.asdflj.ae2thing.nei.recipes.FluidRecipe;
 import com.asdflj.ae2thing.network.CPacketTransferRecipe;
@@ -19,7 +19,7 @@ public class FluidPatternTerminalRecipeTransferHandler implements IOverlayHandle
 
     @Override
     public void overlayRecipe(GuiContainer firstGui, IRecipeHandler recipe, int recipeIndex, boolean shift) {
-        if (firstGui instanceof GuiDistillationPatternTerminal) {
+        if (firstGui instanceof GuiInfusionPatternTerminal) {
             List<OrderStack<?>> in = FluidRecipe.getPackageInputs(recipe, recipeIndex, false);
             List<OrderStack<?>> out = FluidRecipe.getPackageOutputs(recipe, recipeIndex, false);
             AE2Thing.proxy.netHandler.sendToServer(new CPacketTransferRecipe(out, in, true, shift));

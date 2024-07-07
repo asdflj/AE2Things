@@ -16,12 +16,12 @@ import appeng.util.InventoryAdaptor;
 import appeng.util.inv.IInventoryDestination;
 import appeng.util.inv.ItemSlot;
 
-public class EssenceInventoryAdaptor extends InventoryAdaptor {
+public class EssentiaInventoryAdaptor extends InventoryAdaptor {
 
     private final InventoryAdaptor adaptor;
     private final TileInfusionInterface tile;
 
-    public EssenceInventoryAdaptor(InventoryAdaptor ad, TileInfusionInterface tile) {
+    public EssentiaInventoryAdaptor(InventoryAdaptor ad, TileInfusionInterface tile) {
         this.adaptor = ad;
         this.tile = tile;
 
@@ -33,7 +33,7 @@ public class EssenceInventoryAdaptor extends InventoryAdaptor {
         TileEntity inter = tile.getWorldObj()
             .getTileEntity(tile.xCoord + d.offsetX, tile.yCoord + d.offsetY, tile.zCoord + d.offsetZ);
         if (inter instanceof TileInfusionInterface t) {
-            return new EssenceInventoryAdaptor(ad, t);
+            return new EssentiaInventoryAdaptor(ad, t);
         }
         return ad;
     }

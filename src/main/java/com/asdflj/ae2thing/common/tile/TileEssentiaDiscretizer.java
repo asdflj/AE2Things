@@ -39,14 +39,14 @@ import appeng.me.storage.MEInventoryHandler;
 import appeng.tile.grid.AENetworkTile;
 import thaumcraft.api.aspects.Aspect;
 
-public class TileEssenceDiscretizer extends AENetworkTile implements IPriorityHost, ICellContainer {
+public class TileEssentiaDiscretizer extends AENetworkTile implements IPriorityHost, ICellContainer {
 
     private final BaseActionSource ownActionSource = new MachineSource(this);
     private final FluidDiscretizingInventory fluidDropInv = new FluidDiscretizingInventory();
     private final FluidCraftingInventory fluidCraftInv = new FluidCraftingInventory();
     private boolean prevActiveState = false;
 
-    public TileEssenceDiscretizer() {
+    public TileEssentiaDiscretizer() {
         super();
         getProxy().setIdlePowerUsage(3D);
         getProxy().setFlags(GridFlags.REQUIRE_CHANNEL);
@@ -170,7 +170,7 @@ public class TileEssenceDiscretizer extends AENetworkTile implements IPriorityHo
                 return request;
             }
             return ItemPhial.newAeStack(
-                fluidGrid.injectItems(ItemPhial.newEssenceStack(aspect, request.getStackSize()), type, src));
+                fluidGrid.injectItems(ItemPhial.newEssentiaStack(aspect, request.getStackSize()), type, src));
         }
 
         @Override
@@ -188,7 +188,7 @@ public class TileEssenceDiscretizer extends AENetworkTile implements IPriorityHo
                 return null;
             }
             return ItemPhial.newAeStack(
-                fluidGrid.extractItems(ItemPhial.newEssenceStack(aspect, request.getStackSize()), type, src));
+                fluidGrid.extractItems(ItemPhial.newEssentiaStack(aspect, request.getStackSize()), type, src));
         }
 
         @Override
@@ -219,7 +219,7 @@ public class TileEssenceDiscretizer extends AENetworkTile implements IPriorityHo
             if (fluidGrid == null) {
                 return null;
             }
-            IAEFluidStack fluidRequest = ItemPhial.getAeEssenceStack(request);
+            IAEFluidStack fluidRequest = ItemPhial.getAeEssentiaStack(request);
             if (fluidRequest == null) {
                 return null;
             }
@@ -289,7 +289,7 @@ public class TileEssenceDiscretizer extends AENetworkTile implements IPriorityHo
                 IAEStack remaining = ((CraftingGridCache) craftingGrid)
                     .injectItems(ItemPhial.newAeStack(input), type, ownActionSource);
                 if (remaining instanceof IAEItemStack) {
-                    return ItemPhial.getAeEssenceStack((IAEItemStack) remaining);
+                    return ItemPhial.getAeEssentiaStack((IAEItemStack) remaining);
                 }
             }
             return null;

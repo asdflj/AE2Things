@@ -7,7 +7,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
-import com.asdflj.ae2thing.client.gui.container.ContainerDistillationPatternTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
@@ -70,7 +70,7 @@ public class CPacketPatternValueSet implements IMessage {
                                 Objects.requireNonNull(context.getSide()),
                                 message.originGui);
                         }
-                        if (player.openContainer instanceof ContainerDistillationPatternTerminal) {
+                        if (player.openContainer instanceof ContainerInfusionPatternTerminal) {
                             Slot slot = player.openContainer.getSlot(message.valueIndex);
                             if (slot instanceof SlotFake) {
                                 ItemStack stack = slot.getStack()

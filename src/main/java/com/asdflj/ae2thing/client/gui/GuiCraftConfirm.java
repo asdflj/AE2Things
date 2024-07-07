@@ -2,7 +2,7 @@ package com.asdflj.ae2thing.client.gui;
 
 import net.minecraft.entity.player.InventoryPlayer;
 
-import com.asdflj.ae2thing.common.parts.PartDistillationPatternTerminal;
+import com.asdflj.ae2thing.common.parts.PartInfusionPatternTerminal;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 
@@ -14,8 +14,8 @@ public class GuiCraftConfirm extends appeng.client.gui.implementations.GuiCraftC
 
     public GuiCraftConfirm(final InventoryPlayer inventoryPlayer, final ITerminalHost te) {
         super(inventoryPlayer, te);
-        if (te instanceof PartDistillationPatternTerminal) {
-            this.originalGui = GuiType.DISTILLATION_PATTERN_TERMINAL;
+        if (te instanceof PartInfusionPatternTerminal) {
+            this.originalGui = GuiType.INFUSION_PATTERN_TERMINAL;
         }
     }
 

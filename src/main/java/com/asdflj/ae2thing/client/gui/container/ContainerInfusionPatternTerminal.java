@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminalEx;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -20,7 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.asdflj.ae2thing.common.parts.PartDistillationPatternTerminal;
+import com.asdflj.ae2thing.common.parts.PartInfusionPatternTerminal;
 import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
 
@@ -57,16 +58,16 @@ import thaumcraft.common.lib.research.ScanManager;
 import thaumicenergistics.common.items.ItemCraftingAspect;
 import thaumicenergistics.common.items.ItemEnum;
 
-public class ContainerDistillationPatternTerminal extends ContainerMonitor
-    implements IOptionalSlotHost, IPatternContainer {
+public class ContainerInfusionPatternTerminal extends ContainerMonitor implements IOptionalSlotHost, IPatternContainer {
 
+    private static final int CRAFTING_GRID_PAGES = 2;
     private static final int CRAFTING_GRID_WIDTH = 4;
     private static final int CRAFTING_GRID_HEIGHT = 4;
     private static final int CRAFTING_GRID_SLOTS = CRAFTING_GRID_WIDTH * CRAFTING_GRID_HEIGHT;
     protected IGridNode networkNode;
     protected final SlotRestrictedInput[] cellView = new SlotRestrictedInput[5];
     protected SlotFakeCraftingMatrix[] craftingSlots = new SlotFakeCraftingMatrix[1];
-    protected SlotPatternOutputs[] outputSlots = new SlotPatternOutputs[CRAFTING_GRID_SLOTS];
+    protected SlotPatternOutputs[] outputSlots = new SlotPatternOutputs[CRAFTING_GRID_SLOTS * CRAFTING_GRID_PAGES];
     protected final SlotRestrictedInput patternSlotIN;
     protected final SlotRestrictedInput patternSlotOUT;
     protected SlotRestrictedInput patternRefiller;
@@ -79,15 +80,16 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
     public boolean hasPower = false;
     @GuiSync(99)
     public boolean canAccessViewCells;
-
+    @GuiSync(92)
+    public int activePage = 0;
     @GuiSync(100)
     public boolean craftingMode = true;
-    private final PartDistillationPatternTerminal it;
+    private final PartInfusionPatternTerminal it;
     private ItemStack lastScanItem = null;
 
-    public ContainerDistillationPatternTerminal(InventoryPlayer ip, ITerminalHost monitorable) {
+    public ContainerInfusionPatternTerminal(InventoryPlayer ip, ITerminalHost monitorable) {
         super(ip, monitorable);
-        this.it = (PartDistillationPatternTerminal) monitorable;
+        this.it = (PartInfusionPatternTerminal) monitorable;
         this.canAccessViewCells = false;
         this.crafting = this.it.getInventoryByName("crafting");
         this.output = this.it.getInventoryByName("output");
@@ -127,14 +129,24 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
 
         this.addSlotToContainer(this.craftingSlots[0] = new SlotFakeCraftingMatrix(this.crafting, 0, 12, -56));
 
-        for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
+        for (int page = 0; page < CRAFTING_GRID_PAGES; page++) {
             for (int y = 0; y < CRAFTING_GRID_HEIGHT; y++) {
-                this.addSlotToContainer(
-                    this.outputSlots[x * CRAFTING_GRID_HEIGHT
-                        + y] = new SlotPatternOutputs(output, this, x * CRAFTING_GRID_HEIGHT + y, 58, -83, x, y, 1));
-                this.outputSlots[x * CRAFTING_GRID_HEIGHT + y].setRenderDisabled(false);
+                for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
+                    this.addSlotToContainer(
+                        this.outputSlots[x + y * CRAFTING_GRID_WIDTH
+                            + page * CRAFTING_GRID_SLOTS] = new ProcessingSlotPattern(
+                            crafting,
+                            this,
+                            x + y * CRAFTING_GRID_WIDTH + page * CRAFTING_GRID_SLOTS,
+                            15,
+                            -83,
+                            x,
+                            y,
+                            x + 4));
+                }
             }
         }
+
         if (this.isPatternTerminal()) {
             this.addSlotToContainer(
                 this.patternRefiller = new SlotRestrictedInput(
@@ -151,6 +163,35 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
         }
 
         this.bindPlayerInventory(ip, 0, 0);
+    }
+
+    private void offsetSlots() {
+        for (int page = 0; page < CRAFTING_GRID_PAGES; page++) {
+            for (int y = 0; y < CRAFTING_GRID_HEIGHT; y++) {
+                for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
+                    ((ProcessingSlotPattern) this.outputSlots[x * CRAFTING_GRID_HEIGHT + y + page * CRAFTING_GRID_SLOTS])
+                        .setHidden(page != activePage || x > 0 );
+                }
+            }
+        }
+    }
+
+
+    private static class ProcessingSlotPattern extends SlotPatternOutputs {
+
+        private static final int POSITION_SHIFT = 9000;
+        private boolean hidden = false;
+
+        public ProcessingSlotPattern(IInventory inv, IOptionalSlotHost containerBus, int idx, int x, int y, int offX, int offY, int groupNum) {
+            super(inv, containerBus, idx, x, y, offX, offY, groupNum);
+            this.setRenderDisabled(false);
+        }
+        public void setHidden(boolean hide) {
+            if (this.hidden != hide) {
+                this.hidden = hide;
+                this.xDisplayPosition += (hide ? -1 : 1) * POSITION_SHIFT;
+            }
+        }
     }
 
     public void refillBlankPatterns(Slot slot) {
@@ -204,7 +245,7 @@ public class ContainerDistillationPatternTerminal extends ContainerMonitor
         }
     }
 
-    public PartDistillationPatternTerminal getPatternTerminal() {
+    public PartInfusionPatternTerminal getPatternTerminal() {
         return this.it;
     }
 

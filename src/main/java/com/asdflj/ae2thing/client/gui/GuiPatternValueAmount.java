@@ -5,7 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
-import com.asdflj.ae2thing.common.parts.PartDistillationPatternTerminal;
+import com.asdflj.ae2thing.common.parts.PartInfusionPatternTerminal;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.loader.ItemAndBlockHolder;
 import com.asdflj.ae2thing.network.CPacketPatternValueSet;
@@ -36,9 +36,9 @@ public class GuiPatternValueAmount extends GuiAmount {
     }
 
     protected void setOriginGUI(Object target) {
-        if (target instanceof PartDistillationPatternTerminal) {
-            this.myIcon = ItemAndBlockHolder.DISTILLATION_PATTERN_TERMINAL.stack();
-            this.originalGui = GuiType.DISTILLATION_PATTERN_TERMINAL;
+        if (target instanceof PartInfusionPatternTerminal) {
+            this.myIcon = ItemAndBlockHolder.INFUSION_PATTERN_TERMINAL.stack();
+            this.originalGui = GuiType.INFUSION_PATTERN_TERMINAL;
         }
     }
 

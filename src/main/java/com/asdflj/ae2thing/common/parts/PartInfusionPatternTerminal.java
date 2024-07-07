@@ -21,7 +21,7 @@ import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
 import appeng.util.Platform;
 
-public class PartDistillationPatternTerminal extends THPart {
+public class PartInfusionPatternTerminal extends THPart {
 
     protected boolean craftingMode = true;
 
@@ -48,10 +48,10 @@ public class PartDistillationPatternTerminal extends THPart {
 
     protected final AppEngInternalInventory pattern = new AppEngInternalInventory(this, 2);
     protected AppEngInternalInventory crafting = new BiggerAppEngInventory(this, 1);
-    protected AppEngInternalInventory output = new BiggerAppEngInventory(this, 16);
+    protected AppEngInternalInventory output = new BiggerAppEngInventory(this, 32);
     private final AppEngInternalInventory upgrades = new RefillerInventory(this);
 
-    public PartDistillationPatternTerminal(ItemStack is) {
+    public PartInfusionPatternTerminal(ItemStack is) {
         super(is, true);
     }
 
@@ -85,7 +85,7 @@ public class PartDistillationPatternTerminal extends THPart {
 
     @Override
     public GuiType getGui() {
-        return GuiType.DISTILLATION_PATTERN_TERMINAL;
+        return GuiType.INFUSION_PATTERN_TERMINAL;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.asdflj.ae2thing.client.gui;
 
 import java.util.List;
 
+import appeng.client.gui.widgets.GuiScrollbar;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
@@ -9,7 +10,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.AE2Thing;
-import com.asdflj.ae2thing.client.gui.container.ContainerDistillationPatternTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
@@ -33,9 +34,9 @@ import appeng.core.localization.GuiText;
 import appeng.helpers.InventoryAction;
 import appeng.util.item.AEItemStack;
 
-public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFluidTerminal {
+public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiFluidTerminal {
 
-    private final ContainerDistillationPatternTerminal container;
+    private final ContainerInfusionPatternTerminal container;
     protected GuiTabButton tabCraftButton;
     protected GuiTabButton tabProcessButton;
     protected final boolean viewCell;
@@ -44,13 +45,14 @@ public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFl
     protected GuiImgButton doubleBtn;
     private static final int MODE_CRAFTING = 1;
     private static final int MODE_PROCESSING = 0;
+    protected final GuiScrollbar processingScrollBar = new GuiScrollbar();
 
-    public GuiDistillationPatternTerminal(InventoryPlayer inventory, ITerminalHost inv) {
-        super(new ContainerDistillationPatternTerminal(inventory, inv));
+    public GuiInfusionPatternTerminal(InventoryPlayer inventory, ITerminalHost inv) {
+        super(new ContainerInfusionPatternTerminal(inventory, inv));
         this.xSize = 195;
         this.ySize = 204;
         this.standardSize = this.xSize;
-        (this.container = (ContainerDistillationPatternTerminal) this.inventorySlots).setGui(this);
+        (this.container = (ContainerInfusionPatternTerminal) this.inventorySlots).setGui(this);
         this.reservedSpace = 81;
         this.viewCell = inv instanceof IViewCellStorage;
         this.repo.setCache(this);
@@ -95,6 +97,12 @@ public class GuiDistillationPatternTerminal extends GuiMonitor implements IGuiFl
         this.fontRendererObj.drawString(this.getGuiDisplayName(GuiText.Terminal.getLocal()), 8, 6, 4210752);
         updateButton(this.tabCraftButton, this.container.isCraftingMode());
         updateButton(this.tabProcessButton, !this.container.isCraftingMode());
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float btn) {
+        processingScrollBar.setCurrentScroll(container.activePage);
+        super.drawScreen(mouseX, mouseY, btn);
     }
 
     protected void updateButton(GuiButton button, boolean vis) {

@@ -9,7 +9,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.asdflj.ae2thing.common.tile.TileInfusionInterface;
-import com.asdflj.ae2thing.inventory.EssenceInventoryAdaptor;
+import com.asdflj.ae2thing.inventory.EssentiaInventoryAdaptor;
 import com.asdflj.ae2thing.util.NameConst;
 import com.asdflj.ae2thing.util.Util;
 
@@ -86,7 +86,7 @@ public class CoreModHooks {
             .getTileEntity(tile.xCoord + face.offsetX, tile.yCoord + face.offsetY, tile.zCoord + face.offsetZ);
 
         if (inter instanceof TileInfusionInterface) {
-            return EssenceInventoryAdaptor.getAdaptor(tile, face);
+            return EssentiaInventoryAdaptor.getAdaptor(tile, face);
         }
         return InventoryAdaptor.getAdaptor(tile, face);
     }

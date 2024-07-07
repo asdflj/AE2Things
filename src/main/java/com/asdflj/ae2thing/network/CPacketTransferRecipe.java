@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
-import com.asdflj.ae2thing.client.gui.container.ContainerDistillationPatternTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerMonitor;
 import com.asdflj.ae2thing.nei.object.OrderStack;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -90,7 +90,7 @@ public class CPacketTransferRecipe implements IMessage {
         public IMessage onMessage(CPacketTransferRecipe message, MessageContext ctx) {
             Container c = ctx.getServerHandler().playerEntity.openContainer;
             if (c instanceof ContainerMonitor) {
-                if (c instanceof ContainerDistillationPatternTerminal ct) {
+                if (c instanceof ContainerInfusionPatternTerminal ct) {
                     // pattern terminal only
 
                     ct.getPatternTerminal()

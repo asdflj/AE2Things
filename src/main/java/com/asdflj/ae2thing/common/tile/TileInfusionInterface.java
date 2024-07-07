@@ -32,7 +32,7 @@ public class TileInfusionInterface extends TileFluidInterface implements IAspect
         for (Aspect aspect : aspects.getAspectsSorted()) {
             int stored = aspects.getAmount(aspect);
             if (stored > 0) {
-                ItemStack fluidPacket = ItemFluidPacket.newStack(ItemPhial.newEssenceStack(aspect, stored));
+                ItemStack fluidPacket = ItemFluidPacket.newStack(ItemPhial.newEssentiaStack(aspect, stored));
                 drops.add(fluidPacket);
             }
         }

@@ -11,12 +11,12 @@ import com.asdflj.ae2thing.client.gui.GuiCraftAmount;
 import com.asdflj.ae2thing.client.gui.GuiCraftConfirm;
 import com.asdflj.ae2thing.client.gui.GuiCraftingStatus;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
-import com.asdflj.ae2thing.client.gui.GuiDistillationPatternTerminal;
+import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiPatternValueAmount;
 import com.asdflj.ae2thing.client.gui.container.ContainerCellLink;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftConfirm;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
-import com.asdflj.ae2thing.client.gui.container.ContainerDistillationPatternTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
 import com.asdflj.ae2thing.common.parts.THPart;
 import com.asdflj.ae2thing.inventory.ItemCellLinkInventory;
@@ -41,16 +41,16 @@ public enum GuiType {
         }
     }),
 
-    DISTILLATION_PATTERN_TERMINAL(new PartGuiFactory<>(ITerminalHost.class) {
+    INFUSION_PATTERN_TERMINAL(new PartGuiFactory<>(ITerminalHost.class) {
 
         @Override
         protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
-            return new ContainerDistillationPatternTerminal(player.inventory, inv);
+            return new ContainerInfusionPatternTerminal(player.inventory, inv);
         }
 
         @Override
         protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
-            return new GuiDistillationPatternTerminal(player.inventory, inv);
+            return new GuiInfusionPatternTerminal(player.inventory, inv);
         }
     }),
     CRAFTING_CONFIRM(new PartGuiFactory<>(THPart.class) {
