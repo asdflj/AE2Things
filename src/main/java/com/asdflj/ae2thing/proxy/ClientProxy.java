@@ -10,12 +10,14 @@ import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.client.gui.GuiMonitor;
 import com.asdflj.ae2thing.common.Config;
+import com.asdflj.ae2thing.common.item.ItemPhial;
 import com.asdflj.ae2thing.loader.KeybindLoader;
 import com.asdflj.ae2thing.loader.RenderLoader;
 import com.asdflj.ae2thing.nei.recipes.DefaultExtractorLoader;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 
 import codechicken.nei.LayoutManager;
+import codechicken.nei.api.API;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -33,6 +35,8 @@ public class ClientProxy extends CommonProxy {
         super.onLoadComplete(event);
         if (ModAndClassUtil.NEI) {
             new DefaultExtractorLoader().run();
+            ItemPhial.getItems()
+                .forEach(API::hideItem);
         }
     }
 

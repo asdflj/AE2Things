@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.common.item;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +58,21 @@ public class ItemPhial extends ItemEssence implements IRegister<ItemPhial> {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubItems(Item par1, CreativeTabs tab, List par3List) {}
+    @SuppressWarnings("unchecked")
+    public void getSubItems(Item par1, CreativeTabs tab, List par3List) {
+        par3List.addAll(getItems());
+    }
+
+    public static List<ItemStack> getItems() {
+        List<ItemStack> list = new ArrayList<>();
+        list.add(new ItemStack(ItemAndBlockHolder.PHIAL, 1, 0));
+        for (Aspect tag : Aspect.aspects.values()) {
+            ItemStack i = new ItemStack(ItemAndBlockHolder.PHIAL, 1, 1);
+            ItemAndBlockHolder.PHIAL.setAspects(i, (new AspectList()).add(tag, 1));
+            list.add(i);
+        }
+        return list;
+    }
 
     public static IAEFluidStack getAeEssentiaStack(IAEItemStack item) {
         Aspect aspect = getAspect(item);
