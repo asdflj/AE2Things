@@ -47,7 +47,7 @@ dependencies {
         exclude group: 'com.github.GTNewHorizons', module: 'AE2FluidCraft-Rework'
     }
     implementation('com.github.GTNewHorizons:TCNEIAdditions:1.4.0:dev')
-    compileOnly('com.github.GTNewHorizons:AdventureBackpack2:1.1.3-GTNH:dev')
+    compile('com.github.GTNewHorizons:AdventureBackpack2:1.1.3-GTNH:dev')
     compileOnly('com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.3.0-GTNH:dev')
     compileOnly('com.github.GTNewHorizons:ForestryMC:4.8.1:dev')
     compileOnly 'curse.maven:thaumcraft-nei-plugin-225095:2241913'

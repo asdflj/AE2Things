@@ -23,26 +23,6 @@ import appeng.util.Platform;
 
 public class PartInfusionPatternTerminal extends THPart {
 
-    protected boolean craftingMode = true;
-    protected int activePage = 0;
-    protected boolean combine = false;
-
-    public void setActivePage(int value) {
-        this.activePage = value;
-    }
-
-    public int getActivePage() {
-        return this.activePage;
-    }
-
-    public boolean shouldCombine() {
-        return this.combine;
-    }
-
-    public void setCombineMode(boolean shouldCombine) {
-        this.combine = shouldCombine;
-    }
-
     public static class RefillerInventory extends AppEngInternalInventory {
 
         public RefillerInventory(final IAEAppEngInventory parent) {
@@ -68,6 +48,9 @@ public class PartInfusionPatternTerminal extends THPart {
     protected AppEngInternalInventory crafting = new BiggerAppEngInventory(this, 1);
     protected AppEngInternalInventory output = new BiggerAppEngInventory(this, 32);
     private final AppEngInternalInventory upgrades = new RefillerInventory(this);
+    protected boolean craftingMode = true;
+    protected int activePage = 0;
+    protected boolean combine = false;
 
     public PartInfusionPatternTerminal(ItemStack is) {
         super(is, true);
@@ -81,6 +64,22 @@ public class PartInfusionPatternTerminal extends THPart {
                 drops.add(is);
             }
         }
+    }
+
+    public void setActivePage(int value) {
+        this.activePage = value;
+    }
+
+    public int getActivePage() {
+        return this.activePage;
+    }
+
+    public boolean shouldCombine() {
+        return this.combine;
+    }
+
+    public void setCombineMode(boolean shouldCombine) {
+        this.combine = shouldCombine;
     }
 
     public boolean hasRefillerUpgrade() {
