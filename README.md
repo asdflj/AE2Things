@@ -10,8 +10,13 @@ This mod adds a new type of cell the DISK: Deep Item Storage disk. This cell has
 ![backpack_terminal.png](blob/backpack_terminal.png)
 ![backpack_terminal_2.png](blob/backpack_terminal_2.png)
 
-**Distillation Pattern Terminal** Distillation Pattern Encoder AE version support order fluid and essentia
-![distillation_pattern_terminal.gif](blob/distillation_pattern_terminal.gif)
-![distillation_pattern_terminal_2.gif](blob/distillation_pattern_terminal_2.gif)
+**Infusion Pattern Terminal**Infusion Pattern Terminal support encode infusion recipe and distillation pattern support order fluid and essentia
+![infusion_pattern_terminal.gif](blob/infusion_pattern_terminal.gif)
+![infusion_pattern_terminal_2.gif](blob/infusion_pattern_terminal_2.gif)
+
+**Essentia discretizer**
+**Infusion Interface**
+![infusion_interface_2.png](blob/infusion_interface_2.png)
+
 
 ![fishbig.png](blob/fishbig.png)

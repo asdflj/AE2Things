@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.asdflj.ae2thing.common.item.ItemPhial;
+import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -286,13 +287,15 @@ public class TileEssentiaDiscretizer extends AENetworkTile implements IPriorityH
                 return null;
             }
             if (craftingGrid instanceof CraftingGridCache) {
-                IAEStack remaining = ((CraftingGridCache) craftingGrid)
-                    .injectItems(ItemPhial.newAeStack(input), type, ownActionSource);
-                if (remaining instanceof IAEItemStack) {
-                    return ItemPhial.getAeEssentiaStack((IAEItemStack) remaining);
+                if (AspectUtil.isEssentiaGas(input.getFluidStack())) {
+                    IAEStack remaining = ((CraftingGridCache) craftingGrid)
+                        .injectItems(ItemPhial.newAeStack(input), type, ownActionSource);
+                    if (remaining instanceof IAEItemStack) {
+                        return ItemPhial.getAeEssentiaStack((IAEItemStack) remaining);
+                    }
                 }
             }
-            return null;
+            return input;
         }
 
         @Override
