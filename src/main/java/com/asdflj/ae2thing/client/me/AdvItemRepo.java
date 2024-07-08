@@ -154,21 +154,27 @@ public class AdvItemRepo extends ItemRepo implements Runnable {
 
     @Override
     public void run() {
-        lock.lock();
-        for (IAEItemStack is : this.cache) {
-            this.repo.postUpdate(is);
+        try {
+            lock.lock();
+            for (IAEItemStack is : this.cache) {
+                this.repo.postUpdate(is);
+            }
+            this.cache.clear();
+        } finally {
+            lock.unlock();
         }
-        this.cache.clear();
-        lock.unlock();
         this.repo.updateView();
-        lock.lock();
-        this.view.clear();
-        this.dsp.clear();
-        this.view.ensureCapacity(this.repo.view.size());
-        this.dsp.ensureCapacity(this.repo.dsp.size());
-        this.view.addAll(this.repo.view);
-        this.dsp.addAll(this.repo.dsp);
-        lock.unlock();
-        this.gui.setScrollBar();
+        try {
+            lock.lock();
+            this.view.clear();
+            this.dsp.clear();
+            this.view.ensureCapacity(this.repo.view.size());
+            this.dsp.ensureCapacity(this.repo.dsp.size());
+            this.view.addAll(this.repo.view);
+            this.dsp.addAll(this.repo.dsp);
+            this.gui.setScrollBar();
+        } finally {
+            lock.unlock();
+        }
     }
 }

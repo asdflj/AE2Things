@@ -27,7 +27,7 @@ public class ItemMonitor implements IMEMonitorHandlerReceiver<IAEItemStack>, IPr
     private final IItemList<IAEItemStack> items = AEApi.instance()
         .storage()
         .createItemList();
-    private List<ICrafting> crafters = null;
+    private final List<ICrafting> crafters;
     private FluidMonitor fluidMonitorObject = null;
 
     public ItemMonitor(List<ICrafting> crafters) {

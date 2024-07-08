@@ -870,11 +870,15 @@ public abstract class GuiMonitor extends AEBaseMEGui
     @Override
     public void func_146977_a(final Slot s) {
         if (this.repo.hasCache()) {
-            this.repo.getLock()
-                .lock();
-            if (drawSlot(s)) super.func_146977_a(s);
-            this.repo.getLock()
-                .unlock();
+            try {
+                this.repo.getLock()
+                    .lock();
+                if (drawSlot(s)) super.func_146977_a(s);
+            } finally {
+                this.repo.getLock()
+                    .unlock();
+            }
+
         } else {
             if (drawSlot(s)) super.func_146977_a(s);
         }
