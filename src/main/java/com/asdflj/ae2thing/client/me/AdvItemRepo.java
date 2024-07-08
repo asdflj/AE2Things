@@ -66,6 +66,10 @@ public class AdvItemRepo extends ItemRepo implements Runnable {
         super(null, sortSrc);
     }
 
+    public Lock getLock() {
+        return lock;
+    }
+
     public void setCache(GuiMonitor gui) {
         this.repo = new AdvItemRepo(gui);
         this.repo.setPowered(true);
