@@ -770,7 +770,18 @@ public abstract class GuiMonitor extends AEBaseMEGui
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float btn) {
-        super.drawScreen(mouseX, mouseY, btn);
+        if (this.repo.hasCache()) {
+            try {
+                this.repo.getLock()
+                    .lock();
+                super.drawScreen(mouseX, mouseY, btn);
+            } finally {
+                this.repo.getLock()
+                    .unlock();
+            }
+        } else {
+            super.drawScreen(mouseX, mouseY, btn);
+        }
         if (AEConfig.instance.preserveSearchBar && searchField != null)
             handleTooltip(mouseX, mouseY, searchField.getTooltipProvider());
         if (ModAndClassUtil.NEI && this.searchField.isMouseIn(mouseX, mouseY) && this.isNEISearch()) {
@@ -869,19 +880,7 @@ public abstract class GuiMonitor extends AEBaseMEGui
 
     @Override
     public void func_146977_a(final Slot s) {
-        if (this.repo.hasCache()) {
-            try {
-                this.repo.getLock()
-                    .lock();
-                if (drawSlot(s)) super.func_146977_a(s);
-            } finally {
-                this.repo.getLock()
-                    .unlock();
-            }
-
-        } else {
-            if (drawSlot(s)) super.func_146977_a(s);
-        }
+        if (drawSlot(s)) super.func_146977_a(s);
     }
 
     @Override
