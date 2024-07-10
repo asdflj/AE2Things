@@ -6,7 +6,7 @@ item.creative_fluid_cell.lava.name=创造ME流体存储元件(岩浆)
 item.part_infusion_pattern_terminal.name=注魔样板终端
 tile.fishbig.name=鱼大
 tile.essentia_discretizer.name=源质散离器
-tile.infusion_interface.name=注魔接口
+tile.infusion_interface.name=ME注魔接口
 
 ae2thing.tooltip.shift_for_more=§r> 按 §3Shift§r 显示更多信息
 ae2thing.tooltip.linked=已链接

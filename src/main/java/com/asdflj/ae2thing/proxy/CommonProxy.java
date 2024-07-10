@@ -63,6 +63,10 @@ public class CommonProxy {
                 .addBackpackItem(ItemAdventureBackpack.class);
         }
         Upgrades.PATTERN_REFILLER.registerItem(ItemAndBlockHolder.INFUSION_PATTERN_TERMINAL.stack(), 1);
+        Upgrades.LOCK_CRAFTING.registerItem(ItemAndBlockHolder.INFUSION_INTERFACE.stack(), 1);
+        Upgrades.ADVANCED_BLOCKING.registerItem(ItemAndBlockHolder.INFUSION_INTERFACE.stack(), 1);
+        Upgrades.CRAFTING.registerItem(ItemAndBlockHolder.INFUSION_INTERFACE.stack(), 1);
+        Upgrades.PATTERN_CAPACITY.registerItem(ItemAndBlockHolder.INFUSION_INTERFACE.stack(), 1);
         if (ModAndClassUtil.IC2) {
             AE2ThingAPI.instance()
                 .setDefaultFluidContainer(Ic2Items.cell);
