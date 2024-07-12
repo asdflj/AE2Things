@@ -28,7 +28,7 @@ public class CellHandler implements ICellHandler {
     }
 
     @Override
-    public IMEInventoryHandler getCellInventory(ItemStack is, ISaveProvider container, StorageChannel channel) {
+    public IMEInventoryHandler<?> getCellInventory(ItemStack is, ISaveProvider container, StorageChannel channel) {
         try {
             if (is.getItem() instanceof IItemInventoryHandler iih) {
                 if (iih.getChannel() == channel) {

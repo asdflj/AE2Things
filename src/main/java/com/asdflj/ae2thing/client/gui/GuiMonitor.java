@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -544,14 +545,27 @@ public abstract class GuiMonitor extends AEBaseMEGui
 
     @Override
     protected void keyTyped(final char character, final int key) {
-        if (ModAndClassUtil.NEI && key == Keyboard.KEY_DELETE) {
-            String next = this.history.getNext(this.searchField.getText())
-                .orElse("");
-            Ae2ReflectClient.getHistoryList(this.history)
-                .removeIf(s -> s.equals(this.searchField.getText()));
-            setSearchString(next, true);
-            return;
+        if (ModAndClassUtil.NEI && this.isNEISearch()) {
+            if (key == Keyboard.KEY_TAB) {
+                Optional<String> history = Ae2ReflectClient.getHistoryList(this.history)
+                    .stream()
+                    .filter(s -> s.startsWith(this.searchField.getText()))
+                    .findFirst();
+                history.ifPresent(s -> {
+                    setSearchString(s, true);
+                    setSuggestion(s);
+                });
+                return;
+            } else if (key == Keyboard.KEY_DELETE) {
+                String next = this.history.getNext(this.searchField.getText())
+                    .orElse("");
+                Ae2ReflectClient.getHistoryList(this.history)
+                    .removeIf(s -> s.equals(this.searchField.getText()));
+                setSearchString(next, true);
+                return;
+            }
         }
+
         if (!this.checkHotbarKeys(key)) {
             if (character == ' ' && this.searchField.getText()
                 .isEmpty()) {
@@ -566,6 +580,25 @@ public abstract class GuiMonitor extends AEBaseMEGui
                 super.keyTyped(character, key);
             }
         }
+
+        if (ModAndClassUtil.NEI && this.isNEISearch()) {
+            Optional<String> history = Ae2ReflectClient.getHistoryList(this.history)
+                .stream()
+                .filter(s -> s.startsWith(this.searchField.getText()))
+                .findFirst();
+            history.ifPresent(this::setSuggestion);
+        }
+    }
+
+    private void setSuggestion(String suggestion) {
+        String text = "";
+        if (suggestion.startsWith(this.searchField.getText())) {
+            int pos = suggestion.indexOf(this.searchField.getText());
+            text = suggestion.substring(
+                pos + this.searchField.getText()
+                    .length());
+        }
+        this.searchField.setSuggestion(text);
     }
 
     public void setSearchString(String memoryText, boolean updateView) {

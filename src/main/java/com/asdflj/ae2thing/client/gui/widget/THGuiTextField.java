@@ -18,6 +18,7 @@ public class THGuiTextField extends GuiTextField {
     private final int _height;
     private int _border;
     private int _color;
+    private String suggestion;
     private final TooltipProvider tooltipProvider = new TooltipProvider();
 
     /**
@@ -44,18 +45,39 @@ public class THGuiTextField extends GuiTextField {
         this._height = height;
         this._fontRender = fontRenderer;
         this.tooltip = "";
+        this.suggestion = "";
+    }
+
+    public void setSuggestion(final String suggestion) {
+        this.suggestion = suggestion;
     }
 
     @Override
     public void drawTextBox() {
         super.drawTextBox();
-        if (this.getBorder() > 0 && this.getVisible()) {
-            drawRect(
-                this._xPos - getBorder(),
-                this._yPos - getBorder(),
-                this.xPosition + this.width + getBorder(),
-                this.yPosition + this.height + getBorder(),
-                this.getColor());
+        if (this.getVisible()) {
+            drawSuggestion();
+            if (this.getBorder() > 0) {
+                drawRect(
+                    this._xPos - getBorder(),
+                    this._yPos - getBorder(),
+                    this.xPosition + this.width + getBorder(),
+                    this.yPosition + this.height + getBorder(),
+                    this.getColor());
+            }
+        }
+    }
+
+    private void drawSuggestion() {
+        if (this.getVisible() && !this.suggestion.isEmpty()
+            && !this.getText()
+                .isEmpty()) {
+            drawString(
+                this._fontRender,
+                this.suggestion,
+                this._xPos + 2 + this._fontRender.getStringWidth(this.getText()),
+                this._yPos + 2,
+                0xC0C0C0);
         }
     }
 
