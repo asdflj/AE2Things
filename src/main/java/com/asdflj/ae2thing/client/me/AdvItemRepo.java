@@ -25,6 +25,7 @@ import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IItemList;
 import appeng.client.gui.widgets.IScrollSource;
 import appeng.client.gui.widgets.ISortSource;
 import appeng.client.me.ItemRepo;
@@ -54,8 +55,10 @@ public class AdvItemRepo extends ItemRepo implements Runnable {
 
     protected final ArrayList<IAEItemStack> view = Ae2ReflectClient.getView(this);
     protected final ArrayList<ItemStack> dsp = Ae2ReflectClient.getDsp(this);
+    protected final IItemList<IAEItemStack> list = Ae2ReflectClient.getList(this);
+
     protected AdvItemRepo repo;
-    protected final Set<IAEItemStack> cache = Collections.synchronizedSet(new HashSet<IAEItemStack>());
+    protected final Set<IAEItemStack> cache = Collections.synchronizedSet(new HashSet<>());
     protected GuiMonitor gui;
     private static final Lock lock = new ReentrantLock();
 
@@ -139,13 +142,16 @@ public class AdvItemRepo extends ItemRepo implements Runnable {
                     continue;
                 }
                 IAEItemStack is = pinItems.get(i);
-                int idx = this.view.indexOf(is);
-                if (idx != -1) {
-                    this.view.remove(idx);
-                    this.dsp.remove(idx);
-                    this.view.add(i, is);
-                    this.dsp.add(i, is.getItemStack());
-                    continue;
+                if (this.list.findPrecise(is) != null) {
+                    int idx = this.view.indexOf(is);
+                    IAEItemStack viewStack = this.list.findPrecise(is);
+                    if (idx != -1) {
+                        this.view.remove(idx);
+                        this.dsp.remove(idx);
+                        this.view.add(i, viewStack);
+                        this.dsp.add(i, viewStack.getItemStack());
+                        continue;
+                    }
                 }
                 this.setAsEmpty(i);
             }
