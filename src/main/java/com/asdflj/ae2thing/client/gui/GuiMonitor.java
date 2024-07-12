@@ -586,7 +586,11 @@ public abstract class GuiMonitor extends AEBaseMEGui
                 .stream()
                 .filter(s -> s.startsWith(this.searchField.getText()))
                 .findFirst();
-            history.ifPresent(this::setSuggestion);
+            if (history.isPresent()) {
+                this.setSuggestion(history.get());
+            } else {
+                this.setSuggestion("");
+            }
         }
     }
 
