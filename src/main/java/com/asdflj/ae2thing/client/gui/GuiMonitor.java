@@ -551,10 +551,7 @@ public abstract class GuiMonitor extends AEBaseMEGui
                     .stream()
                     .filter(s -> s.startsWith(this.searchField.getText()))
                     .findFirst();
-                history.ifPresent(s -> {
-                    setSearchString(s, true);
-                    setSuggestion(s);
-                });
+                history.ifPresent(s -> setSearchString(s, true));
                 return;
             } else if (key == Keyboard.KEY_DELETE) {
                 String next = this.history.getNext(this.searchField.getText())
@@ -576,11 +573,14 @@ public abstract class GuiMonitor extends AEBaseMEGui
                 this.repo.setSearchString(this.searchField.getText());
                 this.repo.updateView();
                 this.setScrollBar();
+                this.updateSuggestion();
             } else {
                 super.keyTyped(character, key);
             }
         }
+    }
 
+    private void updateSuggestion() {
         if (ModAndClassUtil.NEI && this.isNEISearch()) {
             Optional<String> history = Ae2ReflectClient.getHistoryList(this.history)
                 .stream()
@@ -612,6 +612,7 @@ public abstract class GuiMonitor extends AEBaseMEGui
             this.repo.updateView();
             this.setScrollBar();
         }
+        updateSuggestion();
     }
 
     public void setSearchString(String memoryText, boolean updateView, int pos) {
