@@ -54,9 +54,9 @@ public class THGuiTextField extends GuiTextField {
 
     @Override
     public void drawTextBox() {
+        drawSuggestion();
         super.drawTextBox();
         if (this.getVisible()) {
-            drawSuggestion();
             if (this.getBorder() > 0) {
                 drawRect(
                     this._xPos - getBorder(),
