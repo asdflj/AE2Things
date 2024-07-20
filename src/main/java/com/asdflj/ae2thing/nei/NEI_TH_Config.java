@@ -29,11 +29,16 @@ public class NEI_TH_Config implements IConfigureNEI {
                     identifier);
             }
         }
-        if (!API.hasGuiOverlayHandler(GuiInfusionPatternTerminal.class, "infusionCrafting")) {
-            API.registerGuiOverlayHandler(
-                GuiInfusionPatternTerminal.class,
-                FluidPatternTerminalRecipeTransferHandler.INSTANCE,
-                "infusionCrafting");
+        recipes.clear();
+        recipes.add("infusionCrafting");
+        recipes.add("cruciblerecipe");
+        for (String identifier : recipes) {
+            if (!API.hasGuiOverlayHandler(GuiInfusionPatternTerminal.class, identifier)) {
+                API.registerGuiOverlayHandler(
+                    GuiInfusionPatternTerminal.class,
+                    FluidPatternTerminalRecipeTransferHandler.INSTANCE,
+                    identifier);
+            }
         }
     }
 

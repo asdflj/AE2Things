@@ -8,6 +8,7 @@ import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.INFUSION_PATTERN_TER
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_CREATIVE_WATER_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_FLUID_CELL;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.THAUMATRIUM_INTERFACE;
 import static com.glodblock.github.loader.ItemAndBlockHolder.CELL_HOUSING;
 import static thaumicenergistics.common.blocks.BlockEnum.DISTILLATION_ENCODER;
 
@@ -78,6 +79,8 @@ public class RecipeLoader implements Runnable {
                 ESSENTIA_DISCRETIZER.stack(),
                 com.glodblock.github.loader.ItemAndBlockHolder.DISCRETIZER,
                 AE2ThingAPI.PHIAL);
+            GameRegistry.addShapelessRecipe(INFUSION_INTERFACE.stack(), THAUMATRIUM_INTERFACE.stack());
+            GameRegistry.addShapelessRecipe(THAUMATRIUM_INTERFACE.stack(), INFUSION_INTERFACE.stack());
 
         }
         GameRegistry.addRecipe(new ShapedOreRecipe(BLOCK_FISH_BIG.stack(), "FFF", "F F", "FFF", 'F', FISH));

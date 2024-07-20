@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import com.asdflj.ae2thing.common.item.ItemPhial;
+import com.asdflj.ae2thing.inventory.IEssentiaContainer;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.tile.TileFluidInterface;
 
@@ -17,7 +18,7 @@ import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.aspects.IAspectSource;
 import thaumcraft.common.Thaumcraft;
 
-public class TileInfusionInterface extends TileFluidInterface implements IAspectSource {
+public class TileInfusionInterface extends TileFluidInterface implements IAspectSource, IEssentiaContainer {
 
     private final AspectList aspects = new AspectList();
 
@@ -41,27 +42,6 @@ public class TileInfusionInterface extends TileFluidInterface implements IAspect
     @Override
     public void setAspects(AspectList var1) {
         aspects.add(var1);
-    }
-
-    public ItemStack addAspects(ItemStack is) {
-        if (is.getItem() instanceof ItemPhial) {
-            Aspect aspect = ItemPhial.getAspect(is);
-            if (aspect == null) return is;
-            int size = is.stackSize;
-            long stored = aspects.getAmount(aspect);
-            if (stored + size > Integer.MAX_VALUE) {
-                return is;
-            } else {
-                aspects.add(aspect, size);
-                ItemStack out = is.copy();
-                out.stackSize -= size;
-                if (out.stackSize <= 0) {
-                    return null;
-                }
-                return out;
-            }
-        }
-        return is;
     }
 
     @Override
