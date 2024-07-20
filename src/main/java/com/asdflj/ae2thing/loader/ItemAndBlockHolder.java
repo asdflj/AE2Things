@@ -11,6 +11,7 @@ import com.asdflj.ae2thing.common.item.ItemCreativeFluidCell;
 import com.asdflj.ae2thing.common.item.ItemInfinityStorageCell;
 import com.asdflj.ae2thing.common.item.ItemInfinityStorageFluidCell;
 import com.asdflj.ae2thing.common.item.ItemPartInfusionPatternTerminal;
+import com.asdflj.ae2thing.common.item.ItemPartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.item.ItemPhial;
 import com.asdflj.ae2thing.util.NameConst;
 
@@ -18,6 +19,7 @@ public class ItemAndBlockHolder {
 
     public static ItemPartInfusionPatternTerminal INFUSION_PATTERN_TERMINAL = new ItemPartInfusionPatternTerminal()
         .register();
+    public static ItemPartThaumatoriumInterface THAUMATRIUM_INTERFACE = new ItemPartThaumatoriumInterface().register();
     public static ItemBackpackTerminal BACKPACK_MANAGER = new ItemBackpackTerminal().register();
     public static BlockInfusionInterface INFUSION_INTERFACE = new BlockInfusionInterface().register();
     public static ItemPhial PHIAL = new ItemPhial().register();

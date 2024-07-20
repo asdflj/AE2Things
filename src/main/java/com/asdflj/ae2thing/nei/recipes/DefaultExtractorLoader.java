@@ -12,5 +12,6 @@ public class DefaultExtractorLoader implements Runnable {
         FluidRecipe.addRecipeMap("crafting", new VanillaRecipeExtractor(true));
         FluidRecipe.addRecipeMap("crafting2x2", new VanillaRecipeExtractor(true));
         FluidRecipe.addRecipeMap("infusionCrafting", new TCRecipeExtractor(false));
+        FluidRecipe.addRecipeMap("cruciblerecipe", new TCRecipeExtractor(false));
     }
 }
