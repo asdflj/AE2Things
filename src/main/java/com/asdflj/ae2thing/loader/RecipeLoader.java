@@ -10,6 +10,8 @@ import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_FLUID_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.THAUMATRIUM_INTERFACE;
 import static com.glodblock.github.loader.ItemAndBlockHolder.CELL_HOUSING;
+import static thaumcraft.common.config.ConfigItems.itemResource;
+import static thaumcraft.common.config.ConfigItems.itemThaumonomicon;
 import static thaumicenergistics.common.blocks.BlockEnum.DISTILLATION_ENCODER;
 
 import net.minecraft.init.Blocks;
@@ -23,6 +25,7 @@ import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.storage.CellType;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import thaumcraft.common.config.ConfigBlocks;
 
 public class RecipeLoader implements Runnable {
 
@@ -31,10 +34,10 @@ public class RecipeLoader implements Runnable {
     public static final ItemStack CRAFTING_TABLE = new ItemStack(Blocks.crafting_table, 1);
     public static final ItemStack DIAMOND = new ItemStack(Items.diamond, 1);
     public static final ItemStack FISH = new ItemStack(Items.fish);
-    public static final ItemStack AE2_PROCESS_PATTERN_TERM = new ItemStack(
+    public static final ItemStack AE2_PATTERN_TERM = new ItemStack(
         GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"),
         1,
-        500);
+        340);
     public static final ItemStack AE2_DIGITAL_SINGULARITY_CELL = new ItemStack(
         GameRegistry.findItem("appliedenergistics2", "item.ItemExtremeStorageCell.Singularity"),
         1);
@@ -66,11 +69,28 @@ public class RecipeLoader implements Runnable {
                 'C',
                 AE2FC_DIGITAL_SINGULARITY_CELL));
         if (ModAndClassUtil.THE) {
+            final ItemStack THAUMIUM_INGOT = new ItemStack(itemResource, 1, 2);
+            final ItemStack RUNIC_MATRIX = new ItemStack(ConfigBlocks.blockStoneDevice, 1, 2);
+            final ItemStack THAUMONOMICON = new ItemStack(itemThaumonomicon, 1);
             final ItemStack THE_DISTILLATION_ENCODER = new ItemStack(DISTILLATION_ENCODER.getBlock(), 1);
-            GameRegistry.addShapelessRecipe(
-                INFUSION_PATTERN_TERMINAL.stack(),
-                AE2_PROCESS_PATTERN_TERM,
-                THE_DISTILLATION_ENCODER);
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    INFUSION_PATTERN_TERMINAL.stack(),
+                    "IRI",
+                    "DPE",
+                    "ICI",
+                    'P',
+                    AE2_PATTERN_TERM,
+                    'I',
+                    THAUMIUM_INGOT,
+                    'R',
+                    RUNIC_MATRIX,
+                    'C',
+                    THAUMONOMICON,
+                    'D',
+                    THE_DISTILLATION_ENCODER,
+                    'E',
+                    ESSENTIA_DISCRETIZER.stack()));
             GameRegistry.addShapelessRecipe(
                 INFUSION_INTERFACE.stack(),
                 com.glodblock.github.loader.ItemAndBlockHolder.INTERFACE,
