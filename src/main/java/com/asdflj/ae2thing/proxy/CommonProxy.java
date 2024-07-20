@@ -64,9 +64,13 @@ public class CommonProxy {
         }
         Upgrades.PATTERN_REFILLER.registerItem(ItemAndBlockHolder.INFUSION_PATTERN_TERMINAL.stack(), 1);
         Upgrades.LOCK_CRAFTING.registerItem(ItemAndBlockHolder.INFUSION_INTERFACE.stack(), 1);
+        Upgrades.LOCK_CRAFTING.registerItem(ItemAndBlockHolder.THAUMATRIUM_INTERFACE.stack(), 1);
         Upgrades.ADVANCED_BLOCKING.registerItem(ItemAndBlockHolder.INFUSION_INTERFACE.stack(), 1);
+        Upgrades.ADVANCED_BLOCKING.registerItem(ItemAndBlockHolder.THAUMATRIUM_INTERFACE.stack(), 1);
         Upgrades.CRAFTING.registerItem(ItemAndBlockHolder.INFUSION_INTERFACE.stack(), 1);
-        Upgrades.PATTERN_CAPACITY.registerItem(ItemAndBlockHolder.INFUSION_INTERFACE.stack(), 1);
+        Upgrades.CRAFTING.registerItem(ItemAndBlockHolder.THAUMATRIUM_INTERFACE.stack(), 1);
+        Upgrades.PATTERN_CAPACITY.registerItem(ItemAndBlockHolder.INFUSION_INTERFACE.stack(), 3);
+        Upgrades.PATTERN_CAPACITY.registerItem(ItemAndBlockHolder.THAUMATRIUM_INTERFACE.stack(), 3);
         if (ModAndClassUtil.IC2) {
             AE2ThingAPI.instance()
                 .setDefaultFluidContainer(Ic2Items.cell);

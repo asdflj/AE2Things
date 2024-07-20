@@ -177,26 +177,18 @@ public class TileInfusionInterface extends TileFluidInterface
     @Override
     public int getEssentiaAmount(ForgeDirection side) {
         Aspect wantedAspect = this.getNeighborWantedAspect(side);
-
-        // Does the neighbor want anything?
         if (wantedAspect != null) {
             return this.aspects.getAmount(wantedAspect);
         }
 
-        // No match or no request
         return 0;
     }
 
     protected Aspect getNeighborWantedAspect(final ForgeDirection side) {
-        // Get the tile entity next to this side
         TileEntity neighbor = this.worldObj
             .getTileEntity(this.xCoord + side.offsetX, this.yCoord + side.offsetY, this.zCoord + side.offsetZ);
 
-        // Do we have essentia transport neighbor?
         if ((neighbor instanceof IEssentiaTransport)) {
-            // Get the aspect they want
-
-            // Return the aspect they want
             return ((IEssentiaTransport) neighbor).getSuctionType(side.getOpposite());
         }
 
