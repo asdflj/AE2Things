@@ -4,7 +4,9 @@ import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.asdflj.ae2thing.common.item.ItemPhial;
 import com.asdflj.ae2thing.inventory.IEssentiaContainer;
@@ -16,9 +18,11 @@ import appeng.tile.events.TileEventType;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.aspects.IAspectSource;
+import thaumcraft.api.aspects.IEssentiaTransport;
 import thaumcraft.common.Thaumcraft;
 
-public class TileInfusionInterface extends TileFluidInterface implements IAspectSource, IEssentiaContainer {
+public class TileInfusionInterface extends TileFluidInterface
+    implements IAspectSource, IEssentiaContainer, IEssentiaTransport {
 
     private final AspectList aspects = new AspectList();
 
@@ -112,5 +116,100 @@ public class TileInfusionInterface extends TileFluidInterface implements IAspect
     @Override
     public int containerContains(Aspect var1) {
         return this.aspects.getAmount(var1);
+    }
+
+    @Override
+    public boolean isConnectable(ForgeDirection side) {
+        return false;
+    }
+
+    @Override
+    public boolean canInputFrom(ForgeDirection side) {
+        return false;
+    }
+
+    @Override
+    public boolean canOutputTo(ForgeDirection side) {
+        return true;
+    }
+
+    @Override
+    public void setSuction(Aspect aspect, int amount) {
+
+    }
+
+    @Override
+    public Aspect getSuctionType(ForgeDirection var1) {
+        return null;
+    }
+
+    @Override
+    public int getSuctionAmount(ForgeDirection side) {
+        return 8;
+    }
+
+    @Override
+    public int takeEssentia(Aspect aspect, int amount, ForgeDirection side) {
+        int stored = aspects.getAmount(aspect);
+        if (stored >= amount) {
+            aspects.remove(aspect, amount);
+            return amount;
+        }
+        return 0;
+    }
+
+    @Override
+    public int addEssentia(Aspect var1, int var2, ForgeDirection var3) {
+        return 0;
+    }
+
+    @Override
+    public Aspect getEssentiaType(ForgeDirection side) {
+        Aspect wantedAspect = this.getNeighborWantedAspect(side);
+        if (wantedAspect != null) {
+            if (this.aspects.getAmount(wantedAspect) > 0) {
+                return wantedAspect;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public int getEssentiaAmount(ForgeDirection side) {
+        Aspect wantedAspect = this.getNeighborWantedAspect(side);
+
+        // Does the neighbor want anything?
+        if (wantedAspect != null) {
+            return this.aspects.getAmount(wantedAspect);
+        }
+
+        // No match or no request
+        return 0;
+    }
+
+    protected Aspect getNeighborWantedAspect(final ForgeDirection side) {
+        // Get the tile entity next to this side
+        TileEntity neighbor = this.worldObj
+            .getTileEntity(this.xCoord + side.offsetX, this.yCoord + side.offsetY, this.zCoord + side.offsetZ);
+
+        // Do we have essentia transport neighbor?
+        if ((neighbor instanceof IEssentiaTransport)) {
+            // Get the aspect they want
+
+            // Return the aspect they want
+            return ((IEssentiaTransport) neighbor).getSuctionType(side.getOpposite());
+        }
+
+        return null;
+    }
+
+    @Override
+    public int getMinimumSuction() {
+        return 1;
+    }
+
+    @Override
+    public boolean renderExtendedTube() {
+        return false;
     }
 }

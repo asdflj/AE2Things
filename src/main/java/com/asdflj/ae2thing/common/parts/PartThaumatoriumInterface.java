@@ -3,6 +3,7 @@ package com.asdflj.ae2thing.common.parts;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -63,37 +64,37 @@ public class PartThaumatoriumInterface extends PartFluidInterface
     }
 
     @Override
-    public boolean isConnectable(ForgeDirection site) {
+    public boolean isConnectable(ForgeDirection side) {
         return true;
     }
 
     @Override
-    public boolean canInputFrom(ForgeDirection site) {
+    public boolean canInputFrom(ForgeDirection side) {
         return true;
     }
 
     @Override
-    public boolean canOutputTo(ForgeDirection site) {
+    public boolean canOutputTo(ForgeDirection side) {
         return true;
     }
 
     @Override
-    public void setSuction(Aspect aspect, int site) {
+    public void setSuction(Aspect aspect, int side) {
 
     }
 
     @Override
-    public Aspect getSuctionType(ForgeDirection site) {
+    public Aspect getSuctionType(ForgeDirection side) {
         return null;
     }
 
     @Override
-    public int getSuctionAmount(ForgeDirection site) {
+    public int getSuctionAmount(ForgeDirection side) {
         return 8;
     }
 
     @Override
-    public int takeEssentia(Aspect aspect, int amount, ForgeDirection site) {
+    public int takeEssentia(Aspect aspect, int amount, ForgeDirection side) {
         int stored = aspects.getAmount(aspect);
         if (stored >= amount) {
             aspects.remove(aspect, amount);
@@ -130,5 +131,17 @@ public class PartThaumatoriumInterface extends PartFluidInterface
     @Override
     public AspectList getAspects() {
         return this.aspects;
+    }
+
+    @Override
+    public void readFromNBT(final NBTTagCompound data) {
+        super.readFromNBT(data);
+        this.aspects.readFromNBT(data);
+    }
+
+    @Override
+    public void writeToNBT(final NBTTagCompound data) {
+        super.writeToNBT(data);
+        this.aspects.writeToNBT(data);
     }
 }

@@ -55,5 +55,6 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:Hodgepodge:2.4.5:dev") { transitive = false }
     compile('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
     compile('com.github.GTNewHorizons:ThaumicEnergistics:1.6.10-GTNH:dev') { transitive = false }
+    runtimeOnlyNonPublishable('com.github.GTNewHorizons:thaumicinsurgence:0.3.1:dev')
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.5.4-GTNH:dev")
 }
