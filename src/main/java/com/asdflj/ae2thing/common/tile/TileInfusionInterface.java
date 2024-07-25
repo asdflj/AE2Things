@@ -89,11 +89,13 @@ public class TileInfusionInterface extends TileFluidInterface
 
     @TileEvent(TileEventType.WORLD_NBT_READ)
     public void readFromNBTEvent(NBTTagCompound data) {
+        super.readFromNBTEvent(data);
         this.aspects.readFromNBT(data);
     }
 
     @TileEvent(TileEventType.WORLD_NBT_WRITE)
     public NBTTagCompound writeToNBTEvent(NBTTagCompound data) {
+        super.writeToNBTEvent(data);
         this.aspects.writeToNBT(data);
         return data;
     }
