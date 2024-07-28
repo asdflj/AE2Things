@@ -80,7 +80,7 @@ public class CommonProxy {
     }
 
     public void onLoadComplete(FMLLoadCompleteEvent event) {
-        if (ModAndClassUtil.GT5NH || ModAndClassUtil.GT5) {
+        if (ModAndClassUtil.THE && (ModAndClassUtil.GT5NH || ModAndClassUtil.GT5)) {
             // fix terminus essentia not register
             registerGases();
         }
