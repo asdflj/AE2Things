@@ -43,7 +43,7 @@ dependencies {
     }
 //    compile('com.github.GTNewHorizons:Angelica:1.0.0-alpha52:dev')
 //    compileOnly('com.github.GTNewHorizons:Draconic-Evolution:1.3.5-GTNH:dev')
-    compileOnly('com.github.GTNewHorizons:GT5-Unofficial:5.09.45.15:dev') {
+    compileOnly('com.github.GTNewHorizons:GT5-Unofficial:5.09.45.168:dev') {
         exclude group: 'com.github.GTNewHorizons', module: 'AE2FluidCraft-Rework'
     }
     implementation('com.github.GTNewHorizons:TCNEIAdditions:1.4.0:dev')
@@ -54,7 +54,7 @@ dependencies {
     compile('com.github.GTNewHorizons:Baubles:1.0.3:dev')
     compileOnly("com.github.GTNewHorizons:Hodgepodge:2.4.5:dev") { transitive = false }
     compile('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
-    compile('com.github.GTNewHorizons:ThaumicEnergistics:1.6.10-GTNH:dev') { transitive = false }
+    compile('com.github.GTNewHorizons:ThaumicEnergistics:1.6.18-GTNH:dev') { transitive = false }
     runtimeOnlyNonPublishable('com.github.GTNewHorizons:thaumicinsurgence:0.3.1:dev')
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.5.4-GTNH:dev")
 }

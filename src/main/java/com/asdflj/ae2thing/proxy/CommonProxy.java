@@ -1,5 +1,7 @@
 package com.asdflj.ae2thing.proxy;
 
+import static thaumicenergistics.common.fluids.GaseousEssentia.registerGases;
+
 import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
@@ -78,7 +80,10 @@ public class CommonProxy {
     }
 
     public void onLoadComplete(FMLLoadCompleteEvent event) {
-
+        if (ModAndClassUtil.GT5NH || ModAndClassUtil.GT5) {
+            // fix terminus essentia not register
+            registerGases();
+        }
     }
 
     public void serverStarting(FMLServerStartingEvent event) {
