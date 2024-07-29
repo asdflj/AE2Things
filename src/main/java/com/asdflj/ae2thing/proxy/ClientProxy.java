@@ -33,7 +33,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void onLoadComplete(FMLLoadCompleteEvent event) {
         super.onLoadComplete(event);
-        if (ModAndClassUtil.NEI) {
+        if (ModAndClassUtil.NEI && ModAndClassUtil.THE) {
             new DefaultExtractorLoader().run();
             ItemPhial.getItems()
                 .forEach(API::hideItem);

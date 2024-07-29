@@ -205,7 +205,7 @@ public class CellInventory implements ITCellInventory {
     }
 
     private FluidStack injectFluid(FluidStack fs) {
-        if (AspectUtil.isEssentiaGas(fs)) return fs;
+        if (ModAndClassUtil.THE && AspectUtil.isEssentiaGas(fs)) return fs;
         FluidStack injectFluid = fs.copy();
         for (BaseBackpackHandler inv : this.fluidInv) {
             for (FluidTank ft : inv.getFluidTanks()) {

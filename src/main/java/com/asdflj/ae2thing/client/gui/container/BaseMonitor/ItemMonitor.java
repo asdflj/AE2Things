@@ -9,6 +9,8 @@ import net.minecraft.inventory.ICrafting;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.TheUtil;
 import com.glodblock.github.common.item.ItemFluidDrop;
 
 import appeng.api.AEApi;
@@ -19,7 +21,6 @@ import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
-import thaumicenergistics.common.items.ItemCraftingAspect;
 
 public class ItemMonitor implements IMEMonitorHandlerReceiver<IAEItemStack>, IProcessItemList {
 
@@ -70,7 +71,7 @@ public class ItemMonitor implements IMEMonitorHandlerReceiver<IAEItemStack>, IPr
     }
 
     private void fluidHandler(IAEItemStack send) {
-        if (this.fluidMonitorObject != null && send.getItem() instanceof ItemCraftingAspect) {
+        if (this.fluidMonitorObject != null && ModAndClassUtil.THE && TheUtil.isItemCraftingAspect(send)) {
             this.fluidMonitorObject.addItemCraftingAspect(send);
         } else if (this.fluidMonitorObject != null && send.getStackSize() == 0
             && send.getItem() instanceof ItemFluidDrop) {

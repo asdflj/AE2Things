@@ -7,6 +7,7 @@ import com.asdflj.ae2thing.common.storage.CellHandler;
 import com.asdflj.ae2thing.crossmod.waila.WailaInit;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.loader.ChannelLoader;
+import com.asdflj.ae2thing.loader.ItemAndBlockHolder;
 import com.asdflj.ae2thing.loader.RecipeLoader;
 import com.asdflj.ae2thing.proxy.CommonProxy;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
@@ -72,6 +73,7 @@ public class AE2Thing {
             .cell()
             .addCellHandler(new CellHandler());
         RecipeLoader.INSTANCE.run();
+        ItemAndBlockHolder.INSTANCE.run();
         proxy.postInit(event);
     }
 

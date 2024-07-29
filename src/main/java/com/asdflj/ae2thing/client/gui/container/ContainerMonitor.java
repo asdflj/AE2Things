@@ -20,6 +20,7 @@ import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.container.BaseMonitor.FluidMonitor;
 import com.asdflj.ae2thing.client.gui.container.BaseMonitor.ItemMonitor;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 import com.glodblock.github.util.Util;
@@ -227,7 +228,7 @@ public abstract class ContainerMonitor extends AEBaseContainer
         MutablePair<Integer, ItemStack> result = null;
         ItemStack container = AE2ThingAPI.instance()
             .getFluidContainer(ifs);
-        if (AspectUtil.isEssentiaGas(ifs.getFluidStack())) {
+        if (ModAndClassUtil.THE && AspectUtil.isEssentiaGas(ifs.getFluidStack())) {
             result = AspectUtil.fillEssentiaFromGas(container, ifs.getFluidStack());
         } else if (Util.FluidUtil.isFluidContainer(
             AE2ThingAPI.instance()
@@ -262,8 +263,8 @@ public abstract class ContainerMonitor extends AEBaseContainer
 
         if (targetStack == null) return;
         // The primary output itemstack
-        if (fluid != null && ((AspectUtil.isEmptyEssentiaContainer(targetStack) && AspectUtil.isEssentiaGas(fluid))
-            || com.glodblock.github.util.Util.FluidUtil.isEmpty(targetStack))) {
+        if (fluid != null && ((ModAndClassUtil.THE && AspectUtil.isEmptyEssentiaContainer(targetStack)
+            && AspectUtil.isEssentiaGas(fluid)) || com.glodblock.github.util.Util.FluidUtil.isEmpty(targetStack))) {
             // Situation 1.a: Empty fluid container, and nonnull slot
             extractFluid(fluid, player, slotIndex, shift);
         } else if (!com.glodblock.github.util.Util.FluidUtil.isEmpty(targetStack)
@@ -302,7 +303,7 @@ public abstract class ContainerMonitor extends AEBaseContainer
         final int fluidPerContainer;
         final FluidStack fluidStackPerContainer;
         final boolean partialInsertSupported;
-        if (AspectUtil.isEssentiaContainer(targetStack)) {
+        if (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(targetStack)) {
             ItemStack test = targetStack.copy();
             test.stackSize = 1;
             IAEFluidStack fs = AspectUtil.getAEGasFromContainer(test);
@@ -385,7 +386,7 @@ public abstract class ContainerMonitor extends AEBaseContainer
         ItemStack emptiedTanksStack;
         final ItemStack partialTanksStack;
 
-        if (AspectUtil.isEssentiaContainer(targetStack)) {
+        if (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(targetStack)) {
             if (emptiedTanks > 0) {
                 emptiedTanksStack = targetStack.copy();
                 emptiedTanksStack.stackSize = 1;
@@ -498,7 +499,7 @@ public abstract class ContainerMonitor extends AEBaseContainer
         // Step 1: Determine container characteristics and verify fluid to be insertable
         final int fluidPerContainer;
         final boolean partialInsertSupported;
-        if (AspectUtil.isEssentiaContainer(targetStack)) {
+        if (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(targetStack)) {
             ItemStack testStack = targetStack.copy();
             testStack.stackSize = 1;
             fluidPerContainer = AspectUtil.fillEssentiaFromGas(testStack, clientRequestedFluidStack).left;
@@ -548,7 +549,7 @@ public abstract class ContainerMonitor extends AEBaseContainer
         ItemStack filledTanksStack;
         ItemStack partialTanksStack;
 
-        if (AspectUtil.isEssentiaContainer(targetStack)) {
+        if (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(targetStack)) {
             if (filledTanks > 0) {
                 filledTanksStack = targetStack.copy();
                 filledTanksStack.stackSize = 1;

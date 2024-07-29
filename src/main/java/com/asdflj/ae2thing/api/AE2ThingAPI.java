@@ -20,6 +20,7 @@ import com.asdflj.ae2thing.Tags;
 import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 import com.glodblock.github.util.Util;
 
@@ -31,7 +32,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public final class AE2ThingAPI implements IAE2ThingAPI {
 
     public static final ItemStack BUCKET = new ItemStack(Items.bucket, 1);
-    public static final ItemStack PHIAL = AspectUtil.HELPER.createEmptyPhial();
+    public static final ItemStack PHIAL = createEmptyPhial();
     public static final ItemStack GLASS_BOTTLE = new ItemStack(glass_bottle, 1);
     public static int maxPinSize = 9;
 
@@ -44,6 +45,13 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
 
     public static AE2ThingAPI instance() {
         return API;
+    }
+
+    private static ItemStack createEmptyPhial() {
+        if (ModAndClassUtil.THE) {
+            return AspectUtil.HELPER.createEmptyPhial();
+        }
+        return null;
     }
 
     @Override
@@ -138,7 +146,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
 
     @Override
     public ItemStack getFluidContainer(FluidStack fluid) {
-        if (AspectUtil.isEssentiaGas(fluid)) {
+        if (ModAndClassUtil.THE && AspectUtil.isEssentiaGas(fluid)) {
             return PHIAL;
         } else if (canFillContainer(BUCKET, fluid)) {
             return BUCKET;

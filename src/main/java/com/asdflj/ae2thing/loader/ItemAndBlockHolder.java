@@ -13,17 +13,19 @@ import com.asdflj.ae2thing.common.item.ItemInfinityStorageFluidCell;
 import com.asdflj.ae2thing.common.item.ItemPartInfusionPatternTerminal;
 import com.asdflj.ae2thing.common.item.ItemPartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.item.ItemPhial;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.asdflj.ae2thing.util.NameConst;
 
-public class ItemAndBlockHolder {
+public class ItemAndBlockHolder implements Runnable {
 
-    public static ItemPartInfusionPatternTerminal INFUSION_PATTERN_TERMINAL = new ItemPartInfusionPatternTerminal()
-        .register();
-    public static ItemPartThaumatoriumInterface THAUMATRIUM_INTERFACE = new ItemPartThaumatoriumInterface().register();
+    public static final ItemAndBlockHolder INSTANCE = new ItemAndBlockHolder();
+
     public static ItemBackpackTerminal BACKPACK_MANAGER = new ItemBackpackTerminal().register();
-    public static BlockInfusionInterface INFUSION_INTERFACE = new BlockInfusionInterface().register();
-    public static ItemPhial PHIAL = new ItemPhial().register();
-    public static BlockEssentiaDiscretizer ESSENTIA_DISCRETIZER = new BlockEssentiaDiscretizer().register();
+    public static ItemPartInfusionPatternTerminal INFUSION_PATTERN_TERMINAL;
+    public static ItemPartThaumatoriumInterface THAUMATRIUM_INTERFACE;
+    public static BlockInfusionInterface INFUSION_INTERFACE;
+    public static ItemPhial PHIAL;
+    public static BlockEssentiaDiscretizer ESSENTIA_DISCRETIZER;
     public static ItemInfinityStorageCell ITEM_INFINITY_CELL = new ItemInfinityStorageCell().register();
     public static ItemInfinityStorageFluidCell ITEM_INFINITY_FLUID_CELL = new ItemInfinityStorageFluidCell().register();
     public static ItemCreativeFluidCell ITEM_CREATIVE_WATER_CELL = new ItemCreativeFluidCell(
@@ -34,4 +36,15 @@ public class ItemAndBlockHolder {
         lava_bucket).register();
 
     public static BlockFishBig BLOCK_FISH_BIG = new BlockFishBig().register();
+
+    @Override
+    public void run() {
+        if (ModAndClassUtil.THE) {
+            INFUSION_PATTERN_TERMINAL = new ItemPartInfusionPatternTerminal().register();
+            THAUMATRIUM_INTERFACE = new ItemPartThaumatoriumInterface().register();
+            INFUSION_INTERFACE = new BlockInfusionInterface().register();
+            PHIAL = new ItemPhial().register();
+            ESSENTIA_DISCRETIZER = new BlockEssentiaDiscretizer().register();
+        }
+    }
 }

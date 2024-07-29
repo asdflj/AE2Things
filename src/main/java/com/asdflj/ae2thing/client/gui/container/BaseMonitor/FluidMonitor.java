@@ -1,5 +1,7 @@
 package com.asdflj.ae2thing.client.gui.container.BaseMonitor;
 
+import static com.asdflj.ae2thing.util.TheUtil.ItemCraftingAspect2IAEFluidStack;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,10 +10,10 @@ import java.util.Set;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ICrafting;
-import net.minecraftforge.fluids.FluidStack;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.network.SPacketMEFluidInvUpdate;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.item.ItemFluidDrop;
 
 import appeng.api.AEApi;
@@ -24,10 +26,6 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
-import appeng.util.item.AEFluidStack;
-import thaumcraft.api.aspects.Aspect;
-import thaumicenergistics.common.fluids.GaseousEssentia;
-import thaumicenergistics.common.items.ItemCraftingAspect;
 
 public class FluidMonitor implements IMEMonitorHandlerReceiver<IAEFluidStack>, IProcessItemList {
 
@@ -119,12 +117,10 @@ public class FluidMonitor implements IMEMonitorHandlerReceiver<IAEFluidStack>, I
             piu.addAll(toSend);
             this.fluids.resetStatus();
         }
-        if (!this.craftingAspects.isEmpty()) {
+        if (!this.craftingAspects.isEmpty() && ModAndClassUtil.THE) {
             final IItemList<IAEFluidStack> monitorCache = this.fluidMonitor.getStorageList();
             for (IAEItemStack is : this.craftingAspects) {
-                Aspect aspect = ItemCraftingAspect.getAspect(is.getItemStack());
-                GaseousEssentia gaseousEssentia = GaseousEssentia.getGasFromAspect(aspect);
-                IAEFluidStack fs = AEFluidStack.create(new FluidStack(gaseousEssentia, 1));
+                IAEFluidStack fs = ItemCraftingAspect2IAEFluidStack(is);
                 IAEFluidStack send = monitorCache.findPrecise(fs);
                 if (send != null) {
                     send.setCraftable(is.isCraftable());

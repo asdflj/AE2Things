@@ -29,7 +29,7 @@ public class TooltipHandlerWaila extends mcp.mobius.waila.handlers.nei.TooltipHa
         List<String> currentToolTip) {
         if (itemstack != null && itemstack.getItem() instanceof ItemFluidDrop && !currentToolTip.isEmpty()) {
             FluidStack fs = ItemFluidDrop.getFluidStack(itemstack);
-            if (AspectUtil.isEssentiaGas(fs)) {
+            if (ModAndClassUtil.THE && AspectUtil.isEssentiaGas(fs)) {
                 Aspect aspect = AspectUtil.getAspectFromGas(fs);
                 ItemStack is = ItemCraftingAspect.createStackForAspect(aspect, 1);
                 currentToolTip.clear();

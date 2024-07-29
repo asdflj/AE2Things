@@ -70,7 +70,7 @@ public class Util {
         if (item.getItem() instanceof ItemFluidDrop) {
             FluidStack fs = ItemFluidDrop.getFluidStack(item.getItemStack());
             if (fs == null) return GameRegistry.findUniqueIdentifierFor(item.getItem()).modId;
-            if (AspectUtil.isEssentiaGas(fs)) {
+            if (ModAndClassUtil.THE && AspectUtil.isEssentiaGas(fs)) {
                 ModContainer mod = AspectHooks.aspectToMod.getOrDefault(AspectUtil.getAspectFromGas(fs), null);
                 if (mod != null) return mod.getModId();
             } else {
@@ -94,7 +94,7 @@ public class Util {
         if (item.getItem() instanceof ItemFluidDrop) {
             FluidStack fs = ItemFluidDrop.getFluidStack(item.getItemStack());
             if (fs == null) return Platform.getItemDisplayName(item);
-            if (AspectUtil.isEssentiaGas(fs)) {
+            if (ModAndClassUtil.THE && AspectUtil.isEssentiaGas(fs)) {
                 return AspectUtil.getAspectFromGas(fs)
                     .getName();
             } else {

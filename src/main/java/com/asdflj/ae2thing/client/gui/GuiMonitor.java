@@ -151,18 +151,20 @@ public abstract class GuiMonitor extends AEBaseMEGui
                     .getItem() instanceof ItemFluidDrop
                     && sme.getAEStack()
                         .getStackSize() != 0) {
-                    if (cs == null || (Util.FluidUtil.isEmpty(cs)
-                        || (AspectUtil.isEssentiaContainer(cs) && AspectUtil.isEmptyEssentiaContainer(cs)))) {
+                    if (cs == null
+                        || (Util.FluidUtil.isEmpty(cs) || (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(cs)
+                            && AspectUtil.isEmptyEssentiaContainer(cs)))) {
                         IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(sme.getAEStack());
                         AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
                         return;
                     }
                 }
-            } else if (ctrlDown == 1 && (Util.FluidUtil.isFilled(cs)
-                || (AspectUtil.isEssentiaContainer(cs) && !AspectUtil.isEmptyEssentiaContainer(cs)))) {
-                    AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(null, isShiftKeyDown()));
-                    return;
-                }
+            } else if (ctrlDown == 1
+                && (Util.FluidUtil.isFilled(cs) || (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(cs)
+                    && !AspectUtil.isEmptyEssentiaContainer(cs)))) {
+                        AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(null, isShiftKeyDown()));
+                        return;
+                    }
             if (mouseButton == 3 && player.capabilities.isCreativeMode
                 && sme.getHasStack()
                 && !sme.getAEStack()
@@ -854,7 +856,7 @@ public abstract class GuiMonitor extends AEBaseMEGui
     }
 
     private String getContainerDisplayName(ItemStack is) {
-        if (AspectUtil.isEssentiaContainer(is)) {
+        if (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(is)) {
             Aspect aspect = AspectUtil.getAspectFromJar(is);
             return aspect.getName();
         } else if (Util.FluidUtil.isFluidContainer(is)) {
@@ -867,7 +869,7 @@ public abstract class GuiMonitor extends AEBaseMEGui
 
     private boolean isFilledContainer(ItemStack is) {
         if (is == null) return false;
-        return (AspectUtil.isEssentiaContainer(is) && !AspectUtil.isEmptyEssentiaContainer(is))
+        return (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(is) && !AspectUtil.isEmptyEssentiaContainer(is))
             || (Util.FluidUtil.isFluidContainer(is) && Util.FluidUtil.isFilled(is));
     }
 
@@ -884,7 +886,7 @@ public abstract class GuiMonitor extends AEBaseMEGui
 
     @Override
     public void setTextFieldValue(String displayName, int mousex, int mousey, ItemStack stack) {
-        if (AspectUtil.getAspectFromJar(stack) != null) {
+        if (ModAndClassUtil.THE && AspectUtil.getAspectFromJar(stack) != null) {
             setSearchString(
                 Objects.requireNonNull(AspectUtil.getAspectFromJar(stack))
                     .getName(),

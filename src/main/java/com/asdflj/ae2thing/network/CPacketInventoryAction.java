@@ -18,6 +18,7 @@ import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.util.BlockPos;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 
@@ -110,7 +111,7 @@ public class CPacketInventoryAction implements IMessage {
                         if (te != null) {
                             if(message.stack.getItem() instanceof ItemFluidDrop){
                                 IAEFluidStack fs = ItemFluidDrop.getAeFluidStack(message.stack);
-                                if(AspectUtil.isEssentiaGas(fs)){
+                                if(ModAndClassUtil.THE &&AspectUtil.isEssentiaGas(fs)){
                                     Aspect aspect = AspectUtil.getAspectFromGas(fs.getFluidStack());
                                     IAEItemStack result = AEApi.instance().storage()
                                         .createItemStack(ItemCraftingAspect.createStackForAspect(aspect, 1));

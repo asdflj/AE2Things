@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fluids.FluidStack;
 
+import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
@@ -77,7 +78,7 @@ public class CoreModHooksClient {
                 return cache.get(is).tooltip;
             } else if (is.getItem() instanceof ItemFluidDrop) {
                 FluidStack fs = ItemFluidDrop.getFluidStack(is.getItemStack());
-                if (AspectUtil.isEssentiaGas(fs)) {
+                if (ModAndClassUtil.THE && AspectUtil.isEssentiaGas(fs)) {
                     Aspect aspect = AspectUtil.getAspectFromGas(fs);
                     List<String> tooltip = ItemCraftingAspect.createStackForAspect(aspect, 1)
                         .getTooltip(Minecraft.getMinecraft().thePlayer, false);
