@@ -1,37 +1,50 @@
 package com.asdflj.ae2thing.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
+import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.common.storage.StorageManager;
+import com.asdflj.ae2thing.common.storage.infinityCell.BaseInventory;
+import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
 
-import appeng.api.implementations.guiobjects.IGuiItemObject;
 import appeng.container.interfaces.IInventorySlotAware;
 import appeng.tile.inventory.BiggerAppEngInventory;
 import appeng.util.Platform;
+import appeng.util.item.AEItemStack;
 
-public class ItemCellLinkInventory extends BiggerAppEngInventory implements IGuiItemObject, IInventorySlotAware {
+public class ItemCellLinkInventory extends BiggerAppEngInventory implements BaseInventory, IInventorySlotAware {
 
     private final ItemStack is;
-    private final String name;
     private final EntityPlayer player;
     private final int slot;
 
-    public ItemCellLinkInventory(ItemStack is, String name, EntityPlayer player, int slot) {
+    public ItemCellLinkInventory(ItemStack is, EntityPlayer player, int slot) {
         super(null, 1);
-        this.name = name;
         this.is = is;
         this.player = player;
         this.slot = slot;
-        this.readFromNBT(Platform.openNbtData(is), name);
+        this.genUUID();
+    }
+
+    private void genUUID() {
+        if (Platform.isServer() && Platform.openNbtData(is)
+            .hasNoTags()) {
+            StorageManager m = AE2ThingAPI.instance()
+                .getStorageManager();
+            m.getStorage(this.is, this.player);
+            SPacketMEItemInvUpdate piu = new SPacketMEItemInvUpdate((byte) -1);
+            piu.appendItem(AEItemStack.create(this.is));
+            AE2Thing.proxy.netHandler.sendTo(piu, (EntityPlayerMP) player);
+        }
     }
 
     @Override
-    public void markDirty() {
-        this.writeToNBT(Platform.openNbtData(is), this.name);
-        if (Platform.isServer()) this.player.inventory.setInventorySlotContents(slot, this.is);
-    }
+    public void markDirty() {}
 
     @Override
     public void setInventorySlotContents(int slot, ItemStack disk) {
@@ -57,5 +70,11 @@ public class ItemCellLinkInventory extends BiggerAppEngInventory implements IGui
     @Override
     public int getInventorySlot() {
         return this.slot;
+    }
+
+    @Override
+    public String getUUID() {
+        NBTTagCompound data = Platform.openNbtData(is);
+        return data.getString(Constants.DISKUUID);
     }
 }

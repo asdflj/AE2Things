@@ -26,7 +26,7 @@ public abstract class BaseCellItem extends BaseItem implements IItemInventory, I
 
     @Override
     public Object getInventory(ItemStack stack, World world, int x, int y, int z, EntityPlayer player) {
-        return new ItemCellLinkInventory(player.inventory.mainInventory[x], "inv", player, x);
+        return new ItemCellLinkInventory(player.inventory.mainInventory[x], player, x);
     }
 
     @Override

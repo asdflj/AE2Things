@@ -71,6 +71,9 @@ public class InfinityItemStorageCellInventory implements ITCellInventory {
     public void loadCellItems() {
         if (this.cellItems == null) {
             this.cellItems = this.storage.getItems();
+            for (IAEItemStack is : this.cellItems) {
+                if (is.getStackSize() <= 0) is.reset();
+            }
         }
         if (!this.getUUID()
             .equals(this.storage.getUUID())) {
@@ -331,24 +334,10 @@ public class InfinityItemStorageCellInventory implements ITCellInventory {
     }
 
     private void saveChanges() {
-        long count = 0;
-        int types = 0;
-        for (final IAEItemStack ias : this.getCellItems()) {
-            if (ias.getStackSize() > 0) {
-                types++;
-                count += ias.getStackSize();
-            } else {
-                ias.reset();
-            }
-        }
-        this.storedItemTypes = types;
-        this.storedItemCount = count;
-        data.setLong(ITEM_TYPE_TAG, this.storedItemTypes);
-        data.setLong(ITEM_COUNT_TAG, this.storedItemCount);
+        this.data.setBoolean(Constants.IS_EMPTY, this.cellItems.isEmpty());
         AE2ThingAPI.instance()
             .getStorageManager()
             .postChanges(this.cellItem, this.storage, this.drive);
-
         AE2ThingAPI.instance()
             .getStorageManager()
             .setDirty(true);
