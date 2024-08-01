@@ -48,6 +48,7 @@ public class AE2Thing {
         Config.run();
         ChannelLoader.INSTANCE.run();
         proxy.preInit(event);
+        ItemAndBlockHolder.INSTANCE.run();
     }
 
     @Mod.EventHandler
@@ -73,7 +74,6 @@ public class AE2Thing {
             .cell()
             .addCellHandler(new CellHandler());
         RecipeLoader.INSTANCE.run();
-        ItemAndBlockHolder.INSTANCE.run();
         proxy.postInit(event);
     }
 
