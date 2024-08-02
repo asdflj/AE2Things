@@ -1,6 +1,5 @@
 package com.asdflj.ae2thing.common.item;
 
-import java.text.NumberFormat;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.common.storage.FluidCellInventoryHandler;
@@ -138,17 +136,6 @@ public class ItemInfinityStorageFluidCell extends BaseCellItem
         if (inventory instanceof final ITFluidCellInventoryHandler handler) {
             final ITFluidCellInventory cellInventory = handler.getCellInv();
             if (cellInventory != null) {
-                lines.add(
-                    EnumChatFormatting.WHITE + NumberFormat.getInstance().format(cellInventory.getStoredFluidTypes())
-                        + EnumChatFormatting.GRAY
-                        + " "
-                        + GuiText.Of.getLocal()
-                        + " "
-                        + EnumChatFormatting.DARK_GREEN
-                        + cellInventory.getTotalFluidTypes()
-                        + " "
-                        + EnumChatFormatting.GRAY
-                        + GuiText.Types.getLocal());
                 String uid = cellInventory.getUUID();
                 if (!uid.isEmpty()) lines.add(uid);
                 if (handler.isPreformatted()) {

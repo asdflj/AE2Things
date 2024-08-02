@@ -125,21 +125,10 @@ public class InfinityFluidStorageCellInventory implements ITFluidCellInventory {
     }
 
     private void saveChanges() {
-        long count = 0;
-        int types = 0;
-        for (final IAEFluidStack ias : this.getCellFluids()) {
-            if (ias.getStackSize() > 0) {
-                types++;
-                count += ias.getStackSize();
-            } else {
-                ias.reset();
-            }
+        this.data.setBoolean(Constants.IS_EMPTY, this.cellFluids.isEmpty());
+        if (this.container != null) {
+            this.container.saveChanges(this);
         }
-        this.storedFluids = types;
-        this.storedFluidCount = count;
-        data.setLong(FLUID_TYPE_TAG, this.storedFluids);
-        data.setLong(FLUID_COUNT_TAG, this.storedFluidCount);
-
         AE2ThingAPI.instance()
             .getStorageManager()
             .postChanges(this.cellItem, this.storage, this.drive);
@@ -169,6 +158,9 @@ public class InfinityFluidStorageCellInventory implements ITFluidCellInventory {
     protected void loadCellFluids() {
         if (this.cellFluids == null) {
             this.cellFluids = this.storage.getFluids();
+            for (IAEFluidStack is : this.cellFluids) {
+                if (is.getStackSize() <= 0) is.reset();
+            }
         }
         if (!this.getUUID()
             .equals(this.storage.getUUID())) {

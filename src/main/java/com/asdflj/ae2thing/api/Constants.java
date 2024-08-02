@@ -10,4 +10,5 @@ public interface Constants {
     String LINKED = "linked";
     String DISPLAY_ONLY = "DisplayOnly";
     String TC_CRAFTING = "tc_crafting";
+    String IS_EMPTY = "is_empty";
 }
