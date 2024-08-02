@@ -10,6 +10,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.common.item.BaseCellItem;
@@ -355,6 +357,14 @@ public class InfinityItemStorageCellInventory implements ITCellInventory {
             out.add(i);
         }
         return out;
+    }
+
+    @Override
+    public IAEItemStack getAvailableItem(@NotNull IAEItemStack request) {
+        IAEItemStack is = this.getCellItems()
+            .findPrecise(request);
+        if (is != null) return is.copy();
+        return null;
     }
 
     @Override

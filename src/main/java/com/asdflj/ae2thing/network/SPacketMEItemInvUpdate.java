@@ -5,11 +5,16 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
 
 import com.asdflj.ae2thing.client.gui.GuiMonitor;
+import com.asdflj.ae2thing.util.NameConst;
+import com.asdflj.ae2thing.util.Util;
 
 import appeng.api.storage.data.IAEItemStack;
+import appeng.util.ReadableNumberConverter;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -54,12 +59,22 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
                     }
                     gim.setPlayerInv(is);
                 }
-            } else if (gs == null && message.ref == -1) {
+            } else if (gs == null) {
                 Minecraft mc = Minecraft.getMinecraft();
                 EntityClientPlayerMP player = mc.thePlayer;
-                player.inventory.setInventorySlotContents(
-                    player.inventory.currentItem,
-                    ((IAEItemStack) message.list.get(0)).getItemStack());
+                IAEItemStack is = (IAEItemStack) message.list.get(0);
+                if (is == null) return null;
+                if (message.ref == -1) {
+                    player.inventory.setInventorySlotContents(player.inventory.currentItem, is.getItemStack());
+                } else if (message.ref == -2) {
+                    player.addChatMessage(
+                        new ChatComponentText(
+                            I18n.format(
+                                NameConst.TT_CRAFTING_COMPLETE,
+                                Util.getDisplayName(is),
+                                ReadableNumberConverter.INSTANCE.toWideReadableForm(is.getStackSize()))));
+                }
+
             }
             return null;
         }

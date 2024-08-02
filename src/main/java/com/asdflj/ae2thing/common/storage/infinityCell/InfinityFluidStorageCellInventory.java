@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -269,6 +271,12 @@ public class InfinityFluidStorageCellInventory implements ITFluidCellInventory {
             ret.add(fluid);
         }
         return ret;
+    }
+
+    @Override
+    public IAEFluidStack getAvailableItem(@Nonnull IAEFluidStack request) {
+        return this.getCellFluids()
+            .findPrecise(request);
     }
 
     @Override

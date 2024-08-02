@@ -2,17 +2,17 @@ package com.asdflj.ae2thing.coremod.hooker;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.common.parts.PartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.tile.TileInfusionInterface;
 import com.asdflj.ae2thing.inventory.EssentiaInventoryAdaptor;
 import com.asdflj.ae2thing.inventory.ThaumatoriumInventoryAdapter;
-import com.asdflj.ae2thing.util.NameConst;
+import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
 import com.asdflj.ae2thing.util.Util;
 
 import appeng.api.networking.IGrid;
@@ -22,7 +22,6 @@ import appeng.api.parts.IPart;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
 import appeng.util.InventoryAdaptor;
-import appeng.util.ReadableNumberConverter;
 import thaumcraft.common.tiles.TileThaumatorium;
 
 public class CoreModHooks {
@@ -48,12 +47,9 @@ public class CoreModHooks {
                         .getField("requestItem");
                     IAEItemStack is = (IAEItemStack) f.get(cpuCluster);
                     if (is != null) {
-                        player.addChatMessage(
-                            new ChatComponentText(
-                                I18n.format(
-                                    NameConst.TT_CRAFTING_COMPLETE,
-                                    Util.getDisplayName(is),
-                                    ReadableNumberConverter.INSTANCE.toWideReadableForm(is.getStackSize()))));
+                        SPacketMEItemInvUpdate piu = new SPacketMEItemInvUpdate((byte) -2);
+                        piu.appendItem(is);
+                        AE2Thing.proxy.netHandler.sendTo(piu, (EntityPlayerMP) player);
                     }
                 }
             }
