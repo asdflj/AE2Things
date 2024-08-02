@@ -335,6 +335,9 @@ public class InfinityItemStorageCellInventory implements ITCellInventory {
 
     private void saveChanges() {
         this.data.setBoolean(Constants.IS_EMPTY, this.cellItems.isEmpty());
+        if (this.container != null) {
+            this.container.saveChanges(this);
+        }
         AE2ThingAPI.instance()
             .getStorageManager()
             .postChanges(this.cellItem, this.storage, this.drive);

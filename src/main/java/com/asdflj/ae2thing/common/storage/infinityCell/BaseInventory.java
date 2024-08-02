@@ -4,6 +4,7 @@ import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.common.storage.DataStorage;
 
 import appeng.api.implementations.guiobjects.IGuiItemObject;
+import appeng.util.Platform;
 
 public interface BaseInventory extends IGuiItemObject {
 
@@ -12,8 +13,11 @@ public interface BaseInventory extends IGuiItemObject {
     }
 
     default DataStorage getStorage() {
-        return AE2ThingAPI.instance()
-            .getStorageManager()
-            .getStorage(this.getItemStack());
+        if (Platform.isServer()) {
+            return AE2ThingAPI.instance()
+                .getStorageManager()
+                .getStorage(this.getItemStack());
+        }
+        return null;
     }
 }

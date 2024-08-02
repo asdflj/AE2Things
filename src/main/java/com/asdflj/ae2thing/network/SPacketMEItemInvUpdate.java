@@ -3,8 +3,8 @@ package com.asdflj.ae2thing.network;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.client.gui.GuiMonitor;
@@ -56,7 +56,7 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
                 }
             } else if (gs == null && message.ref == -1) {
                 Minecraft mc = Minecraft.getMinecraft();
-                EntityPlayer player = mc.thePlayer;
+                EntityClientPlayerMP player = mc.thePlayer;
                 player.inventory.setInventorySlotContents(
                     player.inventory.currentItem,
                     ((IAEItemStack) message.list.get(0)).getItemStack());
