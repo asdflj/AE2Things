@@ -12,6 +12,7 @@ import com.asdflj.ae2thing.common.item.ItemInfinityStorageCell;
 import com.asdflj.ae2thing.common.item.ItemInfinityStorageFluidCell;
 import com.asdflj.ae2thing.common.item.ItemPartInfusionPatternTerminal;
 import com.asdflj.ae2thing.common.item.ItemPartThaumatoriumInterface;
+import com.asdflj.ae2thing.common.item.ItemPartWirelessConnectorTerminal;
 import com.asdflj.ae2thing.common.item.ItemPhial;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.asdflj.ae2thing.util.NameConst;
@@ -28,6 +29,8 @@ public class ItemAndBlockHolder implements Runnable {
     public static BlockEssentiaDiscretizer ESSENTIA_DISCRETIZER;
     public static ItemInfinityStorageCell ITEM_INFINITY_CELL = new ItemInfinityStorageCell().register();
     public static ItemInfinityStorageFluidCell ITEM_INFINITY_FLUID_CELL = new ItemInfinityStorageFluidCell().register();
+    public static ItemPartWirelessConnectorTerminal WIRELESS_CONNECTOR_TERMINAL = new ItemPartWirelessConnectorTerminal()
+        .register();
     public static ItemCreativeFluidCell ITEM_CREATIVE_WATER_CELL = new ItemCreativeFluidCell(
         NameConst.ITEM_CREATIVE_FLUID_CELL_WATER,
         water_bucket).register();

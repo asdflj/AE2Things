@@ -12,6 +12,7 @@ public class NameConst {
     public static final String ITEM_INFINITY_FLUID_CELL = "infinity_fluid_cell";
     public static final String ITEM_PART_INFUSION_PATTERN_TERMINAL = "part_infusion_pattern_terminal";
     public static final String ITEM_PART_THAUMATORIUM_INTERFACE = "part_thaumatorium_interface";
+    public static final String ITEM_PART_WIRELESS_CONNECTOR_TERMINAL = "part_wireless_connector_terminal";
     public static final String ITEM_PHIAL = "phial";
     public static final String BLOCK_FISHBIG = "fishbig";
     public static final String BLOCK_ESSENTIA_DISCRETIZER = "essentia_discretizer";

@@ -58,4 +58,5 @@ dependencies {
     compileOnly('com.github.GTNewHorizons:ThaumicEnergistics:1.6.18-GTNH:dev') { transitive = false }
     compileOnly('com.github.GTNewHorizons:thaumicinsurgence:0.3.1:dev')
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.5.4-GTNH:dev")
+//    runtimeOnlyNonPublishable('com.github.GTNewHorizons:BetterP2P:1.2.1:dev')
 }
