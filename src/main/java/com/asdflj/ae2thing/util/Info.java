@@ -29,4 +29,24 @@ public class Info {
         this.used = used;
     }
 
+    public String getPosString(){
+        return a.x +
+            "," +
+            a.y +
+            "," +
+            a.z;
+    }
+
+    public String getColor(){
+        return color.toString();
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public String getChannelsUsed(){
+        return String.valueOf(used);
+    }
+
 }
