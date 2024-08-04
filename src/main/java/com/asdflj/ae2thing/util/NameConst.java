@@ -40,15 +40,13 @@ public class NameConst {
     public static final String GUI_TERMINAL_STORE_ACTION = GUI_TERMINAL + "store_action";
     public static final String GUI_TERMINAL_LEFT_CLICK = GUI_TERMINAL + "left_click";
     public static final String GUI_TERMINAL_RIGHT_CLICK = GUI_TERMINAL + "right_click";
-    public static final String GUI_WIRELESS_CONNECTOR_TERMINAL= GUI_KEY + "wireless_connector_terminal.";
-    public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_NAME= GUI_WIRELESS_CONNECTOR_TERMINAL + "name";
-    public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_POS= GUI_WIRELESS_CONNECTOR_TERMINAL + "pos";
-    public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_COLOR= GUI_WIRELESS_CONNECTOR_TERMINAL + "color";
-    public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_CHANNELS_USED= GUI_WIRELESS_CONNECTOR_TERMINAL + "channels_used";
-    public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_BIND= GUI_WIRELESS_CONNECTOR_TERMINAL + "bind";
-    public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_UNBIND= GUI_WIRELESS_CONNECTOR_TERMINAL + "unbind";
-
-
-
+    public static final String GUI_WIRELESS_CONNECTOR_TERMINAL = GUI_KEY + "wireless_connector_terminal.";
+    public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_NAME = GUI_WIRELESS_CONNECTOR_TERMINAL + "name";
+    public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_POS = GUI_WIRELESS_CONNECTOR_TERMINAL + "pos";
+    public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_COLOR = GUI_WIRELESS_CONNECTOR_TERMINAL + "color";
+    public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_CHANNELS_USED = GUI_WIRELESS_CONNECTOR_TERMINAL
+        + "channels_used";
+    public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_BIND = GUI_WIRELESS_CONNECTOR_TERMINAL + "bind";
+    public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_UNBIND = GUI_WIRELESS_CONNECTOR_TERMINAL + "unbind";
 
 }

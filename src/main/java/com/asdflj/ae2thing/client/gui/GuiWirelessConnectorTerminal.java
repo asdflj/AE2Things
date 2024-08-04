@@ -3,11 +3,6 @@ package com.asdflj.ae2thing.client.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import appeng.client.gui.widgets.GuiScrollbar;
-import appeng.core.localization.ButtonToolTips;
-import com.asdflj.ae2thing.client.gui.widget.THGuiWirelessConnector;
-import com.asdflj.ae2thing.client.me.IDisplayRepo;
-import com.asdflj.ae2thing.client.me.WirelessConnectorRepo;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -15,50 +10,64 @@ import org.lwjgl.input.Keyboard;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTerminal;
+import com.asdflj.ae2thing.client.gui.widget.Component;
+import com.asdflj.ae2thing.client.gui.widget.IClickable;
+import com.asdflj.ae2thing.client.gui.widget.METextField;
 import com.asdflj.ae2thing.client.gui.widget.THGuiTextField;
+import com.asdflj.ae2thing.client.me.IDisplayRepo;
+import com.asdflj.ae2thing.client.me.WirelessConnectorRepo;
 import com.asdflj.ae2thing.util.Info;
 
 import appeng.api.config.Settings;
 import appeng.api.config.TerminalStyle;
 import appeng.api.storage.ITerminalHost;
 import appeng.client.gui.AEBaseGui;
+import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.core.AEConfig;
+import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.GuiText;
 import appeng.integration.IntegrationRegistry;
 import appeng.integration.IntegrationType;
 
 public class GuiWirelessConnectorTerminal extends AEBaseGui {
 
-//    public static final int
-    private final int reservedSpace;
+    private int reservedSpace;
     protected static String memoryText = "";
     private int maxRows;
     private int perRow;
     protected int standardSize;
     private int rows;
     protected THGuiTextField searchField;
-    private int offsetY;
     protected final IDisplayRepo repo;
-    private final List<THGuiWirelessConnector> components = new ArrayList<>();
+    private final List<Component> components = new ArrayList<>();
+    private final List<IClickable> clickables = new ArrayList<>();
 
     public GuiWirelessConnectorTerminal(InventoryPlayer inventory, ITerminalHost inv) {
         super(new ContainerWirelessConnectorTerminal(inventory, inv));
         this.xSize = 195;
         this.ySize = 204;
         this.standardSize = this.xSize;
-        this.reservedSpace = 92;
+        this.reservedSpace = 10;
         final GuiScrollbar scrollbar = new GuiScrollbar();
         this.setScrollBar(scrollbar);
         this.repo = new WirelessConnectorRepo(scrollbar);
+
     }
 
     @Override
     public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
         this.fontRendererObj.drawString(this.getGuiDisplayName(GuiText.Terminal.getLocal()), 8, 6, 4210752);
-        for (THGuiWirelessConnector com:this.components){
+        for (IClickable clickable : this.clickables) {
+            if (clickable instanceof METextField tf) {
+                if (tf.isMouseIn(mouseX, mouseY)) {
+                    tf.drawNameMask();
+                    break;
+                }
+            }
+        }
+        for (Component com : this.components) {
             com.draw();
         }
-
     }
 
     public void bindTextureBack(final String file) {
@@ -73,8 +82,8 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
         Keyboard.enableRepeatEvents(true);
         this.maxRows = this.getMaxRows();
         this.perRow = AEConfig.instance.getConfigManager()
-            .getSetting(Settings.TERMINAL_STYLE) != TerminalStyle.FULL ? 9
-                : 9 + ((this.width - this.standardSize) / 42);
+            .getSetting(Settings.TERMINAL_STYLE) != TerminalStyle.FULL ? 1
+                : 1 + ((this.width - this.standardSize) / 42);
 
         final boolean hasNEI = IntegrationRegistry.INSTANCE.isEnabled(IntegrationType.NEI);
 
@@ -89,35 +98,29 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
             this.rows = this.maxRows;
         }
 
-        if (hasNEI) {
-            this.rows--;
-        }
-
         if (this.rows < 3) {
             this.rows = 3;
         }
         super.initGui();
         this.ySize = magicNumber + this.rows * 42 + this.reservedSpace;
         final int unusedSpace = this.height - this.ySize;
-        this.guiTop = unusedSpace < 0 ? 0 : (int) Math.floor(unusedSpace / 4.0f);
-        this.offsetY = this.guiTop + 8;
+        this.guiTop = unusedSpace < 0 ? 0 : (unusedSpace % 10);
 
-        this.searchField = new THGuiTextField(
-            this.fontRendererObj,
-            this.guiLeft + 69,
-            this.guiTop + 3,
-            100,
-            12);
+        this.components.clear();
+        this.clickables.clear();
+        for (int i = 0; i < this.rows; i++) {
+            this.components.add(new Component(this.repo, i, this, 28, 20));
+        }
+        this.getClickables()
+            .sort(((o1, o2) -> o2.getIndex() - o1.getIndex()));
+
+        this.searchField = new THGuiTextField(this.fontRendererObj, this.guiLeft + 69, this.guiTop + 3, 100, 12);
         this.searchField.setEnableBackgroundDrawing(false);
         this.searchField.setMaxStringLength(25);
         this.searchField.setTextColor(0xFFFFFF);
         this.searchField.setVisible(true);
         this.searchField.setMessage(ButtonToolTips.SearchStringTooltip.getLocal());
-        this.components.clear();
-        for (int i = 0; i < this.rows; i++) {
-            this.components.add(new THGuiWirelessConnector(this.repo,i,this.fontRendererObj,28,21));
-        }
-        setSearchString(memoryText,false);
+        setSearchString(memoryText, false);
     }
 
     @Override
@@ -131,15 +134,32 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
     protected void mouseClicked(int xCoord, int yCoord, int btn) {
         this.searchField.mouseClicked(xCoord, yCoord, btn);
         if (btn == 1 && this.searchField.isMouseIn(xCoord, yCoord)) {
-            setSearchString("",true);
+            setSearchString("", true);
+        }
+        IClickable lastClickable = null;
+        for (IClickable click : this.getClickables()) {
+            if (click.mouseClicked(xCoord, yCoord)) {
+                click.onClick();
+                lastClickable = click;
+                break;
+            }
+        }
+        IClickable finalLastClickable = lastClickable;
+        this.getClickables()
+            .stream()
+            .filter(c -> c instanceof METextField && finalLastClickable != c)
+            .forEach(IClickable::unfocused);
+        if (lastClickable == null) {
+            Component.setActiveInfo(null);
         }
         super.mouseClicked(xCoord, yCoord, btn);
     }
 
-    public void setSearchString(String memoryText,boolean updateView) {
+    public void setSearchString(String memoryText, boolean updateView) {
         this.searchField.setText(memoryText);
         this.setScrollBar();
-        if(updateView){
+        if (updateView) {
+            this.repo.setSearchString(memoryText);
             this.repo.updateView();
         }
 
@@ -163,6 +183,11 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
             if (character == ' ' && this.searchField.getText()
                 .isEmpty()) {
                 return;
+            }
+            for (Component com : this.components) {
+                if (com.isFocused()) {
+                    com.textboxKeyTyped(character, key);
+                }
             }
 
             if (this.searchField.textboxKeyTyped(character, key)) {
@@ -192,26 +217,26 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
         for (int x = 0; x < this.rows; x++) {
             this.drawTexturedModalRect(offsetX, offsetY + 18 + x * 42, 0, 18, x_width, 42);
         }
-        this.drawTexturedModalRect(offsetX, offsetY + 16 + this.rows * 42, 0, 145, x_width, 8);
-        for(THGuiWirelessConnector com:this.components){
-            if(com.isMouseIn(mouseX,mouseY)){
-                com.drawNameMask();
-            }
-        }
+        this.drawTexturedModalRect(offsetX, offsetY + 18 + this.rows * 42, 0, 144, x_width, 8);
         if (this.searchField != null) {
             this.searchField.drawTextBox();
         }
     }
 
-    protected String getBackground() {
+    public String getBackground() {
         return "gui/wireless_connector.png";
     }
 
     public void postUpdate(List<Info> list) {
         this.repo.clear();
-        for (Info info:list){
+        for (Info info : list) {
             this.repo.postUpdate(info);
         }
         this.repo.updateView();
+        this.setScrollBar();
+    }
+
+    public List<IClickable> getClickables() {
+        return this.clickables;
     }
 }

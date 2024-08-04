@@ -5,10 +5,14 @@ import java.util.List;
 
 import net.bdew.ae2stuff.grid.Security;
 import net.bdew.ae2stuff.machines.wireless.TileWireless;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.inventory.WirelessConnectorTerminal;
@@ -17,6 +21,7 @@ import com.asdflj.ae2thing.network.SPacketWirelessConnectorUpdate;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IMachineSet;
 import appeng.api.storage.ITerminalHost;
+import appeng.api.util.DimensionalCoord;
 import appeng.container.AEBaseContainer;
 import appeng.hooks.TickHandler;
 import appeng.me.Grid;
@@ -26,6 +31,7 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
 
     private final EntityPlayer player;
     private final WirelessConnectorTerminal terminal;
+    private final List<TileWireless> wirelessTiles = new ArrayList<>();
 
     public ContainerWirelessConnectorTerminal(InventoryPlayer ip, ITerminalHost host) {
         super(ip, host);
@@ -35,8 +41,8 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
 
     public void updateData() {
         if (Platform.isServer()) {
+            wirelessTiles.clear();
             int playerID = Security.getPlayerId(player.getGameProfile());
-            List<TileWireless> wirelessTiles = new ArrayList<>();
             for (Grid grid : TickHandler.INSTANCE.getGridList()) {
                 IMachineSet set = grid.getMachines(TileWireless.class);
                 if (set.isEmpty()) continue;
@@ -53,9 +59,12 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
                 }
             }
             // send to client
-            AE2Thing.proxy.netHandler
-                .sendTo(new SPacketWirelessConnectorUpdate(wirelessTiles), (EntityPlayerMP) player);
+            sendToPlayer();
         }
+    }
+
+    private void sendToPlayer() {
+        AE2Thing.proxy.netHandler.sendTo(new SPacketWirelessConnectorUpdate(wirelessTiles), (EntityPlayerMP) player);
     }
 
     @Override
@@ -64,16 +73,70 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
         super.addCraftingToCrafters(crafting);
     }
 
-    public boolean doLink(TileWireless left, TileWireless right) {
-        if (left == null || right == null || left == right) return false;
+    public void doLink(TileWireless left, TileWireless right) {
+        if (left == null || right == null || left == right) return;
         if (left.isLinked()) left.doUnlink();
         if (right.isLinked()) right.doUnlink();
-        left.doLink(right);
-        return true;
+        try {
+            left.doLink(right);
+        } catch (Exception e) {
+            left.doUnlink();
+            right.doUnlink();
+            ChatComponentText s = new ChatComponentText(
+                I18n.format("ae2stuff.wireless.tool.failed") + ": " + e.getMessage());
+            s.getChatStyle()
+                .setColor(EnumChatFormatting.RED);
+            this.player.addChatComponentMessage(s);
+        }
     }
 
     public void doUnlink(TileWireless tile) {
         if (tile == null) return;
         if (tile.isLinked()) tile.doUnlink();
+    }
+
+    public void setName(String name, NBTTagCompound tag) {
+        if (tag == null) return;
+        DimensionalCoord d = DimensionalCoord.readFromNBT(tag);
+        for (TileWireless tile : wirelessTiles) {
+            if (tile.getLocation()
+                .hashCode() == d.hashCode()) {
+                tile.setCustomName(name);
+                sendToPlayer();
+            }
+        }
+    }
+
+    public void bind(NBTTagCompound tag) {
+        if (tag == null) return;
+        DimensionalCoord a = DimensionalCoord.readFromNBT((NBTTagCompound) tag.getTag("#0"));
+        DimensionalCoord b = DimensionalCoord.readFromNBT((NBTTagCompound) tag.getTag("#1"));
+        TileWireless ta = null;
+        TileWireless tb = null;
+        for (TileWireless tile : wirelessTiles) {
+            if (tile.getLocation()
+                .hashCode() == a.hashCode()) {
+                ta = tile;
+            } else if (tile.getLocation()
+                .hashCode() == b.hashCode()) {
+                    tb = tile;
+                }
+            if (ta != null && tb != null) {
+                doLink(ta, tb);
+                sendToPlayer();
+            }
+        }
+    }
+
+    public void unBind(NBTTagCompound tag) {
+        if (tag == null) return;
+        DimensionalCoord d = DimensionalCoord.readFromNBT((NBTTagCompound) tag.getTag("#0"));
+        for (TileWireless tile : wirelessTiles) {
+            if (tile.getLocation()
+                .hashCode() == d.hashCode()) {
+                doUnlink(tile);
+                sendToPlayer();
+            }
+        }
     }
 }

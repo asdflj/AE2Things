@@ -90,7 +90,7 @@ public class SPacketWirelessConnectorUpdate implements IMessage {
                 data.setBoolean("is_linked", tile.isLinked());
                 data.setInteger(
                     "used",
-                    tile.isLinked() ? tile.connection()
+                    tile.connection() != null ? tile.connection()
                         .getUsedChannels() : 0);
                 if (tile.isLinked()) {
                     NBTTagCompound t = new NBTTagCompound();

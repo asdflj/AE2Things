@@ -1,20 +1,17 @@
 package com.asdflj.ae2thing.client.me;
 
-import appeng.api.storage.data.IAEItemStack;
-import appeng.client.gui.widgets.IScrollSource;
-import appeng.client.me.ItemRepo;
-import appeng.util.Platform;
-import appeng.util.item.OreHelper;
-import appeng.util.item.OreReference;
-import com.asdflj.ae2thing.util.Info;
-import net.minecraft.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.asdflj.ae2thing.util.Info;
+
+import appeng.client.gui.widgets.IScrollSource;
+
 public class WirelessConnectorRepo implements IDisplayRepo {
+
     private final IScrollSource src;
     private final List<Info> infos = new ArrayList<>();
     private final List<Info> dsp = new ArrayList<>();
@@ -72,7 +69,8 @@ public class WirelessConnectorRepo implements IDisplayRepo {
                 default -> dspName = info.getName();
             }
             if (dspName == null) continue;
-            if (m.matcher(dspName.toLowerCase()).find()) {
+            if (m.matcher(dspName.toLowerCase())
+                .find()) {
                 this.dsp.add(info);
             }
         }
@@ -108,7 +106,10 @@ public class WirelessConnectorRepo implements IDisplayRepo {
     public void setSearchString(@NotNull String searchString) {
         this.searchString = searchString;
     }
+
     enum SearchMode {
-        NAME,POS,COLOR
+        NAME,
+        POS,
+        COLOR
     }
 }

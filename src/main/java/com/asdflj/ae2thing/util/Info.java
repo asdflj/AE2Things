@@ -29,24 +29,31 @@ public class Info {
         this.used = used;
     }
 
-    public String getPosString(){
-        return a.x +
-            "," +
-            a.y +
-            "," +
-            a.z;
+    public String getPosString() {
+        return a.x + "," + a.y + "," + a.z;
     }
 
-    public String getColor(){
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getColor() {
         return color.toString();
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public String getChannelsUsed(){
+    public String getChannelsUsed() {
         return String.valueOf(used);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Info i) {
+            return this.a.hashCode() == i.a.hashCode();
+        }
+        return false;
+    }
 }
