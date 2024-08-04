@@ -8,13 +8,16 @@ import net.minecraftforge.event.world.WorldEvent;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.common.parts.PartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.storage.StorageManager;
+import com.asdflj.ae2thing.common.tile.TileInfusionInterface;
 import com.asdflj.ae2thing.loader.ItemAndBlockHolder;
 import com.asdflj.ae2thing.network.wrapper.AE2ThingNetworkWrapper;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.darkona.adventurebackpack.item.ItemAdventureBackpack;
 
 import appeng.api.config.Upgrades;
+import appeng.core.features.registries.InterfaceTerminalRegistry;
 import appeng.util.Platform;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -79,6 +82,10 @@ public class CommonProxy {
                     .setDefaultFluidContainer(Ic2Items.cell);
             }
         }
+        InterfaceTerminalRegistry.instance()
+            .register(TileInfusionInterface.class);
+        InterfaceTerminalRegistry.instance()
+            .register(PartThaumatoriumInterface.class);
     }
 
     public void onLoadComplete(FMLLoadCompleteEvent event) {

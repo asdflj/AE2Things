@@ -182,7 +182,7 @@ public class Component implements IClickable {
     public void onClick() {
         Info info = this.repo.getInfo(idx);
         if (info == null) return;
-        activeInfo = info;
+        setActiveInfo(info);
     }
 
     @Override

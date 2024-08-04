@@ -35,7 +35,7 @@ public class THGuiButton extends GuiButton implements IClickable {
         Info info = component.getInfo();
         if (info != null && Component.activeInfo != null) {
             sendToServer(packetName, Component.activeInfo, info);
-            Component.activeInfo = null;
+            Component.setActiveInfo(null);
         }
     }
 
