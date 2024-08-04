@@ -41,6 +41,10 @@ public class Info {
         return color.toString();
     }
 
+    public AEColor getAEColor() {
+        return color;
+    }
+
     public String getName() {
         return name;
     }

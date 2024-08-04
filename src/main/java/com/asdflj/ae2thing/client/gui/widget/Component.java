@@ -18,6 +18,8 @@ import com.asdflj.ae2thing.util.Info;
 import com.asdflj.ae2thing.util.NameConst;
 import com.asdflj.ae2thing.util.Util;
 
+import appeng.api.util.AEColor;
+
 public class Component implements IClickable {
 
     public static Info activeInfo = null;
@@ -138,6 +140,9 @@ public class Component implements IClickable {
             } else if (!activeInfo.link && info.dim == activeInfo.dim) {
                 drawBindBtn();
             }
+        } else {
+            this.unbind.visible = false;
+            this.bind.visible = false;
         }
         this.render.drawString(this.getName(info), x, y, 4210752);
         this.render.drawString(
@@ -155,12 +160,29 @@ public class Component implements IClickable {
             x,
             y + 10 * 3,
             4210752);
+        drawWirelessConnector(info);
+    }
+
+    private void drawWirelessConnector(Info info) {
         GL11.glColor4f(255, 255, 255, 255);
         this.gui.bindTextureBack(this.gui.getBackground());
         if (info.link) {
-            this.gui.drawTexturedModalRect(10, 32 + offsetY * idx, 224, 0, 16, 16);
+            this.gui.drawTexturedModalRect(10, 40 + offsetY * idx, 224, 0, 16, 16);
+            if (info.getAEColor() == AEColor.Transparent) {
+                this.gui.drawTexturedModalRect(10, 20 + offsetY * idx, 224, 16, 16, 16);
+            } else {
+                this.gui.drawTexturedModalRect(
+                    10,
+                    20 + offsetY * idx,
+                    208,
+                    info.getAEColor()
+                        .ordinal() * 16,
+                    16,
+                    16);
+            }
         } else {
-            this.gui.drawTexturedModalRect(10, 32 + offsetY * idx, 240, 0, 16, 16);
+            this.gui.drawTexturedModalRect(10, 40 + offsetY * idx, 240, 0, 16, 16);
+            this.gui.drawTexturedModalRect(10, 20 + offsetY * idx, 240, 16, 16, 16);
         }
     }
 
