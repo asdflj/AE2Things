@@ -81,11 +81,12 @@ public class CommonProxy {
                 AE2ThingAPI.instance()
                     .setDefaultFluidContainer(Ic2Items.cell);
             }
+            InterfaceTerminalRegistry.instance()
+                .register(TileInfusionInterface.class);
+            InterfaceTerminalRegistry.instance()
+                .register(PartThaumatoriumInterface.class);
         }
-        InterfaceTerminalRegistry.instance()
-            .register(TileInfusionInterface.class);
-        InterfaceTerminalRegistry.instance()
-            .register(PartThaumatoriumInterface.class);
+
     }
 
     public void onLoadComplete(FMLLoadCompleteEvent event) {

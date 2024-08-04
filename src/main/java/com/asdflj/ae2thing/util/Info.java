@@ -52,7 +52,7 @@ public class Info {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Info i) {
-            return this.a.hashCode() == i.a.hashCode();
+            return a.x == i.a.x && a.y == i.a.y && a.z == i.a.z && a.getDimension() == i.a.getDimension();
         }
         return false;
     }

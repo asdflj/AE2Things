@@ -17,6 +17,7 @@ import net.minecraft.util.EnumChatFormatting;
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.inventory.WirelessConnectorTerminal;
 import com.asdflj.ae2thing.network.SPacketWirelessConnectorUpdate;
+import com.asdflj.ae2thing.util.Util;
 
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IMachineSet;
@@ -99,8 +100,7 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
         if (tag == null) return;
         DimensionalCoord d = DimensionalCoord.readFromNBT(tag);
         for (TileWireless tile : wirelessTiles) {
-            if (tile.getLocation()
-                .hashCode() == d.hashCode()) {
+            if (Util.isSameDimensionalCoord(tile.getLocation(), d)) {
                 tile.setCustomName(name);
                 sendToPlayer();
             }
@@ -114,13 +114,11 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
         TileWireless ta = null;
         TileWireless tb = null;
         for (TileWireless tile : wirelessTiles) {
-            if (tile.getLocation()
-                .hashCode() == a.hashCode()) {
+            if (Util.isSameDimensionalCoord(tile.getLocation(), a)) {
                 ta = tile;
-            } else if (tile.getLocation()
-                .hashCode() == b.hashCode()) {
-                    tb = tile;
-                }
+            } else if (Util.isSameDimensionalCoord(tile.getLocation(), b)) {
+                tb = tile;
+            }
             if (ta != null && tb != null) {
                 doLink(ta, tb);
                 sendToPlayer();
@@ -132,8 +130,7 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
         if (tag == null) return;
         DimensionalCoord d = DimensionalCoord.readFromNBT((NBTTagCompound) tag.getTag("#0"));
         for (TileWireless tile : wirelessTiles) {
-            if (tile.getLocation()
-                .hashCode() == d.hashCode()) {
+            if (Util.isSameDimensionalCoord(tile.getLocation(), d)) {
                 doUnlink(tile);
                 sendToPlayer();
             }

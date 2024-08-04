@@ -16,6 +16,7 @@ import com.asdflj.ae2thing.client.gui.GuiWirelessConnectorTerminal;
 import com.asdflj.ae2thing.client.me.IDisplayRepo;
 import com.asdflj.ae2thing.util.Info;
 import com.asdflj.ae2thing.util.NameConst;
+import com.asdflj.ae2thing.util.Util;
 
 public class Component implements IClickable {
 
@@ -126,7 +127,7 @@ public class Component implements IClickable {
             this.textField.drawTextBox();
         }
         if (activeInfo != null) {
-            if (activeInfo.link && activeInfo.b.hashCode() == info.a.hashCode()) {
+            if (activeInfo.link && Util.isSameDimensionalCoord(activeInfo.b, info.a)) {
                 drawBackground(INACTIVE_COLOR);
                 drawUnbindBtn();
             } else if (info.equals(activeInfo) && info.link) {
