@@ -46,7 +46,7 @@ import thaumicenergistics.common.integration.tc.AspectHooks;
 public class Util {
 
     public static boolean isSameDimensionalCoord(DimensionalCoord a, DimensionalCoord b) {
-        return a.x == b.x && a.y == b.y && a.z == b.z && a.getDimension() == b.getDimension();
+        return a != null && b != null && a.x == b.x && a.y == b.y && a.z == b.z && a.getDimension() == b.getDimension();
     }
 
     private static int randTickSeed = 0;

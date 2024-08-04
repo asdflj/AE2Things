@@ -30,7 +30,7 @@ public class Info {
     }
 
     public String getPosString() {
-        return a.x + "," + a.y + "," + a.z;
+        return a.x + "," + a.y + "," + a.z + "  " + a.getDimension();
     }
 
     public void setName(String name) {

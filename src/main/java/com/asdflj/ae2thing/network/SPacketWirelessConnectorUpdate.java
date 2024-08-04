@@ -3,7 +3,6 @@ package com.asdflj.ae2thing.network;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +25,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import scala.Option;
 
 public class SPacketWirelessConnectorUpdate implements IMessage {
 
@@ -44,8 +44,9 @@ public class SPacketWirelessConnectorUpdate implements IMessage {
     public void fromBytes(ByteBuf buf) {
         try {
             int size = buf.readShort();
-            ByteArrayInputStream bytes = new ByteArrayInputStream(buf.array());
-            bytes.skip(3);
+            ByteArrayInputStream bytes = new ByteArrayInputStream(
+                buf.readBytes(buf.readableBytes())
+                    .array());
             final NBTTagCompound comp = CompressedStreamTools.readCompressed(bytes);
             if (comp != null) {
                 for (int x = 0; x < size; x++) {
@@ -58,14 +59,15 @@ public class SPacketWirelessConnectorUpdate implements IMessage {
                     infos.add(
                         new Info(
                             a,
-                            is_linked ? DimensionalCoord.readFromNBT((NBTTagCompound) tag.getTag("link")) : null,
+                            tag.hasKey("link") ? DimensionalCoord.readFromNBT((NBTTagCompound) tag.getTag("link"))
+                                : null,
                             name,
                             color,
                             is_linked,
                             used));
                 }
             }
-        } catch (IOException ignored) {
+        } catch (Exception ignored) {
 
         }
 
@@ -94,11 +96,13 @@ public class SPacketWirelessConnectorUpdate implements IMessage {
                         .getUsedChannels() : 0);
                 if (tile.isLinked()) {
                     NBTTagCompound t = new NBTTagCompound();
-                    tile.getLink()
-                        .get()
-                        .getLocation()
-                        .writeToNBT(t);
-                    data.setTag("link", t);
+                    Option<TileWireless> other = tile.getLink();
+                    if (!other.isEmpty()) {
+                        other.get()
+                            .getLocation()
+                            .writeToNBT(t);
+                        data.setTag("link", t);
+                    }
                 }
                 tag.setTag("#" + count, data);
                 count++;
@@ -110,7 +114,7 @@ public class SPacketWirelessConnectorUpdate implements IMessage {
             data.writeBytes(bytes.toByteArray());
             data.capacity(data.readableBytes());
             buf.writeBytes(data);
-        } catch (IOException ignored) {
+        } catch (Exception ignored) {
 
         }
     }

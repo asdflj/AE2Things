@@ -113,7 +113,7 @@ public class Component implements IClickable {
         this.unbind.drawButton(this.gui.mc, mouse.x - this.gui.getGuiLeft(), mouse.y - this.gui.getGuiTop());
     }
 
-    public void drawbindBtn() {
+    public void drawBindBtn() {
         this.unbind.visible = false;
         this.bind.visible = true;
         MousePos mouse = new MousePos();
@@ -135,8 +135,8 @@ public class Component implements IClickable {
                 drawUnbindBtn();
             } else if (!activeInfo.link && info.equals(activeInfo)) {
                 drawBackground(SELECTED_COLOR);
-            } else if (!activeInfo.link) {
-                drawbindBtn();
+            } else if (!activeInfo.link && info.dim == activeInfo.dim) {
+                drawBindBtn();
             }
         }
         this.render.drawString(this.getName(info), x, y, 4210752);
