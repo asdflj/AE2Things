@@ -33,6 +33,7 @@ public class WirelessObject {
     private IGridNode gridNode;
     private IGrid grid;
     private IEnergySource energySource;
+    private WirelessConnectorTerminalInventory wirelessConnectorTerminal;
 
     public WirelessObject(ItemStack item, World world, int x, int y, int z, EntityPlayer player)
         throws AppEngException {
@@ -93,7 +94,10 @@ public class WirelessObject {
     }
 
     public Object getInventory() {
-        return new WirelessConnectorTerminalInventory(this);
+        if (wirelessConnectorTerminal == null) {
+            this.wirelessConnectorTerminal = new WirelessConnectorTerminalInventory(this);
+        }
+        return wirelessConnectorTerminal;
     }
 
     public IGridNode getWirelessGrid() {
