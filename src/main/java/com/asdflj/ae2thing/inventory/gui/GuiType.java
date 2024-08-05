@@ -13,11 +13,13 @@ import com.asdflj.ae2thing.client.gui.GuiCraftingStatus;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiPatternValueAmount;
+import com.asdflj.ae2thing.client.gui.GuiWirelessConnectorTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerCellLink;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftConfirm;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
+import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTerminal;
 import com.asdflj.ae2thing.common.parts.THPart;
 import com.asdflj.ae2thing.inventory.ItemCellLinkInventory;
 import com.google.common.collect.ImmutableList;
@@ -38,6 +40,30 @@ public enum GuiType {
         @Override
         protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
             return new GuiCraftingTerminal(player.inventory, inv);
+        }
+    }),
+    WIRELESS_CONNECTOR_TERMINAL(new PartGuiFactory<>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerWirelessConnectorTerminal(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiWirelessConnectorTerminal(player.inventory, inv);
+        }
+    }),
+    WIRELESS_CONNECTOR_TERMINAL_ITEM(new ItemGuiFactory<>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerWirelessConnectorTerminal(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiWirelessConnectorTerminal(player.inventory, inv);
         }
     }),
 

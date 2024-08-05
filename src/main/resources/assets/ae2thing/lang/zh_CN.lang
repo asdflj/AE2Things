@@ -5,6 +5,8 @@ item.creative_fluid_cell.water.name=创造ME流体存储元件(水)
 item.creative_fluid_cell.lava.name=创造ME流体存储元件(岩浆)
 item.part_infusion_pattern_terminal.name=ME注魔样板终端
 item.part_thaumatorium_interface.name=ME炼金接口
+item.part_wireless_connector_terminal.name=ME无线连接终端
+item.wireless_connector_terminal.name=ME无线连接终端
 tile.fishbig.name=鱼大
 tile.essentia_discretizer.name=源质散离器
 tile.infusion_interface.name=ME注魔接口
@@ -25,7 +27,17 @@ ae2thing.gui.cell_link=元件链接
 ae2thing.gui.terminal.store_action=%s：存入 %s
 ae2thing.gui.terminal.left_click=左键点击
 ae2thing.gui.terminal.right_click=右键点击
+ae2thing.gui.wireless_connector_terminal.name=名字
+ae2thing.gui.wireless_connector_terminal.pos=位置
+ae2thing.gui.wireless_connector_terminal.color=颜色
+ae2thing.gui.wireless_connector_terminal.channels_used=已使用频道
+ae2thing.gui.wireless_connector_terminal.bind=绑定
+ae2thing.gui.wireless_connector_terminal.unbind=解绑
+ae2thing.gui.wireless_connector_terminal.search_tooltip=§4#§r - 搜索位置 \n§e$§r - 搜索颜色
+ae2thing.gui.wireless_connector_terminal.highlight=无线连接器已高亮，坐标：%d, %d, %d 世界:%d
+ae2thing.gui.wireless_connector_terminal.in_other_dim=无线连接器位于 %d 世界，无法高亮显示
 
 ae2thing.key.open_terminal=打开终端
 
 itemGroup.ae2thing=AE2 Thing
+

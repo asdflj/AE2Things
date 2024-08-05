@@ -8,12 +8,15 @@ import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.INFUSION_PATTERN_TER
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_CREATIVE_WATER_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_FLUID_CELL;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_WIRELESS_CONNECTOR_TERMINAL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.THAUMATRIUM_INTERFACE;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.WIRELESS_CONNECTOR_TERMINAL;
 import static com.glodblock.github.loader.ItemAndBlockHolder.CELL_HOUSING;
 import static thaumcraft.common.config.ConfigItems.itemResource;
 import static thaumcraft.common.config.ConfigItems.itemThaumonomicon;
 import static thaumicenergistics.common.blocks.BlockEnum.DISTILLATION_ENCODER;
 
+import net.bdew.ae2stuff.machines.wireless.MachineWireless;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -43,6 +46,12 @@ public class RecipeLoader implements Runnable {
         1);
     public static final ItemStack AE2FC_DIGITAL_SINGULARITY_CELL = com.glodblock.github.loader.ItemAndBlockHolder.SINGULARITY_CELL
         .stack();
+    public static final ItemStack AE2_WIRELESS_TERMINAL = GameRegistry
+        .findItemStack("appliedenergistics2", "item.ToolWirelessTerminal", 1);
+    public static final ItemStack AE2_TERMINAL = new ItemStack(
+        GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"),
+        1,
+        380);
 
     @Override
     public void run() {
@@ -68,6 +77,11 @@ public class RecipeLoader implements Runnable {
                 "CCC",
                 'C',
                 AE2FC_DIGITAL_SINGULARITY_CELL));
+        GameRegistry.addShapelessRecipe(
+            ITEM_WIRELESS_CONNECTOR_TERMINAL.stack(),
+            AE2_WIRELESS_TERMINAL,
+            MachineWireless.block());
+        GameRegistry.addShapelessRecipe(WIRELESS_CONNECTOR_TERMINAL.stack(), AE2_TERMINAL, MachineWireless.block());
         if (ModAndClassUtil.THE) {
             final ItemStack THAUMIUM_INGOT = new ItemStack(itemResource, 1, 2);
             final ItemStack RUNIC_MATRIX = new ItemStack(ConfigBlocks.blockStoneDevice, 1, 2);

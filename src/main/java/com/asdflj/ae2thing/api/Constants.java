@@ -11,4 +11,8 @@ public interface Constants {
     String DISPLAY_ONLY = "DisplayOnly";
     String TC_CRAFTING = "tc_crafting";
     String IS_EMPTY = "is_empty";
+    int OUTPUT_COLOR = 0x4566ccff;
+    int ERROR_COLOR = 0x45DA4527;
+    int INACTIVE_COLOR = 0x45FFEA05;
+    int SELECTED_COLOR = 0x4545DA75;
 }

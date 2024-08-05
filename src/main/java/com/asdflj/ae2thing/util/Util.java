@@ -33,6 +33,7 @@ import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.util.DimensionalCoord;
 import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
@@ -43,6 +44,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import thaumicenergistics.common.integration.tc.AspectHooks;
 
 public class Util {
+
+    public static boolean isSameDimensionalCoord(DimensionalCoord a, DimensionalCoord b) {
+        return a != null && b != null && a.x == b.x && a.y == b.y && a.z == b.z && a.getDimension() == b.getDimension();
+    }
 
     private static int randTickSeed = 0;
 
