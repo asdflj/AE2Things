@@ -16,9 +16,12 @@ import net.minecraft.util.EnumChatFormatting;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.inventory.WirelessConnectorTerminal;
+import com.asdflj.ae2thing.inventory.item.WirelessConnectorTerminalInventory;
 import com.asdflj.ae2thing.network.SPacketWirelessConnectorUpdate;
 import com.asdflj.ae2thing.util.Util;
 
+import appeng.api.config.Actionable;
+import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IMachineSet;
 import appeng.api.storage.ITerminalHost;
@@ -33,11 +36,13 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
     private final EntityPlayer player;
     private final WirelessConnectorTerminal terminal;
     private final List<TileWireless> wirelessTiles = new ArrayList<>();
+    private int ticks;
+    private final double powerMultiplier = 0.5;
 
     public ContainerWirelessConnectorTerminal(InventoryPlayer ip, ITerminalHost host) {
         super(ip, host);
         this.player = ip.player;
-        terminal = (WirelessConnectorTerminal) host;
+        this.terminal = (WirelessConnectorTerminal) host;
     }
 
     public void updateData() {
@@ -62,6 +67,19 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
             // send to client
             sendToPlayer();
         }
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+        if (Platform.isServer() && this.terminal instanceof WirelessConnectorTerminalInventory wt) {
+            ticks = wt.getWirelessObject()
+                .extractPower(getPowerMultiplier() * ticks, Actionable.MODULATE, PowerMultiplier.CONFIG, ticks);
+        }
+    }
+
+    public double getPowerMultiplier() {
+        return this.powerMultiplier;
     }
 
     private void sendToPlayer() {

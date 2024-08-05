@@ -6,6 +6,7 @@ item.creative_fluid_cell.lava.name=Creative ME Fluid Storage Cell (Lava)
 item.part_infusion_pattern_terminal.name=ME Infusion Pattern Terminal
 item.part_thaumatorium_interface.name=ME Thaumatorium Interface
 item.part_wireless_connector_terminal.name=ME Wireless Connector Terminal
+item.wireless_connector_terminal.name=ME Wireless Connector Terminal
 tile.fishbig.name=FishBig
 tile.essentia_discretizer.name=Essentia Discretizer
 tile.infusion_interface.name=ME Infusion Interface
@@ -32,6 +33,9 @@ ae2thing.gui.wireless_connector_terminal.color=Color
 ae2thing.gui.wireless_connector_terminal.channels_used=Channels used
 ae2thing.gui.wireless_connector_terminal.bind=Bind
 ae2thing.gui.wireless_connector_terminal.unbind=Unbind
+ae2thing.gui.wireless_connector_terminal.search_tooltip=§4#§r - Search Position \n§e$§r - Search Color 
+ae2thing.gui.wireless_connector_terminal.highlight=The wireless connector is now highlighted at %d,%d,%d dimension:%d
+ae2thing.gui.wireless_connector_terminal.in_other_dim=Wireless connector located at dimension: %d and cant be highlighted
 ae2thing.key.open_terminal=Open Terminal
 
 itemGroup.ae2thing=AE2 Thing

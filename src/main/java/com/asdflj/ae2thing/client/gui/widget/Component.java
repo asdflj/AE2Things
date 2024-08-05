@@ -30,11 +30,11 @@ public class Component implements IClickable {
     private final FontRenderer render;
     private final int x;
     private final int y;
-    private final int nameWidth;
     private final GuiWirelessConnectorTerminal gui;
     private final METextField textField;
     private final THGuiButton unbind;
     private final THGuiButton bind;
+    private final HighLightButton highLightBtn;
 
     public Component(IDisplayRepo repo, int idx, GuiWirelessConnectorTerminal gui, int x, int y) {
         this.textField = new METextField(110, 12, this, gui.getGuiLeft(), gui.getGuiTop());
@@ -44,8 +44,8 @@ public class Component implements IClickable {
         this.render = gui.getFontRenderer();
         this.x = x;
         this.y = y + offsetY * idx;
-        this.nameWidth = this.render.getStringWidth(I18n.format(NameConst.GUI_WIRELESS_CONNECTOR_TERMINAL_NAME) + ": ");
-        this.textField.x = x + nameWidth;
+        this.textField.x = x
+            + this.render.getStringWidth(I18n.format(NameConst.GUI_WIRELESS_CONNECTOR_TERMINAL_NAME) + ": ");
         this.textField.y = this.y - 2;
         this.textField.setVisible(false);
         this.bind = new THGuiButton(
@@ -68,6 +68,14 @@ public class Component implements IClickable {
             gui.getGuiTop(),
             this,
             "WirelessConnectorTerminal.Unbind");
+        this.highLightBtn = new HighLightButton(
+            this.x + render.getStringWidth(I18n.format(NameConst.GUI_WIRELESS_CONNECTOR_TERMINAL_POS) + ": "),
+            this.y + 10 * 2,
+            0,
+            render.FONT_HEIGHT,
+            gui.getGuiLeft(),
+            gui.getGuiTop(),
+            this);
         this.gui.getClickables()
             .add(this);
         this.gui.getClickables()
@@ -76,6 +84,8 @@ public class Component implements IClickable {
             .add(this.unbind);
         this.gui.getClickables()
             .add(this.textField);
+        this.gui.getClickables()
+            .add(this.highLightBtn);
     }
 
     private String getName(Info info) {
@@ -125,6 +135,7 @@ public class Component implements IClickable {
     public void draw() {
         Info info = getInfo();
         if (info == null) return;
+        this.highLightBtn.setWidth(render.getStringWidth(info.getPosString()));
         if (this.textField.isVisible()) {
             this.textField.drawTextBox();
         }
@@ -215,5 +226,9 @@ public class Component implements IClickable {
 
     public static void setActiveInfo(Info info) {
         activeInfo = info;
+    }
+
+    public GuiWirelessConnectorTerminal getGui() {
+        return gui;
     }
 }

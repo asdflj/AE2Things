@@ -54,6 +54,18 @@ public enum GuiType {
             return new GuiWirelessConnectorTerminal(player.inventory, inv);
         }
     }),
+    WIRELESS_CONNECTOR_TERMINAL_ITEM(new ItemGuiFactory<>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerWirelessConnectorTerminal(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiWirelessConnectorTerminal(player.inventory, inv);
+        }
+    }),
 
     INFUSION_PATTERN_TERMINAL(new PartGuiFactory<>(ITerminalHost.class) {
 

@@ -74,7 +74,6 @@ public class WirelessConnectorRepo implements IDisplayRepo {
                 this.dsp.add(info);
             }
         }
-
     }
 
     @Override
