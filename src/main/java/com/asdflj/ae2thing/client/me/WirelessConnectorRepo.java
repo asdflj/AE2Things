@@ -74,6 +74,9 @@ public class WirelessConnectorRepo implements IDisplayRepo {
                 this.dsp.add(info);
             }
         }
+        this.dsp.sort(
+            (o1, o2) -> o2.getName()
+                .compareTo(o1.getName()));
     }
 
     @Override
