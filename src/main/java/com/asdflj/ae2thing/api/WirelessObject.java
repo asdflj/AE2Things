@@ -20,6 +20,7 @@ import appeng.api.util.WorldCoord;
 import appeng.core.localization.PlayerMessages;
 import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.tile.networking.TileWireless;
+import appeng.util.Platform;
 
 public class WirelessObject {
 
@@ -29,8 +30,8 @@ public class WirelessObject {
     private final int y;
     private final int z;
     private final EntityPlayer player;
-    private final IGridNode gridNode;
-    private final IGrid grid;
+    private IGridNode gridNode;
+    private IGrid grid;
     private IEnergySource energySource;
 
     public WirelessObject(ItemStack item, World world, int x, int y, int z, EntityPlayer player)
@@ -41,13 +42,15 @@ public class WirelessObject {
         this.y = y;
         this.z = z;
         this.player = player;
-        this.gridNode = getWirelessGrid();
-        if (gridNode == null || !rangeCheck()) {
-            throw new AppEngException(
-                PlayerMessages.OutOfRange.get()
-                    .toString());
+        if (Platform.isServer()) {
+            this.gridNode = getWirelessGrid();
+            if (gridNode == null || !rangeCheck()) {
+                throw new AppEngException(
+                    PlayerMessages.OutOfRange.get()
+                        .toString());
+            }
+            this.grid = this.gridNode.getGrid();
         }
-        this.grid = this.gridNode.getGrid();
     }
 
     public ItemStack getItemStack() {

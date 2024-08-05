@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -37,7 +39,10 @@ public class SPacketWirelessConnectorUpdate implements IMessage {
     }
 
     public SPacketWirelessConnectorUpdate(List<TileWireless> list) {
-        tiles.addAll(list);
+        tiles.addAll(
+            list.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList()));
     }
 
     @Override
