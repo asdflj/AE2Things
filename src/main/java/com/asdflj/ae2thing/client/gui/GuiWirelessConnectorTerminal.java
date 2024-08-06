@@ -219,7 +219,7 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
             .setLeft(175)
             .setHeight(this.rows * 42 - 2);
         this.getScrollBar()
-            .setRange(0, (this.repo.size() + this.perRow - 1) / this.perRow - this.rows, Math.max(1, this.rows / 6));
+            .setRange(0, (this.repo.size() + this.perRow - 1) / this.perRow - this.rows, 1);
     }
 
     @Override

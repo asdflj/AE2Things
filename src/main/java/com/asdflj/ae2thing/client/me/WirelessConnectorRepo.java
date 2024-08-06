@@ -82,7 +82,7 @@ public class WirelessConnectorRepo implements IDisplayRepo {
 
     @Override
     public int size() {
-        return this.infos.size();
+        return this.dsp.size();
     }
 
     @Override
