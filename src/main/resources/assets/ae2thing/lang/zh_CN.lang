@@ -33,7 +33,7 @@ ae2thing.gui.wireless_connector_terminal.color=颜色
 ae2thing.gui.wireless_connector_terminal.channels_used=已使用频道
 ae2thing.gui.wireless_connector_terminal.bind=绑定
 ae2thing.gui.wireless_connector_terminal.unbind=解绑
-ae2thing.gui.wireless_connector_terminal.search_tooltip=§4#§r - 搜索位置 \n§e$§r - 搜索颜色
+ae2thing.gui.wireless_connector_terminal.search_tooltip=§b§n标签分类§r \n§d#§r - 搜索位置 \n§6~§r - 搜索颜色 \n§a@b§r - 只显示已绑定的无线连接器 \n§4@u§r - 只显示未绑定的无线连接器 \n§9@c§r - 只显示已点击的无线连接器 \n标签以空格分隔,并使用 AND 运算符组合.
 ae2thing.gui.wireless_connector_terminal.highlight=无线连接器已高亮，坐标：%d, %d, %d 世界:%d
 ae2thing.gui.wireless_connector_terminal.in_other_dim=无线连接器位于 %d 世界，无法高亮显示
 

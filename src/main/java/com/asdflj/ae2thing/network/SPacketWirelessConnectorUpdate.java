@@ -17,6 +17,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
+import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.client.gui.GuiWirelessConnectorTerminal;
 import com.asdflj.ae2thing.util.Info;
 
@@ -57,14 +58,15 @@ public class SPacketWirelessConnectorUpdate implements IMessage {
                 for (int x = 0; x < size; x++) {
                     final NBTTagCompound tag = (NBTTagCompound) comp.getTag("#" + x);
                     DimensionalCoord a = DimensionalCoord.readFromNBT(tag);
-                    String name = tag.getString("name");
-                    AEColor color = AEColor.values()[tag.getInteger("color")];
-                    boolean is_linked = tag.getBoolean("is_linked");
-                    int used = tag.getInteger("used");
+                    String name = tag.getString(Constants.NAME);
+                    AEColor color = AEColor.values()[tag.getInteger(Constants.COLOR)];
+                    boolean is_linked = tag.getBoolean(Constants.IS_LINKED);
+                    int used = tag.getInteger(Constants.USED_CHANNELS);
                     infos.add(
                         new Info(
                             a,
-                            tag.hasKey("link") ? DimensionalCoord.readFromNBT((NBTTagCompound) tag.getTag("link"))
+                            tag.hasKey(Constants.LINK)
+                                ? DimensionalCoord.readFromNBT((NBTTagCompound) tag.getTag(Constants.LINK))
                                 : null,
                             name,
                             color,
@@ -89,14 +91,16 @@ public class SPacketWirelessConnectorUpdate implements IMessage {
                 NBTTagCompound data = new NBTTagCompound();
                 tile.getLocation()
                     .writeToNBT(data);
-                data.setString("name", tile.hasCustomName() ? tile.getCustomName() : BlockWireless.getLocalizedName());
+                data.setString(
+                    Constants.NAME,
+                    tile.hasCustomName() ? tile.getCustomName() : BlockWireless.getLocalizedName());
                 data.setInteger(
-                    "color",
+                    Constants.COLOR,
                     tile.getColor()
                         .ordinal());
-                data.setBoolean("is_linked", tile.isLinked());
+                data.setBoolean(Constants.IS_LINKED, tile.isLinked());
                 data.setInteger(
-                    "used",
+                    Constants.USED_CHANNELS,
                     tile.connection() != null ? tile.connection()
                         .getUsedChannels() : 0);
                 if (tile.isLinked()) {
@@ -106,7 +110,7 @@ public class SPacketWirelessConnectorUpdate implements IMessage {
                         other.get()
                             .getLocation()
                             .writeToNBT(t);
-                        data.setTag("link", t);
+                        data.setTag(Constants.LINK, t);
                     }
                 }
                 tag.setTag("#" + count, data);

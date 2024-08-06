@@ -624,7 +624,7 @@ public abstract class GuiMonitor extends AEBaseMEGui
 
     protected void drawHistorySelection(final int x, final int y, String text, int width,
         final List<String> searchHistory) {
-        final int maxRows = 5;
+        final int maxRows = AE2ThingAPI.maxSelectionRows;
         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
         RenderHelper.disableStandardItemLighting();

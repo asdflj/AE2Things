@@ -11,6 +11,11 @@ public interface Constants {
     String DISPLAY_ONLY = "DisplayOnly";
     String TC_CRAFTING = "tc_crafting";
     String IS_EMPTY = "is_empty";
+    String COLOR = "color";
+    String NAME = "name";
+    String IS_LINKED = "is_linked";
+    String LINK = "link";
+    String USED_CHANNELS = "used";
     int OUTPUT_COLOR = 0x4566ccff;
     int ERROR_COLOR = 0x45DA4527;
     int INACTIVE_COLOR = 0x45FFEA05;

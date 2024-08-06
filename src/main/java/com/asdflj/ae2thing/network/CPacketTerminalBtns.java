@@ -129,7 +129,7 @@ public class CPacketTerminalBtns implements IMessage {
                     case "WirelessConnectorTerminal.SetName" -> cwt.setName(value, tag);
                     case "WirelessConnectorTerminal.Unbind" -> cwt.unBind(tag);
                     case "WirelessConnectorTerminal.Bind" -> cwt.bind(tag);
-
+                    case "WirelessConnectorTerminal.Color" -> cwt.setColor(tag);
                 }
             }
             return null;
