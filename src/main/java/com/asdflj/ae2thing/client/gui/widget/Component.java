@@ -9,11 +9,13 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import com.asdflj.ae2thing.client.gui.GuiWirelessConnectorTerminal;
 import com.asdflj.ae2thing.client.me.IDisplayRepo;
+import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.util.Info;
 import com.asdflj.ae2thing.util.NameConst;
 import com.asdflj.ae2thing.util.Util;
@@ -35,6 +37,7 @@ public class Component implements IClickable {
     private final THGuiButton unbind;
     private final THGuiButton bind;
     private final HighLightButton highLightBtn;
+    private THGuiSelection selection;
 
     public Component(IDisplayRepo repo, int idx, GuiWirelessConnectorTerminal gui, int x, int y) {
         this.textField = new METextField(110, 12, this, gui.getGuiLeft(), gui.getGuiTop());
@@ -68,6 +71,7 @@ public class Component implements IClickable {
             gui.getGuiTop(),
             this,
             "WirelessConnectorTerminal.Unbind");
+
         this.highLightBtn = new HighLightButton(
             this.x + render.getStringWidth(I18n.format(NameConst.GUI_WIRELESS_CONNECTOR_TERMINAL_POS) + ": "),
             this.y + 10 * 2,
@@ -86,6 +90,21 @@ public class Component implements IClickable {
             .add(this.textField);
         this.gui.getClickables()
             .add(this.highLightBtn);
+        if (Config.wirelessConnectorColorSelection) {
+            this.selection = new THGuiSelection(
+                x + 85,
+                this.y + 11,
+                16,
+                16,
+                gui.getGuiLeft(),
+                gui.getGuiTop(),
+                this,
+                "WirelessConnectorTerminal.Color");
+            this.gui.getClickables()
+                .add(this.selection);
+            this.gui.getScrollables()
+                .add(this.selection);
+        }
     }
 
     private String getName(Info info) {
@@ -96,10 +115,10 @@ public class Component implements IClickable {
     public void drawBackground(int color) {
         Info info = getInfo();
         if (info == null) return;
-        GuiTextField.drawRect(9, +18 + (idx * offsetY), 169, 18 + offsetY * (idx + 1), color);
+        GuiTextField.drawRect(9, 18 + (idx * offsetY), 169, 18 + offsetY * (idx + 1), color);
     }
 
-    private static class MousePos {
+    public static class MousePos {
 
         public final int x;
         public final int y;
@@ -118,23 +137,32 @@ public class Component implements IClickable {
         return repo.getInfo(idx);
     }
 
-    public void drawUnbindBtn() {
+    public void drawUnbindBtn(MousePos mouse) {
         this.unbind.visible = true;
         this.bind.visible = false;
-        MousePos mouse = new MousePos();
         this.unbind.drawButton(this.gui.mc, mouse.x - this.gui.getGuiLeft(), mouse.y - this.gui.getGuiTop());
     }
 
-    public void drawBindBtn() {
+    public void drawBindBtn(MousePos mouse) {
         this.unbind.visible = false;
         this.bind.visible = true;
-        MousePos mouse = new MousePos();
         this.bind.drawButton(this.gui.mc, mouse.x - this.gui.getGuiLeft(), mouse.y - this.gui.getGuiTop());
+    }
+
+    private void drawSelection(MousePos mouse) {
+        this.drawSelection(mouse.x, mouse.y);
+    }
+
+    public void drawSelection(int mouseX, int mouseY) {
+        if (this.selection != null) {
+            this.selection.drawButton(this.gui.mc, mouseX - this.gui.getGuiLeft(), mouseY - this.gui.getGuiTop());
+        }
     }
 
     public void draw() {
         Info info = getInfo();
         if (info == null) return;
+        MousePos mouse = new MousePos();
         this.highLightBtn.setWidth(render.getStringWidth(info.getPosString()));
         if (this.textField.isVisible()) {
             this.textField.drawTextBox();
@@ -142,14 +170,14 @@ public class Component implements IClickable {
         if (activeInfo != null) {
             if (activeInfo.link && Util.isSameDimensionalCoord(activeInfo.b, info.a)) {
                 drawBackground(INACTIVE_COLOR);
-                drawUnbindBtn();
+                drawUnbindBtn(mouse);
             } else if (info.equals(activeInfo) && info.link) {
                 drawBackground(SELECTED_COLOR);
-                drawUnbindBtn();
+                drawUnbindBtn(mouse);
             } else if (!activeInfo.link && info.equals(activeInfo)) {
                 drawBackground(SELECTED_COLOR);
             } else if (!activeInfo.link && info.dim == activeInfo.dim) {
-                drawBindBtn();
+                drawBindBtn(mouse);
             }
         } else {
             this.unbind.visible = false;
@@ -172,11 +200,15 @@ public class Component implements IClickable {
             y + 10 * 3,
             4210752);
         drawWirelessConnector(info);
+        this.drawSelection(mouse);
     }
 
     private void drawWirelessConnector(Info info) {
         GL11.glColor4f(255, 255, 255, 255);
         this.gui.bindTextureBack(this.gui.getBackground());
+        if (this.selection != null) {
+            this.gui.drawTexturedModalRect(this.selection.xPosition, this.selection.yPosition, 224, 32, 16, 16);
+        }
         if (info.link) {
             this.gui.drawTexturedModalRect(10, 40 + offsetY * idx, 224, 0, 16, 16);
             if (info.getAEColor() == AEColor.Transparent) {
@@ -202,7 +234,11 @@ public class Component implements IClickable {
     }
 
     public void textboxKeyTyped(char character, int key) {
-        this.textField.textboxKeyTyped(character, key);
+        if (key == Keyboard.KEY_RETURN) {
+            this.textField.unfocused();
+        } else {
+            this.textField.textboxKeyTyped(character, key);
+        }
     }
 
     @Override
@@ -230,5 +266,17 @@ public class Component implements IClickable {
 
     public GuiWirelessConnectorTerminal getGui() {
         return gui;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public FontRenderer getRender() {
+        return render;
     }
 }

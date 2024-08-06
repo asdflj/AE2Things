@@ -1,33 +1,16 @@
 package com.asdflj.ae2thing.client.gui.widget;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.util.Info;
 
-public class THGuiButton extends GuiButton implements IClickable {
+public class THGuiButton extends BaseGuiButton {
 
-    private final int offsetX;
-    private final int offsetY;
-    private final Component component;
-    private final String packetName;
-
-    public THGuiButton(int xPos, int yPos, int x, int y, String text, int offsetX, int offsetY, Component component,
-        String packetName) {
-        super(0, xPos, yPos, x, y, text);
-        this.visible = false;
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
-        this.component = component;
-        this.packetName = packetName;
-    }
-
-    @Override
-    public boolean mouseClicked(int xPos, int yPos) {
-        return super.mousePressed(Minecraft.getMinecraft(), xPos - offsetX, yPos - offsetY);
+    public THGuiButton(int xPos, int yPos, int width, int height, String text, int offsetX, int offsetY,
+        Component component, String packetName) {
+        super(xPos, yPos, width, height, text, offsetX, offsetY, component, packetName);
     }
 
     @Override

@@ -15,6 +15,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.inventory.WirelessConnectorTerminal;
 import com.asdflj.ae2thing.inventory.item.WirelessConnectorTerminalInventory;
 import com.asdflj.ae2thing.network.SPacketWirelessConnectorUpdate;
@@ -25,6 +26,7 @@ import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IMachineSet;
 import appeng.api.storage.ITerminalHost;
+import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
 import appeng.container.AEBaseContainer;
 import appeng.hooks.TickHandler;
@@ -154,4 +156,20 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
             }
         }
     }
+
+    public void setColor(NBTTagCompound tag) {
+        if (tag == null) return;
+        NBTTagCompound data = (NBTTagCompound) tag.getTag("#0");
+        DimensionalCoord a = DimensionalCoord.readFromNBT(data);
+        AEColor color = AEColor.values()[data.getShort(Constants.COLOR)];
+        for (TileWireless tile : wirelessTiles) {
+            if (Util.isSameDimensionalCoord(tile.getLocation(), a)) {
+                tile.color_$eq(color);
+                tile.getWorldObject()
+                    .markBlockForUpdate(a.x, a.y, a.z);
+                sendToPlayer();
+            }
+        }
+    }
+
 }

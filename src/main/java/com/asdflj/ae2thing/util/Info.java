@@ -60,4 +60,8 @@ public class Info {
         }
         return false;
     }
+
+    public void setAEColor(AEColor color) {
+        this.color = color;
+    }
 }

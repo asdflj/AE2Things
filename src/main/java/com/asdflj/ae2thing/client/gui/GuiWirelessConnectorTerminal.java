@@ -13,6 +13,7 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTerminal;
 import com.asdflj.ae2thing.client.gui.widget.Component;
 import com.asdflj.ae2thing.client.gui.widget.IClickable;
+import com.asdflj.ae2thing.client.gui.widget.IScrollable;
 import com.asdflj.ae2thing.client.gui.widget.METextField;
 import com.asdflj.ae2thing.client.gui.widget.THGuiTextField;
 import com.asdflj.ae2thing.client.me.IDisplayRepo;
@@ -30,6 +31,7 @@ import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.GuiText;
 import appeng.integration.IntegrationRegistry;
 import appeng.integration.IntegrationType;
+import appeng.integration.modules.NEI;
 
 public class GuiWirelessConnectorTerminal extends AEBaseGui {
 
@@ -43,6 +45,7 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
     protected final IDisplayRepo repo;
     private final List<Component> components = new ArrayList<>();
     private final List<IClickable> clickables = new ArrayList<>();
+    private final List<IScrollable> scrollables = new ArrayList<>();
 
     public GuiWirelessConnectorTerminal(InventoryPlayer inventory, ITerminalHost inv) {
         super(new ContainerWirelessConnectorTerminal(inventory, inv));
@@ -53,6 +56,7 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
         final GuiScrollbar scrollbar = new GuiScrollbar();
         this.setScrollBar(scrollbar);
         this.repo = new WirelessConnectorRepo(scrollbar);
+
     }
 
     @Override
@@ -69,13 +73,9 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
         for (Component com : this.components) {
             com.draw();
         }
-        if (this.searchField.isMouseIn(mouseX, mouseY)) {
-            this.drawTooltip(
-                0,
-                this.ySize,
-                0,
-                I18n.format(NameConst.GUI_WIRELESS_CONNECTOR_TERMINAL_SEARCH_TOOLTIP)
-                    .replace("\\n", "\n"));
+
+        for (Component com : this.components) {
+            com.drawSelection(mouseX, mouseY);
         }
     }
 
@@ -95,7 +95,6 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
                 : 1 + ((this.width - this.standardSize) / 42);
 
         final boolean hasNEI = IntegrationRegistry.INSTANCE.isEnabled(IntegrationType.NEI);
-
         final int NEI = 0;
         int top = hasNEI ? 22 : 0;
 
@@ -117,6 +116,7 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
 
         this.components.clear();
         this.clickables.clear();
+        this.scrollables.clear();
         for (int i = 0; i < this.rows; i++) {
             this.components.add(new Component(this.repo, i, this, 28, 20));
         }
@@ -137,6 +137,14 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
         super.drawScreen(mouseX, mouseY, btn);
         if (AEConfig.instance.preserveSearchBar && searchField != null)
             handleTooltip(mouseX, mouseY, searchField.getTooltipProvider());
+        if (this.searchField != null && this.searchField.isMouseIn(mouseX, mouseY)) {
+            this.drawTooltip(
+                this.guiLeft,
+                this.ySize,
+                0,
+                I18n.format(NameConst.GUI_WIRELESS_CONNECTOR_TERMINAL_SEARCH_TOOLTIP)
+                    .replace("\\n", "\n"));
+        }
     }
 
     @Override
@@ -156,22 +164,18 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
         IClickable finalLastClickable = lastClickable;
         this.getClickables()
             .stream()
-            .filter(c -> c instanceof METextField && finalLastClickable != c)
+            .filter(c -> (c != null && finalLastClickable != c))
             .forEach(IClickable::unfocused);
-        if (lastClickable == null) {
-            Component.setActiveInfo(null);
-        }
         super.mouseClicked(xCoord, yCoord, btn);
     }
 
     public void setSearchString(String memoryText, boolean updateView) {
         this.searchField.setText(memoryText);
-        this.setScrollBar();
+        this.repo.setSearchString(memoryText);
         if (updateView) {
-            this.repo.setSearchString(memoryText);
             this.repo.updateView();
+            this.setScrollBar();
         }
-
     }
 
     private int getMaxRows() {
@@ -232,6 +236,16 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
         }
     }
 
+    @Override
+    protected boolean mouseWheelEvent(int x, int y, int wheel) {
+        for (IScrollable scrollable : this.getScrollables()) {
+            if (scrollable.scroll(x, y, wheel)) {
+                return true;
+            }
+        }
+        return super.mouseWheelEvent(x, y, wheel);
+    }
+
     public String getBackground() {
         return "gui/wireless_connector.png";
     }
@@ -247,5 +261,9 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
 
     public List<IClickable> getClickables() {
         return this.clickables;
+    }
+
+    public List<IScrollable> getScrollables() {
+        return this.scrollables;
     }
 }

@@ -35,6 +35,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     public static final ItemStack PHIAL = createEmptyPhial();
     public static final ItemStack GLASS_BOTTLE = new ItemStack(glass_bottle, 1);
     public static int maxPinSize = 9;
+    public static int maxSelectionRows = 5;
 
     private static final AE2ThingAPI API = new AE2ThingAPI();
 

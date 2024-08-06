@@ -1,7 +1,6 @@
 package com.asdflj.ae2thing.client.gui.widget;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ChatComponentText;
 
@@ -11,27 +10,18 @@ import com.asdflj.ae2thing.util.NameConst;
 import appeng.api.util.WorldCoord;
 import appeng.client.render.BlockPosHighlighter;
 
-public class HighLightButton extends GuiButton implements IClickable {
+public class HighLightButton extends BaseGuiButton {
 
-    private final int offsetX;
-    private final int offsetY;
-    private final Component component;
     private final Minecraft mc = Minecraft.getMinecraft();
 
-    public HighLightButton(int xPos, int yPos, int x, int y, int offsetX, int offsetY, Component component) {
-        super(0, xPos, yPos, x, y, "");
-        this.visible = false;
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
-        this.component = component;
+    public HighLightButton(int xPos, int yPos, int width, int height, int offsetX, int offsetY, Component component) {
+        super(xPos, yPos, width, height, offsetX, offsetY, component);
+        this.visible = true;
     }
 
     @Override
-    public boolean mouseClicked(int xPos, int yPos) {
-        return this.enabled && xPos - offsetX >= this.xPosition
-            && yPos - offsetY >= this.yPosition
-            && xPos - offsetX < this.xPosition + this.width
-            && yPos - offsetY < this.yPosition + this.height;
+    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+
     }
 
     @Override

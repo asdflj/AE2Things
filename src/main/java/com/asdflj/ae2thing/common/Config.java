@@ -16,6 +16,7 @@ public class Config {
     public static boolean cellLink;
     public static int magnetRange;
     public static boolean updateViewThread = true;
+    public static boolean wirelessConnectorColorSelection = true;
 
     public static void run() {
         loadCategory();
@@ -33,7 +34,12 @@ public class Config {
         magnetRange = Config
             .getInt("Backpack terminal magnet range", AE2Thing.NAME, 32, 8, 64, "Set backpack terminal magnet range");
         updateViewThread = Config
-            .getBoolean("Terminal updateView Thread", AE2Thing.NAME, true, "Terminal create update view Thread");
+            .getBoolean("Terminal updateView thread", AE2Thing.NAME, true, "Terminal create update view thread");
+        wirelessConnectorColorSelection = Config.getBoolean(
+            "Wireless connector terminal color selection",
+            AE2Thing.NAME,
+            true,
+            "Wireless connector terminal enable color selection");
         if (Config.hasChanged()) Config.save();
     }
 
