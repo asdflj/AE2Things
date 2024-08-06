@@ -19,5 +19,7 @@ This mod adds a new type of cell the DISK: Deep Item Storage disk. This cell has
 **Infusion Interface** support infusion intercepter
 ![infusion_interface_2.png](blob/infusion_interface_2.png)
 
+**Wireless Connector Terminal** can easily manage ae2 stuff wireless connector
+![wireless_connector.png](blob/wireless_connector.png)
 
 ![fishbig.png](blob/fishbig.png)
