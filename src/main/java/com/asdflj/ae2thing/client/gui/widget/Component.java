@@ -95,7 +95,7 @@ public class Component implements IClickable {
                 x + 85,
                 this.y + 11,
                 16,
-                16,
+                7,
                 gui.getGuiLeft(),
                 gui.getGuiTop(),
                 this,
