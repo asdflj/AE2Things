@@ -10,6 +10,7 @@ import appeng.api.config.PowerMultiplier;
 import appeng.api.implementations.guiobjects.IGuiItemObject;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergySource;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.ITerminalHost;
@@ -74,6 +75,11 @@ public class WirelessConnectorTerminalInventory
     @Override
     public IGrid getGrid() {
         return obj.getGrid();
+    }
+
+    @Override
+    public IGridNode getGridNode() {
+        return obj.getGridNode();
     }
 
 }

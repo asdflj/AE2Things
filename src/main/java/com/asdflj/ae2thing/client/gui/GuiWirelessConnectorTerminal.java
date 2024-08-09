@@ -46,9 +46,11 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
     private final List<Component> components = new ArrayList<>();
     private final List<IClickable> clickables = new ArrayList<>();
     private final List<IScrollable> scrollables = new ArrayList<>();
+    private final ContainerWirelessConnectorTerminal container;
 
     public GuiWirelessConnectorTerminal(InventoryPlayer inventory, ITerminalHost inv) {
         super(new ContainerWirelessConnectorTerminal(inventory, inv));
+        this.container = (ContainerWirelessConnectorTerminal) this.inventorySlots;
         this.xSize = 195;
         this.ySize = 204;
         this.standardSize = this.xSize;
@@ -130,6 +132,7 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
         this.searchField.setVisible(true);
         this.searchField.setMessage(ButtonToolTips.SearchStringTooltip.getLocal());
         setSearchString(memoryText, false);
+        this.setScrollBar();
     }
 
     @Override
@@ -265,5 +268,10 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
 
     public List<IScrollable> getScrollables() {
         return this.scrollables;
+    }
+
+    @Override
+    protected boolean isPowered() {
+        return this.container.hasPower;
     }
 }

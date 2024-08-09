@@ -25,10 +25,12 @@ import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IMachineSet;
+import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
 import appeng.container.AEBaseContainer;
+import appeng.container.guisync.GuiSync;
 import appeng.hooks.TickHandler;
 import appeng.me.Grid;
 import appeng.util.Platform;
@@ -41,6 +43,9 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
     private int ticks;
     private final double powerMultiplier = 0.5;
 
+    @GuiSync(98)
+    public boolean hasPower = false;
+
     public ContainerWirelessConnectorTerminal(InventoryPlayer ip, ITerminalHost host) {
         super(ip, host);
         this.player = ip.player;
@@ -50,6 +55,8 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
     public void updateData() {
         if (Platform.isServer()) {
             wirelessTiles.clear();
+            if (!hasPower) return;
+            if (terminal.getGrid() == null) return;
             int playerID = Security.getPlayerId(player.getGameProfile());
             for (Grid grid : TickHandler.INSTANCE.getGridList()) {
                 IMachineSet set = grid.getMachines(TileWireless.class);
@@ -73,11 +80,37 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
 
     @Override
     public void detectAndSendChanges() {
-        super.detectAndSendChanges();
-        if (Platform.isServer() && this.terminal instanceof WirelessConnectorTerminalInventory wt) {
-            ticks = wt.getWirelessObject()
-                .extractPower(getPowerMultiplier() * ticks, Actionable.MODULATE, PowerMultiplier.CONFIG, ticks);
+        if (Platform.isServer()) {
+            if (this.terminal instanceof WirelessConnectorTerminalInventory wt && this.hasPower) {
+                ticks = wt.getWirelessObject()
+                    .extractPower(getPowerMultiplier() * ticks, Actionable.MODULATE, PowerMultiplier.CONFIG, ticks);
+            }
         }
+        super.detectAndSendChanges();
+    }
+
+    private IGridNode getNetworkNode() {
+        return this.terminal.getGridNode();
+    }
+
+    protected void updatePowerStatus() {
+        try {
+            if (this.getNetworkNode() != null) {
+                this.setPowered(
+                    this.getNetworkNode()
+                        .isActive());
+            } else if (this.getPowerSource() instanceof IEnergyGrid) {
+                this.setPowered(((IEnergyGrid) this.getPowerSource()).isNetworkPowered());
+            } else {
+                this.setPowered(
+                    this.getPowerSource()
+                        .extractAEPower(1, Actionable.SIMULATE, PowerMultiplier.CONFIG) > 0.8);
+            }
+        } catch (final Throwable ignore) {}
+    }
+
+    protected void setPowered(final boolean isPowered) {
+        this.hasPower = isPowered;
     }
 
     public double getPowerMultiplier() {
@@ -90,6 +123,7 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
 
     @Override
     public void addCraftingToCrafters(ICrafting crafting) {
+        updatePowerStatus();
         updateData();
         super.addCraftingToCrafters(crafting);
     }

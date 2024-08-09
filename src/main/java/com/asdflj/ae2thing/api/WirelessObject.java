@@ -59,6 +59,10 @@ public class WirelessObject {
         return item;
     }
 
+    public IGridNode getGridNode() {
+        return gridNode;
+    }
+
     public int getSlot() {
         return x;
     }
