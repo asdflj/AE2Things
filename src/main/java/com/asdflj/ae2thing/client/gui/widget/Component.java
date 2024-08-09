@@ -90,7 +90,7 @@ public class Component implements IClickable {
             .add(this.textField);
         this.gui.getClickables()
             .add(this.highLightBtn);
-        if (Config.wirelessConnectorColorSelection) {
+        if (Config.wirelessConnectorTerminalColorSelection) {
             this.selection = new THGuiSelection(
                 x + 85,
                 this.y + 11,
