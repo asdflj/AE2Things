@@ -1,12 +1,14 @@
 package com.asdflj.ae2thing.api;
 
+import java.lang.reflect.InvocationTargetException;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.asdflj.ae2thing.common.Config;
-import com.asdflj.ae2thing.inventory.item.WirelessConnectorTerminalInventory;
+import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -17,6 +19,10 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergySource;
+import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.WorldCoord;
 import appeng.core.localization.PlayerMessages;
 import appeng.items.tools.powered.ToolWirelessTerminal;
@@ -34,7 +40,9 @@ public class WirelessObject {
     private IGridNode gridNode;
     private IGrid grid;
     private IEnergySource energySource;
-    private WirelessConnectorTerminalInventory wirelessConnectorTerminal;
+    private IMEMonitor<IAEItemStack> itemInv;
+    private IMEMonitor<IAEFluidStack> fluidInv;
+    private WirelessTerminal wirelessTerminal;
 
     public WirelessObject(ItemStack item, World world, int x, int y, int z, EntityPlayer player)
         throws AppEngException {
@@ -52,7 +60,19 @@ public class WirelessObject {
                         .toString());
             }
             this.grid = this.gridNode.getGrid();
+            IStorageGrid iStorageGrid = this.getGrid()
+                .getCache(IStorageGrid.class);
+            this.itemInv = iStorageGrid.getItemInventory();
+            this.fluidInv = iStorageGrid.getFluidInventory();
         }
+    }
+
+    public IMEMonitor<IAEItemStack> getItemInventory() {
+        return this.itemInv;
+    }
+
+    public IMEMonitor<IAEFluidStack> getFluidInventory() {
+        return this.fluidInv;
     }
 
     public ItemStack getItemStack() {
@@ -99,11 +119,13 @@ public class WirelessObject {
         return canConnect;
     }
 
-    public Object getInventory() {
-        if (wirelessConnectorTerminal == null) {
-            this.wirelessConnectorTerminal = new WirelessConnectorTerminalInventory(this);
+    public Object getInventory(Class<?> obj)
+        throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        if (wirelessTerminal == null) {
+            this.wirelessTerminal = (WirelessTerminal) obj.getConstructor(WirelessObject.class)
+                .newInstance(this);
         }
-        return wirelessConnectorTerminal;
+        return wirelessTerminal;
     }
 
     public IGridNode getWirelessGrid() {

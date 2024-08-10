@@ -7,30 +7,17 @@ import com.asdflj.ae2thing.inventory.WirelessConnectorTerminal;
 
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
-import appeng.api.implementations.guiobjects.IGuiItemObject;
-import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.energy.IEnergySource;
 import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.IConfigManager;
-import appeng.container.interfaces.IInventorySlotAware;
-import appeng.items.tools.powered.ToolWirelessTerminal;
 
-public class WirelessConnectorTerminalInventory
-    implements ITerminalHost, IInventorySlotAware, IGuiItemObject, IEnergySource, WirelessConnectorTerminal {
-
-    private final WirelessObject obj;
-    private final IAEItemPowerStorage ips;
+public class WirelessConnectorTerminalInventory extends WirelessTerminal implements WirelessConnectorTerminal {
 
     public WirelessConnectorTerminalInventory(WirelessObject obj) {
-        this.obj = obj;
-        this.ips = (ToolWirelessTerminal) obj.getItemStack()
-            .getItem();
-        this.obj.setEnergySource(this);
+        super(obj);
     }
 
     public WirelessObject getWirelessObject() {
@@ -54,12 +41,12 @@ public class WirelessConnectorTerminalInventory
 
     @Override
     public IMEMonitor<IAEItemStack> getItemInventory() {
-        return null;
+        return obj.getItemInventory();
     }
 
     @Override
     public IMEMonitor<IAEFluidStack> getFluidInventory() {
-        return null;
+        return this.obj.getFluidInventory();
     }
 
     @Override
