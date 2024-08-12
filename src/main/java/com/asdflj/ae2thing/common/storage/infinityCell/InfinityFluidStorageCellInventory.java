@@ -1,6 +1,7 @@
 package com.asdflj.ae2thing.common.storage.infinityCell;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -266,6 +267,7 @@ public class InfinityFluidStorageCellInventory implements ITFluidCellInventory {
 
     @Override
     public List<IAEFluidStack> getContents() {
+        if (Platform.isClient()) return Collections.emptyList();
         List<IAEFluidStack> ret = new ArrayList<>();
         for (IAEFluidStack fluid : this.getCellFluids()) {
             ret.add(fluid);

@@ -169,9 +169,13 @@ public class StorageManager extends WorldSavedData {
                 UUID uid = storage.getRawUUID();
                 if (curGrid.isEmpty()) return;
                 Set<IGrid> iGrids = this.grids.get(uid);
-                if (iGrids == null || iGrids.size() <= 1) return;
+                if (iGrids == null) return;
+                iGrids.removeIf(
+                    g -> g.isEmpty() || !g.getPivot()
+                        .isActive());
+                if (iGrids.size() <= 1) return;
+                iGrids.removeIf(i -> i == curGrid);
                 List<IGrid> cp = new ArrayList<>(iGrids);
-                iGrids.removeIf(i -> i != curGrid);
                 for (IGrid grid : cp) {
                     if (grid.isEmpty() || grid.equals(curGrid)) continue;
                     IStorageGrid iStorageGrid = grid.getCache(IStorageGrid.class);
