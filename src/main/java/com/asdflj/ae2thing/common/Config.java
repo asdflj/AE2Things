@@ -18,7 +18,7 @@ public class Config {
     public static boolean updateViewThread = true;
     public static boolean wirelessConnectorTerminalColorSelection = true;
     public static boolean wirelessConnectorTerminalInfinityConnectionRange = true;
-    public static int exIOPortTransferContentsRate = 64;
+    public static int exIOPortTransferContentsRate;
 
     public static void run() {
         loadCategory();
