@@ -3,6 +3,7 @@ package com.asdflj.ae2thing.loader;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BACKPACK_MANAGER;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BLOCK_FISH_BIG;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ESSENTIA_DISCRETIZER;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.EX_IO_PORT;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.INFUSION_INTERFACE;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.INFUSION_PATTERN_TERMINAL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_CREATIVE_WATER_CELL;
@@ -27,6 +28,7 @@ import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.storage.CellType;
 
+import appeng.api.AEApi;
 import cpw.mods.fml.common.registry.GameRegistry;
 import thaumcraft.common.config.ConfigBlocks;
 
@@ -52,6 +54,22 @@ public class RecipeLoader implements Runnable {
         GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"),
         1,
         380);
+    public static final ItemStack AE2_ME_IO_PORT = AEApi.instance()
+        .definitions()
+        .blocks()
+        .iOPort()
+        .maybeStack(1)
+        .get();
+    public static final ItemStack AE2_SINGULARITY = AEApi.instance()
+        .definitions()
+        .materials()
+        .singularity()
+        .maybeStack(1)
+        .get();
+    public static final ItemStack AE2_SUPER_SPEED_CARD = new ItemStack(
+        GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
+        1,
+        56);
 
     @Override
     public void run() {
@@ -82,6 +100,12 @@ public class RecipeLoader implements Runnable {
             AE2_WIRELESS_TERMINAL,
             MachineWireless.block());
         GameRegistry.addShapelessRecipe(WIRELESS_CONNECTOR_TERMINAL.stack(), AE2_TERMINAL, MachineWireless.block());
+        GameRegistry.addShapelessRecipe(
+            EX_IO_PORT.stack(),
+            AE2_ME_IO_PORT,
+            AE2_SINGULARITY,
+            AE2_SUPER_SPEED_CARD,
+            AE2_SUPER_SPEED_CARD);
         if (ModAndClassUtil.THE) {
             final ItemStack THAUMIUM_INGOT = new ItemStack(itemResource, 1, 2);
             final ItemStack RUNIC_MATRIX = new ItemStack(ConfigBlocks.blockStoneDevice, 1, 2);

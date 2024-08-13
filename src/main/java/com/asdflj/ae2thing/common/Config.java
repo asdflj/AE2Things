@@ -18,6 +18,7 @@ public class Config {
     public static boolean updateViewThread = true;
     public static boolean wirelessConnectorTerminalColorSelection = true;
     public static boolean wirelessConnectorTerminalInfinityConnectionRange = true;
+    public static int exIOPortTransferContentsRate = 64;
 
     public static void run() {
         loadCategory();
@@ -46,6 +47,13 @@ public class Config {
             AE2Thing.NAME,
             true,
             "Wireless connector terminal infinity connection range");
+        exIOPortTransferContentsRate = Config.getInt(
+            "Ex IO Port Transfer Rate",
+            AE2Thing.NAME,
+            256,
+            256,
+            Integer.MAX_VALUE,
+            "Set Ex IO Port Transfer Rate. Base transfer quantity = 256. Make sure you have enough power to transfer stack.");
         if (Config.hasChanged()) Config.save();
     }
 

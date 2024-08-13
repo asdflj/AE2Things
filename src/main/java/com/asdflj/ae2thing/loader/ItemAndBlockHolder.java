@@ -4,6 +4,7 @@ import static com.asdflj.ae2thing.common.item.ItemCreativeFluidCell.lava_bucket;
 import static com.asdflj.ae2thing.common.item.ItemCreativeFluidCell.water_bucket;
 
 import com.asdflj.ae2thing.common.block.BlockEssentiaDiscretizer;
+import com.asdflj.ae2thing.common.block.BlockExIOPort;
 import com.asdflj.ae2thing.common.block.BlockFishBig;
 import com.asdflj.ae2thing.common.block.BlockInfusionInterface;
 import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
@@ -40,6 +41,7 @@ public class ItemAndBlockHolder implements Runnable {
     public static ItemCreativeFluidCell ITEM_CREATIVE_LAVA_CELL = new ItemCreativeFluidCell(
         NameConst.ITEM_CREATIVE_FLUID_CELL_LAVA,
         lava_bucket).register();
+    public static BlockExIOPort EX_IO_PORT = new BlockExIOPort().register();
 
     public static BlockFishBig BLOCK_FISH_BIG = new BlockFishBig().register();
 
