@@ -12,6 +12,7 @@ import com.asdflj.ae2thing.client.gui.GuiMonitor;
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.item.ItemPhial;
 import com.asdflj.ae2thing.loader.KeybindLoader;
+import com.asdflj.ae2thing.loader.ListenerLoader;
 import com.asdflj.ae2thing.loader.RenderLoader;
 import com.asdflj.ae2thing.nei.recipes.DefaultExtractorLoader;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
@@ -43,6 +44,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
+        (new ListenerLoader()).run();
         (new RenderLoader()).run();
         (new KeybindLoader()).run();
     }

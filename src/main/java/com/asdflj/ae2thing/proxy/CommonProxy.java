@@ -77,6 +77,9 @@ public class CommonProxy {
             Upgrades.CRAFTING.registerItem(ItemAndBlockHolder.THAUMATRIUM_INTERFACE.stack(), 1);
             Upgrades.PATTERN_CAPACITY.registerItem(ItemAndBlockHolder.INFUSION_INTERFACE.stack(), 3);
             Upgrades.PATTERN_CAPACITY.registerItem(ItemAndBlockHolder.THAUMATRIUM_INTERFACE.stack(), 3);
+            Upgrades.REDSTONE.registerItem(ItemAndBlockHolder.EX_IO_PORT.stack(), 1);
+            Upgrades.SPEED.registerItem(ItemAndBlockHolder.EX_IO_PORT.stack(), 3);
+            Upgrades.SUPERSPEED.registerItem(ItemAndBlockHolder.EX_IO_PORT.stack(), 3);
             if (ModAndClassUtil.IC2) {
                 AE2ThingAPI.instance()
                     .setDefaultFluidContainer(Ic2Items.cell);

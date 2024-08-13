@@ -10,6 +10,7 @@ item.wireless_connector_terminal.name=ME无线连接终端
 tile.fishbig.name=鱼大
 tile.essentia_discretizer.name=源质散离器
 tile.infusion_interface.name=ME注魔接口
+tile.ex_io_port.name=ME扩展IO端口
 
 ae2thing.tooltip.shift_for_more=§r> 按 §3Shift§r 显示更多信息
 ae2thing.tooltip.linked=已链接

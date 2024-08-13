@@ -18,6 +18,7 @@ public class NameConst {
     public static final String BLOCK_FISHBIG = "fishbig";
     public static final String BLOCK_ESSENTIA_DISCRETIZER = "essentia_discretizer";
     public static final String BLOCK_INFUSION_INTERFACE = "infusion_interface";
+    public static final String BLOCK_EX_IO_PORT = "ex_io_port";
 
     public static final String TT_KEY = AE2Thing.MODID + ".tooltip.";
     public static final String TT_SHIFT_FOR_MORE = TT_KEY + "shift_for_more";
@@ -34,6 +35,8 @@ public class NameConst {
     public static final String MAGNET_INV = MAGNET + "inv";
     public static final String MAGNET_BACKPACK = MAGNET + "backpack";
     public static final String MAGNET_CURRENT_MODE = MAGNET + "current_mode";
+
+    public static final String RES_KEY = AE2Thing.MODID + ":";
 
     public static final String GUI_KEY = AE2Thing.MODID + ".gui.";
     public static final String GUI_CELL_LINK = GUI_KEY + "cell_link";
