@@ -37,6 +37,8 @@ ae2thing.gui.wireless_connector_terminal.unbind=Unbind
 ae2thing.gui.wireless_connector_terminal.search_tooltip=§b§nSorting tags§r \n§d#§r - Search Position \n§6~§r - Search Color \n§a@b§r - Show Bound Wireless Connectors only \n§4@u§r - Show Unbound Wireless Connectors only \n§9@c§r - Show Clicked Wireless Connectors only \nTags are space separated and are combined w/ the AND operator.
 ae2thing.gui.wireless_connector_terminal.highlight=The wireless connector is now highlighted at %d,%d,%d dimension:%d
 ae2thing.gui.wireless_connector_terminal.in_other_dim=Wireless connector located at dimension: %d and cant be highlighted
+ae2thing.gui.infusion_interface=ME Infusion Interface
+ae2thing.gui.part_thaumatorium_interface=ME Thaumatorium Interface
 ae2thing.key.open_terminal=Open Terminal
 
 itemGroup.ae2thing=AE2 Thing

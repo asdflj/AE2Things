@@ -9,12 +9,15 @@ import java.util.Set;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import com.glodblock.github.client.gui.GuiDualInterface;
+
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.implementations.GuiCraftingStatus;
 import appeng.client.gui.widgets.GuiTabButton;
 import appeng.client.me.ItemRepo;
+import appeng.helpers.IInterfaceHost;
 import codechicken.nei.SearchField;
 import codechicken.nei.util.TextHistory;
 import cpw.mods.fml.relauncher.Side;
@@ -32,6 +35,7 @@ public class Ae2ReflectClient {
     private static final Field fItemRepo_view;
     private static final Field fItemRepo_dsp;
     private static final Field fItemRepo_list;
+    private static final Field fGuiDualInterface_host;
 
     static {
         try {
@@ -44,6 +48,7 @@ public class Ae2ReflectClient {
             fItemRepo_view = Ae2Reflect.reflectField(ItemRepo.class, "view");
             fItemRepo_dsp = Ae2Reflect.reflectField(ItemRepo.class, "dsp");
             fItemRepo_list = Ae2Reflect.reflectField(ItemRepo.class, "list");
+            fGuiDualInterface_host = Ae2Reflect.reflectField(GuiDualInterface.class, "host");
         } catch (NoSuchFieldException | NoSuchMethodException e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -88,6 +93,10 @@ public class Ae2ReflectClient {
 
     public static IItemList<IAEItemStack> getList(ItemRepo repo) {
         return Ae2Reflect.readField(repo, fItemRepo_list);
+    }
+
+    public static IInterfaceHost getHost(GuiDualInterface gui) {
+        return Ae2Reflect.readField(gui, fGuiDualInterface_host);
     }
 
 }
