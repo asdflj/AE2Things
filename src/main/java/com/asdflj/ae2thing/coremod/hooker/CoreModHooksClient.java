@@ -4,10 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.TheUtil;
 import com.asdflj.ae2thing.util.Util;
+import com.glodblock.github.client.gui.GuiDualInterface;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 
@@ -89,5 +92,12 @@ public class CoreModHooksClient {
         }
 
         return Platform.getTooltip(o);
+    }
+
+    public static String translateToLocal(String displayName, GuiDualInterface dualInterface) {
+        if (ModAndClassUtil.THE) {
+            return TheUtil.getGuiDualInterfaceDisplayName(displayName, dualInterface);
+        }
+        return I18n.format(displayName);
     }
 }
