@@ -6,7 +6,6 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 
-import com.asdflj.ae2thing.coremod.transform.CraftingCpuTransformer;
 import com.asdflj.ae2thing.coremod.transform.FluidConvertingInventoryAdaptorTransformer;
 import com.asdflj.ae2thing.coremod.transform.GuiDualInterfaceTransformer;
 import com.asdflj.ae2thing.coremod.transform.PlatformTransformer;
@@ -18,7 +17,6 @@ public class ClassTransformer implements IClassTransformer {
     public byte[] transform(String name, String transformedName, byte[] code) {
         Transform tform;
         switch (transformedName) {
-            case "appeng.me.cluster.implementations.CraftingCPUCluster" -> tform = CraftingCpuTransformer.INSTANCE;
             case "appeng.client.me.ItemRepo" -> tform = PlatformTransformer.INSTANCE;
             case "com.glodblock.github.inventory.FluidConvertingInventoryAdaptor" -> tform = FluidConvertingInventoryAdaptorTransformer.INSTANCE;
             case "thaumcraft.common.tiles.TileThaumatorium" -> tform = TileThaumatoriumTransformer.INSTANCE;

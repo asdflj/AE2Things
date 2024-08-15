@@ -302,7 +302,7 @@ public abstract class GuiMonitor extends AEBaseMEGui
                         if (slotItem != null) {
                             action = InventoryAction.CREATIVE_DUPLICATE;
                         }
-                    } else if (stack != null) {
+                    } else if (stack != null && this instanceof GuiCraftingTerminal) {
                         AE2ThingAPI.instance()
                             .togglePinItems(stack);
                         this.repo.updateView();
