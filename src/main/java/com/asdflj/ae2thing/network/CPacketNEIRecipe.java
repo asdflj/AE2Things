@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
 
 import appeng.api.config.Actionable;
@@ -139,8 +140,8 @@ public class CPacketNEIRecipe implements IMessage {
         @SuppressWarnings("all")
         public void serverPacketData(final EntityPlayer player, ContainerCraftingTerminal cct) {
             final EntityPlayerMP pmp = (EntityPlayerMP) player;
-            final IInventory craftMatrix = cct.getInventoryByName("crafting");
-            final IInventory playerInventory = cct.getInventoryByName("player");
+            final IInventory craftMatrix = cct.getInventoryByName(Constants.CRAFTING);
+            final IInventory playerInventory = cct.getInventoryByName(Constants.PLAYER);
 
             final IEnergySource energy = cct.getPowerSource();
 

@@ -6,7 +6,6 @@ import java.util.List;
 import net.bdew.ae2stuff.grid.Security;
 import net.bdew.ae2stuff.machines.wireless.TileWireless;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
@@ -16,40 +15,24 @@ import net.minecraft.util.EnumChatFormatting;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.Constants;
-import com.asdflj.ae2thing.inventory.WirelessConnectorTerminal;
-import com.asdflj.ae2thing.inventory.item.WirelessConnectorTerminalInventory;
 import com.asdflj.ae2thing.network.SPacketWirelessConnectorUpdate;
 import com.asdflj.ae2thing.util.Util;
 
-import appeng.api.config.Actionable;
-import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IMachineSet;
-import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
-import appeng.container.AEBaseContainer;
-import appeng.container.guisync.GuiSync;
 import appeng.hooks.TickHandler;
 import appeng.me.Grid;
 import appeng.util.Platform;
 
-public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
+public class ContainerWirelessConnectorTerminal extends BaseNetworkContainer {
 
-    private final EntityPlayer player;
-    private final WirelessConnectorTerminal terminal;
     private final List<TileWireless> wirelessTiles = new ArrayList<>();
-    private int ticks;
-    private final double powerMultiplier = 0.5;
-
-    @GuiSync(98)
-    public boolean hasPower = false;
 
     public ContainerWirelessConnectorTerminal(InventoryPlayer ip, ITerminalHost host) {
         super(ip, host);
-        this.player = ip.player;
-        this.terminal = (WirelessConnectorTerminal) host;
     }
 
     public void updateData() {
@@ -78,52 +61,12 @@ public class ContainerWirelessConnectorTerminal extends AEBaseContainer {
         }
     }
 
-    @Override
-    public void detectAndSendChanges() {
-        if (Platform.isServer()) {
-            if (this.terminal instanceof WirelessConnectorTerminalInventory wt && this.hasPower) {
-                ticks = wt.getWirelessObject()
-                    .extractPower(getPowerMultiplier() * ticks, Actionable.MODULATE, PowerMultiplier.CONFIG, ticks);
-            }
-        }
-        super.detectAndSendChanges();
-    }
-
-    private IGridNode getNetworkNode() {
-        return this.terminal.getGridNode();
-    }
-
-    protected void updatePowerStatus() {
-        try {
-            if (this.getNetworkNode() != null) {
-                this.setPowered(
-                    this.getNetworkNode()
-                        .isActive());
-            } else if (this.getPowerSource() instanceof IEnergyGrid) {
-                this.setPowered(((IEnergyGrid) this.getPowerSource()).isNetworkPowered());
-            } else {
-                this.setPowered(
-                    this.getPowerSource()
-                        .extractAEPower(1, Actionable.SIMULATE, PowerMultiplier.CONFIG) > 0.8);
-            }
-        } catch (final Throwable ignore) {}
-    }
-
-    protected void setPowered(final boolean isPowered) {
-        this.hasPower = isPowered;
-    }
-
-    public double getPowerMultiplier() {
-        return this.powerMultiplier;
-    }
-
     private void sendToPlayer() {
         AE2Thing.proxy.netHandler.sendTo(new SPacketWirelessConnectorUpdate(wirelessTiles), (EntityPlayerMP) player);
     }
 
     @Override
     public void addCraftingToCrafters(ICrafting crafting) {
-        updatePowerStatus();
         updateData();
         super.addCraftingToCrafters(crafting);
     }

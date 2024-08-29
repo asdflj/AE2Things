@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import appeng.api.config.ActionItems;
 import appeng.api.config.Settings;
+import appeng.core.localization.ButtonToolTips;
 import cpw.mods.fml.common.Loader;
 
 public final class ModAndClassUtil {
@@ -22,6 +23,7 @@ public final class ModAndClassUtil {
     public static boolean isTypeFilter;
     public static boolean isCraftStatus;
     public static boolean isDoubleButton;
+    public static boolean isBeSubstitutionsButton;
 
     @SuppressWarnings("all")
     public static void init() {
@@ -44,6 +46,12 @@ public final class ModAndClassUtil {
             isDoubleButton = true;
         } catch (NoSuchFieldException e) {
             isDoubleButton = false;
+        }
+        try {
+            Field d = ButtonToolTips.class.getDeclaredField("BeSubstitutionsDescEnabled");
+            isBeSubstitutionsButton = true;
+        } catch (NoSuchFieldException e) {
+            isBeSubstitutionsButton = false;
         }
         if (Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi")) {
             try {

@@ -16,6 +16,7 @@ import com.asdflj.ae2thing.common.item.ItemPartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.item.ItemPartWirelessConnectorTerminal;
 import com.asdflj.ae2thing.common.item.ItemPhial;
 import com.asdflj.ae2thing.common.item.ItemWirelessConnectorTerminal;
+import com.asdflj.ae2thing.common.item.ItemWirelessInterfaceTerminal;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.asdflj.ae2thing.util.NameConst;
 
@@ -34,6 +35,8 @@ public class ItemAndBlockHolder implements Runnable {
     public static ItemPartWirelessConnectorTerminal WIRELESS_CONNECTOR_TERMINAL = new ItemPartWirelessConnectorTerminal()
         .register();
     public static ItemWirelessConnectorTerminal ITEM_WIRELESS_CONNECTOR_TERMINAL = new ItemWirelessConnectorTerminal()
+        .register();
+    public static ItemWirelessInterfaceTerminal ITEM_WIRELESS_INTERFACE_TERMINAL = new ItemWirelessInterfaceTerminal()
         .register();
     public static ItemCreativeFluidCell ITEM_CREATIVE_WATER_CELL = new ItemCreativeFluidCell(
         NameConst.ITEM_CREATIVE_FLUID_CELL_WATER,

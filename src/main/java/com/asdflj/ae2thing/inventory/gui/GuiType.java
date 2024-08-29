@@ -12,12 +12,14 @@ import com.asdflj.ae2thing.client.gui.GuiCraftConfirm;
 import com.asdflj.ae2thing.client.gui.GuiCraftingStatus;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
+import com.asdflj.ae2thing.client.gui.GuiInterfaceWireless;
 import com.asdflj.ae2thing.client.gui.GuiPatternValueAmount;
 import com.asdflj.ae2thing.client.gui.GuiWirelessConnectorTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerCellLink;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftConfirm;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerInterfaceWireless;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTerminal;
 import com.asdflj.ae2thing.common.parts.THPart;
@@ -66,7 +68,18 @@ public enum GuiType {
             return new GuiWirelessConnectorTerminal(player.inventory, inv);
         }
     }),
+    WIRELESS_INTERFACE_TERMINAL(new ItemGuiFactory<>(ITerminalHost.class) {
 
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerInterfaceWireless(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiInterfaceWireless(player.inventory, inv);
+        }
+    }),
     INFUSION_PATTERN_TERMINAL(new PartGuiFactory<>(ITerminalHost.class) {
 
         @Override
@@ -103,7 +116,31 @@ public enum GuiType {
             return new GuiCraftingStatus(player.inventory, inv);
         }
     }),
+    CRAFTING_STATUS_ITEM(new ItemGuiFactory<>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerCraftingStatus(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiCraftingStatus(player.inventory, inv);
+        }
+    }),
     PATTERN_VALUE_SET(new PartGuiFactory<>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerPatternValueAmount(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiPatternValueAmount(player.inventory, inv);
+        }
+    }),
+    PATTERN_VALUE_SET_ITEM(new ItemGuiFactory<>(ITerminalHost.class) {
 
         @Override
         protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {

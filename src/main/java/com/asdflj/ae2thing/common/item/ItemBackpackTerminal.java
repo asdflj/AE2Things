@@ -22,8 +22,8 @@ import com.asdflj.ae2thing.common.storage.IStorageItemCell;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
+import com.asdflj.ae2thing.inventory.item.BackpackTerminalInventory;
 import com.asdflj.ae2thing.inventory.item.IItemInventory;
-import com.asdflj.ae2thing.inventory.item.PortableItemInventory;
 import com.asdflj.ae2thing.loader.IRegister;
 import com.asdflj.ae2thing.util.BlockPos;
 import com.asdflj.ae2thing.util.NameConst;
@@ -104,7 +104,7 @@ public class ItemBackpackTerminal extends BaseItem
     public Object getInventory(ItemStack stack, World world, int x, int y, int z, EntityPlayer player) {
         if (stack.getItem() instanceof IItemInventoryHandler iih) {
             try {
-                return new PortableItemInventory(stack, x, player, iih.getInventoryHandler(stack, null, player));
+                return new BackpackTerminalInventory(stack, x, player, iih.getInventoryHandler(stack, null, player));
             } catch (AppEngException ignored) {}
         }
         return null;

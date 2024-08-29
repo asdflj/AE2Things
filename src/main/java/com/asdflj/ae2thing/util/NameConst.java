@@ -14,6 +14,7 @@ public class NameConst {
     public static final String ITEM_PART_THAUMATORIUM_INTERFACE = "part_thaumatorium_interface";
     public static final String ITEM_PART_WIRELESS_CONNECTOR_TERMINAL = "part_wireless_connector_terminal";
     public static final String ITEM_WIRELESS_CONNECTOR_TERMINAL = "wireless_connector_terminal";
+    public static final String ITEM_WIRELESS_INTERFACE_TERMINAL = "wireless_interface_terminal";
     public static final String ITEM_PHIAL = "phial";
     public static final String BLOCK_FISHBIG = "fishbig";
     public static final String BLOCK_ESSENTIA_DISCRETIZER = "essentia_discretizer";

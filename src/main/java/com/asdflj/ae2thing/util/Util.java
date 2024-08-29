@@ -25,6 +25,7 @@ import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
 import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 
 import appeng.api.AEApi;
@@ -92,6 +93,10 @@ public class Util {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    public static boolean isFluidPacket(ItemStack stack) {
+        return stack != null && stack.getItem() instanceof ItemFluidPacket;
     }
 
     @Nonnull

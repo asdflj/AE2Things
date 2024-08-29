@@ -11,8 +11,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
+import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerInterfaceWireless;
 import com.asdflj.ae2thing.client.gui.container.ContainerMonitor;
+import com.asdflj.ae2thing.inventory.IPatternTerminal;
 import com.asdflj.ae2thing.nei.NEIUtils;
 import com.asdflj.ae2thing.nei.object.OrderStack;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -97,8 +100,8 @@ public class CPacketTransferRecipe implements IMessage {
                     ct.getPatternTerminal()
                         .setCraftingRecipe(true);
                     ct.setCrafting(true);
-                    IInventory inputSlot = ct.getInventoryByName("crafting");
-                    IInventory outputSlot = ct.getInventoryByName("output");
+                    IInventory inputSlot = ct.getInventoryByName(Constants.CRAFTING);
+                    IInventory outputSlot = ct.getInventoryByName(Constants.OUTPUT);
                     for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
                         inputSlot.setInventorySlotContents(i, null);
                     }
@@ -116,6 +119,30 @@ public class CPacketTransferRecipe implements IMessage {
                     c.onCraftMatrixChanged(inputSlot);
                     c.onCraftMatrixChanged(outputSlot);
                 }
+            } else if (c instanceof ContainerInterfaceWireless ciw) {
+                boolean combine = ciw.combine;
+                IPatternTerminal pt = ciw.getContainer()
+                    .getPatternTerminal();
+                IInventory inputSlot = pt.getInventoryByName(Constants.CRAFTING_EX);
+                IInventory outputSlot = pt.getInventoryByName(Constants.OUTPUT_EX);
+                for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
+                    inputSlot.setInventorySlotContents(i, null);
+                }
+                for (int i = 0; i < outputSlot.getSizeInventory(); i++) {
+                    outputSlot.setInventorySlotContents(i, null);
+                }
+                if (!message.isCraft) {
+                    if (combine) {
+                        message.inputs = NEIUtils.compress(message.inputs);
+                        message.outputs = NEIUtils.compress(message.outputs);
+                    }
+                    message.inputs = NEIUtils.clearNull(message.inputs);
+                    message.outputs = NEIUtils.clearNull(message.outputs);
+                }
+                transferPack(message.inputs, inputSlot);
+                transferPack(message.outputs, outputSlot);
+                c.onCraftMatrixChanged(inputSlot);
+                c.onCraftMatrixChanged(outputSlot);
             }
 
             return null;

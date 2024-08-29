@@ -2,14 +2,14 @@ package com.asdflj.ae2thing.common.parts;
 
 import net.minecraft.item.ItemStack;
 
-import com.asdflj.ae2thing.inventory.WirelessConnectorTerminal;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
+import com.asdflj.ae2thing.inventory.item.INetworkTerminal;
 import com.glodblock.github.client.textures.FCPartsTexture;
 
 import appeng.api.networking.IGrid;
 import appeng.me.GridAccessException;
 
-public class PartWirelessConnectorTerminal extends THPart implements WirelessConnectorTerminal {
+public class PartWirelessConnectorTerminal extends THPart implements INetworkTerminal {
 
     private static final FCPartsTexture FRONT_BRIGHT_ICON = FCPartsTexture.PartFluidPatternTerminal_Bright;
     private static final FCPartsTexture FRONT_DARK_ICON = FCPartsTexture.PartFluidPatternTerminal_Colored;

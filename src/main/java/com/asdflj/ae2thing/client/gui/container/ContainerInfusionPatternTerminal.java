@@ -3,10 +3,8 @@ package com.asdflj.ae2thing.client.gui.container;
 import static com.asdflj.ae2thing.api.Constants.TC_CRAFTING;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -18,8 +16,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.ForgeDirection;
 
+import com.asdflj.ae2thing.client.gui.container.slot.ProcessingSlotPattern;
+import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
 import com.asdflj.ae2thing.common.parts.PartInfusionPatternTerminal;
 import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
@@ -31,21 +30,15 @@ import appeng.api.config.SecurityPermissions;
 import appeng.api.definitions.IDefinitions;
 import appeng.api.implementations.IUpgradeableHost;
 import appeng.api.implementations.tiles.IViewCellStorage;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyGrid;
-import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
-import appeng.container.guisync.GuiSync;
 import appeng.container.slot.IOptionalSlotHost;
 import appeng.container.slot.OptionalSlotFake;
 import appeng.container.slot.SlotFake;
 import appeng.container.slot.SlotFakeCraftingMatrix;
-import appeng.container.slot.SlotPatternOutputs;
 import appeng.container.slot.SlotRestrictedInput;
-import appeng.me.helpers.ChannelPowerSrc;
 import appeng.tile.inventory.InvOperation;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
@@ -57,7 +50,8 @@ import thaumcraft.common.lib.research.ScanManager;
 import thaumicenergistics.common.items.ItemCraftingAspect;
 import thaumicenergistics.common.items.ItemEnum;
 
-public class ContainerInfusionPatternTerminal extends ContainerMonitor implements IOptionalSlotHost, IPatternContainer {
+public class ContainerInfusionPatternTerminal extends BasePatternContainerMonitor
+    implements IOptionalSlotHost, IPatternContainer, IWidgetPatternContainer {
 
     private static final int CRAFTING_GRID_PAGES = 2;
     private static final int CRAFTING_GRID_WIDTH = 4;
@@ -66,35 +60,15 @@ public class ContainerInfusionPatternTerminal extends ContainerMonitor implement
     protected IGridNode networkNode;
     protected final SlotRestrictedInput[] cellView = new SlotRestrictedInput[5];
     protected SlotFakeCraftingMatrix[] craftingSlots = new SlotFakeCraftingMatrix[1];
-    protected SlotPatternOutputs[] outputSlots = new SlotPatternOutputs[CRAFTING_GRID_SLOTS * CRAFTING_GRID_PAGES];
-    protected final SlotRestrictedInput patternSlotIN;
-    protected final SlotRestrictedInput patternSlotOUT;
-    protected SlotRestrictedInput patternRefiller;
+    protected ProcessingSlotPattern[] outputSlots = new ProcessingSlotPattern[CRAFTING_GRID_SLOTS
+        * CRAFTING_GRID_PAGES];
 
-    protected final IInventory crafting;
-    protected final IInventory output;
-    protected final IInventory patternInv;
-
-    @GuiSync(98)
-    public boolean hasPower = false;
-    @GuiSync(99)
-    public boolean canAccessViewCells;
-    @GuiSync(95)
-    public boolean combine = false;
-    @GuiSync(92)
-    public int activePage = 0;
-    @GuiSync(100)
-    public boolean craftingMode = true;
     private final PartInfusionPatternTerminal it;
     private ItemStack lastScanItem = null;
 
     public ContainerInfusionPatternTerminal(InventoryPlayer ip, ITerminalHost monitorable) {
         super(ip, monitorable);
         this.it = (PartInfusionPatternTerminal) monitorable;
-        this.canAccessViewCells = false;
-        this.crafting = this.it.getInventoryByName("crafting");
-        this.output = this.it.getInventoryByName("output");
-        this.patternInv = this.it.getInventoryByName("pattern");
 
         if (monitorable instanceof IViewCellStorage) {
             for (int y = 0; y < 5; y++) {
@@ -170,28 +144,9 @@ public class ContainerInfusionPatternTerminal extends ContainerMonitor implement
         for (int page = 0; page < CRAFTING_GRID_PAGES; page++) {
             for (int y = 0; y < CRAFTING_GRID_HEIGHT; y++) {
                 for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
-                    ((ProcessingSlotPattern) this.outputSlots[x + y * CRAFTING_GRID_WIDTH + page * CRAFTING_GRID_SLOTS])
+                    this.outputSlots[x + y * CRAFTING_GRID_WIDTH + page * CRAFTING_GRID_SLOTS]
                         .setHidden((page != activePage));
                 }
-            }
-        }
-    }
-
-    private static class ProcessingSlotPattern extends SlotPatternOutputs {
-
-        private static final int POSITION_SHIFT = 9000;
-        private boolean hidden = false;
-
-        public ProcessingSlotPattern(IInventory inv, IOptionalSlotHost containerBus, int idx, int x, int y, int offX,
-            int offY, int groupNum) {
-            super(inv, containerBus, idx, x, y, offX, offY, groupNum);
-            this.setRenderDisabled(false);
-        }
-
-        public void setHidden(boolean hide) {
-            if (this.hidden != hide) {
-                this.hidden = hide;
-                this.xDisplayPosition += (hide ? -1 : 1) * POSITION_SHIFT;
             }
         }
     }
@@ -402,6 +357,7 @@ public class ContainerInfusionPatternTerminal extends ContainerMonitor implement
         super.onUpdate(field, oldValue, newValue);
     }
 
+    @Override
     protected void updatePowerStatus() {
         try {
             if (this.networkNode != null) {
@@ -414,10 +370,6 @@ public class ContainerInfusionPatternTerminal extends ContainerMonitor implement
                         .extractAEPower(1, Actionable.SIMULATE, PowerMultiplier.CONFIG) > 0.8);
             }
         } catch (final Throwable ignore) {}
-    }
-
-    protected void setPowered(final boolean isPowered) {
-        this.hasPower = isPowered;
     }
 
     @Override
@@ -442,33 +394,6 @@ public class ContainerInfusionPatternTerminal extends ContainerMonitor implement
     public void onContainerClosed(EntityPlayer player) {
         super.onContainerClosed(player);
         if (this.fluidMonitor.getMonitor() != null) this.fluidMonitor.removeListener();
-    }
-
-    @Override
-    void setMonitor() {
-        if (this.host instanceof IGridHost) {
-            final IGridNode node = ((IGridHost) this.host).getGridNode(ForgeDirection.UNKNOWN);
-            if (node != null) {
-                this.networkNode = node;
-                final IGrid g = node.getGrid();
-                if (g != null) {
-                    this.setPowerSource(new ChannelPowerSrc(this.networkNode, g.getCache(IEnergyGrid.class)));
-                    IStorageGrid storageGrid = g.getCache(IStorageGrid.class);
-                    this.monitor.setMonitor(storageGrid.getItemInventory());
-                    this.fluidMonitor.setMonitor(storageGrid.getFluidInventory(), storageGrid.getItemInventory());
-                    this.monitor.setFluidMonitorObject(this.fluidMonitor);
-                    if (this.monitor.getMonitor() == null) {
-                        this.setValidContainer(false);
-                    } else {
-                        this.monitor.addListener();
-                        this.fluidMonitor.addListener();
-                        this.setCellInventory(this.monitor.getMonitor());
-                    }
-                }
-            } else {
-                this.setValidContainer(false);
-            }
-        }
     }
 
     public SlotRestrictedInput getCellViewSlot(final int index) {
@@ -642,31 +567,6 @@ public class ContainerInfusionPatternTerminal extends ContainerMonitor implement
 
     }
 
-    private static void doubleStacksInternal(SlotFake[] slots, int mult) {
-        List<SlotFake> enabledSlots = Arrays.stream(slots)
-            .filter(SlotFake::isEnabled)
-            .collect(Collectors.toList());
-        for (final Slot s : enabledSlots) {
-            ItemStack st = s.getStack();
-            if (st != null) {
-                st.stackSize *= mult;
-            }
-        }
-    }
-
-    private static boolean canDouble(SlotFake[] slots, int mult) {
-        for (Slot s : slots) {
-            ItemStack st = s.getStack();
-            if (st != null) {
-                long result = (long) s.getStack().stackSize * mult;
-                if (result > Integer.MAX_VALUE) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     public void encodeAndMoveToInventory() {
         encode();
         ItemStack output = this.patternSlotOUT.getStack();
@@ -716,5 +616,10 @@ public class ContainerInfusionPatternTerminal extends ContainerMonitor implement
     public void setCrafting(boolean craftingMode) {
         this.craftingMode = craftingMode;
         this.it.setCraftingRecipe(craftingMode);
+    }
+
+    @Override
+    public IPatternContainer getContainer() {
+        return this;
     }
 }

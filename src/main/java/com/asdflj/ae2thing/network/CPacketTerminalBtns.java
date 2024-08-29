@@ -9,8 +9,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTerminal;
+import com.asdflj.ae2thing.client.gui.container.IPatternContainer;
+import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -105,7 +106,8 @@ public class CPacketTerminalBtns implements IMessage {
             String value = message.value;
             NBTTagCompound tag = message.tag;
             final Container c = ctx.getServerHandler().playerEntity.openContainer;
-            if (name.startsWith("PatternTerminal.") && c instanceof ContainerInfusionPatternTerminal cpt) {
+            if (name.startsWith("PatternTerminal.") && c instanceof IWidgetPatternContainer wpc) {
+                IPatternContainer cpt = wpc.getContainer();
                 switch (name) {
                     case "PatternTerminal.Encode" -> {
                         switch (value) {
@@ -122,7 +124,23 @@ public class CPacketTerminalBtns implements IMessage {
                     case "PatternTerminal.ActivePage" -> cpt.getPatternTerminal()
                         .setActivePage(Integer.parseInt(value));
                     case "PatternTerminal.Double" -> cpt.doubleStacks(value.equals("1"));
+                    case "PatternTerminal.Substitute" -> cpt.getPatternTerminal()
+                        .setSubstitution(value.equals("1"));
+                    case "PatternTerminal.Prioritize" -> {
+                        switch (value) {
+                            case "0", "1" -> cpt.getPatternTerminal()
+                                .setPrioritization(value.equals("1"));
+                            case "2" -> cpt.getPatternTerminal()
+                                .sortCraftingItems();
+                        }
+                    }
+                    case "PatternTerminal.Invert" -> cpt.getPatternTerminal()
+                        .setInverted(value.equals("1"));
+                    case "PatternTerminal.beSubstitute" -> cpt.getPatternTerminal()
+                        .setBeSubstitute(value.equals("1"));
                 }
+                cpt.getPatternTerminal()
+                    .saveSettings();
             }
             if (name.startsWith("WirelessConnectorTerminal.") && c instanceof ContainerWirelessConnectorTerminal cwt) {
                 switch (name) {

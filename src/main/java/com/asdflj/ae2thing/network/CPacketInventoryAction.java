@@ -17,6 +17,7 @@ import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
+import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 import com.asdflj.ae2thing.util.BlockPos;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.item.ItemFluidDrop;
@@ -151,6 +152,13 @@ public class CPacketInventoryAction implements IMessage {
                                     new BlockPos(te),
                                     Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
                                     GuiType.PATTERN_VALUE_SET);
+                        }else{
+                            InventoryHandler.openGui(
+                                sender,
+                                sender.getEntityWorld(),
+                                new BlockPos(((WirelessTerminal)target).getInventorySlot(),0,0),
+                                Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
+                                GuiType.PATTERN_VALUE_SET_ITEM);
                         }
                         int amt = (int) message.stack.getStackSize();
                         AE2Thing.proxy.netHandler.sendTo(new SPacketSetItemAmount(amt), sender);

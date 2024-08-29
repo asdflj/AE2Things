@@ -7,6 +7,7 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
 import com.asdflj.ae2thing.common.parts.PartInfusionPatternTerminal;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
+import com.asdflj.ae2thing.inventory.item.WirelessInterfaceTerminalInventory;
 import com.asdflj.ae2thing.loader.ItemAndBlockHolder;
 import com.asdflj.ae2thing.network.CPacketPatternValueSet;
 
@@ -39,6 +40,9 @@ public class GuiPatternValueAmount extends GuiAmount {
         if (target instanceof PartInfusionPatternTerminal) {
             this.myIcon = ItemAndBlockHolder.INFUSION_PATTERN_TERMINAL.stack();
             this.originalGui = GuiType.INFUSION_PATTERN_TERMINAL;
+        } else if (target instanceof WirelessInterfaceTerminalInventory) {
+            this.myIcon = ItemAndBlockHolder.ITEM_WIRELESS_INTERFACE_TERMINAL.stack();
+            this.originalGui = GuiType.WIRELESS_INTERFACE_TERMINAL;
         }
     }
 

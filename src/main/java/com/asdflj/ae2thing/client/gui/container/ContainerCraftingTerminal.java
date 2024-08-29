@@ -6,7 +6,8 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 
-import com.asdflj.ae2thing.inventory.item.PortableItemInventory;
+import com.asdflj.ae2thing.api.Constants;
+import com.asdflj.ae2thing.inventory.item.BackpackTerminalInventory;
 import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidDrop;
 
@@ -26,13 +27,13 @@ public class ContainerCraftingTerminal extends ContainerMonitor {
 
     private final SlotCraftingMatrix[] craftingSlots = new SlotCraftingMatrix[9];
     private final SlotCraftingTerm outputSlot;
-    private final PortableItemInventory it;
+    private final BackpackTerminalInventory it;
 
     public ContainerCraftingTerminal(InventoryPlayer ip, ITerminalHost monitorable) {
         super(ip, monitorable);
-        this.it = (PortableItemInventory) monitorable;
+        this.it = (BackpackTerminalInventory) monitorable;
         this.lockSlot();
-        final IInventory crafting = this.it.getInventoryByName("crafting");
+        final IInventory crafting = this.it.getInventoryByName(Constants.CRAFTING);
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 this.addSlotToContainer(
