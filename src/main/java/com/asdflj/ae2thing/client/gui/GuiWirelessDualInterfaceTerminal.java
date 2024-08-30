@@ -9,7 +9,7 @@ import net.minecraft.inventory.Slot;
 import org.lwjgl.opengl.GL11;
 
 import com.asdflj.ae2thing.AE2Thing;
-import com.asdflj.ae2thing.client.gui.container.ContainerInterfaceWireless;
+import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.client.gui.widget.IAEBasePanel;
 import com.asdflj.ae2thing.client.gui.widget.PatternPanel;
@@ -27,16 +27,16 @@ import appeng.container.slot.SlotRestrictedInput;
 import appeng.core.localization.GuiText;
 import appeng.util.item.AEItemStack;
 
-public class GuiInterfaceWireless extends GuiBaseInterfaceWireless implements IWidgetGui {
+public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless implements IWidgetGui {
 
     private final IAEBasePanel panel;
-    public ContainerInterfaceWireless container;
+    public ContainerWirelessDualInterfaceTerminal container;
     private GuiTabButton craftingStatusBtn;
     private final int baseXSize;
 
-    public GuiInterfaceWireless(InventoryPlayer inventoryPlayer, ITerminalHost te) {
+    public GuiWirelessDualInterfaceTerminal(InventoryPlayer inventoryPlayer, ITerminalHost te) {
         super(inventoryPlayer, te);
-        container = (ContainerInterfaceWireless) this.inventorySlots;
+        container = (ContainerWirelessDualInterfaceTerminal) this.inventorySlots;
         panel = new PatternPanel(this, container);
         this.baseXSize = this.xSize;
     }
@@ -192,6 +192,6 @@ public class GuiInterfaceWireless extends GuiBaseInterfaceWireless implements IW
 
     @Override
     protected boolean isPowered() {
-        return ((ContainerInterfaceWireless) this.inventorySlots).hasPower;
+        return ((ContainerWirelessDualInterfaceTerminal) this.inventorySlots).hasPower;
     }
 }

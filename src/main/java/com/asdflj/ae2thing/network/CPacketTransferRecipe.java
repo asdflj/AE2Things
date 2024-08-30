@@ -13,8 +13,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
-import com.asdflj.ae2thing.client.gui.container.ContainerInterfaceWireless;
 import com.asdflj.ae2thing.client.gui.container.ContainerMonitor;
+import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
 import com.asdflj.ae2thing.nei.NEIUtils;
 import com.asdflj.ae2thing.nei.object.OrderStack;
@@ -119,7 +119,7 @@ public class CPacketTransferRecipe implements IMessage {
                     c.onCraftMatrixChanged(inputSlot);
                     c.onCraftMatrixChanged(outputSlot);
                 }
-            } else if (c instanceof ContainerInterfaceWireless ciw) {
+            } else if (c instanceof ContainerWirelessDualInterfaceTerminal ciw) {
                 boolean combine = ciw.combine;
                 IPatternTerminal pt = ciw.getContainer()
                     .getPatternTerminal();

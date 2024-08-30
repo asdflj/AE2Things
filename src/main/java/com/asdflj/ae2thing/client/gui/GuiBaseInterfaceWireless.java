@@ -34,7 +34,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import com.asdflj.ae2thing.AE2Thing;
-import com.asdflj.ae2thing.client.gui.container.ContainerInterfaceWireless;
+import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.network.CPacketRenamer;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
@@ -124,7 +124,7 @@ public class GuiBaseInterfaceWireless extends AEBaseMEGui
     protected int offsetY;
 
     public GuiBaseInterfaceWireless(final InventoryPlayer inventoryPlayer, final ITerminalHost te) {
-        super(new ContainerInterfaceWireless(inventoryPlayer, te));
+        super(new ContainerWirelessDualInterfaceTerminal(inventoryPlayer, te));
         this.setScrollBar(new GuiScrollbar());
         this.xSize = 240;
         this.ySize = 255;

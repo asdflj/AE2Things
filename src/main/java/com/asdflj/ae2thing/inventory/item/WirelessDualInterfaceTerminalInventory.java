@@ -31,7 +31,7 @@ import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
 import appeng.util.Platform;
 
-public class WirelessInterfaceTerminalInventory extends WirelessTerminal
+public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
     implements IActionHost, IGridHost, IPatternTerminal, IClickableInTerminal, IAEAppEngInventory {
 
     protected AppEngInternalInventory crafting;
@@ -47,7 +47,7 @@ public class WirelessInterfaceTerminalInventory extends WirelessTerminal
     protected int activePage = 0;
     private Util.DimensionalCoordSide tile;
 
-    public WirelessInterfaceTerminalInventory(WirelessObject obj) {
+    public WirelessDualInterfaceTerminalInventory(WirelessObject obj) {
         super(obj);
         pattern = new WirelessFluidPatternTerminalPatterns(obj.getItemStack(), this, obj.getPlayer(), obj.getSlot());
         crafting = new ItemBiggerAppEngInventory(

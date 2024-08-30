@@ -12,18 +12,18 @@ import com.asdflj.ae2thing.client.gui.GuiCraftConfirm;
 import com.asdflj.ae2thing.client.gui.GuiCraftingStatus;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
-import com.asdflj.ae2thing.client.gui.GuiInterfaceWireless;
 import com.asdflj.ae2thing.client.gui.GuiPatternValueAmount;
 import com.asdflj.ae2thing.client.gui.GuiRenamer;
 import com.asdflj.ae2thing.client.gui.GuiWirelessConnectorTerminal;
+import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerCellLink;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftConfirm;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
-import com.asdflj.ae2thing.client.gui.container.ContainerInterfaceWireless;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
 import com.asdflj.ae2thing.client.gui.container.ContainerRenamer;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.common.parts.THPart;
 import com.asdflj.ae2thing.inventory.ItemCellLinkInventory;
 import com.google.common.collect.ImmutableList;
@@ -70,16 +70,16 @@ public enum GuiType {
             return new GuiWirelessConnectorTerminal(player.inventory, inv);
         }
     }),
-    WIRELESS_INTERFACE_TERMINAL(new ItemGuiFactory<>(ITerminalHost.class) {
+    WIRELESS_DUAL_INTERFACE_TERMINAL(new ItemGuiFactory<>(ITerminalHost.class) {
 
         @Override
         protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
-            return new ContainerInterfaceWireless(player.inventory, inv);
+            return new ContainerWirelessDualInterfaceTerminal(player.inventory, inv);
         }
 
         @Override
         protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
-            return new GuiInterfaceWireless(player.inventory, inv);
+            return new GuiWirelessDualInterfaceTerminal(player.inventory, inv);
         }
     }),
     INFUSION_PATTERN_TERMINAL(new PartGuiFactory<>(ITerminalHost.class) {

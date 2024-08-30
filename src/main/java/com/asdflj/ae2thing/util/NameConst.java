@@ -14,7 +14,7 @@ public class NameConst {
     public static final String ITEM_PART_THAUMATORIUM_INTERFACE = "part_thaumatorium_interface";
     public static final String ITEM_PART_WIRELESS_CONNECTOR_TERMINAL = "part_wireless_connector_terminal";
     public static final String ITEM_WIRELESS_CONNECTOR_TERMINAL = "wireless_connector_terminal";
-    public static final String ITEM_WIRELESS_INTERFACE_TERMINAL = "wireless_interface_terminal";
+    public static final String ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL = "wireless_dual_interface_terminal";
     public static final String ITEM_PHIAL = "phial";
     public static final String BLOCK_FISHBIG = "fishbig";
     public static final String BLOCK_ESSENTIA_DISCRETIZER = "essentia_discretizer";
@@ -30,6 +30,8 @@ public class NameConst {
     public static final String TT_CELL_LINK_DISABLE = TT_CELL_LINK + "disable";
     public static final String TT_CELL_LINK_DESC = TT_CELL_LINK + "desc";
     public static final String TT_CRAFTING_COMPLETE = TT_KEY + "crafting_complete";
+    public static final String TT_INTERFACE_TERMINAL = TT_KEY + "wireless_dual_interface_terminal.";
+    public static final String TT_INTERFACE_TERMINAL_DESC = TT_INTERFACE_TERMINAL + "desc";
 
     public static final String MAGNET = AE2Thing.MODID + ".magnet.";
     public static final String MAGNET_OFF = MAGNET + "off";

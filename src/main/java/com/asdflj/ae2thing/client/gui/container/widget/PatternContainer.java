@@ -17,7 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import com.asdflj.ae2thing.api.Constants;
-import com.asdflj.ae2thing.client.gui.container.ContainerInterfaceWireless;
+import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.container.IPatternContainer;
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPattern;
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
@@ -58,9 +58,9 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
     private static final int CRAFTING_GRID_SLOTS = CRAFTING_GRID_WIDTH * CRAFTING_GRID_HEIGHT;
 
     private final IPatternTerminal it;
-    private final ContainerInterfaceWireless container;
+    private final ContainerWirelessDualInterfaceTerminal container;
 
-    public PatternContainer(InventoryPlayer ip, ITerminalHost host, ContainerInterfaceWireless container) {
+    public PatternContainer(InventoryPlayer ip, ITerminalHost host, ContainerWirelessDualInterfaceTerminal container) {
         this.container = container;
         this.it = (IPatternTerminal) host;
         this.crafting = this.it.getInventoryByName(Constants.CRAFTING_EX);

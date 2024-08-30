@@ -4,7 +4,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
-import com.asdflj.ae2thing.client.gui.GuiInterfaceWireless;
+import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 
 import codechicken.nei.api.INEIGuiAdapter;
 
@@ -14,8 +14,8 @@ public class AE2TH_NEIGuiHandler extends INEIGuiAdapter {
     public boolean hideItemPanelSlot(GuiContainer gui, int x, int y, int w, int h) {
         if (gui instanceof GuiInfusionPatternTerminal) {
             return ((GuiInfusionPatternTerminal) gui).hideItemPanelSlot(x, y, w, h);
-        } else if (gui instanceof GuiInterfaceWireless) {
-            return ((GuiInterfaceWireless) gui).hideItemPanelSlot(x, y, w, h);
+        } else if (gui instanceof GuiWirelessDualInterfaceTerminal) {
+            return ((GuiWirelessDualInterfaceTerminal) gui).hideItemPanelSlot(x, y, w, h);
         }
         return false;
     }

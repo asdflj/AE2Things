@@ -10,7 +10,7 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerRenamer;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
-import com.asdflj.ae2thing.inventory.item.WirelessInterfaceTerminalInventory;
+import com.asdflj.ae2thing.inventory.item.WirelessDualInterfaceTerminalInventory;
 import com.asdflj.ae2thing.loader.ItemAndBlockHolder;
 import com.asdflj.ae2thing.network.CPacketRenamer;
 
@@ -47,9 +47,9 @@ public class GuiRenamer extends AEBaseGui implements IDropToFillTextField {
     public void initGui() {
         super.initGui();
         AE2Thing.proxy.netHandler.sendToServer(new CPacketRenamer(CPacketRenamer.Action.GET_TEXT));
-        if (host instanceof WirelessInterfaceTerminalInventory) {
-            icon = ItemAndBlockHolder.ITEM_WIRELESS_INTERFACE_TERMINAL.stack();
-            originalGui = GuiType.WIRELESS_INTERFACE_TERMINAL;
+        if (host instanceof WirelessDualInterfaceTerminalInventory) {
+            icon = ItemAndBlockHolder.ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL.stack();
+            originalGui = GuiType.WIRELESS_DUAL_INTERFACE_TERMINAL;
         }
         if (this.icon != null) {
             this.buttonList.add(

@@ -8,7 +8,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
-import com.asdflj.ae2thing.client.gui.GuiInterfaceWireless;
+import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.nei.object.OrderStack;
 import com.asdflj.ae2thing.nei.recipes.FluidRecipe;
 import com.asdflj.ae2thing.network.CPacketTransferRecipe;
@@ -37,8 +37,8 @@ public class FluidPatternTerminalRecipeTransferHandler implements IOverlayHandle
             List<OrderStack<?>> in = FluidRecipe.getPackageInputs(recipe, recipeIndex, false);
             List<OrderStack<?>> out = FluidRecipe.getPackageOutputs(recipe, recipeIndex, false);
             AE2Thing.proxy.netHandler.sendToServer(new CPacketTransferRecipe(out, in, true, shift));
-        } else if (firstGui instanceof GuiInterfaceWireless) {
-            boolean priority = ((GuiInterfaceWireless) firstGui).container.prioritize;
+        } else if (firstGui instanceof GuiWirelessDualInterfaceTerminal) {
+            boolean priority = ((GuiWirelessDualInterfaceTerminal) firstGui).container.prioritize;
             List<com.glodblock.github.nei.object.OrderStack<?>> in = com.glodblock.github.nei.recipes.FluidRecipe
                 .getPackageInputs(recipe, recipeIndex, priority);
             List<com.glodblock.github.nei.object.OrderStack<?>> out = com.glodblock.github.nei.recipes.FluidRecipe

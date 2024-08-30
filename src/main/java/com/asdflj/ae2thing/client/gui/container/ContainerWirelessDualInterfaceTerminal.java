@@ -24,7 +24,7 @@ import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
 import com.asdflj.ae2thing.client.gui.container.widget.PatternContainer;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
-import com.asdflj.ae2thing.inventory.item.WirelessInterfaceTerminalInventory;
+import com.asdflj.ae2thing.inventory.item.WirelessDualInterfaceTerminalInventory;
 import com.asdflj.ae2thing.util.Ae2Reflect;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.util.Util;
@@ -48,7 +48,7 @@ import appeng.tile.networking.TileCableBus;
 import appeng.util.PatternMultiplierHelper;
 import appeng.util.Platform;
 
-public class ContainerInterfaceWireless extends BaseNetworkContainer
+public class ContainerWirelessDualInterfaceTerminal extends BaseNetworkContainer
     implements IContainerCraftingPacket, IWidgetPatternContainer {
 
     public final ContainerInterfaceTerminal delegateContainer;
@@ -73,12 +73,12 @@ public class ContainerInterfaceWireless extends BaseNetworkContainer
 
     private final IPatternTerminal it;
 
-    public ContainerInterfaceWireless(InventoryPlayer ip, ITerminalHost monitorable) {
+    public ContainerWirelessDualInterfaceTerminal(InventoryPlayer ip, ITerminalHost monitorable) {
         super(ip, monitorable);
         this.patternPanel = new PatternContainer(ip, monitorable, this);
         this.delegateContainer = new ContainerInterfaceTerminal(ip, (IActionHost) monitorable);
         this.it = (IPatternTerminal) monitorable;
-        if (monitorable instanceof WirelessInterfaceTerminalInventory witi) {
+        if (monitorable instanceof WirelessDualInterfaceTerminalInventory witi) {
             this.setPowerSource(witi);
             this.setCellInventory(null);
         }

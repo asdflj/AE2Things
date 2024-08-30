@@ -10,7 +10,7 @@ import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_CREATIVE_WATER_
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_FLUID_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_WIRELESS_CONNECTOR_TERMINAL;
-import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_WIRELESS_INTERFACE_TERMINAL;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.THAUMATRIUM_INTERFACE;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.WIRELESS_CONNECTOR_TERMINAL;
 import static com.glodblock.github.loader.ItemAndBlockHolder.CELL_HOUSING;
@@ -110,7 +110,7 @@ public class RecipeLoader implements Runnable {
             AE2_SUPER_SPEED_CARD,
             AE2_SUPER_SPEED_CARD);
         GameRegistry.addShapelessRecipe(
-            ITEM_WIRELESS_INTERFACE_TERMINAL.stack(),
+            ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL.stack(),
             WIRELESS_INTERFACE_TERM,
             FLUID_TERMINAL_EX.stack());
         if (ModAndClassUtil.THE) {

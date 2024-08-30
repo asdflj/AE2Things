@@ -7,7 +7,7 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.Tags;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
-import com.asdflj.ae2thing.client.gui.GuiInterfaceWireless;
+import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.glodblock.github.nei.recipes.FluidRecipe;
 
 import codechicken.nei.api.API;
@@ -43,9 +43,9 @@ public class NEI_TH_Config implements IConfigureNEI {
             }
         }
         for (String identifier : FluidRecipe.getSupportRecipes()) {
-            if (!API.hasGuiOverlayHandler(GuiInterfaceWireless.class, identifier)) {
+            if (!API.hasGuiOverlayHandler(GuiWirelessDualInterfaceTerminal.class, identifier)) {
                 API.registerGuiOverlayHandler(
-                    GuiInterfaceWireless.class,
+                    GuiWirelessDualInterfaceTerminal.class,
                     FluidPatternTerminalRecipeTransferHandler.INSTANCE,
                     identifier);
             }

@@ -9,8 +9,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.asdflj.ae2thing.client.gui.container.ContainerInterfaceWireless;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.container.IPatternContainer;
 import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
 
@@ -143,7 +143,7 @@ public class CPacketTerminalBtns implements IMessage {
                 cpt.getPatternTerminal()
                     .saveSettings();
             }
-            if (name.startsWith("InterfaceTerminal.") && c instanceof ContainerInterfaceWireless ciw) {
+            if (name.startsWith("InterfaceTerminal.") && c instanceof ContainerWirelessDualInterfaceTerminal ciw) {
                 ciw.doubleStacks(Integer.parseInt(value), tag);
             }
             if (name.startsWith("WirelessConnectorTerminal.") && c instanceof ContainerWirelessConnectorTerminal cwt) {

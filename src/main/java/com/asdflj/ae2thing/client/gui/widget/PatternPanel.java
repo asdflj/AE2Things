@@ -14,7 +14,7 @@ import org.lwjgl.input.Mouse;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.IWidgetGui;
-import com.asdflj.ae2thing.client.gui.container.ContainerInterfaceWireless;
+import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
@@ -45,7 +45,7 @@ public class PatternPanel implements IAEBasePanel {
 
     private final AEBaseGui parent;
     private final IWidgetGui gui;
-    private final ContainerInterfaceWireless container;
+    private final ContainerWirelessDualInterfaceTerminal container;
     protected GuiImgButton encodeBtn;
     protected GuiImgButton substitutionsEnabledBtn;
     protected GuiImgButton substitutionsDisabledBtn;
@@ -61,7 +61,7 @@ public class PatternPanel implements IAEBasePanel {
     protected final GuiScrollbar processingScrollBar = new GuiScrollbar();
     private AEBaseContainer inventorySlots;
 
-    public PatternPanel(IWidgetGui gui, ContainerInterfaceWireless container) {
+    public PatternPanel(IWidgetGui gui, ContainerWirelessDualInterfaceTerminal container) {
         this.gui = gui;
         this.container = container;
         this.parent = gui.getGui();
