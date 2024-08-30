@@ -8,6 +8,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.asdflj.ae2thing.AE2Thing;
@@ -202,8 +203,10 @@ public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiFluidT
         } else if (btn == clearBtn) {
             AE2Thing.proxy.netHandler.sendToServer(new CPacketTerminalBtns("PatternTerminal.Clear", 1));
         } else if (btn == doubleBtn) {
-            AE2Thing.proxy.netHandler
-                .sendToServer(new CPacketTerminalBtns("PatternTerminal.Double", (isShiftKeyDown() ? 1 : 0)));
+            final boolean backwards = Mouse.isButtonDown(1);
+            int val = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? 1 : 0;
+            if (backwards) val |= 0b10;
+            AE2Thing.proxy.netHandler.sendToServer(new CPacketTerminalBtns("PatternTerminal.Double", val));
         } else if (this.tabCraftButton == btn || this.tabProcessButton == btn) {
             AE2Thing.proxy.netHandler.sendToServer(
                 new CPacketTerminalBtns(

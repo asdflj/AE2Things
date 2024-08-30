@@ -5,6 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.inventory.ItemBiggerAppEngInventory;
 
 import appeng.api.config.Actionable;
@@ -28,7 +29,7 @@ import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.util.ConfigManager;
 import appeng.util.Platform;
 
-public class PortableItemInventory extends MEMonitorHandler<IAEItemStack>
+public class BackpackTerminalInventory extends MEMonitorHandler<IAEItemStack>
     implements ITerminalHost, IInventorySlotAware, IGuiItemObject, IEnergySource {
 
     private final ItemStack target;
@@ -37,12 +38,12 @@ public class PortableItemInventory extends MEMonitorHandler<IAEItemStack>
     protected EntityPlayer player;
 
     @SuppressWarnings("unchecked")
-    public PortableItemInventory(ItemStack is, int slot, EntityPlayer player, IMEInventoryHandler<?> monitor) {
+    public BackpackTerminalInventory(ItemStack is, int slot, EntityPlayer player, IMEInventoryHandler<?> monitor) {
         super((IMEInventoryHandler<IAEItemStack>) monitor);
         this.target = is;
         this.inventorySlot = slot;
         this.player = player;
-        this.crafting = new ItemBiggerAppEngInventory(is, "crafting", 9, player, slot);
+        this.crafting = new ItemBiggerAppEngInventory(is, Constants.CRAFTING, 9, player, slot);
     }
 
     @Override
@@ -87,7 +88,7 @@ public class PortableItemInventory extends MEMonitorHandler<IAEItemStack>
     }
 
     public IInventory getInventoryByName(String crafting) {
-        if (crafting.equals("crafting")) {
+        if (crafting.equals(Constants.CRAFTING)) {
             return this.crafting;
         }
         return null;

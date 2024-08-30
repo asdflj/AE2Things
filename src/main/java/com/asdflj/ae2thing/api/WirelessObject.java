@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.asdflj.ae2thing.common.Config;
+import com.asdflj.ae2thing.common.item.ItemWirelessConnectorTerminal;
 import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 
 import appeng.api.AEApi;
@@ -100,7 +101,10 @@ public class WirelessObject {
     }
 
     public boolean rangeCheck() {
-        if (Config.wirelessConnectorTerminalInfinityConnectionRange) return true;
+        if (this.getItemStack() != null && this.getItemStack()
+            .getItem() instanceof ItemWirelessConnectorTerminal) {
+            if (Config.wirelessConnectorTerminalInfinityConnectionRange) return true;
+        }
         boolean canConnect = false;
         for (IGridNode node : this.gridNode.getGrid()
             .getMachines(TileWireless.class)) {

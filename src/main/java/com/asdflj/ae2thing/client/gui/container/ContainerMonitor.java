@@ -19,6 +19,7 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.container.BaseMonitor.FluidMonitor;
 import com.asdflj.ae2thing.client.gui.container.BaseMonitor.ItemMonitor;
+import com.asdflj.ae2thing.inventory.item.INetworkTerminal;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -32,6 +33,7 @@ import appeng.api.config.SortDir;
 import appeng.api.config.SortOrder;
 import appeng.api.config.TypeFilter;
 import appeng.api.config.ViewItems;
+import appeng.api.networking.IGridNode;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEFluidStack;
@@ -39,7 +41,6 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
-import appeng.container.AEBaseContainer;
 import appeng.core.AELog;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketValueConfig;
@@ -51,7 +52,7 @@ import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
 import appeng.util.item.AEItemStack;
 
-public abstract class ContainerMonitor extends AEBaseContainer
+public abstract class ContainerMonitor extends BaseNetworkContainer
     implements IConfigurableObject, IConfigManagerHost, IAEAppEngInventory, IContainerCraftingPacket {
 
     protected final IItemList<IAEItemStack> items = AEApi.instance()
@@ -63,6 +64,7 @@ public abstract class ContainerMonitor extends AEBaseContainer
     protected ITerminalHost host;
     protected IConfigManagerHost gui;
     protected IConfigManager serverCM;
+    protected IGridNode networkNode;
 
     public ContainerMonitor(InventoryPlayer ip, ITerminalHost monitorable) {
         super(ip, monitorable);
@@ -75,10 +77,12 @@ public abstract class ContainerMonitor extends AEBaseContainer
         this.monitor = new ItemMonitor(this.crafters);
         this.fluidMonitor = new FluidMonitor(this.crafters);
         if (Platform.isServer()) {
+            if (monitorable instanceof INetworkTerminal) {
+                this.networkNode = ((INetworkTerminal) monitorable).getGridNode();
+            }
             this.serverCM = monitorable.getConfigManager();
             this.setMonitor();
         }
-
     }
 
     protected void dropItem(ItemStack is) {

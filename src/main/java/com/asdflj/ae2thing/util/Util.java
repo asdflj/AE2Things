@@ -25,6 +25,7 @@ import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
 import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 
 import appeng.api.AEApi;
@@ -92,6 +93,10 @@ public class Util {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    public static boolean isFluidPacket(ItemStack stack) {
+        return stack != null && stack.getItem() instanceof ItemFluidPacket;
     }
 
     @Nonnull
@@ -226,5 +231,44 @@ public class Util {
             return fillStack.right;
         }
         return null;
+    }
+
+    public static class DimensionalCoordSide extends DimensionalCoord {
+
+        private ForgeDirection side = ForgeDirection.UNKNOWN;
+        private final String name;
+
+        public DimensionalCoordSide(final int _x, final int _y, final int _z, final int _dim, ForgeDirection side,
+            String name) {
+            super(_x, _y, _z, _dim);
+            this.side = side;
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public ForgeDirection getSide() {
+            return this.side;
+        }
+
+        @Override
+        public void writeToNBT(NBTTagCompound data) {
+            data.setInteger("side", this.side.ordinal());
+            data.setString("name", this.name);
+            super.writeToNBT(data);
+        }
+
+        public static DimensionalCoordSide readFromNBT(final NBTTagCompound data) {
+            return new DimensionalCoordSide(
+                data.getInteger("x"),
+                data.getInteger("y"),
+                data.getInteger("z"),
+                data.getInteger("dim"),
+                ForgeDirection.getOrientation(data.getInteger("side")),
+                data.getString("name"));
+        }
+
     }
 }

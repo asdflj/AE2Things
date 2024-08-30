@@ -8,11 +8,14 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import com.asdflj.ae2thing.api.Constants;
+import com.asdflj.ae2thing.inventory.IPatternTerminal;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.glodblock.github.client.textures.FCPartsTexture;
 
 import appeng.api.AEApi;
 import appeng.api.implementations.ICraftingPatternItem;
+import appeng.api.networking.IGrid;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.tile.inventory.AppEngInternalInventory;
@@ -21,7 +24,7 @@ import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
 import appeng.util.Platform;
 
-public class PartInfusionPatternTerminal extends THPart {
+public class PartInfusionPatternTerminal extends THPart implements IPatternTerminal {
 
     public static class RefillerInventory extends AppEngInternalInventory {
 
@@ -66,20 +69,34 @@ public class PartInfusionPatternTerminal extends THPart {
         }
     }
 
+    @Override
     public void setActivePage(int value) {
         this.activePage = value;
     }
 
+    @Override
     public int getActivePage() {
         return this.activePage;
     }
 
+    @Override
     public boolean shouldCombine() {
         return this.combine;
     }
 
+    @Override
     public void setCombineMode(boolean shouldCombine) {
         this.combine = shouldCombine;
+    }
+
+    @Override
+    public void setPrioritization(boolean canPrioritize) {
+
+    }
+
+    @Override
+    public void setInverted(boolean inverted) {
+
     }
 
     public boolean hasRefillerUpgrade() {
@@ -88,16 +105,25 @@ public class PartInfusionPatternTerminal extends THPart {
 
     @Override
     public IInventory getInventoryByName(final String name) {
-        if (name.equals("crafting")) {
+        if (name.equals(Constants.CRAFTING)) {
             return crafting;
-        } else if (name.equals("output")) {
+        } else if (name.equals(Constants.OUTPUT)) {
             return output;
-        } else if (name.equals("pattern")) {
+        } else if (name.equals(Constants.PATTERN)) {
             return this.pattern;
-        } else if (name.equals("upgrades")) {
+        } else if (name.equals(Constants.UPGRADES)) {
             return this.upgrades;
         }
         return null;
+    }
+
+    @Override
+    public IGrid getGrid() {
+        try {
+            return this.proxy.getGrid();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -178,12 +204,49 @@ public class PartInfusionPatternTerminal extends THPart {
         this.combine = data.getBoolean("combine");
     }
 
+    @Override
     public void setCraftingRecipe(final boolean craftingMode) {
         this.craftingMode = craftingMode;
     }
 
+    @Override
+    public void setSubstitution(boolean canSubstitute) {
+
+    }
+
+    @Override
+    public void setBeSubstitute(boolean canBeSubstitute) {
+
+    }
+
+    @Override
     public boolean isCraftingRecipe() {
         return this.craftingMode;
+    }
+
+    @Override
+    public void saveSettings() {
+
+    }
+
+    @Override
+    public boolean isInverted() {
+        return false;
+    }
+
+    @Override
+    public boolean canBeSubstitute() {
+        return false;
+    }
+
+    @Override
+    public boolean isPrioritize() {
+        return false;
+    }
+
+    @Override
+    public boolean isSubstitution() {
+        return false;
     }
 
     @Override

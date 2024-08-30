@@ -12,6 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
+import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 import com.asdflj.ae2thing.util.BlockPos;
 import com.asdflj.ae2thing.util.Util;
 
@@ -60,7 +61,7 @@ public class CPacketSwitchGuis implements IMessage {
                 }
                 return null;
             }
-            if (cont instanceof AEBaseContainer) {
+            if (cont instanceof AEBaseContainer c) {
                 ContainerOpenContext context = ((AEBaseContainer) cont).getOpenContext();
                 if (context == null) {
                     return null;
@@ -71,6 +72,13 @@ public class CPacketSwitchGuis implements IMessage {
                         player,
                         player.worldObj,
                         new BlockPos(te),
+                        Objects.requireNonNull(context.getSide()),
+                        message.guiType);
+                } else {
+                    InventoryHandler.openGui(
+                        player,
+                        player.getEntityWorld(),
+                        new BlockPos(((WirelessTerminal) (c.getTarget())).getInventorySlot(), 0, 0),
                         Objects.requireNonNull(context.getSide()),
                         message.guiType);
                 }

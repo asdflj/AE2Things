@@ -6,12 +6,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fluids.FluidStack;
 
-import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
+import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
+import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 import com.asdflj.ae2thing.util.BlockPos;
+import com.asdflj.ae2thing.util.Util;
+import com.glodblock.github.common.item.ItemFluidPacket;
 
 import appeng.api.networking.IGridHost;
 import appeng.container.ContainerOpenContext;
@@ -69,14 +73,31 @@ public class CPacketPatternValueSet implements IMessage {
                                 new BlockPos(te),
                                 Objects.requireNonNull(context.getSide()),
                                 message.originGui);
+                        } else {
+                            InventoryHandler.openGui(
+                                player,
+                                player.getEntityWorld(),
+                                new BlockPos(((WirelessTerminal) target).getInventorySlot(), 0, 0),
+                                Objects.requireNonNull(context.getSide()),
+                                message.originGui);
                         }
-                        if (player.openContainer instanceof ContainerInfusionPatternTerminal) {
+                        if (player.openContainer instanceof IWidgetPatternContainer) {
                             Slot slot = player.openContainer.getSlot(message.valueIndex);
                             if (slot instanceof SlotFake) {
                                 ItemStack stack = slot.getStack()
                                     .copy();
-                                stack.stackSize = message.amount;
-                                slot.putStack(stack);
+                                if (Util.isFluidPacket(stack)) {
+                                    FluidStack fluidStack = ItemFluidPacket.getFluidStack(stack);
+                                    if (fluidStack != null) {
+                                        fluidStack = ItemFluidPacket.getFluidStack(stack)
+                                            .copy();
+                                        fluidStack.amount = message.amount;
+                                    }
+                                    slot.putStack(ItemFluidPacket.newStack(fluidStack));
+                                } else {
+                                    stack.stackSize = message.amount;
+                                    slot.putStack(stack);
+                                }
                             }
                         }
                     }
