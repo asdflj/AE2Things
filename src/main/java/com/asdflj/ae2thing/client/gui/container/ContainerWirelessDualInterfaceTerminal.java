@@ -26,6 +26,8 @@ import com.asdflj.ae2thing.client.gui.container.widget.PatternContainer;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
 import com.asdflj.ae2thing.inventory.item.WirelessDualInterfaceTerminalInventory;
 import com.asdflj.ae2thing.util.Ae2Reflect;
+import com.asdflj.ae2thing.util.GTUtil;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.util.Util;
 
@@ -34,6 +36,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.storage.ITerminalHost;
+import appeng.api.util.IInterfaceViewable;
 import appeng.container.guisync.GuiSync;
 import appeng.container.implementations.ContainerInterfaceTerminal;
 import appeng.container.slot.AppEngSlot;
@@ -41,7 +44,6 @@ import appeng.core.AELog;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInterfaceTerminalUpdate;
 import appeng.helpers.IContainerCraftingPacket;
-import appeng.helpers.IInterfaceHost;
 import appeng.helpers.InventoryAction;
 import appeng.me.cache.CraftingGridCache;
 import appeng.tile.networking.TileCableBus;
@@ -202,18 +204,21 @@ public class ContainerWirelessDualInterfaceTerminal extends BaseNetworkContainer
         Util.DimensionalCoordSide intMsg = Util.DimensionalCoordSide.readFromNBT(tag);
         World w = DimensionManager.getWorld(intMsg.getDimension());
         TileEntity tile = w.getTileEntity(intMsg.x, intMsg.y, intMsg.z);
-        IInterfaceHost host;
+        IInterfaceViewable host;
         if (tile instanceof TileCableBus) {
-            host = (IInterfaceHost) ((TileCableBus) tile).getPart(intMsg.getSide());
-        } else if (tile instanceof IInterfaceHost ih) {
-            host = ih;
+            host = (IInterfaceViewable) ((TileCableBus) tile).getPart(intMsg.getSide());
+        } else if (tile instanceof IInterfaceViewable iv) {
+            host = iv;
+        } else if ((ModAndClassUtil.GT5 || ModAndClassUtil.GT5NH)) {
+            host = GTUtil.getIInterfaceViewable(tile);
+            if (host == null) return;
         } else {
             return;
         }
         doublePatterns(value, w, host);
     }
 
-    private void doublePatterns(int val, World w, IInterfaceHost host) {
+    private void doublePatterns(int val, World w, IInterfaceViewable host) {
         IInventory patterns = host.getPatterns();
         boolean fast = (val & 1) != 0;
         boolean backwards = (val & 2) != 0;
@@ -240,7 +245,7 @@ public class ContainerWirelessDualInterfaceTerminal extends BaseNetworkContainer
         this.sendToClient(host);
     }
 
-    private void sendToClient(IInterfaceHost host) {
+    private void sendToClient(IInterfaceViewable host) {
         PacketInterfaceTerminalUpdate update = new PacketInterfaceTerminalUpdate();
         Map map = Ae2Reflect.getTracked(this.delegateContainer);
         Object o = map.get(host);

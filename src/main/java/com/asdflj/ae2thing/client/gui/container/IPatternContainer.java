@@ -8,6 +8,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
+import com.glodblock.github.common.item.ItemFluidPacket;
 
 import appeng.container.slot.SlotFake;
 
@@ -31,6 +32,14 @@ public interface IPatternContainer {
 
     void doubleStacks(int value);
 
+    default int getStackSize(ItemStack stack) {
+        if (stack.getItem() instanceof ItemFluidPacket) {
+            return ItemFluidPacket.getFluidAmount(stack);
+        } else {
+            return stack.stackSize;
+        }
+    }
+
     default boolean canDouble(SlotFake[] slots, int mult) {
         if (mult == 0) return false;
         for (Slot s : slots) {
@@ -38,9 +47,9 @@ public interface IPatternContainer {
             if (st != null) {
                 long result;
                 if (mult < 0) {
-                    result = (long) s.getStack().stackSize / Math.abs(mult);
+                    result = (long) getStackSize(st) / Math.abs(mult);
                 } else {
-                    result = (long) s.getStack().stackSize * mult;
+                    result = (long) getStackSize(st) * mult;
                 }
                 if (result > Integer.MAX_VALUE || result <= 0) {
                     return false;
@@ -59,9 +68,17 @@ public interface IPatternContainer {
             ItemStack st = s.getStack();
             if (st != null) {
                 if (mult < 0) {
-                    st.stackSize /= Math.abs(mult);
+                    if (st.getItem() instanceof ItemFluidPacket) {
+                        ItemFluidPacket.setFluidAmount(st, ItemFluidPacket.getFluidAmount(st) / Math.abs(mult));
+                    } else {
+                        st.stackSize /= Math.abs(mult);
+                    }
                 } else {
-                    st.stackSize *= mult;
+                    if (st.getItem() instanceof ItemFluidPacket) {
+                        ItemFluidPacket.setFluidAmount(st, ItemFluidPacket.getFluidAmount(st) * mult);
+                    } else {
+                        st.stackSize *= mult;
+                    }
                 }
             }
         }
