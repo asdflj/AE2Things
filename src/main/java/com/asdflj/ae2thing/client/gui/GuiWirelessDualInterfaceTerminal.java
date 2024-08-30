@@ -33,6 +33,7 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless i
     public ContainerWirelessDualInterfaceTerminal container;
     private GuiTabButton craftingStatusBtn;
     private final int baseXSize;
+    private static final int fullXSize = 400;
 
     public GuiWirelessDualInterfaceTerminal(InventoryPlayer inventoryPlayer, ITerminalHost te) {
         super(inventoryPlayer, te);
@@ -52,7 +53,7 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless i
         this.xSize = baseXSize;
         panel.drawScreen(mouseX, mouseY, btn);
         super.drawScreen(mouseX, mouseY, btn);
-        this.xSize = 400;
+        this.xSize = fullXSize;
     }
 
     @Override
@@ -136,6 +137,7 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless i
 
     @Override
     public void initGui() {
+        this.xSize = baseXSize;
         super.initGui();
         this.panel.initGui();
         this.buttonList.add(
