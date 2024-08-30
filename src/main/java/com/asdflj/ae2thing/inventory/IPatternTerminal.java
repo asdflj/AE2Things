@@ -39,4 +39,6 @@ public interface IPatternTerminal extends INetworkTerminal {
     default void sortCraftingItems() {}
 
     void saveSettings();
+
+    boolean hasRefillerUpgrade();
 }

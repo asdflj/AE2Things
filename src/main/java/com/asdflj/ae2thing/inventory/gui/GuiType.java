@@ -14,6 +14,7 @@ import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInterfaceWireless;
 import com.asdflj.ae2thing.client.gui.GuiPatternValueAmount;
+import com.asdflj.ae2thing.client.gui.GuiRenamer;
 import com.asdflj.ae2thing.client.gui.GuiWirelessConnectorTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerCellLink;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftConfirm;
@@ -21,6 +22,7 @@ import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerInterfaceWireless;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
+import com.asdflj.ae2thing.client.gui.container.ContainerRenamer;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTerminal;
 import com.asdflj.ae2thing.common.parts.THPart;
 import com.asdflj.ae2thing.inventory.ItemCellLinkInventory;
@@ -102,6 +104,18 @@ public enum GuiType {
         @Override
         protected Object createClientGui(EntityPlayer player, THPart inv) {
             return new GuiCraftConfirm(player.inventory, inv);
+        }
+    }),
+    RENAMER(new ItemGuiFactory<>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerRenamer(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiRenamer(player.inventory, inv);
         }
     }),
     CRAFTING_STATUS(new PartGuiFactory<>(ITerminalHost.class) {

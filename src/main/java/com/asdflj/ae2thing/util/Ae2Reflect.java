@@ -3,6 +3,7 @@ package com.asdflj.ae2thing.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Map;
 
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -13,6 +14,7 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.container.AEBaseContainer;
+import appeng.container.implementations.ContainerInterfaceTerminal;
 import appeng.me.storage.MEInventoryHandler;
 import appeng.me.storage.MEPassThrough;
 import appeng.tile.inventory.AppEngInternalInventory;
@@ -32,6 +34,8 @@ public class Ae2Reflect {
     private static final Method mIOPort_shouldMove;
     private static final Method mIOPort_moveSlot;
     private static final Method mAEBaseContainer_addSlotToContainer;
+    private static final Field fContainerInterfaceTerminal_tracked;
+    // private static final Field fContainerInterfaceTerminal_InvTracker_id;
 
     static {
         try {
@@ -55,6 +59,7 @@ public class Ae2Reflect {
                 AEBaseContainer.class,
                 "addSlotToContainer",
                 Slot.class);
+            fContainerInterfaceTerminal_tracked = reflectField(ContainerInterfaceTerminal.class, "tracked");
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -159,6 +164,10 @@ public class Ae2Reflect {
         } catch (Exception e) {
             throw new IllegalStateException("Failed to invoke method: " + mIOPort_transferContents, e);
         }
+    }
+
+    public static Map getTracked(ContainerInterfaceTerminal obj) {
+        return Ae2Reflect.readField(obj, fContainerInterfaceTerminal_tracked);
     }
 
 }

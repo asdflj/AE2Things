@@ -1,29 +1,49 @@
 package com.asdflj.ae2thing.client.gui.container;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
-import com.asdflj.ae2thing.client.gui.container.slot.ProcessingSlotPattern;
+import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
 import com.asdflj.ae2thing.client.gui.container.widget.PatternContainer;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
 import com.asdflj.ae2thing.inventory.item.WirelessInterfaceTerminalInventory;
+import com.asdflj.ae2thing.util.Ae2Reflect;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.util.Util;
 
+import appeng.api.implementations.ICraftingPatternItem;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.storage.ITerminalHost;
 import appeng.container.guisync.GuiSync;
 import appeng.container.implementations.ContainerInterfaceTerminal;
+import appeng.core.sync.network.NetworkHandler;
+import appeng.core.sync.packets.PacketInterfaceTerminalUpdate;
 import appeng.helpers.IContainerCraftingPacket;
+import appeng.helpers.IInterfaceHost;
 import appeng.helpers.InventoryAction;
+import appeng.me.cache.CraftingGridCache;
+import appeng.tile.networking.TileCableBus;
+import appeng.util.PatternMultiplierHelper;
 import appeng.util.Platform;
 
 public class ContainerInterfaceWireless extends BaseNetworkContainer
@@ -73,6 +93,16 @@ public class ContainerInterfaceWireless extends BaseNetworkContainer
     }
 
     @Override
+    public void onSlotChange(final Slot s) {
+        this.patternPanel.onSlotChange(s);
+        super.onSlotChange(s);
+    }
+
+    public void setInverted(boolean value) {
+        this.inverted = value;
+    }
+
+    @Override
     public void onUpdate(String field, Object oldValue, Object newValue) {
         super.onUpdate(field, oldValue, newValue);
         this.patternPanel.onUpdate(field, oldValue, newValue);
@@ -84,7 +114,7 @@ public class ContainerInterfaceWireless extends BaseNetworkContainer
             delegateContainer.doAction(player, action, slotId, id);
         } else {
             Slot s = this.inventorySlots.get(slotId);
-            if (s instanceof ProcessingSlotPattern) {
+            if (s instanceof SlotPatternFake) {
                 if (action == InventoryAction.MOVE_REGION) {
                     super.doAction(player, InventoryAction.MOVE_REGION, slotId, id);
                     return;
@@ -123,11 +153,10 @@ public class ContainerInterfaceWireless extends BaseNetworkContainer
                 }
             }
         }
-
     }
 
     protected boolean validPatternSlot(Slot slot) {
-        return slot instanceof ProcessingSlotPattern;
+        return slot instanceof SlotPatternFake;
     }
 
     @Override
@@ -159,4 +188,79 @@ public class ContainerInterfaceWireless extends BaseNetworkContainer
         return this.patternPanel;
     }
 
+    public List<ICrafting> getCrafters() {
+        return this.crafters;
+    }
+
+    public void doubleStacks(int value, NBTTagCompound tag) {
+        Util.DimensionalCoordSide intMsg = Util.DimensionalCoordSide.readFromNBT(tag);
+        World w = DimensionManager.getWorld(intMsg.getDimension());
+        TileEntity tile = w.getTileEntity(intMsg.x, intMsg.y, intMsg.z);
+        IInterfaceHost host;
+        if (tile instanceof TileCableBus) {
+            host = (IInterfaceHost) ((TileCableBus) tile).getPart(intMsg.getSide());
+        } else if (tile instanceof IInterfaceHost ih) {
+            host = ih;
+        } else {
+            return;
+        }
+        doublePatterns(value, w, host);
+    }
+
+    private void doublePatterns(int val, World w, IInterfaceHost host) {
+        IInventory patterns = host.getPatterns();
+        boolean fast = (val & 1) != 0;
+        boolean backwards = (val & 2) != 0;
+        CraftingGridCache.pauseRebuilds();
+        try {
+            for (int i = 0; i < patterns.getSizeInventory(); i++) {
+                ItemStack stack = patterns.getStackInSlot(i);
+                if (stack != null && stack.getItem() instanceof ICraftingPatternItem cpi) {
+                    ICraftingPatternDetails details = cpi.getPatternForItem(stack, w);
+                    if (details != null && !details.isCraftable()) {
+                        int max = backwards ? PatternMultiplierHelper.getMaxBitDivider(details)
+                            : PatternMultiplierHelper.getMaxBitMultiplier(details);
+                        if (max > 0) {
+                            ItemStack copy = stack.copy();
+                            PatternMultiplierHelper
+                                .applyModification(copy, (fast ? Math.min(3, max) : 1) * (backwards ? -1 : 1));
+                            patterns.setInventorySlotContents(i, copy);
+                        }
+                    }
+                }
+            }
+        } catch (Throwable ignored) {}
+        CraftingGridCache.unpauseRebuilds();
+        this.sendToClient(host);
+    }
+
+    private void sendToClient(IInterfaceHost host) {
+        PacketInterfaceTerminalUpdate update = new PacketInterfaceTerminalUpdate();
+        Map map = Ae2Reflect.getTracked(this.delegateContainer);
+        Object o = map.get(host);
+        if (o == null) return;
+        try {
+            Field f = o.getClass()
+                .getDeclaredField("id");
+            f.setAccessible(true);
+            long id = (long) f.get(o);
+            Method m = o.getClass()
+                .getDeclaredMethod("updateNBT");
+            m.setAccessible(true);
+            m.invoke(o);
+            Field f1 = o.getClass()
+                .getDeclaredField("invNbt");
+            f1.setAccessible(true);
+            NBTTagList tag = (NBTTagList) f1.get(o);
+            int[] size = new int[host.rowSize() * host.rows()];
+            for (int i = 0; i < size.length; i++) {
+                size[i] = i;
+            }
+            update.addOverwriteEntry(id)
+                .setOnline(true)
+                .setItems(size, tag);
+            update.encode();
+            NetworkHandler.instance.sendTo(update, (EntityPlayerMP) this.getPlayerInv().player);
+        } catch (Exception ignored) {}
+    }
 }

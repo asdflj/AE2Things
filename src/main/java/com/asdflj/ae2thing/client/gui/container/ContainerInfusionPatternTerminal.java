@@ -17,9 +17,10 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import com.asdflj.ae2thing.client.gui.container.slot.ProcessingSlotPattern;
+import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
 import com.asdflj.ae2thing.common.parts.PartInfusionPatternTerminal;
+import com.asdflj.ae2thing.inventory.IPatternTerminal;
 import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
 
@@ -60,8 +61,7 @@ public class ContainerInfusionPatternTerminal extends BasePatternContainerMonito
     protected IGridNode networkNode;
     protected final SlotRestrictedInput[] cellView = new SlotRestrictedInput[5];
     protected SlotFakeCraftingMatrix[] craftingSlots = new SlotFakeCraftingMatrix[1];
-    protected ProcessingSlotPattern[] outputSlots = new ProcessingSlotPattern[CRAFTING_GRID_SLOTS
-        * CRAFTING_GRID_PAGES];
+    protected SlotPatternFake[] outputSlots = new SlotPatternFake[CRAFTING_GRID_SLOTS * CRAFTING_GRID_PAGES];
 
     private final PartInfusionPatternTerminal it;
     private ItemStack lastScanItem = null;
@@ -109,7 +109,7 @@ public class ContainerInfusionPatternTerminal extends BasePatternContainerMonito
                 for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
                     this.addSlotToContainer(
                         this.outputSlots[x + y * CRAFTING_GRID_WIDTH
-                            + page * CRAFTING_GRID_SLOTS] = new ProcessingSlotPattern(
+                            + page * CRAFTING_GRID_SLOTS] = new SlotPatternFake(
                                 output,
                                 this,
                                 x + y * CRAFTING_GRID_WIDTH + page * CRAFTING_GRID_SLOTS,
@@ -202,7 +202,7 @@ public class ContainerInfusionPatternTerminal extends BasePatternContainerMonito
         }
     }
 
-    public PartInfusionPatternTerminal getPatternTerminal() {
+    public IPatternTerminal getPatternTerminal() {
         return this.it;
     }
 
@@ -550,18 +550,15 @@ public class ContainerInfusionPatternTerminal extends BasePatternContainerMonito
         this.detectAndSendChanges();
     }
 
-    public void doubleStacks(boolean isShift) {
+    public void doubleStacks(int val) {
         if (isCraftingMode()) return;
-        if (isShift) {
-            if (canDouble(this.craftingSlots, 8) && canDouble(this.outputSlots, 8)) {
-                doubleStacksInternal(this.craftingSlots, 8);
-                doubleStacksInternal(this.outputSlots, 8);
-            }
-        } else {
-            if (canDouble(this.craftingSlots, 2) && canDouble(this.outputSlots, 2)) {
-                doubleStacksInternal(this.craftingSlots, 2);
-                doubleStacksInternal(this.outputSlots, 2);
-            }
+        boolean isShift = (val & 1) != 0;
+        boolean backwards = (val & 2) != 0;
+        int multi = isShift ? 8 : 2;
+        multi = backwards ? Math.negateExact(multi) : multi;
+        if (canDouble(this.craftingSlots, multi) && canDouble(this.outputSlots, multi)) {
+            doubleStacksInternal(this.craftingSlots, multi);
+            doubleStacksInternal(this.outputSlots, multi);
         }
         this.detectAndSendChanges();
 

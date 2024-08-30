@@ -44,7 +44,7 @@ public class FluidPatternTerminalRecipeTransferHandler implements IOverlayHandle
             List<com.glodblock.github.nei.object.OrderStack<?>> out = com.glodblock.github.nei.recipes.FluidRecipe
                 .getPackageOutputs(recipe, recipeIndex, !notUseOther(recipe));
             AE2Thing.proxy.netHandler
-                .sendToServer(new CPacketTransferRecipe(transfer(out), transfer(in), false, shift));
+                .sendToServer(new CPacketTransferRecipe(transfer(in), transfer(out), false, shift));
         }
     }
 

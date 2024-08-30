@@ -22,7 +22,7 @@ public class BaseNetworkContainer extends AEBaseContainer {
     protected int ticks;
     protected final double powerMultiplier = 0.5;
 
-    @GuiSync(98)
+    @GuiSync(1)
     public boolean hasPower = false;
 
     public BaseNetworkContainer(InventoryPlayer ip, ITerminalHost host) {

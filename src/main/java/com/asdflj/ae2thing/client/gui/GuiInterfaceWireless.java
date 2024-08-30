@@ -6,31 +6,39 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 
+import org.lwjgl.opengl.GL11;
+
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerInterfaceWireless;
-import com.asdflj.ae2thing.client.gui.container.slot.ProcessingSlotPattern;
+import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.client.gui.widget.IAEBasePanel;
 import com.asdflj.ae2thing.client.gui.widget.PatternPanel;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
+import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.inventory.slot.SlotSingleItem;
 
 import appeng.api.storage.ITerminalHost;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiTabButton;
 import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.SlotRestrictedInput;
 import appeng.core.localization.GuiText;
+import appeng.util.item.AEItemStack;
 
 public class GuiInterfaceWireless extends GuiBaseInterfaceWireless implements IWidgetGui {
 
     private final IAEBasePanel panel;
     public ContainerInterfaceWireless container;
     private GuiTabButton craftingStatusBtn;
+    private final int baseXSize;
 
     public GuiInterfaceWireless(InventoryPlayer inventoryPlayer, ITerminalHost te) {
         super(inventoryPlayer, te);
         container = (ContainerInterfaceWireless) this.inventorySlots;
         panel = new PatternPanel(this, container);
+        this.baseXSize = this.xSize;
     }
 
     @Override
@@ -41,9 +49,10 @@ public class GuiInterfaceWireless extends GuiBaseInterfaceWireless implements IW
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float btn) {
+        this.xSize = baseXSize;
         panel.drawScreen(mouseX, mouseY, btn);
         super.drawScreen(mouseX, mouseY, btn);
-
+        this.xSize = 400;
     }
 
     @Override
@@ -54,9 +63,8 @@ public class GuiInterfaceWireless extends GuiBaseInterfaceWireless implements IW
 
     @Override
     protected void mouseClicked(int xCoord, int yCoord, int btn) {
-        if (!panel.mouseClicked(xCoord, yCoord, btn)) {
-            super.mouseClicked(xCoord, yCoord, btn);
-        }
+        panel.mouseClicked(xCoord, yCoord, btn);
+        super.mouseClicked(xCoord, yCoord, btn);
     }
 
     @Override
@@ -72,8 +80,7 @@ public class GuiInterfaceWireless extends GuiBaseInterfaceWireless implements IW
 
     @Override
     protected void handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton) {
-        if (slotIdx == -999) return;
-        panel.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
+        this.panel.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
         super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
     }
 
@@ -84,8 +91,44 @@ public class GuiInterfaceWireless extends GuiBaseInterfaceWireless implements IW
     }
 
     @Override
+    protected void keyTyped(char character, int key) {
+        this.xSize = baseXSize;
+        super.keyTyped(character, key);
+    }
+
+    @Override
     public void setXSize(int size) {
         this.xSize = size;
+    }
+
+    @Override
+    public void func_146977_a(final Slot s) {
+        if (drawSlot0(s)) super.func_146977_a(s);
+    }
+
+    public boolean drawSlot0(Slot slot) {
+        if (slot instanceof SlotPatternFake) {
+            AEItemStack stack = AEItemStack.create(slot.getStack());
+            super.func_146977_a(new SlotSingleItem(slot));
+            if (stack == null) return true;
+            IAEItemStack fake = stack.copy();
+            if (fake.getItemStack()
+                .getItem() instanceof ItemFluidPacket) {
+                if (ItemFluidPacket.getFluidStack(stack) != null && ItemFluidPacket.getFluidStack(stack).amount > 0)
+                    fake.setStackSize(ItemFluidPacket.getFluidStack(stack).amount);
+            } else return true;
+            aeRenderItem.setAeStack(fake);
+            GL11.glTranslatef(0.0f, 0.0f, 200.0f);
+            aeRenderItem.renderItemOverlayIntoGUI(
+                fontRendererObj,
+                mc.getTextureManager(),
+                stack.getItemStack(),
+                slot.xDisplayPosition,
+                slot.yDisplayPosition);
+            GL11.glTranslatef(0.0f, 0.0f, -200.0f);
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -134,7 +177,7 @@ public class GuiInterfaceWireless extends GuiBaseInterfaceWireless implements IW
     @Override
     protected void repositionSlots() {
         for (final Object obj : this.inventorySlots.inventorySlots) {
-            if(obj instanceof ProcessingSlotPattern psp){
+            if(obj instanceof SlotPatternFake psp){
                 psp.yDisplayPosition = this.ySize + psp.getY() - this.viewHeight - 78 - 4;
             } else if (obj instanceof SlotRestrictedInput sri) {
                 sri.yDisplayPosition = this.ySize + sri.getY() - this.viewHeight - 78 - 4;

@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -25,13 +26,19 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerInterfaceWireless;
+import com.asdflj.ae2thing.network.CPacketRenamer;
+import com.asdflj.ae2thing.network.CPacketTerminalBtns;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.client.gui.GuiFCImgButton;
 
 import appeng.api.AEApi;
@@ -559,8 +566,9 @@ public class GuiBaseInterfaceWireless extends AEBaseMEGui
         Tessellator.instance.draw();
         /* Draw button */
         if (viewY + entry.optionsButton.height > 0 && viewY < viewHeight) {
-            entry.optionsButton.yPosition = viewY + 5;
-            entry.renameButton.yPosition = viewY + 5;
+            entry.optionsButton.yPosition = viewY;
+            entry.renameButton.yPosition = viewY;
+            entry.doubleButton.yPosition = viewY + 8;
             GuiFCImgButton toRender;
             if (isShiftKeyDown()) {
                 toRender = entry.renameButton;
@@ -568,18 +576,32 @@ public class GuiBaseInterfaceWireless extends AEBaseMEGui
                 toRender = entry.optionsButton;
             }
             toRender.drawButton(mc, relMouseX, relMouseY);
+            entry.doubleButton.drawButton(mc, relMouseX, relMouseY);
+            List<String> tooltips = new ArrayList<>();
             if (toRender.getMouseIn()
                 && relMouseY >= Math.max(InterfaceWirelessSection.TITLE_HEIGHT, entry.optionsButton.yPosition)) {
+                tooltips.add(toRender.getMessage());
+            } else if (entry.doubleButton.getMouseIn()
+                && relMouseY >= Math.max(InterfaceWirelessSection.TITLE_HEIGHT, entry.optionsButton.yPosition)) {
+                    tooltips.addAll(
+                        Arrays.stream(
+                            entry.doubleButton.getMessage()
+                                .split("\\n"))
+                            .collect(Collectors.toList()));
+                }
+            if (!tooltips.isEmpty()) {
                 // draw a tooltip
                 GL11.glTranslatef(0f, 0f, TOOLTIP_Z);
                 GL11.glDisable(GL11.GL_SCISSOR_TEST);
-                drawHoveringText(Arrays.asList(toRender.getMessage()), relMouseX, relMouseY);
+                drawHoveringText(tooltips, relMouseX, relMouseY);
                 GL11.glTranslatef(0f, 0f, -TOOLTIP_Z);
                 GL11.glEnable(GL11.GL_SCISSOR_TEST);
+
             }
         } else {
             entry.optionsButton.yPosition = -1;
             entry.renameButton.yPosition = -1;
+            entry.doubleButton.yPosition = -1;
         }
         /* PASS 2: Items */
         for (int row = 0; row < entry.rows; ++row) {
@@ -1249,6 +1271,7 @@ public class GuiBaseInterfaceWireless extends AEBaseMEGui
         AppEngInternalInventory inv;
         GuiFCImgButton optionsButton;
         GuiFCImgButton renameButton;
+        GuiImgButton doubleButton;
 
         /** Nullable - icon that represents the interface */
         ItemStack selfRep;
@@ -1287,6 +1310,11 @@ public class GuiBaseInterfaceWireless extends AEBaseMEGui
             this.optionsButton.setHalfSize(true);
             this.renameButton = new GuiFCImgButton(2, 0, "EDIT", "YES");
             this.renameButton.setHalfSize(true);
+            if (ModAndClassUtil.isDoubleButton) {
+                this.doubleButton = new GuiImgButton(2, 0, Settings.ACTIONS, ActionItems.DOUBLE);
+                this.doubleButton.setHalfSize(true);
+            }
+
             this.guiHeight = 18 * rows + 1;
             this.brokenRecipes = new Boolean[rows * rowSize];
             this.filteredRecipes = new boolean[rows * rowSize];
@@ -1393,13 +1421,13 @@ public class GuiBaseInterfaceWireless extends AEBaseMEGui
                 DimensionalCoord blockPos = new DimensionalCoord(x, y, z, dim);
 
                 if (isShiftKeyDown()) {
-                    // FluidCraft.proxy.netHandler.sendToServer(
-                    // new CPacketRenamer(
-                    // blockPos.x,
-                    // blockPos.y,
-                    // blockPos.z,
-                    // blockPos.getDimension(),
-                    // ForgeDirection.getOrientation(side)));
+                    AE2Thing.proxy.netHandler.sendToServer(
+                        new CPacketRenamer(
+                            blockPos.x,
+                            blockPos.y,
+                            blockPos.z,
+                            blockPos.getDimension(),
+                            ForgeDirection.getOrientation(side)));
                 } else {
                     /* View in world */
                     WorldCoord blockPos2 = new WorldCoord(
@@ -1423,7 +1451,25 @@ public class GuiBaseInterfaceWireless extends AEBaseMEGui
                     mc.thePlayer.closeScreen();
                 }
                 return true;
-            }
+            } else if (mouseX >= doubleButton.xPosition && mouseX < 2 + doubleButton.width
+                && mouseY > Math.max(doubleButton.yPosition, InterfaceWirelessSection.TITLE_HEIGHT)
+                && mouseY <= Math.min(doubleButton.yPosition + doubleButton.height, viewHeight)) {
+                    doubleButton.func_146113_a(mc.getSoundHandler());
+                    Util.DimensionalCoordSide blockPos = new Util.DimensionalCoordSide(
+                        x,
+                        y,
+                        z,
+                        dim,
+                        ForgeDirection.getOrientation(side),
+                        this.dispName);
+                    NBTTagCompound data = new NBTTagCompound();
+                    blockPos.writeToNBT(data);
+                    final boolean backwards = Mouse.isButtonDown(1);
+                    int val = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? 1 : 0;
+                    if (backwards) val |= 0b10;
+                    AE2Thing.proxy.netHandler
+                        .sendToServer(new CPacketTerminalBtns("InterfaceTerminal.Double", String.valueOf(val), data));
+                }
 
             int offsetY = mouseY - dispY;
             int offsetX = mouseX - (VIEW_WIDTH - rowSize * 18) - 1;

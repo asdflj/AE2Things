@@ -67,6 +67,7 @@ public class CommonProxy {
             AE2ThingAPI.instance()
                 .addBackpackItem(ItemAdventureBackpack.class);
         }
+        Upgrades.PATTERN_REFILLER.registerItem(ItemAndBlockHolder.ITEM_WIRELESS_INTERFACE_TERMINAL.stack(), 1);
         if (ModAndClassUtil.THE) {
             Upgrades.PATTERN_REFILLER.registerItem(ItemAndBlockHolder.INFUSION_PATTERN_TERMINAL.stack(), 1);
             Upgrades.LOCK_CRAFTING.registerItem(ItemAndBlockHolder.INFUSION_INTERFACE.stack(), 1);

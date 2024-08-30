@@ -32,7 +32,7 @@ public interface IAEBasePanel {
 
     boolean hideItemPanelSlot(int x, int y, int w, int h);
 
-    boolean mouseClicked(int xCoord, int yCoord, int btn);
+    void mouseClicked(int xCoord, int yCoord, int btn);
 
     void handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton);
 

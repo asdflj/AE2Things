@@ -10,12 +10,15 @@ import com.asdflj.ae2thing.network.CPacketFluidUpdate;
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.network.CPacketNEIRecipe;
 import com.asdflj.ae2thing.network.CPacketPatternValueSet;
+import com.asdflj.ae2thing.network.CPacketRenamer;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.network.CPacketTransferRecipe;
 import com.asdflj.ae2thing.network.SPacketMEFluidInvUpdate;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
 import com.asdflj.ae2thing.network.SPacketSetItemAmount;
+import com.asdflj.ae2thing.network.SPacketStringUpdate;
+import com.asdflj.ae2thing.network.SPacketSwitchBack;
 import com.asdflj.ae2thing.network.SPacketWirelessConnectorUpdate;
 import com.asdflj.ae2thing.network.wrapper.AE2ThingNetworkWrapper;
 
@@ -39,6 +42,8 @@ public class ChannelLoader implements Runnable {
             SPacketWirelessConnectorUpdate.class,
             id++,
             Side.CLIENT);
+        netHandler.registerMessage(new SPacketSwitchBack.Handler(), SPacketSwitchBack.class, id++, Side.CLIENT);
+        netHandler.registerMessage(new SPacketStringUpdate.Handler(), SPacketStringUpdate.class, id++, Side.CLIENT);
         netHandler.registerMessage(new CPacketNEIRecipe.Handler(), CPacketNEIRecipe.class, id++, Side.SERVER);
         netHandler.registerMessage(new CPacketSwitchGuis.Handler(), CPacketSwitchGuis.class, id++, Side.SERVER);
         netHandler.registerMessage(new CPacketFluidUpdate.Handler(), CPacketFluidUpdate.class, id++, Side.SERVER);
@@ -49,6 +54,7 @@ public class ChannelLoader implements Runnable {
             .registerMessage(new CPacketInventoryAction.Handler(), CPacketInventoryAction.class, id++, Side.SERVER);
         netHandler.registerMessage(new CPacketCraftRequest.Handler(), CPacketCraftRequest.class, id++, Side.SERVER);
         netHandler.registerMessage(new CPacketTransferRecipe.Handler(), CPacketTransferRecipe.class, id++, Side.SERVER);
+        netHandler.registerMessage(new CPacketRenamer.Handler(), CPacketRenamer.class, id++, Side.SERVER);
     }
 
     public static void sendPacketToAllPlayers(Packet packet, World world) {

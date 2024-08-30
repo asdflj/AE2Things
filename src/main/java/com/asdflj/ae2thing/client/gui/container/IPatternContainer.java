@@ -29,14 +29,20 @@ public interface IPatternContainer {
 
     void clear();
 
-    void doubleStacks(boolean isShift);
+    void doubleStacks(int value);
 
     default boolean canDouble(SlotFake[] slots, int mult) {
+        if (mult == 0) return false;
         for (Slot s : slots) {
             ItemStack st = s.getStack();
             if (st != null) {
-                long result = (long) s.getStack().stackSize * mult;
-                if (result > Integer.MAX_VALUE) {
+                long result;
+                if (mult < 0) {
+                    result = (long) s.getStack().stackSize / Math.abs(mult);
+                } else {
+                    result = (long) s.getStack().stackSize * mult;
+                }
+                if (result > Integer.MAX_VALUE || result <= 0) {
                     return false;
                 }
             }
@@ -45,13 +51,18 @@ public interface IPatternContainer {
     }
 
     default void doubleStacksInternal(SlotFake[] slots, int mult) {
+        if (mult == 0) return;
         List<SlotFake> enabledSlots = Arrays.stream(slots)
             .filter(SlotFake::isEnabled)
             .collect(Collectors.toList());
         for (final Slot s : enabledSlots) {
             ItemStack st = s.getStack();
             if (st != null) {
-                st.stackSize *= mult;
+                if (mult < 0) {
+                    st.stackSize /= Math.abs(mult);
+                } else {
+                    st.stackSize *= mult;
+                }
             }
         }
     }

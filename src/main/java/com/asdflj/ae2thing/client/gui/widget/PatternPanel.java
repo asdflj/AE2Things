@@ -15,7 +15,7 @@ import org.lwjgl.input.Mouse;
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.IWidgetGui;
 import com.asdflj.ae2thing.client.gui.container.ContainerInterfaceWireless;
-import com.asdflj.ae2thing.client.gui.container.slot.ProcessingSlotPattern;
+import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
@@ -34,7 +34,6 @@ import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.client.me.SlotDisconnected;
 import appeng.client.me.SlotME;
 import appeng.container.AEBaseContainer;
-import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.SlotFake;
 import appeng.container.slot.SlotPatternTerm;
 import appeng.core.sync.network.NetworkHandler;
@@ -101,6 +100,7 @@ public class PatternPanel implements IAEBasePanel {
             this.parent.drawTexturedModalRect(offsetX + 209, offsetY, 0, 93, 133, 93);
         }
         this.parent.drawTexturedModalRect(offsetX + 209, offsetY + 93, 133, 0, 40, 77);
+        this.parent.drawTexturedModalRect(offsetX + 209, offsetY + 93 + 77, 173, 0, 32, 32);
     }
 
     @Override
@@ -261,20 +261,13 @@ public class PatternPanel implements IAEBasePanel {
     }
 
     @Override
-    public boolean mouseClicked(int xCoord, int yCoord, int btn) {
+    public void mouseClicked(int xCoord, int yCoord, int btn) {
         final int currentScroll = this.processingScrollBar.getCurrentScroll();
         this.processingScrollBar
             .click(this.parent, xCoord - this.parent.getGuiLeft(), yCoord - this.parent.getGuiTop());
         if (currentScroll != this.processingScrollBar.getCurrentScroll()) {
             changeActivePage();
         }
-        for (Slot s : this.container.inventorySlots) {
-            if ((s instanceof ProcessingSlotPattern) && isMouseOverSlot((AppEngSlot) s, xCoord, yCoord)) {
-                this.handleMouseClick(s, s.slotNumber, btn, Mouse.getEventButton());
-                return true;
-            }
-        }
-        return false;
     }
 
     protected void changeActivePage() {
@@ -282,23 +275,11 @@ public class PatternPanel implements IAEBasePanel {
             new CPacketTerminalBtns("PatternTerminal.ActivePage", this.processingScrollBar.getCurrentScroll()));
     }
 
-    private boolean isMouseOverSlot(AppEngSlot slotIn, int mouseX, int mouseY) {
-        int k1 = this.parent.getGuiLeft();
-        int l1 = this.parent.getGuiTop();
-        int right = 16;
-        int bottom = 16;
-        int left = slotIn.xDisplayPosition;
-        int top = slotIn.yDisplayPosition;
-        mouseX -= k1;
-        mouseY -= l1;
-        return mouseX >= left - 1 && mouseX < left + right + 1 && mouseY >= top - 1 && mouseY < top + bottom + 1;
-    }
-
     @Override
     public void handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton) {
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        if (ctrlDown == 2) {
-            if (slot instanceof ProcessingSlotPattern) {
+        if (mouseButton == 3) {
+            if (slot instanceof SlotPatternFake) {
                 if (slot.getHasStack()) {
                     InventoryAction action = InventoryAction.SET_PATTERN_VALUE;
                     IAEItemStack stack = AEItemStack.create(slot.getStack());
@@ -467,8 +448,10 @@ public class PatternPanel implements IAEBasePanel {
             AE2Thing.proxy.netHandler.sendToServer(
                 new CPacketTerminalBtns("PatternTerminal.Combine", this.combineDisableBtn == btn ? 1 : 0));
         } else if (com.glodblock.github.util.ModAndClassUtil.isDoubleButton && doubleBtn == btn) {
-            AE2Thing.proxy.netHandler.sendToServer(
-                new CPacketTerminalBtns("PatternTerminal.Double", Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? 1 : 0));
+            final boolean backwards = Mouse.isButtonDown(1);
+            int val = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? 1 : 0;
+            if (backwards) val |= 0b10;
+            AE2Thing.proxy.netHandler.sendToServer(new CPacketTerminalBtns("PatternTerminal.Double", val));
         } else if (ModAndClassUtil.isBeSubstitutionsButton && beSubstitutionsDisabledBtn == btn) {
             AE2Thing.proxy.netHandler.sendToServer(new CPacketTerminalBtns("PatternTerminal.beSubstitute", 1));
         } else if (ModAndClassUtil.isBeSubstitutionsButton && beSubstitutionsEnabledBtn == btn) {

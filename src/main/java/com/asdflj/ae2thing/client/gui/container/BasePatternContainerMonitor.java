@@ -33,8 +33,6 @@ public abstract class BasePatternContainerMonitor extends ContainerMonitor
     protected final IInventory output;
     protected final IInventory patternInv;
 
-    @GuiSync(98)
-    public boolean hasPower = false;
     @GuiSync(99)
     public boolean canAccessViewCells;
     @GuiSync(95)
