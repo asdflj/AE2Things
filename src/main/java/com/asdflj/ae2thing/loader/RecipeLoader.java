@@ -10,9 +10,12 @@ import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_CREATIVE_WATER_
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_FLUID_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_WIRELESS_CONNECTOR_TERMINAL;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_WIRELESS_INTERFACE_TERMINAL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.THAUMATRIUM_INTERFACE;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.WIRELESS_CONNECTOR_TERMINAL;
 import static com.glodblock.github.loader.ItemAndBlockHolder.CELL_HOUSING;
+import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_TERMINAL_EX;
+import static com.glodblock.github.loader.ItemAndBlockHolder.WIRELESS_INTERFACE_TERM;
 import static thaumcraft.common.config.ConfigItems.itemResource;
 import static thaumcraft.common.config.ConfigItems.itemThaumonomicon;
 import static thaumicenergistics.common.blocks.BlockEnum.DISTILLATION_ENCODER;
@@ -106,6 +109,10 @@ public class RecipeLoader implements Runnable {
             AE2_SINGULARITY,
             AE2_SUPER_SPEED_CARD,
             AE2_SUPER_SPEED_CARD);
+        GameRegistry.addShapelessRecipe(
+            ITEM_WIRELESS_INTERFACE_TERMINAL.stack(),
+            WIRELESS_INTERFACE_TERM,
+            FLUID_TERMINAL_EX.stack());
         if (ModAndClassUtil.THE) {
             final ItemStack THAUMIUM_INGOT = new ItemStack(itemResource, 1, 2);
             final ItemStack RUNIC_MATRIX = new ItemStack(ConfigBlocks.blockStoneDevice, 1, 2);

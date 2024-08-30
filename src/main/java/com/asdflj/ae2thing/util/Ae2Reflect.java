@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
 
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import appeng.api.networking.energy.IEnergySource;
@@ -13,7 +12,6 @@ import appeng.api.storage.IMEInventory;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
-import appeng.container.AEBaseContainer;
 import appeng.container.implementations.ContainerInterfaceTerminal;
 import appeng.me.storage.MEInventoryHandler;
 import appeng.me.storage.MEPassThrough;
@@ -33,9 +31,7 @@ public class Ae2Reflect {
     private static final Field fIOPort_FLUID_MULTIPLIER;
     private static final Method mIOPort_shouldMove;
     private static final Method mIOPort_moveSlot;
-    private static final Method mAEBaseContainer_addSlotToContainer;
     private static final Field fContainerInterfaceTerminal_tracked;
-    // private static final Field fContainerInterfaceTerminal_InvTracker_id;
 
     static {
         try {
@@ -55,10 +51,6 @@ public class Ae2Reflect {
             fIOPort_FLUID_MULTIPLIER = reflectField(TileIOPort.class, "FLUID_MULTIPLIER");
             mIOPort_shouldMove = reflectMethod(TileIOPort.class, "shouldMove", IMEInventory.class, IMEInventory.class);
             mIOPort_moveSlot = reflectMethod(TileIOPort.class, "moveSlot", int.class);
-            mAEBaseContainer_addSlotToContainer = reflectMethod(
-                AEBaseContainer.class,
-                "addSlotToContainer",
-                Slot.class);
             fContainerInterfaceTerminal_tracked = reflectField(ContainerInterfaceTerminal.class, "tracked");
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
@@ -153,14 +145,6 @@ public class Ae2Reflect {
         final IMEInventory destination, long itemsToMove, final StorageChannel chan) {
         try {
             return (long) mIOPort_transferContents.invoke(obj, energy, src, destination, itemsToMove, chan);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to invoke method: " + mIOPort_transferContents, e);
-        }
-    }
-
-    public static Slot addSlotToContainer(AEBaseContainer obj, Slot slot) {
-        try {
-            return (Slot) mAEBaseContainer_addSlotToContainer.invoke(obj, slot);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to invoke method: " + mIOPort_transferContents, e);
         }

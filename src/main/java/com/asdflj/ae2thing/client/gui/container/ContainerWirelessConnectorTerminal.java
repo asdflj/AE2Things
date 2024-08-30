@@ -67,8 +67,8 @@ public class ContainerWirelessConnectorTerminal extends BaseNetworkContainer {
 
     @Override
     public void addCraftingToCrafters(ICrafting crafting) {
-        updateData();
         super.addCraftingToCrafters(crafting);
+        updateData();
     }
 
     public void doLink(TileWireless left, TileWireless right) {

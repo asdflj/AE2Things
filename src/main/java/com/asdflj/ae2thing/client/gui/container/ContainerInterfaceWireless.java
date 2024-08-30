@@ -36,6 +36,8 @@ import appeng.api.networking.security.IActionHost;
 import appeng.api.storage.ITerminalHost;
 import appeng.container.guisync.GuiSync;
 import appeng.container.implementations.ContainerInterfaceTerminal;
+import appeng.container.slot.AppEngSlot;
+import appeng.core.AELog;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInterfaceTerminalUpdate;
 import appeng.helpers.IContainerCraftingPacket;
@@ -94,7 +96,11 @@ public class ContainerInterfaceWireless extends BaseNetworkContainer
 
     @Override
     public void onSlotChange(final Slot s) {
-        this.patternPanel.onSlotChange(s);
+        if (this.patternPanel != null) {
+            this.patternPanel.onSlotChange(s);
+        } else {
+            AELog.warn("patternPanel is null!");
+        }
         super.onSlotChange(s);
     }
 
@@ -262,5 +268,10 @@ public class ContainerInterfaceWireless extends BaseNetworkContainer
             update.encode();
             NetworkHandler.instance.sendTo(update, (EntityPlayerMP) this.getPlayerInv().player);
         } catch (Exception ignored) {}
+    }
+
+    @Override
+    public void addMESlotToContainer(AppEngSlot s) {
+        this.addSlotToContainer(s);
     }
 }

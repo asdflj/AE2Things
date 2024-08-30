@@ -23,7 +23,6 @@ import com.asdflj.ae2thing.client.gui.container.slot.SlotPattern;
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
 import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
-import com.asdflj.ae2thing.util.Ae2Reflect;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -36,6 +35,7 @@ import appeng.api.definitions.IDefinitions;
 import appeng.api.networking.energy.IEnergySource;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.IOptionalSlotHost;
 import appeng.container.slot.SlotFake;
 import appeng.container.slot.SlotRestrictedInput;
@@ -68,7 +68,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
         this.patternInv = this.it.getInventoryByName(Constants.PATTERN);
         this.craftingSlots = new SlotPatternFake[CRAFTING_GRID_SLOTS * CRAFTING_GRID_PAGES];
         this.outputSlots = new SlotPatternFake[CRAFTING_GRID_SLOTS * CRAFTING_GRID_PAGES];
-        this.addSlotToContainer(
+        this.addMESlotToContainer(
             this.patternSlotIN = new SlotPattern(
                 SlotRestrictedInput.PlacableItemType.BLANK_PATTERN,
                 patternInv,
@@ -76,7 +76,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
                 220,
                 31,
                 ip));
-        this.addSlotToContainer(
+        this.addMESlotToContainer(
             this.patternSlotOUT = new SlotPattern(
                 SlotRestrictedInput.PlacableItemType.ENCODED_PATTERN,
                 patternInv,
@@ -85,7 +85,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
                 31 + 43,
                 ip));
         if (this.isPatternTerminal()) {
-            this.addSlotToContainer(
+            this.addMESlotToContainer(
                 this.patternRefiller = new SlotPattern(
                     SlotRestrictedInput.PlacableItemType.UPGRADES,
                     this.it.getInventoryByName(Constants.UPGRADES),
@@ -98,7 +98,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
         for (int page = 0; page < CRAFTING_GRID_PAGES; page++) {
             for (int y = 0; y < CRAFTING_GRID_HEIGHT; y++) {
                 for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
-                    this.addSlotToContainer(
+                    this.addMESlotToContainer(
                         this.craftingSlots[x + y * CRAFTING_GRID_WIDTH
                             + page * CRAFTING_GRID_SLOTS] = new SlotPatternFake(
                                 crafting,
@@ -113,7 +113,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
             }
             for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
                 for (int y = 0; y < CRAFTING_GRID_HEIGHT; y++) {
-                    this.addSlotToContainer(
+                    this.addMESlotToContainer(
                         this.outputSlots[x * CRAFTING_GRID_HEIGHT + y
                             + page * CRAFTING_GRID_SLOTS] = new SlotPatternFake(
                                 output,
@@ -165,8 +165,8 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
         }
     }
 
-    protected Slot addSlotToContainer(Slot newSlot) {
-        return Ae2Reflect.addSlotToContainer(this.container, newSlot);
+    protected void addMESlotToContainer(AppEngSlot newSlot) {
+        this.container.addMESlotToContainer(newSlot);
     }
 
     @Override

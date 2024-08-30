@@ -80,8 +80,11 @@ public class GuiInterfaceWireless extends GuiBaseInterfaceWireless implements IW
 
     @Override
     protected void handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton) {
-        this.panel.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
-        super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
+        if (slot instanceof SlotPatternFake) {
+            this.panel.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
+        } else {
+            super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
+        }
     }
 
     @Override
