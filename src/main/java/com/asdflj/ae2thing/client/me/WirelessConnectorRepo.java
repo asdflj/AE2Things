@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.asdflj.ae2thing.client.gui.widget.Component;
 import com.asdflj.ae2thing.util.Info;
+import com.asdflj.ae2thing.util.NeCharUtil;
 import com.asdflj.ae2thing.util.Util;
 
 import appeng.client.gui.widgets.IScrollSource;
@@ -67,10 +68,10 @@ public class WirelessConnectorRepo implements IDisplayRepo {
                 tmp.addAll(
                     this.dsp.stream()
                         .filter(
-                            i -> finalM.matcher(
+                            i -> NeCharUtil.INSTANCE.matcher(
+                                finalM,
                                 result.left.getDisplayName(i)
-                                    .toLowerCase())
-                                .find())
+                                    .toLowerCase()))
                         .collect(Collectors.toList()));
                 this.dsp.clear();
                 this.dsp.addAll(tmp);

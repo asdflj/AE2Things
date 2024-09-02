@@ -38,6 +38,7 @@ import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTe
 import com.asdflj.ae2thing.network.CPacketRenamer;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.NeCharUtil;
 import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.client.gui.GuiFCImgButton;
 
@@ -939,7 +940,7 @@ public class GuiBaseInterfaceWireless extends AEBaseMEGui
                         .storage()
                         .createItemStack(parsedItemStack))
                     .toLowerCase();
-                if (displayName.contains(searchTerm)) {
+                if (NeCharUtil.INSTANCE.contains(searchTerm, displayName)) {
                     return true;
                 }
             } else if (containsInvalidDisplayName && !tag.hasNoTags()) {
@@ -1021,8 +1022,8 @@ public class GuiBaseInterfaceWireless extends AEBaseMEGui
 
             for (InterfaceWirelessSection section : sections.values()) {
                 String query = GuiBaseInterfaceWireless.this.searchFieldNames.getText();
-                if (!query.isEmpty() && !section.name.toLowerCase()
-                    .contains(query.toLowerCase())) {
+                if (!query.isEmpty()
+                    && !NeCharUtil.INSTANCE.contains(query.toLowerCase(), section.name.toLowerCase())) {
                     continue;
                 }
 
