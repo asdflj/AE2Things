@@ -27,7 +27,7 @@ public class NeCharUtil {
         try {
             return (boolean) this.m.invoke(this.o, text, input);
         } catch (Exception e) {
-            return false;
+            return text.contains(input);
         }
     }
 
