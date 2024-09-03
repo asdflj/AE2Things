@@ -2,6 +2,8 @@ package com.asdflj.ae2thing.client.gui;
 
 import static appeng.client.gui.AEBaseGui.aeRenderItem;
 
+import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
+import com.glodblock.github.common.item.ItemFluidPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.inventory.Slot;
@@ -37,48 +39,77 @@ public interface IGuiDrawSlot {
             stack = AEItemStack.create(drawStack);
             ((SlotInaccessible) slot).setDisplay(true);
             display = true;
+        } else if (slot instanceof SlotPatternFake) {
+            stack = ((SlotPatternFake) slot).getAEStack();
         } else {
             return true;
         }
-        if (stack == null || stack.getItem() == null || !(stack.getItem() instanceof ItemFluidDrop)) return true;
-        FluidStack fluidStack = ItemFluidDrop.getFluidStack(slot.getStack());
-        if (fluidStack == null || fluidStack.getFluid() == null) return true;
-        if (ModAndClassUtil.THE && AspectUtil.isEssentiaGas(fluidStack)) {
-            AspectRender.drawAspect(
-                mc.thePlayer,
-                slot.xDisplayPosition,
-                slot.yDisplayPosition,
-                this.getzLevel(),
-                AspectUtil.getAspectFromGas(fluidStack),
-                fluidStack.amount <= 0 ? 1 : fluidStack.amount);
-            IAEItemStack gas = stack.copy()
-                .setStackSize(stack.getStackSize() / AspectUtil.R);
-            aeRenderItem.setAeStack(gas);
-            GL11.glTranslatef(0.0f, 0.0f, 200.0f);
-            if (!display) {
-                aeRenderItem.renderItemOverlayIntoGUI(
-                    mc.fontRenderer,
-                    mc.getTextureManager(),
-                    gas.getItemStack(),
-                    slot.xDisplayPosition,
-                    slot.yDisplayPosition);
-            }
-        } else {
-            this.drawWidget(slot.xDisplayPosition, slot.yDisplayPosition, fluidStack.getFluid());
-            aeRenderItem.setAeStack(stack);
-            GL11.glTranslatef(0.0f, 0.0f, 200.0f);
-            if (!display) {
-                aeRenderItem.renderItemOverlayIntoGUI(
-                    mc.fontRenderer,
-                    mc.getTextureManager(),
-                    stack.getItemStack(),
-                    slot.xDisplayPosition,
-                    slot.yDisplayPosition);
-            }
 
+        if (stack == null || stack.getItem() == null ||
+            !(
+                (stack.getItem() instanceof ItemFluidDrop) || (stack.getItem() instanceof ItemFluidPacket)
+            )
+        ) return true;
+
+        FluidStack fluidStack;
+        if(stack.getItem() instanceof ItemFluidPacket) {
+            fluidStack = ItemFluidPacket.getFluidStack(stack);
+            if(fluidStack == null || fluidStack.amount <= 0) {
+                return true;
+            }
+            this.getAEBaseGui().drawAESlot(slot);
+            IAEItemStack fake = stack.copy();
+            fake.setStackSize(fluidStack.amount);
+            aeRenderItem.setAeStack(fake);
+            GL11.glTranslatef(0.0f, 0.0f, 200.0f);
+            aeRenderItem.renderItemOverlayIntoGUI(
+                mc.fontRenderer,
+                mc.getTextureManager(),
+                stack.getItemStack(),
+                slot.xDisplayPosition,
+                slot.yDisplayPosition);
+            GL11.glTranslatef(0.0f, 0.0f, -200.0f);
+            return false;
+        } else if (stack.getItem() instanceof ItemFluidDrop) {
+            fluidStack = ItemFluidDrop.getFluidStack(slot.getStack());
+            if (fluidStack == null || fluidStack.getFluid() == null) return true;
+            if (ModAndClassUtil.THE && AspectUtil.isEssentiaGas(fluidStack)) {
+                AspectRender.drawAspect(
+                    mc.thePlayer,
+                    slot.xDisplayPosition,
+                    slot.yDisplayPosition,
+                    this.getzLevel(),
+                    AspectUtil.getAspectFromGas(fluidStack),
+                    fluidStack.amount <= 0 ? 1 : fluidStack.amount);
+                IAEItemStack gas = stack.copy()
+                    .setStackSize(stack.getStackSize() / AspectUtil.R);
+                aeRenderItem.setAeStack(gas);
+                GL11.glTranslatef(0.0f, 0.0f, 200.0f);
+                if (!display) {
+                    aeRenderItem.renderItemOverlayIntoGUI(
+                        mc.fontRenderer,
+                        mc.getTextureManager(),
+                        gas.getItemStack(),
+                        slot.xDisplayPosition,
+                        slot.yDisplayPosition);
+                }
+            } else {
+                this.drawWidget(slot.xDisplayPosition, slot.yDisplayPosition, fluidStack.getFluid());
+                aeRenderItem.setAeStack(stack);
+                GL11.glTranslatef(0.0f, 0.0f, 200.0f);
+                if (!display) {
+                    aeRenderItem.renderItemOverlayIntoGUI(
+                        mc.fontRenderer,
+                        mc.getTextureManager(),
+                        stack.getItemStack(),
+                        slot.xDisplayPosition,
+                        slot.yDisplayPosition);
+                }
+            }
+            GL11.glTranslatef(0.0f, 0.0f, -200.0f);
+            return false;
         }
-        GL11.glTranslatef(0.0f, 0.0f, -200.0f);
-        return false;
+        return true;
     }
 
     default void drawWidget(int posX, int posY, Fluid fluid) {

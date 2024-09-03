@@ -21,9 +21,9 @@ import codechicken.nei.PositionedStack;
 import codechicken.nei.api.IOverlayHandler;
 import codechicken.nei.recipe.IRecipeHandler;
 
-public class FluidCraftingTransferHandler implements IOverlayHandler {
+public class CraftingTransferHandler implements IOverlayHandler {
 
-    public static final FluidCraftingTransferHandler INSTANCE = new FluidCraftingTransferHandler();
+    public static final CraftingTransferHandler INSTANCE = new CraftingTransferHandler();
 
     @Override
     public void overlayRecipe(GuiContainer firstGui, IRecipeHandler recipe, int recipeIndex, boolean shift) {

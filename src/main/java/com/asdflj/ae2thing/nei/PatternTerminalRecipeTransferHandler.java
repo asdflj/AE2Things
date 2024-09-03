@@ -17,9 +17,9 @@ import codechicken.nei.api.IOverlayHandler;
 import codechicken.nei.recipe.IRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 
-public class FluidPatternTerminalRecipeTransferHandler implements IOverlayHandler {
+public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
 
-    public static final FluidPatternTerminalRecipeTransferHandler INSTANCE = new FluidPatternTerminalRecipeTransferHandler();
+    public static final PatternTerminalRecipeTransferHandler INSTANCE = new PatternTerminalRecipeTransferHandler();
 
     public static final HashSet<String> notOtherSet = new HashSet<>();
     public static final HashSet<String> craftSet = new HashSet<>();

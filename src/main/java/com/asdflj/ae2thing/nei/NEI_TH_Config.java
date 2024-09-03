@@ -25,10 +25,7 @@ public class NEI_TH_Config implements IConfigureNEI {
         for (String identifier : recipes) {
             // that NEE handlers take priority
             if (!API.hasGuiOverlayHandler(GuiCraftingTerminal.class, identifier)) {
-                API.registerGuiOverlayHandler(
-                    GuiCraftingTerminal.class,
-                    FluidCraftingTransferHandler.INSTANCE,
-                    identifier);
+                API.registerGuiOverlayHandler(GuiCraftingTerminal.class, CraftingTransferHandler.INSTANCE, identifier);
             }
         }
         recipes.clear();
@@ -38,7 +35,7 @@ public class NEI_TH_Config implements IConfigureNEI {
             if (!API.hasGuiOverlayHandler(GuiInfusionPatternTerminal.class, identifier)) {
                 API.registerGuiOverlayHandler(
                     GuiInfusionPatternTerminal.class,
-                    FluidPatternTerminalRecipeTransferHandler.INSTANCE,
+                    PatternTerminalRecipeTransferHandler.INSTANCE,
                     identifier);
             }
         }
@@ -46,7 +43,7 @@ public class NEI_TH_Config implements IConfigureNEI {
             if (!API.hasGuiOverlayHandler(GuiWirelessDualInterfaceTerminal.class, identifier)) {
                 API.registerGuiOverlayHandler(
                     GuiWirelessDualInterfaceTerminal.class,
-                    FluidPatternTerminalRecipeTransferHandler.INSTANCE,
+                    PatternTerminalRecipeTransferHandler.INSTANCE,
                     identifier);
             }
         }

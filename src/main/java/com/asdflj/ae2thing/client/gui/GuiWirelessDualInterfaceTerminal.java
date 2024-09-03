@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
@@ -27,7 +28,7 @@ import appeng.container.slot.SlotRestrictedInput;
 import appeng.core.localization.GuiText;
 import appeng.util.item.AEItemStack;
 
-public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless implements IWidgetGui {
+public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless implements IWidgetGui,IGuiDrawSlot {
 
     private final IAEBasePanel panel;
     public ContainerWirelessDualInterfaceTerminal container;
@@ -107,32 +108,7 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless i
 
     @Override
     public void func_146977_a(final Slot s) {
-        if (drawSlot0(s)) super.func_146977_a(s);
-    }
-
-    public boolean drawSlot0(Slot slot) {
-        if (slot instanceof SlotPatternFake) {
-            AEItemStack stack = AEItemStack.create(slot.getStack());
-            super.func_146977_a(new SlotSingleItem(slot));
-            if (stack == null) return true;
-            IAEItemStack fake = stack.copy();
-            if (fake.getItemStack()
-                .getItem() instanceof ItemFluidPacket) {
-                if (ItemFluidPacket.getFluidStack(stack) != null && ItemFluidPacket.getFluidStack(stack).amount > 0)
-                    fake.setStackSize(ItemFluidPacket.getFluidStack(stack).amount);
-            } else return true;
-            aeRenderItem.setAeStack(fake);
-            GL11.glTranslatef(0.0f, 0.0f, 200.0f);
-            aeRenderItem.renderItemOverlayIntoGUI(
-                fontRendererObj,
-                mc.getTextureManager(),
-                stack.getItemStack(),
-                slot.xDisplayPosition,
-                slot.yDisplayPosition);
-            GL11.glTranslatef(0.0f, 0.0f, -200.0f);
-            return false;
-        }
-        return true;
+        if (drawSlot(s)) super.func_146977_a(s);
     }
 
     @Override
@@ -195,5 +171,15 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless i
     @Override
     protected boolean isPowered() {
         return ((ContainerWirelessDualInterfaceTerminal) this.inventorySlots).hasPower;
+    }
+
+    @Override
+    public AEBaseGui getAEBaseGui() {
+        return this;
+    }
+
+    @Override
+    public float getzLevel() {
+        return this.zLevel;
     }
 }

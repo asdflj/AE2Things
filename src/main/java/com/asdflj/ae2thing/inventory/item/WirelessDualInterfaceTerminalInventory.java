@@ -10,10 +10,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.api.WirelessObject;
-import com.asdflj.ae2thing.inventory.AppEngInternalRefillInventory;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
 import com.asdflj.ae2thing.inventory.ItemBiggerAppEngInventory;
-import com.asdflj.ae2thing.inventory.WirelessFluidPatternTerminalPatterns;
+import com.asdflj.ae2thing.inventory.ItemPatternRefillInventory;
+import com.asdflj.ae2thing.inventory.ItemPatternsInventory;
 import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -49,7 +49,7 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
 
     public WirelessDualInterfaceTerminalInventory(WirelessObject obj) {
         super(obj);
-        pattern = new WirelessFluidPatternTerminalPatterns(obj.getItemStack(), this, obj.getPlayer(), obj.getSlot());
+        pattern = new ItemPatternsInventory(obj.getItemStack(), this, obj.getPlayer(), obj.getSlot());
         crafting = new ItemBiggerAppEngInventory(
             obj.getItemStack(),
             Constants.CRAFTING_EX,
@@ -62,7 +62,7 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
             32,
             obj.getPlayer(),
             obj.getSlot());
-        upgrades = new AppEngInternalRefillInventory(
+        upgrades = new ItemPatternRefillInventory(
             obj.getItemStack(),
             Constants.UPGRADES,
             1,

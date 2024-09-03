@@ -9,14 +9,14 @@ import appeng.core.AELog;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.util.Platform;
 
-public class AppEngInternalRefillInventory extends AppEngInternalInventory {
+public class ItemPatternRefillInventory extends AppEngInternalInventory {
 
     private final ItemStack is;
     private final String name;
     private final EntityPlayer player;
     private final int slot;
 
-    public AppEngInternalRefillInventory(ItemStack is, String name, int size, int maxStack, EntityPlayer player,
+    public ItemPatternRefillInventory(ItemStack is, String name, int size, int maxStack, EntityPlayer player,
         int slot) {
         super(null, size, maxStack);
         this.name = name;

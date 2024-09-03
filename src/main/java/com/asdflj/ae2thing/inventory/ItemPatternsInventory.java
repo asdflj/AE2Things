@@ -10,15 +10,14 @@ import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
 import appeng.util.Platform;
 
-public class WirelessFluidPatternTerminalPatterns extends AppEngInternalInventory {
+public class ItemPatternsInventory extends AppEngInternalInventory {
 
     private final ItemStack is;
     private final IAEAppEngInventory terminal;
     private final EntityPlayer player;
     private final int slot;
 
-    public WirelessFluidPatternTerminalPatterns(final ItemStack is, final IAEAppEngInventory term, EntityPlayer player,
-        int slot) {
+    public ItemPatternsInventory(final ItemStack is, final IAEAppEngInventory term, EntityPlayer player, int slot) {
         super(null, 2);
         this.is = is;
         this.terminal = term;
