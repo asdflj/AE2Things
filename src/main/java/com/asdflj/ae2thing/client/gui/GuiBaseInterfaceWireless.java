@@ -37,6 +37,7 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.network.CPacketRenamer;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
+import com.asdflj.ae2thing.util.GTUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.asdflj.ae2thing.util.NeCharUtil;
 import com.asdflj.ae2thing.util.Util;
@@ -997,6 +998,10 @@ public class GuiBaseInterfaceWireless extends AEBaseMEGui
         }
     }
 
+    public void setPlayerInv(ItemStack is) {
+        this.mc.thePlayer.inventory.setItemStack(is);
+    }
+
     /**
      * Tracks the list of entries.
      */
@@ -1483,18 +1488,35 @@ public class GuiBaseInterfaceWireless extends AEBaseMEGui
 
                 // send packet to server, request an update
                 // TODO: Client prediction.
-                PacketInventoryAction packet;
+                PacketInventoryAction packet = null;
 
                 if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
                     packet = new PacketInventoryAction(InventoryAction.MOVE_REGION, 0, id);
                 } else if (isShiftKeyDown() && (btn == 0 || btn == 1)) {
                     packet = new PacketInventoryAction(InventoryAction.SHIFT_CLICK, slotIdx, id);
                 } else if (btn == 0 || btn == 1) {
-                    packet = new PacketInventoryAction(InventoryAction.PICKUP_OR_SET_DOWN, slotIdx, id);
+                    if ((ModAndClassUtil.GT5 || ModAndClassUtil.GT5NH) && GTUtil.isDataStick()) {
+                        Util.DimensionalCoordSide blockPos = new Util.DimensionalCoordSide(
+                            x,
+                            y,
+                            z,
+                            dim,
+                            ForgeDirection.getOrientation(side),
+                            this.dispName);
+                        NBTTagCompound data = new NBTTagCompound();
+                        blockPos.writeToNBT(data);
+                        AE2Thing.proxy.netHandler
+                            .sendToServer(new CPacketTerminalBtns("InterfaceTerminal.SetStick", "1", data));
+                    } else {
+                        packet = new PacketInventoryAction(InventoryAction.PICKUP_OR_SET_DOWN, slotIdx, id);
+                    }
+
                 } else {
                     packet = new PacketInventoryAction(InventoryAction.CREATIVE_DUPLICATE, slotIdx, id);
                 }
-                NetworkHandler.instance.sendToServer(packet);
+                if (packet != null) {
+                    NetworkHandler.instance.sendToServer(packet);
+                }
                 return true;
             }
 

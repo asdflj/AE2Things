@@ -7,6 +7,7 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 
+import com.asdflj.ae2thing.client.gui.GuiBaseInterfaceWireless;
 import com.asdflj.ae2thing.client.gui.GuiMonitor;
 
 import appeng.api.storage.data.IAEItemStack;
@@ -53,6 +54,14 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
                         is = ((IAEItemStack) message.list.get(0)).getItemStack();
                     }
                     gim.setPlayerInv(is);
+                }
+            } else if (gs instanceof GuiBaseInterfaceWireless gbiw) {
+                if (message.ref == 1) {
+                    ItemStack is = null;
+                    if (!message.isEmpty()) {
+                        is = ((IAEItemStack) message.list.get(0)).getItemStack();
+                    }
+                    gbiw.setPlayerInv(is);
                 }
             } else if (gs == null) {
                 Minecraft mc = Minecraft.getMinecraft();
