@@ -2,8 +2,6 @@ package com.asdflj.ae2thing.client.gui;
 
 import static appeng.client.gui.AEBaseGui.aeRenderItem;
 
-import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
-import com.glodblock.github.common.item.ItemFluidPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.inventory.Slot;
@@ -14,8 +12,10 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
+import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.crossmod.thaumcraft.AspectRender;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
@@ -45,19 +45,18 @@ public interface IGuiDrawSlot {
             return true;
         }
 
-        if (stack == null || stack.getItem() == null ||
-            !(
-                (stack.getItem() instanceof ItemFluidDrop) || (stack.getItem() instanceof ItemFluidPacket)
-            )
-        ) return true;
+        if (stack == null || stack.getItem() == null
+            || !((stack.getItem() instanceof ItemFluidDrop) || (stack.getItem() instanceof ItemFluidPacket)))
+            return true;
 
         FluidStack fluidStack;
-        if(stack.getItem() instanceof ItemFluidPacket) {
+        if (stack.getItem() instanceof ItemFluidPacket) {
             fluidStack = ItemFluidPacket.getFluidStack(stack);
-            if(fluidStack == null || fluidStack.amount <= 0) {
+            if (fluidStack == null || fluidStack.amount <= 0) {
                 return true;
             }
-            this.getAEBaseGui().drawAESlot(slot);
+            this.getAEBaseGui()
+                .drawAESlot(slot);
             IAEItemStack fake = stack.copy();
             fake.setStackSize(fluidStack.amount);
             aeRenderItem.setAeStack(fake);
