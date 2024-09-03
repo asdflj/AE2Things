@@ -279,4 +279,12 @@ public class ContainerWirelessDualInterfaceTerminal extends BaseNetworkContainer
     public void addMESlotToContainer(AppEngSlot s) {
         this.addSlotToContainer(s);
     }
+
+    public void setStick(NBTTagCompound tag) {
+        Util.DimensionalCoordSide c = Util.DimensionalCoordSide.readFromNBT(tag);
+        World w = DimensionManager.getWorld(c.getDimension());
+        if (ModAndClassUtil.GT5 || ModAndClassUtil.GT5NH) {
+            GTUtil.setDataStick(c.x, c.y, c.z, this.player, w);
+        }
+    }
 }

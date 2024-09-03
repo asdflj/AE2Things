@@ -144,7 +144,11 @@ public class CPacketTerminalBtns implements IMessage {
                     .saveSettings();
             }
             if (name.startsWith("InterfaceTerminal.") && c instanceof ContainerWirelessDualInterfaceTerminal ciw) {
-                ciw.doubleStacks(Integer.parseInt(value), tag);
+                switch (name) {
+                    case "InterfaceTerminal.Double" -> ciw.doubleStacks(Integer.parseInt(value), tag);
+                    case "InterfaceTerminal.SetStick" -> ciw.setStick(tag);
+                }
+
             }
             if (name.startsWith("WirelessConnectorTerminal.") && c instanceof ContainerWirelessConnectorTerminal cwt) {
                 switch (name) {
