@@ -34,11 +34,11 @@
  * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
-    api('com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-423-GTNH:dev')
+    api('com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-452-GTNH:dev')
     api('com.github.GTNewHorizons:NotEnoughItems:2.6.34-GTNH:dev')
     api('curse.maven:cofh-core-69162:2388751')
     api('com.github.GTNewHorizons:waila:1.8.0:dev')
-    api('com.github.GTNewHorizons:AE2FluidCraft-Rework:1.3.21-gtnh:dev') {
+    api('com.github.GTNewHorizons:AE2FluidCraft-Rework:1.3.35-gtnh:dev') {
         exclude group: 'com.github.GTNewHorizons', module: 'Applied-Energistics-2-Unofficial'
     }
     api('com.github.GTNewHorizons:ae2stuff:0.8.2-GTNH:dev')
