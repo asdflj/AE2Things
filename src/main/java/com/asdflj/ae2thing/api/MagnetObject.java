@@ -31,7 +31,7 @@ public class MagnetObject {
         Backpack
     }
 
-    public static String modeKey = "MagnetMode";
+    public static String modeKey = Constants.MAGNET_MODE_KEY;
     private static final int range = Config.magnetRange;
 
     private final NBTTagCompound data;

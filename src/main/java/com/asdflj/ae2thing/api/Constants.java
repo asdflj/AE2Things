@@ -16,6 +16,7 @@ public interface Constants {
     String IS_LINKED = "is_linked";
     String LINK = "link";
     String USED_CHANNELS = "used";
+    String MAGNET_MODE_KEY = "MagnetMode";
     int OUTPUT_COLOR = 0x4566ccff;
     int ERROR_COLOR = 0x45DA4527;
     int INACTIVE_COLOR = 0x45FFEA05;

@@ -3,6 +3,8 @@ package com.asdflj.ae2thing.inventory.item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.asdflj.ae2thing.api.WirelessObject;
 
 import appeng.api.config.Actionable;
@@ -19,6 +21,7 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AECableType;
 import appeng.container.interfaces.IInventorySlotAware;
 import appeng.items.tools.powered.ToolWirelessTerminal;
@@ -105,5 +108,27 @@ public abstract class WirelessTerminal
 
     public BaseActionSource getActionSource() {
         return this.playerSource;
+    }
+
+    @NotNull
+    public IAEStack<?> injectStack(IAEStack<?> stack, Actionable mode) {
+        if (stack instanceof IAEItemStack) {
+            return this.getItemInventory()
+                .injectItems((IAEItemStack) stack, mode, this.getActionSource());
+        } else {
+            return this.getFluidInventory()
+                .injectItems((IAEFluidStack) stack, mode, this.getActionSource());
+        }
+    }
+
+    @NotNull
+    public IAEStack<?> extractStack(IAEStack<?> stack, Actionable mode) {
+        if (stack instanceof IAEItemStack) {
+            return this.getItemInventory()
+                .extractItems((IAEItemStack) stack, mode, this.getActionSource());
+        } else {
+            return this.getFluidInventory()
+                .extractItems((IAEFluidStack) stack, mode, this.getActionSource());
+        }
     }
 }
