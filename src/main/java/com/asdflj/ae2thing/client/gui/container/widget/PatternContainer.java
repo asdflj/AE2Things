@@ -42,7 +42,7 @@ import appeng.container.slot.SlotRestrictedInput;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 
-public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
+public class PatternContainer implements IPatternContainer, IOptionalSlotHost, IWidgetSlot {
 
     protected final IInventory crafting;
     protected final IInventory output;
@@ -59,6 +59,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
 
     private final IPatternTerminal it;
     private final ContainerWirelessDualInterfaceTerminal container;
+    private final List<Slot> slots = new ArrayList<>();
 
     public PatternContainer(InventoryPlayer ip, ITerminalHost host, ContainerWirelessDualInterfaceTerminal container) {
         this.container = container;
@@ -76,6 +77,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
                 220,
                 31,
                 ip));
+        this.slots.add(this.patternSlotIN);
         this.addMESlotToContainer(
             this.patternSlotOUT = new SlotPattern(
                 SlotRestrictedInput.PlacableItemType.ENCODED_PATTERN,
@@ -84,6 +86,8 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
                 220,
                 31 + 43,
                 ip));
+        this.patternSlotOUT.setStackLimit(1);
+        this.slots.add(this.patternSlotOUT);
         if (this.isPatternTerminal()) {
             this.addMESlotToContainer(
                 this.patternRefiller = new SlotPattern(
@@ -93,8 +97,8 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
                     217,
                     110,
                     this.container.getInventoryPlayer()));
+            this.slots.add(this.patternRefiller);
         }
-        this.patternSlotOUT.setStackLimit(1);
         for (int page = 0; page < CRAFTING_GRID_PAGES; page++) {
             for (int y = 0; y < CRAFTING_GRID_HEIGHT; y++) {
                 for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
@@ -109,6 +113,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
                                 x,
                                 y,
                                 x + 4));
+                    this.slots.add(this.craftingSlots[x + y * CRAFTING_GRID_WIDTH + page * CRAFTING_GRID_SLOTS]);
                 }
             }
             for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
@@ -124,6 +129,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
                                 -x,
                                 y,
                                 x));
+                    this.slots.add(this.outputSlots[x * CRAFTING_GRID_HEIGHT + y + page * CRAFTING_GRID_SLOTS]);
                 }
             }
         }
@@ -502,5 +508,10 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost {
             this.detectAndSendChanges();
         }
 
+    }
+
+    @Override
+    public List<Slot> getSlot() {
+        return this.slots;
     }
 }

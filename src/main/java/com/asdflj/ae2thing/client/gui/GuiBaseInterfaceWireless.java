@@ -51,7 +51,6 @@ import appeng.api.config.YesNo;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.util.DimensionalCoord;
 import appeng.api.util.WorldCoord;
-import appeng.client.gui.AEBaseMEGui;
 import appeng.client.gui.IInterfaceTerminalPostUpdate;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiScrollbar;
@@ -79,8 +78,7 @@ import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import cpw.mods.fml.common.Loader;
 
-public class GuiBaseInterfaceWireless extends AEBaseMEGui
-    implements IDropToFillTextField, IInterfaceTerminalPostUpdate {
+public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTextField, IInterfaceTerminalPostUpdate {
 
     public Minecraft mc = Minecraft.getMinecraft();
     public static final int HEADER_HEIGHT = 52;
@@ -996,10 +994,6 @@ public class GuiBaseInterfaceWireless extends AEBaseMEGui
         } else if (searchFieldNames.isMouseIn(mousex, mousey)) {
             searchFieldNames.setText(displayName);
         }
-    }
-
-    public void setPlayerInv(ItemStack is) {
-        this.mc.thePlayer.inventory.setItemStack(is);
     }
 
     /**

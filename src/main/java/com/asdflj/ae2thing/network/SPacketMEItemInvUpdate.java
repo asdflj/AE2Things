@@ -7,8 +7,7 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 
-import com.asdflj.ae2thing.client.gui.GuiBaseInterfaceWireless;
-import com.asdflj.ae2thing.client.gui.GuiMonitor;
+import com.asdflj.ae2thing.client.gui.IGuiMonitorTerminal;
 
 import appeng.api.storage.data.IAEItemStack;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -45,23 +44,15 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
         @SuppressWarnings({ "unchecked", "rawtypes" })
         public IMessage onMessage(SPacketMEItemInvUpdate message, MessageContext ctx) {
             final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
-            if (gs instanceof GuiMonitor gim) {
+            if (gs instanceof IGuiMonitorTerminal gmt) {
                 if (message.ref == 0) {
-                    gim.postUpdate((List) message.list);
+                    gmt.postUpdate((List) message.list);
                 } else if (message.ref == 1) {
                     ItemStack is = null;
                     if (!message.isEmpty()) {
                         is = ((IAEItemStack) message.list.get(0)).getItemStack();
                     }
-                    gim.setPlayerInv(is);
-                }
-            } else if (gs instanceof GuiBaseInterfaceWireless gbiw) {
-                if (message.ref == 1) {
-                    ItemStack is = null;
-                    if (!message.isEmpty()) {
-                        is = ((IAEItemStack) message.list.get(0)).getItemStack();
-                    }
-                    gbiw.setPlayerInv(is);
+                    gmt.setPlayerInv(is);
                 }
             } else if (gs == null) {
                 Minecraft mc = Minecraft.getMinecraft();

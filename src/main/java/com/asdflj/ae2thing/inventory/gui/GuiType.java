@@ -106,6 +106,18 @@ public enum GuiType {
             return new GuiCraftConfirm(player.inventory, inv);
         }
     }),
+    CRAFTING_CONFIRM_ITEM(new ItemGuiFactory<>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerCraftConfirm(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiCraftConfirm(player.inventory, inv);
+        }
+    }),
     RENAMER(new ItemGuiFactory<>(ITerminalHost.class) {
 
         @Override
@@ -168,6 +180,18 @@ public enum GuiType {
     }),
 
     CRAFTING_AMOUNT(new PartGuiFactory<>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerCraftAmount(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiCraftAmount(player.inventory, inv);
+        }
+    }),
+    CRAFTING_AMOUNT_ITEM(new ItemGuiFactory<>(ITerminalHost.class) {
 
         @Override
         protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {

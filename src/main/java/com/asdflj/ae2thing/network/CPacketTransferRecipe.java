@@ -118,31 +118,31 @@ public class CPacketTransferRecipe implements IMessage {
                     transferPack(message.outputs, outputSlot);
                     c.onCraftMatrixChanged(inputSlot);
                     c.onCraftMatrixChanged(outputSlot);
-                }
-            } else if (c instanceof ContainerWirelessDualInterfaceTerminal ciw) {
-                boolean combine = ciw.combine;
-                IPatternTerminal pt = ciw.getContainer()
-                    .getPatternTerminal();
-                IInventory inputSlot = pt.getInventoryByName(Constants.CRAFTING_EX);
-                IInventory outputSlot = pt.getInventoryByName(Constants.OUTPUT_EX);
-                for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
-                    inputSlot.setInventorySlotContents(i, null);
-                }
-                for (int i = 0; i < outputSlot.getSizeInventory(); i++) {
-                    outputSlot.setInventorySlotContents(i, null);
-                }
-                if (!message.isCraft) {
-                    if (combine) {
-                        message.inputs = NEIUtils.compress(message.inputs);
-                        message.outputs = NEIUtils.compress(message.outputs);
+                } else if (c instanceof ContainerWirelessDualInterfaceTerminal ciw) {
+                    boolean combine = ciw.combine;
+                    IPatternTerminal pt = ciw.getContainer()
+                        .getPatternTerminal();
+                    IInventory inputSlot = pt.getInventoryByName(Constants.CRAFTING_EX);
+                    IInventory outputSlot = pt.getInventoryByName(Constants.OUTPUT_EX);
+                    for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
+                        inputSlot.setInventorySlotContents(i, null);
                     }
-                    message.inputs = NEIUtils.clearNull(message.inputs);
-                    message.outputs = NEIUtils.clearNull(message.outputs);
+                    for (int i = 0; i < outputSlot.getSizeInventory(); i++) {
+                        outputSlot.setInventorySlotContents(i, null);
+                    }
+                    if (!message.isCraft) {
+                        if (combine) {
+                            message.inputs = NEIUtils.compress(message.inputs);
+                            message.outputs = NEIUtils.compress(message.outputs);
+                        }
+                        message.inputs = NEIUtils.clearNull(message.inputs);
+                        message.outputs = NEIUtils.clearNull(message.outputs);
+                    }
+                    transferPack(message.inputs, inputSlot);
+                    transferPack(message.outputs, outputSlot);
+                    c.onCraftMatrixChanged(inputSlot);
+                    c.onCraftMatrixChanged(outputSlot);
                 }
-                transferPack(message.inputs, inputSlot);
-                transferPack(message.outputs, outputSlot);
-                c.onCraftMatrixChanged(inputSlot);
-                c.onCraftMatrixChanged(outputSlot);
             }
 
             return null;

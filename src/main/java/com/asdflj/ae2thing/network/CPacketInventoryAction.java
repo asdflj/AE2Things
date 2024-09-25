@@ -109,7 +109,7 @@ public class CPacketInventoryAction implements IMessage {
                     final ContainerOpenContext context = baseContainer.getOpenContext();
                     if (context != null) {
                         final TileEntity te = context.getTile();
-                        if (te != null) {
+                        if (te != null || target instanceof WirelessTerminal) {
                             if(message.stack.getItem() instanceof ItemFluidDrop){
                                 IAEFluidStack fs = ItemFluidDrop.getAeFluidStack(message.stack);
                                 if(ModAndClassUtil.THE &&AspectUtil.isEssentiaGas(fs)){
@@ -125,13 +125,21 @@ public class CPacketInventoryAction implements IMessage {
                                     baseContainer.setTargetStack(AEItemStack.create(is));
                                 }
                             }
-
-                            InventoryHandler.openGui(
+                            if(te != null){
+                                InventoryHandler.openGui(
                                     sender,
                                     te.getWorldObj(),
                                     new BlockPos(te),
                                     Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
                                     GuiType.CRAFTING_AMOUNT);
+                            }else{
+                                InventoryHandler.openGui(
+                                    sender,
+                                    sender.getEntityWorld(),
+                                    new BlockPos(((WirelessTerminal) target).getInventorySlot(),0,0),
+                                    Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
+                                    GuiType.CRAFTING_AMOUNT_ITEM);
+                            }
                         }
                         if (sender.openContainer instanceof final ContainerCraftAmount cca) {
                             if (baseContainer.getTargetStack() != null) {

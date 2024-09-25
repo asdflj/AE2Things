@@ -3,11 +3,8 @@ package com.asdflj.ae2thing.client.gui.widget;
 import static net.minecraft.client.gui.GuiScreen.isCtrlKeyDown;
 import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -31,11 +28,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiScrollbar;
-import appeng.client.me.SlotDisconnected;
-import appeng.client.me.SlotME;
 import appeng.container.AEBaseContainer;
-import appeng.container.slot.SlotFake;
-import appeng.container.slot.SlotPatternTerm;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
@@ -60,6 +53,8 @@ public class PatternPanel implements IAEBasePanel {
     protected GuiFCImgButton combineDisableBtn;
     protected final GuiScrollbar processingScrollBar = new GuiScrollbar();
     private AEBaseContainer inventorySlots;
+    private final int w;
+    private final int h;
 
     public PatternPanel(IWidgetGui gui, ContainerWirelessDualInterfaceTerminal container) {
         this.gui = gui;
@@ -71,6 +66,8 @@ public class PatternPanel implements IAEBasePanel {
             .setLeft(6)
             .setRange(0, 1, 1);
         processingScrollBar.setTexture(AE2Thing.MODID, "gui/widget/pattern.png", 242, 0);
+        this.w = 110;
+        this.h = 92;
     }
 
     @Override
@@ -242,8 +239,8 @@ public class PatternPanel implements IAEBasePanel {
 
     @Override
     public boolean hideItemPanelSlot(int tx, int ty, int tw, int th) {
-        int rw = 110;
-        int rh = 92;
+        int rw = this.w;
+        int rh = this.h;
         if (tw <= 0 || th <= 0) {
             return false;
         }
@@ -276,187 +273,85 @@ public class PatternPanel implements IAEBasePanel {
     }
 
     @Override
-    public void handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton) {
-        final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+    public boolean handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton) {
+        if (!(slot instanceof SlotPatternFake)) {
+            return false;
+        }
         if (mouseButton == 3) {
-            if (slot instanceof SlotPatternFake) {
-                if (slot.getHasStack()) {
-                    InventoryAction action = InventoryAction.SET_PATTERN_VALUE;
-                    IAEItemStack stack = AEItemStack.create(slot.getStack());
-                    this.inventorySlots.setTargetStack(stack);
-                    for (int i = 0; i < this.inventorySlots.inventorySlots.size(); i++) {
-                        if (slot.equals(this.inventorySlots.inventorySlots.get(i))) {
-                            AE2Thing.proxy.netHandler.sendToServer(new CPacketInventoryAction(action, i, 0, stack));
-                        }
-                    }
-                    return;
-                }
-            }
-        }
-
-        if (slot instanceof SlotFake) {
-            InventoryAction action = ctrlDown == 1 ? InventoryAction.SPLIT_OR_PLACE_SINGLE
-                : InventoryAction.PICKUP_OR_SET_DOWN;
-            if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
-                if (action == InventoryAction.SPLIT_OR_PLACE_SINGLE) {
-                    action = InventoryAction.MOVE_REGION;
-                } else {
-                    action = InventoryAction.PICKUP_SINGLE;
-                }
-            }
-            if (Ae2ReflectClient.getDragClick(this.parent)
-                .size() > 1) {
-                return;
-            }
-            final PacketInventoryAction p = new PacketInventoryAction(action, slotIdx, -1);
-            NetworkHandler.instance.sendToServer(p);
-            return;
-        }
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-            if (this.enableSpaceClicking() && !(slot instanceof SlotPatternTerm)) {
-                IAEItemStack stack = null;
-                if (slot instanceof SlotME) {
-                    stack = ((SlotME) slot).getAEStack();
-                }
-                int slotNum = Ae2ReflectClient.getInventorySlots(this.parent)
-                    .size();
-                if (!(slot instanceof SlotME) && slot != null) {
-                    slotNum = slot.slotNumber;
-                }
+            if (slot.getHasStack()) {
+                InventoryAction action = InventoryAction.SET_PATTERN_VALUE;
+                IAEItemStack stack = AEItemStack.create(slot.getStack());
                 this.inventorySlots.setTargetStack(stack);
-                final PacketInventoryAction p = new PacketInventoryAction(InventoryAction.MOVE_REGION, slotNum, -1);
-                NetworkHandler.instance.sendToServer(p);
-                return;
-            }
-        }
-
-        if (slot instanceof SlotDisconnected) {
-            if (Ae2ReflectClient.getDragClick(this.parent)
-                .size() > 1) {
-                return;
-            }
-            InventoryAction action = null;
-            switch (mouseButton) {
-                case 0: // pickup / set-down.
-                {
-                    ItemStack heldStack = player.inventory.getItemStack();
-                    if (slot.getStack() == null && heldStack != null) action = InventoryAction.SPLIT_OR_PLACE_SINGLE;
-                    else if (slot.getStack() != null && (heldStack == null || heldStack.stackSize <= 1))
-                        action = InventoryAction.PICKUP_OR_SET_DOWN;
+                for (int i = 0; i < this.inventorySlots.inventorySlots.size(); i++) {
+                    if (slot.equals(this.inventorySlots.inventorySlots.get(i))) {
+                        AE2Thing.proxy.netHandler.sendToServer(new CPacketInventoryAction(action, i, 0, stack));
+                    }
                 }
-                    break;
-                case 1:
-                    action = ctrlDown == 1 ? InventoryAction.PICKUP_SINGLE : InventoryAction.SHIFT_CLICK;
-                    break;
-                case 3: // creative dupe:
-                    if (player.capabilities.isCreativeMode) {
-                        action = InventoryAction.CREATIVE_DUPLICATE;
-                    }
-                    break;
-                default:
-                case 4: // drop item:
-                case 6:
-            }
-            if (action != null) {
-                final PacketInventoryAction p = new PacketInventoryAction(
-                    action,
-                    slot.getSlotIndex(),
-                    ((SlotDisconnected) slot).getSlot()
-                        .getId());
-                NetworkHandler.instance.sendToServer(p);
-            }
-            return;
-        }
-
-        if (slot instanceof SlotME) {
-            InventoryAction action = null;
-            IAEItemStack stack = null;
-            switch (mouseButton) {
-                case 0: // pickup / set-down.
-                    action = ctrlDown == 1 ? InventoryAction.SPLIT_OR_PLACE_SINGLE : InventoryAction.PICKUP_OR_SET_DOWN;
-                    stack = ((SlotME) slot).getAEStack();
-                    if (stack != null && action == InventoryAction.PICKUP_OR_SET_DOWN
-                        && stack.getStackSize() == 0
-                        && player.inventory.getItemStack() == null) {
-                        action = InventoryAction.AUTO_CRAFT;
-                    }
-                    break;
-                case 1:
-                    action = ctrlDown == 1 ? InventoryAction.PICKUP_SINGLE : InventoryAction.SHIFT_CLICK;
-                    stack = ((SlotME) slot).getAEStack();
-                    break;
-                case 3: // creative dupe:
-                    stack = ((SlotME) slot).getAEStack();
-                    stack = transformItem(stack); // for fluid terminal
-                    if (stack != null && stack.isCraftable()) {
-                        action = InventoryAction.AUTO_CRAFT;
-                    } else if (player.capabilities.isCreativeMode) {
-                        final IAEItemStack slotItem = ((SlotME) slot).getAEStack();
-                        if (slotItem != null) {
-                            action = InventoryAction.CREATIVE_DUPLICATE;
-                        }
-                    }
-                    break;
-                default:
-                case 4: // drop item:
-                case 6:
-            }
-            if (action == InventoryAction.AUTO_CRAFT) {
-                this.inventorySlots.setTargetStack(stack);
-                AE2Thing.proxy.netHandler.sendToServer(
-                    new CPacketInventoryAction(
-                        action,
-                        Ae2ReflectClient.getInventorySlots(this.parent)
-                            .size(),
-                        0,
-                        stack));
-            } else if (action != null) {
-                this.inventorySlots.setTargetStack(stack);
-                final PacketInventoryAction p = new PacketInventoryAction(
-                    action,
-                    Ae2ReflectClient.getInventorySlots(this.parent)
-                        .size(),
-                    0);
-                NetworkHandler.instance.sendToServer(p);
+                return true;
             }
         }
 
+        InventoryAction action = ctrlDown == 1 ? InventoryAction.SPLIT_OR_PLACE_SINGLE
+            : InventoryAction.PICKUP_OR_SET_DOWN;
+        if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
+            if (action == InventoryAction.SPLIT_OR_PLACE_SINGLE) {
+                action = InventoryAction.MOVE_REGION;
+            } else {
+                action = InventoryAction.PICKUP_SINGLE;
+            }
+        }
+        if (Ae2ReflectClient.getDragClick(this.parent)
+            .size() > 1) {
+            return false;
+        }
+        final PacketInventoryAction p = new PacketInventoryAction(action, slotIdx, -1);
+        NetworkHandler.instance.sendToServer(p);
+        return true;
     }
 
     @Override
-    public void actionPerformed(GuiButton btn) {
+    public boolean actionPerformed(GuiButton btn) {
         if (this.encodeBtn == btn) {
             AE2Thing.proxy.netHandler.sendToServer(
                 new CPacketTerminalBtns(
                     "PatternTerminal.Encode",
                     (isCtrlKeyDown() ? 1 : 0) << 1 | (isShiftKeyDown() ? 1 : 0)));
+            return true;
         } else if (this.clearBtn == btn) {
             AE2Thing.proxy.netHandler.sendToServer(new CPacketTerminalBtns("PatternTerminal.Clear", 1));
+            return true;
         } else if (this.substitutionsEnabledBtn == btn || this.substitutionsDisabledBtn == btn) {
             AE2Thing.proxy.netHandler.sendToServer(
                 new CPacketTerminalBtns("PatternTerminal.Substitute", this.substitutionsEnabledBtn == btn ? 0 : 1));
+            return true;
         } else if (this.fluidPrioritizedEnabledBtn == btn || this.fluidPrioritizedDisabledBtn == btn) {
             AE2Thing.proxy.netHandler.sendToServer(
                 new CPacketTerminalBtns(
                     "PatternTerminal.Prioritize",
                     isShiftKeyDown() ? 2 : (container.prioritize ? 0 : 1)));
+            return true;
         } else if (this.invertBtn == btn) {
             AE2Thing.proxy.netHandler
                 .sendToServer(new CPacketTerminalBtns("PatternTerminal.Invert", container.inverted ? 0 : 1));
+            return true;
         } else if (this.combineDisableBtn == btn || this.combineEnableBtn == btn) {
             AE2Thing.proxy.netHandler.sendToServer(
                 new CPacketTerminalBtns("PatternTerminal.Combine", this.combineDisableBtn == btn ? 1 : 0));
+            return true;
         } else if (com.glodblock.github.util.ModAndClassUtil.isDoubleButton && doubleBtn == btn) {
             final boolean backwards = Mouse.isButtonDown(1);
             int val = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? 1 : 0;
             if (backwards) val |= 0b10;
             AE2Thing.proxy.netHandler.sendToServer(new CPacketTerminalBtns("PatternTerminal.Double", val));
+            return true;
         } else if (ModAndClassUtil.isBeSubstitutionsButton && beSubstitutionsDisabledBtn == btn) {
             AE2Thing.proxy.netHandler.sendToServer(new CPacketTerminalBtns("PatternTerminal.beSubstitute", 1));
+            return true;
         } else if (ModAndClassUtil.isBeSubstitutionsButton && beSubstitutionsEnabledBtn == btn) {
             AE2Thing.proxy.netHandler.sendToServer(new CPacketTerminalBtns("PatternTerminal.beSubstitute", 0));
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -481,11 +376,27 @@ public class PatternPanel implements IAEBasePanel {
         return false;
     }
 
-    protected boolean enableSpaceClicking() {
-        return true;
+    @Override
+    public boolean keyTyped(char character, int key) {
+        return false;
     }
 
-    protected IAEItemStack transformItem(IAEItemStack stack) {
-        return stack;
+    @Override
+    public boolean draggable() {
+        return false;
+    }
+
+    @Override
+    public Rectangle getRectangle() {
+        return new Rectangle(
+            this.parent.getGuiLeft() + this.parent.getXSize(),
+            this.parent.getGuiTop(),
+            this.w,
+            this.h);
+    }
+
+    @Override
+    public void setRectangle(int x, int y) {
+
     }
 }

@@ -11,6 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
+import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 import com.asdflj.ae2thing.util.BlockPos;
 
 import appeng.api.networking.IGrid;
@@ -126,6 +127,13 @@ public class CPacketCraftRequest implements IMessage {
                                         new BlockPos(te),
                                         Objects.requireNonNull(context.getSide()),
                                         GuiType.CRAFTING_CONFIRM);
+                            }else{
+                                InventoryHandler.openGui(
+                                    player,
+                                    player.worldObj,
+                                    new BlockPos(((WirelessTerminal) target).getInventorySlot(),0,0),
+                                    Objects.requireNonNull(cca.getOpenContext().getSide()),
+                                    GuiType.CRAFTING_CONFIRM_ITEM);
                             }
 
                             if (player.openContainer instanceof final ContainerCraftConfirm ccc) {
