@@ -3,6 +3,8 @@ package com.asdflj.ae2thing.client.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 
+import org.lwjgl.input.Mouse;
+
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.common.parts.PartInfusionPatternTerminal;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
@@ -10,11 +12,17 @@ import com.asdflj.ae2thing.inventory.item.WirelessDualInterfaceTerminalInventory
 import com.asdflj.ae2thing.loader.ItemAndBlockHolder;
 import com.asdflj.ae2thing.network.CPacketCraftRequest;
 
+import appeng.api.config.CraftingMode;
+import appeng.api.config.Settings;
 import appeng.api.storage.ITerminalHost;
+import appeng.client.gui.widgets.GuiImgButton;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.core.localization.GuiText;
+import appeng.util.Platform;
 
 public class GuiCraftAmount extends GuiAmount {
+
+    protected GuiImgButton craftingMode;
 
     public GuiCraftAmount(final InventoryPlayer inventoryPlayer, final ITerminalHost te) {
         super(new ContainerCraftAmount(inventoryPlayer, te));
@@ -23,6 +31,12 @@ public class GuiCraftAmount extends GuiAmount {
     @Override
     public void initGui() {
         super.initGui();
+        this.buttonList.add(
+            this.craftingMode = new GuiImgButton(
+                this.guiLeft + 10,
+                this.guiTop + 53,
+                Settings.CRAFTING_MODE,
+                CraftingMode.STANDARD));
         this.amountBox.setText("1");
         this.amountBox.setSelectionPos(0);
     }
@@ -48,8 +62,25 @@ public class GuiCraftAmount extends GuiAmount {
     protected void actionPerformed(final GuiButton btn) {
         super.actionPerformed(btn);
         try {
+            if (btn == this.craftingMode) {
+                GuiImgButton iBtn = (GuiImgButton) btn;
+
+                final Enum cv = iBtn.getCurrentValue();
+                final boolean backwards = Mouse.isButtonDown(1);
+                final Enum next = Platform.rotateEnum(
+                    cv,
+                    backwards,
+                    iBtn.getSetting()
+                        .getPossibleValues());
+
+                iBtn.set(next);
+            }
             if (btn == this.submit && this.submit.enabled) {
-                AE2Thing.proxy.netHandler.sendToServer(new CPacketCraftRequest(getAmount(), isShiftKeyDown()));
+                AE2Thing.proxy.netHandler.sendToServer(
+                    new CPacketCraftRequest(
+                        getAmount(),
+                        isShiftKeyDown(),
+                        (CraftingMode) this.craftingMode.getCurrentValue()));
             }
         } catch (final NumberFormatException e) {
             this.amountBox.setText("1");
