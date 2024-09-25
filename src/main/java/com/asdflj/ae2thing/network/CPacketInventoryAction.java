@@ -124,6 +124,8 @@ public class CPacketInventoryAction implements IMessage {
                                     is.setTagCompound(data);
                                     baseContainer.setTargetStack(AEItemStack.create(is));
                                 }
+                            }else{
+                                baseContainer.setTargetStack(message.stack);
                             }
                             if(te != null){
                                 InventoryHandler.openGui(
