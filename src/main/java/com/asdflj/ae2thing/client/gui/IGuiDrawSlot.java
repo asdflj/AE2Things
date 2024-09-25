@@ -56,18 +56,20 @@ public interface IGuiDrawSlot {
                 return true;
             }
             this.getAEBaseGui()
-                .drawAESlot(slot);
+                .drawMCSlot(slot);
             IAEItemStack fake = stack.copy();
             fake.setStackSize(fluidStack.amount);
             aeRenderItem.setAeStack(fake);
-            GL11.glTranslatef(0.0f, 0.0f, 200.0f);
-            aeRenderItem.renderItemOverlayIntoGUI(
-                mc.fontRenderer,
-                mc.getTextureManager(),
-                stack.getItemStack(),
-                slot.xDisplayPosition,
-                slot.yDisplayPosition);
-            GL11.glTranslatef(0.0f, 0.0f, -200.0f);
+            if (!display) {
+                GL11.glTranslatef(0.0f, 0.0f, 200.0f);
+                aeRenderItem.renderItemOverlayIntoGUI(
+                    mc.fontRenderer,
+                    mc.getTextureManager(),
+                    fake.getItemStack(),
+                    slot.xDisplayPosition,
+                    slot.yDisplayPosition);
+                GL11.glTranslatef(0.0f, 0.0f, -200.0f);
+            }
             return false;
         } else if (stack.getItem() instanceof ItemFluidDrop) {
             fluidStack = ItemFluidDrop.getFluidStack(slot.getStack());
