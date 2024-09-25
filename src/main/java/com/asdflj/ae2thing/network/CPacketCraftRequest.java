@@ -14,6 +14,7 @@ import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 import com.asdflj.ae2thing.util.BlockPos;
 
+import appeng.api.config.CraftingMode;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
@@ -24,6 +25,7 @@ import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.container.implementations.ContainerCraftConfirm;
 import appeng.core.AELog;
+import appeng.me.cache.CraftingGridCache;
 import appeng.util.item.AEItemStack;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -36,6 +38,7 @@ public class CPacketCraftRequest implements IMessage {
     private boolean heldShift;
     private IAEItemStack item = null;
     private Mode mode;
+    private CraftingMode craftingMode;
 
     private enum Mode {
         ITEM,
@@ -45,20 +48,31 @@ public class CPacketCraftRequest implements IMessage {
     public CPacketCraftRequest() {}
 
     public CPacketCraftRequest(final IAEItemStack item, final boolean shift) {
+        this(item, shift, CraftingMode.STANDARD);
+    }
+
+    public CPacketCraftRequest(final IAEItemStack item, final boolean shift, CraftingMode currentValue) {
         this.item = item;
         this.heldShift = shift;
         this.mode = Mode.ITEM;
+        this.craftingMode = currentValue;
+    }
+
+    public CPacketCraftRequest(final long craftAmt, final boolean shift, CraftingMode currentValue) {
+        this.amount = craftAmt;
+        this.heldShift = shift;
+        this.mode = Mode.STACK_SIZE;
+        this.craftingMode = currentValue;
     }
 
     public CPacketCraftRequest(final long craftAmt, final boolean shift) {
-        amount = craftAmt;
-        heldShift = shift;
-        mode = Mode.STACK_SIZE;
+        this(craftAmt, shift, CraftingMode.STANDARD);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(mode.ordinal());
+        buf.writeByte(mode.ordinal());
+        buf.writeByte(craftingMode.ordinal());
         if (mode == Mode.ITEM) {
             try {
                 item.writeToPacket(buf);
@@ -73,7 +87,8 @@ public class CPacketCraftRequest implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        mode = Mode.values()[buf.readInt()];
+        mode = Mode.values()[buf.readByte()];
+        craftingMode = CraftingMode.values()[buf.readByte()];
         if (mode == Mode.ITEM) {
             try {
                 item = AEItemStack.loadItemStackFromPacket(buf);
@@ -110,12 +125,22 @@ public class CPacketCraftRequest implements IMessage {
                     Future<ICraftingJob> futureJob = null;
                     try {
                         final ICraftingGrid cg = g.getCache(ICraftingGrid.class);
-                        futureJob = cg.beginCraftingJob(
+                        if (cg instanceof CraftingGridCache cgc) {
+                            futureJob = cgc.beginCraftingJob(
+                                cca.getWorld(),
+                                cca.getGrid(),
+                                cca.getActionSrc(),
+                                cca.getItemToCraft(),
+                                message.craftingMode,
+                                null);
+                        } else {
+                            futureJob = cg.beginCraftingJob(
                                 cca.getWorld(),
                                 cca.getGrid(),
                                 cca.getActionSrc(),
                                 cca.getItemToCraft(),
                                 null);
+                        }
 
                         final ContainerOpenContext context = cca.getOpenContext();
                         if (context != null) {
@@ -137,6 +162,7 @@ public class CPacketCraftRequest implements IMessage {
                             }
 
                             if (player.openContainer instanceof final ContainerCraftConfirm ccc) {
+                                cca.setupConfirmationGUI(player);
                                 ccc.setAutoStart(message.heldShift);
                                 ccc.setJob(futureJob);
                                 cca.detectAndSendChanges();
