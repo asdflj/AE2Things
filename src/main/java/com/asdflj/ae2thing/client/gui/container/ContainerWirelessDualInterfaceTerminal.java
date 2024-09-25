@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
@@ -24,7 +26,7 @@ import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
 import com.asdflj.ae2thing.client.gui.container.widget.PatternContainer;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
-import com.asdflj.ae2thing.inventory.item.WirelessDualInterfaceTerminalInventory;
+import com.asdflj.ae2thing.inventory.item.INetworkTerminal;
 import com.asdflj.ae2thing.util.Ae2Reflect;
 import com.asdflj.ae2thing.util.GTUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
@@ -32,10 +34,15 @@ import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.util.Util;
 
 import appeng.api.implementations.ICraftingPatternItem;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
+import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.security.IActionHost;
+import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.ITerminalHost;
+import appeng.api.util.IConfigurableObject;
 import appeng.api.util.IInterfaceViewable;
 import appeng.container.guisync.GuiSync;
 import appeng.container.implementations.ContainerInterfaceTerminal;
@@ -46,12 +53,14 @@ import appeng.core.sync.packets.PacketInterfaceTerminalUpdate;
 import appeng.helpers.IContainerCraftingPacket;
 import appeng.helpers.InventoryAction;
 import appeng.me.cache.CraftingGridCache;
+import appeng.me.helpers.ChannelPowerSrc;
+import appeng.tile.inventory.InvOperation;
 import appeng.tile.networking.TileCableBus;
 import appeng.util.PatternMultiplierHelper;
 import appeng.util.Platform;
 
-public class ContainerWirelessDualInterfaceTerminal extends BaseNetworkContainer
-    implements IContainerCraftingPacket, IWidgetPatternContainer {
+public class ContainerWirelessDualInterfaceTerminal extends ContainerMonitor
+    implements IContainerCraftingPacket, IWidgetPatternContainer, IConfigurableObject {
 
     public final ContainerInterfaceTerminal delegateContainer;
     private final PatternContainer patternPanel;
@@ -80,11 +89,35 @@ public class ContainerWirelessDualInterfaceTerminal extends BaseNetworkContainer
         this.patternPanel = new PatternContainer(ip, monitorable, this);
         this.delegateContainer = new ContainerInterfaceTerminal(ip, (IActionHost) monitorable);
         this.it = (IPatternTerminal) monitorable;
-        if (monitorable instanceof WirelessDualInterfaceTerminalInventory witi) {
-            this.setPowerSource(witi);
-            this.setCellInventory(null);
-        }
+        this.setMonitor();
         this.bindPlayerInventory(ip, 14, 0);
+    }
+
+    @Override
+    void setMonitor() {
+        if (this.host instanceof INetworkTerminal) {
+            final IGridNode node = ((IGridHost) this.host).getGridNode(ForgeDirection.UNKNOWN);
+            if (node != null) {
+                this.networkNode = node;
+                final IGrid g = node.getGrid();
+                if (g != null) {
+                    this.setPowerSource(new ChannelPowerSrc(this.networkNode, g.getCache(IEnergyGrid.class)));
+                    IStorageGrid storageGrid = g.getCache(IStorageGrid.class);
+                    this.monitor.setMonitor(storageGrid.getItemInventory());
+                    this.fluidMonitor.setMonitor(storageGrid.getFluidInventory(), storageGrid.getItemInventory());
+                    this.monitor.setFluidMonitorObject(this.fluidMonitor);
+                    if (this.monitor.getMonitor() == null) {
+                        this.setValidContainer(false);
+                    } else {
+                        this.monitor.addListener();
+                        this.fluidMonitor.addListener();
+                        this.setCellInventory(this.monitor.getMonitor());
+                    }
+                }
+            } else {
+                this.setValidContainer(false);
+            }
+        }
     }
 
     public void detectAndSendChanges() {
@@ -118,9 +151,9 @@ public class ContainerWirelessDualInterfaceTerminal extends BaseNetworkContainer
 
     @Override
     public void doAction(final EntityPlayerMP player, final InventoryAction action, final int slotId, final long id) {
-        if (id != -1) {
+        if (id >= 0) {
             delegateContainer.doAction(player, action, slotId, id);
-        } else {
+        } else if (id == -1) {
             Slot s = this.inventorySlots.get(slotId);
             if (s instanceof SlotPatternFake) {
                 if (action == InventoryAction.MOVE_REGION) {
@@ -160,6 +193,9 @@ public class ContainerWirelessDualInterfaceTerminal extends BaseNetworkContainer
                     }
                 }
             }
+        } else if (id == -2) {
+            super.doAction(player, action, slotId, id);
+
         }
     }
 
@@ -286,5 +322,47 @@ public class ContainerWirelessDualInterfaceTerminal extends BaseNetworkContainer
         if (ModAndClassUtil.GT5 || ModAndClassUtil.GT5NH) {
             GTUtil.setDataStick(c.x, c.y, c.z, this.player, w);
         }
+    }
+
+    @Override
+    public void processItemList() {
+        super.processItemList();
+        this.fluidMonitor.processItemList();
+    }
+
+    @Override
+    public void removeCraftingFromCrafters(ICrafting c) {
+        super.removeCraftingFromCrafters(c);
+        this.fluidMonitor.removeCraftingFromCrafters(c);
+    }
+
+    @Override
+    public void addCraftingToCrafters(ICrafting c) {
+        super.addCraftingToCrafters(c);
+        this.fluidMonitor.queueInventory(c);
+    }
+
+    @Override
+    public void onContainerClosed(EntityPlayer player) {
+        super.onContainerClosed(player);
+        if (this.fluidMonitor.getMonitor() != null) this.fluidMonitor.removeListener();
+    }
+
+    @Override
+    public void saveChanges() {
+
+    }
+
+    @Override
+    public ItemStack slotClick(int slotId, int clickedButton, int mode, EntityPlayer player) {
+        if (slotId == -999) return this.getPlayerInv()
+            .getItemStack();
+        return super.slotClick(slotId, clickedButton, mode, player);
+    }
+
+    @Override
+    public void onChangeInventory(IInventory inv, int slot, InvOperation mc, ItemStack removedStack,
+        ItemStack newStack) {
+
     }
 }

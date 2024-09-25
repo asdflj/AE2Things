@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
-import com.asdflj.ae2thing.client.gui.GuiMonitor;
+import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 
@@ -59,7 +59,7 @@ public class AdvItemRepo extends ItemRepo implements Runnable {
 
     protected AdvItemRepo repo;
     protected final Set<IAEItemStack> cache = Collections.synchronizedSet(new HashSet<>());
-    protected GuiMonitor gui;
+    protected IGuiMonitor gui;
     private static final Lock lock = new ReentrantLock();
 
     public AdvItemRepo(IScrollSource src, ISortSource sortSrc) {
@@ -74,7 +74,7 @@ public class AdvItemRepo extends ItemRepo implements Runnable {
         return lock;
     }
 
-    public void setCache(GuiMonitor gui) {
+    public void setCache(IGuiMonitor gui) {
         if (Config.updateViewThread) {
             this.repo = new AdvItemRepo(gui);
             this.repo.setPowered(true);

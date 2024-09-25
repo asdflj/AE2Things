@@ -7,10 +7,9 @@ import net.minecraft.client.gui.GuiButton;
 import com.asdflj.ae2thing.client.gui.widget.IAEBasePanel;
 
 import appeng.client.gui.AEBaseGui;
+import appeng.client.me.InternalSlotME;
 
 public interface IWidgetGui {
-
-    void setXSize(int size);
 
     AEBaseGui getGui();
 
@@ -18,6 +17,7 @@ public interface IWidgetGui {
 
     List<GuiButton> getButtonList();
 
-    IAEBasePanel getPanel();
+    IAEBasePanel getActivePanel();
 
+    List<InternalSlotME> getMeSlots();
 }

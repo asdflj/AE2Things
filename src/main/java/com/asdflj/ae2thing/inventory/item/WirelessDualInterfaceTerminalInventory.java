@@ -18,6 +18,11 @@ import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 
+import appeng.api.config.Settings;
+import appeng.api.config.SortDir;
+import appeng.api.config.SortOrder;
+import appeng.api.config.TypeFilter;
+import appeng.api.config.ViewItems;
 import appeng.api.implementations.ICraftingPatternItem;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
@@ -29,6 +34,7 @@ import appeng.api.util.IConfigManager;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
+import appeng.util.ConfigManager;
 import appeng.util.Platform;
 
 public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
@@ -88,7 +94,19 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
 
     @Override
     public IConfigManager getConfigManager() {
-        return null;
+        final ConfigManager out = new ConfigManager((manager, settingName, newValue) -> {
+            final NBTTagCompound data = Platform.openNbtData(this.getItemStack());
+            manager.writeToNBT(data);
+            saveSettings();
+        });
+        out.registerSetting(Settings.SORT_BY, SortOrder.NAME);
+        out.registerSetting(Settings.VIEW_MODE, ViewItems.ALL);
+        out.registerSetting(Settings.SORT_DIRECTION, SortDir.ASCENDING);
+        out.registerSetting(Settings.TYPE_FILTER, TypeFilter.ALL);
+        out.readFromNBT(
+            (NBTTagCompound) Platform.openNbtData(this.getItemStack())
+                .copy());
+        return out;
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 import com.asdflj.ae2thing.util.BlockPos;
 import com.asdflj.ae2thing.util.Util;
 
+import appeng.client.gui.AEBaseGui;
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -31,6 +32,7 @@ public class CPacketSwitchGuis implements IMessage {
 
     public CPacketSwitchGuis(GuiType guiType) {
         this.guiType = guiType;
+        AEBaseGui.setSwitchingGuis(true);
     }
 
     @Override

@@ -69,7 +69,7 @@ public class StorageManager extends WorldSavedData {
     }
 
     public void addGrid(String uuid, IChestOrDrive drive) {
-        if (drive == null) return;
+        if (drive == null || uuid.isEmpty()) return;
         this.addGrid(
             uuid,
             drive.getActionableNode()

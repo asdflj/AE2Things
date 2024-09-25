@@ -9,7 +9,7 @@ item.part_wireless_connector_terminal.name=ME无线连接终端
 item.wireless_dual_interface_terminal.name=ME无线二合一接口终端
 item.wireless_connector_terminal.name=ME无线连接终端
 tile.fishbig.name=鱼大
-tile.essentia_discretizer.name=源质散离器
+tile.essentia_discretizer.name=源质离散器
 tile.infusion_interface.name=ME注魔接口
 tile.ex_io_port.name=ME扩展IO端口
 

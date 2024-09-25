@@ -11,7 +11,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public interface IAEBasePanel {
+public interface IAEBasePanel extends IDraggable {
 
     default void bindTextureBack(final String file) {
         final ResourceLocation loc = new ResourceLocation(AE2Thing.MODID, "textures/" + file);
@@ -34,11 +34,16 @@ public interface IAEBasePanel {
 
     void mouseClicked(int xCoord, int yCoord, int btn);
 
-    void handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton);
+    boolean handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton);
 
-    void actionPerformed(GuiButton btn);
+    boolean actionPerformed(GuiButton btn);
 
     void mouseClickMove(final int x, final int y, final int c, final long d);
 
     boolean mouseWheelEvent(int mouseX, int mouseY, int wheel);
+
+    boolean keyTyped(char character, int key);
+
+    default void onGuiClosed() {}
+
 }

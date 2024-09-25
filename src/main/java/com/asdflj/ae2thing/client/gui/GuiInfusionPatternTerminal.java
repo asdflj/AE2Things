@@ -38,7 +38,7 @@ import appeng.core.localization.GuiText;
 import appeng.helpers.InventoryAction;
 import appeng.util.item.AEItemStack;
 
-public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiFluidTerminal {
+public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiMonitorTerminal {
 
     private final ContainerInfusionPatternTerminal container;
     protected GuiTabButton tabCraftButton;
