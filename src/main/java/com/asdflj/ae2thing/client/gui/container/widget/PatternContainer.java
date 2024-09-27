@@ -19,7 +19,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import com.asdflj.ae2thing.api.Constants;
-import com.asdflj.ae2thing.client.gui.container.BaseCraftingContainer;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.container.IPatternContainer;
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPattern;
@@ -69,13 +68,11 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost, I
     private final ContainerWirelessDualInterfaceTerminal container;
     private final List<Slot> slots = new ArrayList<>();
     private final ITerminalHost host;
-    private final BaseCraftingContainer craftingContainer;
 
     public PatternContainer(InventoryPlayer ip, ITerminalHost host, ContainerWirelessDualInterfaceTerminal container) {
         this.container = container;
         this.it = (IPatternTerminal) host;
         this.host = host;
-        this.craftingContainer = new BaseCraftingContainer(this.container.getPlayerInv(), this.host);
         this.crafting = this.it.getInventoryByName(Constants.CRAFTING);
         this.craftingEx = this.it.getInventoryByName(Constants.CRAFTING_EX);
         this.outputEx = this.it.getInventoryByName(Constants.OUTPUT_EX);
@@ -238,18 +235,37 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost, I
         }
     }
 
+    private final ItemStack[] recipeCache = new ItemStack[10];
+
     public ItemStack getAndUpdateOutput() {
         if (!this.container.isCraftingMode()) return null;
-        final InventoryCrafting ic = new InventoryCrafting(this.craftingContainer, 3, 3);
-
-        for (int x = 0; x < ic.getSizeInventory(); x++) {
-            ic.setInventorySlotContents(x, this.crafting.getStackInSlot(x));
+        boolean sameRecipe = true;
+        for (int i = 0; i < this.crafting.getSizeInventory(); i++) {
+            if (recipeCache[i] == null && this.crafting.getStackInSlot(i) == null) continue;
+            if (!Platform.isSameItemPrecise(recipeCache[i], this.crafting.getStackInSlot(i))) {
+                sameRecipe = false;
+                break;
+            }
         }
 
-        final ItemStack is = CraftingManager.getInstance()
-            .findMatchingRecipe(ic, this.container.getPlayerInv().player.worldObj);
-        this.cOut.setInventorySlotContents(0, is);
-        return is;
+        if (!sameRecipe) {
+            final InventoryCrafting ic = new InventoryCrafting(this.container, 3, 3);
+            for (int x = 0; x < ic.getSizeInventory(); x++) {
+                ic.setInventorySlotContents(x, this.crafting.getStackInSlot(x));
+            }
+
+            final ItemStack is = CraftingManager.getInstance()
+                .findMatchingRecipe(ic, this.container.getPlayerInv().player.worldObj);
+            this.cOut.setInventorySlotContents(0, is);
+            for (int i = 0; i < this.crafting.getSizeInventory(); i++) {
+                recipeCache[i] = this.crafting.getStackInSlot(i);
+            }
+            recipeCache[9] = is;
+            return is;
+        } else if (recipeCache[9] != null) {
+            return recipeCache[9];
+        }
+        return null;
     }
 
     protected void addMESlotToContainer(AppEngSlot newSlot) {
