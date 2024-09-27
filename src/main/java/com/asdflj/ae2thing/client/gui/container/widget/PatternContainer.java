@@ -19,6 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import com.asdflj.ae2thing.api.Constants;
+import com.asdflj.ae2thing.client.gui.container.BaseCraftingContainer;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.container.IPatternContainer;
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPattern;
@@ -68,11 +69,13 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost, I
     private final ContainerWirelessDualInterfaceTerminal container;
     private final List<Slot> slots = new ArrayList<>();
     private final ITerminalHost host;
+    private final BaseCraftingContainer craftingContainer;
 
     public PatternContainer(InventoryPlayer ip, ITerminalHost host, ContainerWirelessDualInterfaceTerminal container) {
         this.container = container;
         this.it = (IPatternTerminal) host;
         this.host = host;
+        this.craftingContainer = new BaseCraftingContainer(this.container.getPlayerInv(), this.host);
         this.crafting = this.it.getInventoryByName(Constants.CRAFTING);
         this.craftingEx = this.it.getInventoryByName(Constants.CRAFTING_EX);
         this.outputEx = this.it.getInventoryByName(Constants.OUTPUT_EX);
@@ -236,7 +239,8 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost, I
     }
 
     public ItemStack getAndUpdateOutput() {
-        final InventoryCrafting ic = new InventoryCrafting(this.container, 3, 3);
+        if (!this.container.isCraftingMode()) return null;
+        final InventoryCrafting ic = new InventoryCrafting(this.craftingContainer, 3, 3);
 
         for (int x = 0; x < ic.getSizeInventory(); x++) {
             ic.setInventorySlotContents(x, this.crafting.getStackInSlot(x));
@@ -559,6 +563,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost, I
 
     @Override
     public void encodeAndMoveToInventory() {
+        this.encode();
         ItemStack output = this.patternSlotOUT.getStack();
         if (output != null) {
             if (!this.container.getPlayerInv()
@@ -572,6 +577,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost, I
 
     @Override
     public void encodeAllItemAndMoveToInventory() {
+        this.encode();
         ItemStack output = this.patternSlotOUT.getStack();
         if (output != null) {
             if (this.patternSlotIN.getStack() != null) output.stackSize += this.patternSlotIN.getStack().stackSize;

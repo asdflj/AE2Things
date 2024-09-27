@@ -306,8 +306,6 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
 
                     this.setSubstitution(details.canSubstitute());
                     if (newStack != null) {
-                        NBTTagCompound data = newStack.getTagCompound();
-                        this.setCombineMode(data.getInteger("combine") == 1);
                         this.setBeSubstitute(details.canBeSubstitute());
                     }
                     this.setInverted(inputsCount <= 8 && outputCount > 8);

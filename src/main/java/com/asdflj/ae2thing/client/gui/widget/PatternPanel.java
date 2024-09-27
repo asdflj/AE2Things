@@ -173,10 +173,10 @@ public class PatternPanel implements IAEBasePanel {
             beSubstitutionsDisabledBtn.yPosition = this.parent.getGuiTop() + 69;
 
             fluidPrioritizedEnabledBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
-            fluidPrioritizedEnabledBtn.yPosition = this.parent.getGuiTop() + 69;
+            fluidPrioritizedEnabledBtn.yPosition = this.parent.getGuiTop() + 59;
 
             fluidPrioritizedDisabledBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
-            fluidPrioritizedDisabledBtn.yPosition = this.parent.getGuiTop() + 69;
+            fluidPrioritizedDisabledBtn.yPosition = this.parent.getGuiTop() + 59;
 
             doubleBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
             doubleBtn.yPosition = this.parent.getGuiTop() + 20;
