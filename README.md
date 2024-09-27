@@ -15,6 +15,7 @@ Can easily manage the items in the backpack, support magnet mode and fluid
 **Dual Interface Terminal**</br>
 Support encode pattern
 ![dual_interface_terminal.png](blob/dual_interface_terminal.png)
+![dual_interface_terminal_2.png](blob/dual_interface_terminal_2.png)
 **Infusion Pattern Terminal**</br>
 Support infusion recipe and distillation recipe,Can order fluid and essentia
 ![infusion_pattern_terminal.gif](blob/infusion_pattern_terminal.gif)
