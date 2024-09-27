@@ -130,7 +130,11 @@ public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiMonito
     }
 
     protected String getBackground() {
-        return "gui/pattern.png";
+        if(this.container.isCraftingMode()) {
+            return "gui/pattern1.png";
+        }else{
+            return "gui/pattern.png";
+        }
     }
 
     @Override
