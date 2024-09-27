@@ -1,10 +1,16 @@
 package com.asdflj.ae2thing.client.gui.widget;
 
+import static com.asdflj.ae2thing.api.Constants.MODE_CRAFTING;
+import static com.asdflj.ae2thing.api.Constants.MODE_PROCESSING;
 import static net.minecraft.client.gui.GuiScreen.isCtrlKeyDown;
 import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
+import java.util.Set;
+
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -28,7 +34,12 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiScrollbar;
+import appeng.client.gui.widgets.GuiTabButton;
 import appeng.container.AEBaseContainer;
+import appeng.container.slot.SlotFake;
+import appeng.container.slot.SlotFakeCraftingMatrix;
+import appeng.container.slot.SlotPatternTerm;
+import appeng.core.localization.GuiText;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
@@ -51,8 +62,11 @@ public class PatternPanel implements IAEBasePanel {
     protected GuiImgButton beSubstitutionsDisabledBtn;
     protected GuiFCImgButton combineEnableBtn;
     protected GuiFCImgButton combineDisableBtn;
+    protected GuiTabButton tabProcessButton;
+    protected GuiTabButton tabCraftButton;
     protected final GuiScrollbar processingScrollBar = new GuiScrollbar();
     private AEBaseContainer inventorySlots;
+    protected final Set<Slot> drag_click;
     private final int w;
     private final int h;
 
@@ -61,18 +75,23 @@ public class PatternPanel implements IAEBasePanel {
         this.container = container;
         this.parent = gui.getGui();
         this.inventorySlots = this.container;
+        this.drag_click = Ae2ReflectClient.getDragClick(this.parent);
         processingScrollBar.setHeight(70)
             .setWidth(7)
             .setLeft(6)
             .setRange(0, 1, 1);
-        processingScrollBar.setTexture(AE2Thing.MODID, "gui/widget/pattern.png", 242, 0);
+        processingScrollBar.setTexture(AE2Thing.MODID, getBackground(), 242, 0);
         this.w = 110;
         this.h = 92;
     }
 
     @Override
     public String getBackground() {
-        return "gui/widget/pattern.png";
+        if (this.container.isCraftingMode()) {
+            return "gui/widget/pattern3.png";
+        } else {
+            return "gui/widget/pattern.png";
+        }
     }
 
     @Override
@@ -85,13 +104,16 @@ public class PatternPanel implements IAEBasePanel {
         updateButton(this.beSubstitutionsDisabledBtn, !this.container.beSubstitute);
         updateButton(this.fluidPrioritizedEnabledBtn, this.container.prioritize);
         updateButton(this.fluidPrioritizedDisabledBtn, !this.container.prioritize);
+        updateButton(this.tabCraftButton, this.container.isCraftingMode());
+        updateButton(this.tabProcessButton, !this.container.isCraftingMode());
+        this.processingScrollBar.setVisible(!this.container.isCraftingMode());
         this.processingScrollBar.draw(this.parent);
     }
 
     @Override
     public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
         this.bindTextureBack(getBackground());
-        if (this.container.inverted) {
+        if (this.container.isCraftingMode() || this.container.inverted) {
             this.parent.drawTexturedModalRect(offsetX + 209, offsetY, 0, 0, 133, 93);
         } else {
             this.parent.drawTexturedModalRect(offsetX + 209, offsetY, 0, 93, 133, 93);
@@ -102,19 +124,76 @@ public class PatternPanel implements IAEBasePanel {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float btn) {
-        final int offset = container.inverted ? 18 * -3 : 0;
-        substitutionsEnabledBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
-        substitutionsDisabledBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
-        beSubstitutionsEnabledBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
-        beSubstitutionsDisabledBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
-        fluidPrioritizedEnabledBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
-        fluidPrioritizedDisabledBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
-        doubleBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
-        clearBtn.xPosition = this.parent.getGuiLeft() + 296 + offset;
-        invertBtn.xPosition = this.parent.getGuiLeft() + 296 + offset;
-        combineEnableBtn.xPosition = this.parent.getGuiLeft() + 296 + offset;
-        combineDisableBtn.xPosition = this.parent.getGuiLeft() + 296 + offset;
-        processingScrollBar.setCurrentScroll(container.activePage);
+        if (this.container.isCraftingMode()) {
+            substitutionsEnabledBtn.xPosition = this.parent.getGuiLeft() + 291;
+            substitutionsEnabledBtn.yPosition = this.parent.getGuiTop() + 14;
+
+            substitutionsDisabledBtn.xPosition = this.parent.getGuiLeft() + 291;
+            substitutionsDisabledBtn.yPosition = this.parent.getGuiTop() + 14;
+
+            beSubstitutionsEnabledBtn.xPosition = this.parent.getGuiLeft() + 291;
+            beSubstitutionsEnabledBtn.yPosition = this.parent.getGuiTop() + 24;
+
+            beSubstitutionsDisabledBtn.xPosition = this.parent.getGuiLeft() + 291;
+            beSubstitutionsDisabledBtn.yPosition = this.parent.getGuiTop() + 24;
+
+            fluidPrioritizedEnabledBtn.xPosition = -9000;
+            fluidPrioritizedEnabledBtn.yPosition = -9000;
+
+            fluidPrioritizedDisabledBtn.xPosition = -9000;
+            fluidPrioritizedDisabledBtn.yPosition = -9000;
+
+            doubleBtn.xPosition = -9000;
+            doubleBtn.yPosition = -9000;
+
+            clearBtn.xPosition = this.parent.getGuiLeft() + 281;
+            clearBtn.yPosition = this.parent.getGuiTop() + 14;
+
+            invertBtn.xPosition = -9000;
+            invertBtn.yPosition = -9000;
+
+            combineEnableBtn.xPosition = -9000;
+            combineEnableBtn.yPosition = -9000;
+
+            combineDisableBtn.xPosition = -9000;
+            combineDisableBtn.yPosition = -9000;
+
+        } else {
+            final int offset = container.inverted ? 18 * -3 : 0;
+            substitutionsEnabledBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
+            substitutionsEnabledBtn.yPosition = this.parent.getGuiTop() + 10;
+
+            substitutionsDisabledBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
+            substitutionsDisabledBtn.yPosition = this.parent.getGuiTop() + 10;
+
+            beSubstitutionsEnabledBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
+            beSubstitutionsEnabledBtn.yPosition = this.parent.getGuiTop() + 69;
+
+            beSubstitutionsDisabledBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
+            beSubstitutionsDisabledBtn.yPosition = this.parent.getGuiTop() + 69;
+
+            fluidPrioritizedEnabledBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
+            fluidPrioritizedEnabledBtn.yPosition = this.parent.getGuiTop() + 69;
+
+            fluidPrioritizedDisabledBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
+            fluidPrioritizedDisabledBtn.yPosition = this.parent.getGuiTop() + 69;
+
+            doubleBtn.xPosition = this.parent.getGuiLeft() + 306 + offset;
+            doubleBtn.yPosition = this.parent.getGuiTop() + 20;
+
+            clearBtn.xPosition = this.parent.getGuiLeft() + 296 + offset;
+            clearBtn.yPosition = this.parent.getGuiTop() + 10;
+
+            invertBtn.xPosition = this.parent.getGuiLeft() + 296 + offset;
+            invertBtn.yPosition = this.parent.getGuiTop() + 20;
+
+            combineEnableBtn.xPosition = this.parent.getGuiLeft() + 296 + offset;
+            combineEnableBtn.yPosition = this.parent.getGuiTop() + 59;
+
+            combineDisableBtn.xPosition = this.parent.getGuiLeft() + 296 + offset;
+            combineDisableBtn.yPosition = this.parent.getGuiTop() + 59;
+            processingScrollBar.setCurrentScroll(container.activePage);
+        }
     }
 
     @Override
@@ -126,6 +205,22 @@ public class PatternPanel implements IAEBasePanel {
                     this.parent.getGuiTop() + 118,
                     Settings.ACTIONS,
                     ActionItems.ENCODE));
+        this.gui.getButtonList()
+            .add(
+                this.tabProcessButton = new GuiTabButton(
+                    this.parent.getGuiLeft() + 248,
+                    this.parent.getGuiTop() + 93,
+                    new ItemStack(Blocks.furnace),
+                    GuiText.ProcessingPattern.getLocal(),
+                    this.gui.getRenderItem()));
+        this.gui.getButtonList()
+            .add(
+                this.tabCraftButton = new GuiTabButton(
+                    this.parent.getGuiLeft() + 248,
+                    this.parent.getGuiTop() + 93,
+                    new ItemStack(Blocks.crafting_table),
+                    GuiText.CraftingPattern.getLocal(),
+                    this.gui.getRenderItem()));
         this.substitutionsEnabledBtn = new GuiImgButton(
             this.parent.getGuiLeft() + 306,
             this.parent.getGuiTop() + 10,
@@ -162,12 +257,12 @@ public class PatternPanel implements IAEBasePanel {
         this.gui.getButtonList()
             .add(this.fluidPrioritizedDisabledBtn);
 
-        invertBtn = new GuiImgButton(
+        this.invertBtn = new GuiImgButton(
             this.parent.getGuiLeft() + 296,
             this.parent.getGuiTop() + 20,
             Settings.ACTIONS,
             container.inverted ? PatternSlotConfig.C_4_16 : PatternSlotConfig.C_16_4);
-        invertBtn.setHalfSize(true);
+        this.invertBtn.setHalfSize(true);
         this.gui.getButtonList()
             .add(this.invertBtn);
 
@@ -259,6 +354,7 @@ public class PatternPanel implements IAEBasePanel {
 
     @Override
     public void mouseClicked(int xCoord, int yCoord, int btn) {
+        if (this.container.isCraftingMode()) return;
         final int currentScroll = this.processingScrollBar.getCurrentScroll();
         this.processingScrollBar
             .click(this.parent, xCoord - this.parent.getGuiLeft(), yCoord - this.parent.getGuiTop());
@@ -274,10 +370,11 @@ public class PatternPanel implements IAEBasePanel {
 
     @Override
     public boolean handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton) {
-        if (!(slot instanceof SlotPatternFake)) {
+        if (!((slot instanceof SlotPatternFake) || (slot instanceof SlotFakeCraftingMatrix)
+            || (slot instanceof SlotPatternTerm))) {
             return false;
         }
-        if (mouseButton == 3) {
+        if (mouseButton == 3 && !this.container.isCraftingMode()) {
             if (slot.getHasStack()) {
                 InventoryAction action = InventoryAction.SET_PATTERN_VALUE;
                 IAEItemStack stack = AEItemStack.create(slot.getStack());
@@ -311,7 +408,13 @@ public class PatternPanel implements IAEBasePanel {
 
     @Override
     public boolean actionPerformed(GuiButton btn) {
-        if (this.encodeBtn == btn) {
+        if (this.tabCraftButton == btn || this.tabProcessButton == btn) {
+            AE2Thing.proxy.netHandler.sendToServer(
+                new CPacketTerminalBtns(
+                    "PatternTerminal.CraftMode",
+                    this.tabProcessButton == btn ? MODE_CRAFTING : MODE_PROCESSING));
+            return true;
+        } else if (this.encodeBtn == btn) {
             AE2Thing.proxy.netHandler.sendToServer(
                 new CPacketTerminalBtns(
                     "PatternTerminal.Encode",
@@ -356,6 +459,22 @@ public class PatternPanel implements IAEBasePanel {
 
     @Override
     public void mouseClickMove(int x, int y, int c, long d) {
+        final Slot slot = this.gui.getSlot(x, y);
+        final ItemStack itemstack = this.parent.mc.thePlayer.inventory.getItemStack();
+
+        if (slot instanceof SlotFake && itemstack != null) {
+            this.drag_click.add(slot);
+            if (this.drag_click.size() > 1) {
+                for (final Slot dr : this.drag_click) {
+                    final PacketInventoryAction p = new PacketInventoryAction(
+                        c == 0 ? InventoryAction.PICKUP_OR_SET_DOWN : InventoryAction.PLACE_SINGLE,
+                        dr.slotNumber,
+                        -1);
+                    NetworkHandler.instance.sendToServer(p);
+                }
+            }
+        }
+        if (this.container.isCraftingMode()) return;
         final int currentScroll = this.processingScrollBar.getCurrentScroll();
         this.processingScrollBar.click(this.parent, x - this.parent.getGuiLeft(), y - this.parent.getGuiTop());
         if (currentScroll != this.processingScrollBar.getCurrentScroll()) {
@@ -365,6 +484,7 @@ public class PatternPanel implements IAEBasePanel {
 
     @Override
     public boolean mouseWheelEvent(int mouseX, int mouseY, int wheel) {
+        if (this.container.isCraftingMode()) return false;
         if (this.processingScrollBar.contains(mouseX - this.parent.getGuiLeft(), mouseY - this.parent.getGuiTop())) {
             final int currentScroll = this.processingScrollBar.getCurrentScroll();
             this.processingScrollBar.wheel(wheel);
@@ -396,7 +516,5 @@ public class PatternPanel implements IAEBasePanel {
     }
 
     @Override
-    public void setRectangle(int x, int y) {
-
-    }
+    public void setRectangle(int x, int y) {}
 }

@@ -28,4 +28,6 @@ public interface Constants {
     String OUTPUT_EX = "output_ex";
     String UPGRADES = "upgrades";
     String PLAYER = "player";
+    int MODE_CRAFTING = 1;
+    int MODE_PROCESSING = 0;
 }

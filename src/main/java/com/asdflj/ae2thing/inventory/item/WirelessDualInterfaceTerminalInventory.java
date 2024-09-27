@@ -40,10 +40,11 @@ import appeng.util.Platform;
 public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
     implements IActionHost, IGridHost, IPatternTerminal, IClickableInTerminal, IAEAppEngInventory {
 
-    protected AppEngInternalInventory crafting;
-    protected AppEngInternalInventory output;
+    protected AppEngInternalInventory craftingEx;
+    protected AppEngInternalInventory outputEx;
     protected AppEngInternalInventory pattern;
     protected AppEngInternalInventory upgrades;
+    protected AppEngInternalInventory crafting;
     protected boolean craftingMode = false;
     protected boolean substitute = false;
     protected boolean combine = false;
@@ -58,11 +59,18 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
         pattern = new ItemPatternsInventory(obj.getItemStack(), this, obj.getPlayer(), obj.getSlot());
         crafting = new ItemBiggerAppEngInventory(
             obj.getItemStack(),
+            Constants.CRAFTING,
+            9,
+            obj.getPlayer(),
+            obj.getSlot(),
+            this);
+        craftingEx = new ItemBiggerAppEngInventory(
+            obj.getItemStack(),
             Constants.CRAFTING_EX,
             32,
             obj.getPlayer(),
             obj.getSlot());
-        output = new ItemBiggerAppEngInventory(
+        outputEx = new ItemBiggerAppEngInventory(
             obj.getItemStack(),
             Constants.OUTPUT_EX,
             32,
@@ -86,6 +94,7 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
         this.setPrioritization(data.getBoolean("priorization"));
         this.setInverted(data.getBoolean("inverted"));
         this.setActivePage(data.getInteger("activePage"));
+        this.setCraftingRecipe(data.getBoolean("craftingMode"));
         if (data.hasKey("clickedInterface")) {
             NBTTagCompound tileMsg = (NBTTagCompound) data.getTag("clickedInterface");
             this.tile = Util.DimensionalCoordSide.readFromNBT(tileMsg);
@@ -132,11 +141,14 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
     @Override
     public IInventory getInventoryByName(String name) {
         if (name.equals(Constants.CRAFTING_EX)) {
-            return this.crafting;
+            return this.craftingEx;
         }
 
         if (name.equals(Constants.OUTPUT_EX)) {
-            return this.output;
+            return this.outputEx;
+        }
+        if (name.equals(Constants.CRAFTING)) {
+            return this.crafting;
         }
 
         if (name.equals(Constants.PATTERN)) {
@@ -182,6 +194,7 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
     @Override
     public void setCraftingRecipe(boolean craftingMode) {
         this.craftingMode = craftingMode;
+        this.fixCraftingRecipes();
     }
 
     @Override
@@ -196,7 +209,7 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
 
     @Override
     public boolean isCraftingRecipe() {
-        return false;
+        return this.craftingMode;
     }
 
     @Override
@@ -223,7 +236,7 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
     public void sortCraftingItems() {
         List<ItemStack> items = new ArrayList<>();
         List<ItemStack> fluids = new ArrayList<>();
-        for (ItemStack is : this.crafting) {
+        for (ItemStack is : this.craftingEx) {
             if (is == null) continue;
             if (is.getItem() instanceof ItemFluidPacket) {
                 fluids.add(is);
@@ -239,12 +252,12 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
             fluids.clear();
         }
 
-        for (int i = 0; i < this.crafting.getSizeInventory(); i++) {
-            if (this.crafting.getStackInSlot(i) == null) break;
+        for (int i = 0; i < this.craftingEx.getSizeInventory(); i++) {
+            if (this.craftingEx.getStackInSlot(i) == null) break;
             if (items.isEmpty()) {
-                this.crafting.setInventorySlotContents(i, fluids.get(i));
+                this.craftingEx.setInventorySlotContents(i, fluids.get(i));
             } else {
-                this.crafting.setInventorySlotContents(i, items.get(i));
+                this.craftingEx.setInventorySlotContents(i, items.get(i));
             }
         }
     }
@@ -277,6 +290,7 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
                 if (details != null) {
                     final IAEItemStack[] inItems = details.getInputs();
                     final IAEItemStack[] outItems = details.getOutputs();
+                    this.setCraftingRecipe(details.isCraftable());
                     int inputsCount = 0;
                     int outputCount = 0;
                     for (IAEItemStack inItem : inItems) {
@@ -299,34 +313,37 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
                     this.setInverted(inputsCount <= 8 && outputCount > 8);
                     this.setActivePage(0);
 
+                    for (int i = 0; i < this.craftingEx.getSizeInventory(); i++) {
+                        this.craftingEx.setInventorySlotContents(i, null);
+                    }
                     for (int i = 0; i < this.crafting.getSizeInventory(); i++) {
                         this.crafting.setInventorySlotContents(i, null);
                     }
 
-                    for (int i = 0; i < this.output.getSizeInventory(); i++) {
-                        this.output.setInventorySlotContents(i, null);
+                    for (int i = 0; i < this.outputEx.getSizeInventory(); i++) {
+                        this.outputEx.setInventorySlotContents(i, null);
                     }
 
-                    for (int i = 0; i < this.crafting.getSizeInventory() && i < inItems.length; i++) {
+                    for (int i = 0; i < getCraftingInternalInventory().getSizeInventory() && i < inItems.length; i++) {
                         final IAEItemStack item = inItems[i];
                         if (item != null) {
-                            if (item.getItem() instanceof ItemFluidDrop) {
+                            if (item.getItem() instanceof ItemFluidDrop && !this.isCraftingRecipe()) {
                                 ItemStack packet = ItemFluidPacket
                                     .newStack(ItemFluidDrop.getFluidStack(item.getItemStack()));
-                                this.crafting.setInventorySlotContents(i, packet);
-                            } else this.crafting.setInventorySlotContents(i, item.getItemStack());
+                                getCraftingInternalInventory().setInventorySlotContents(i, packet);
+                            } else getCraftingInternalInventory().setInventorySlotContents(i, item.getItemStack());
                         }
                     }
 
                     if (inverted) {
-                        for (int i = 0; i < this.output.getSizeInventory() && i < outItems.length; i++) {
+                        for (int i = 0; i < this.outputEx.getSizeInventory() && i < outItems.length; i++) {
                             final IAEItemStack item = outItems[i];
                             if (item != null) {
                                 if (item.getItem() instanceof ItemFluidDrop) {
                                     ItemStack packet = ItemFluidPacket
                                         .newStack(ItemFluidDrop.getFluidStack(item.getItemStack()));
-                                    this.output.setInventorySlotContents(i, packet);
-                                } else this.output.setInventorySlotContents(i, item.getItemStack());
+                                    this.outputEx.setInventorySlotContents(i, packet);
+                                } else this.outputEx.setInventorySlotContents(i, item.getItemStack());
                             }
                         }
                     } else {
@@ -336,11 +353,29 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
                                 if (item.getItem() instanceof ItemFluidDrop) {
                                     ItemStack packet = ItemFluidPacket
                                         .newStack(ItemFluidDrop.getFluidStack(item.getItemStack()));
-                                    this.output.setInventorySlotContents(i >= 4 ? 12 + i : i, packet);
-                                } else this.output.setInventorySlotContents(i >= 4 ? 12 + i : i, item.getItemStack());
+                                    this.outputEx.setInventorySlotContents(i >= 4 ? 12 + i : i, packet);
+                                } else this.outputEx.setInventorySlotContents(i >= 4 ? 12 + i : i, item.getItemStack());
                             }
                         }
                     }
+                }
+            }
+        }
+        if (inv == this.crafting) {
+            this.fixCraftingRecipes();
+        }
+    }
+
+    private AppEngInternalInventory getCraftingInternalInventory() {
+        return this.isCraftingRecipe() ? this.crafting : this.craftingEx;
+    }
+
+    private void fixCraftingRecipes() {
+        if (this.craftingMode) {
+            for (int x = 0; x < this.crafting.getSizeInventory(); x++) {
+                final ItemStack is = this.crafting.getStackInSlot(x);
+                if (is != null) {
+                    is.stackSize = 1;
                 }
             }
         }
@@ -348,16 +383,18 @@ public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
 
     private void writeToNBT() {
         NBTTagCompound data = Platform.openNbtData(this.getItemStack());
+        data.setBoolean("craftingMode", this.craftingMode);
         data.setBoolean("substitute", this.substitute);
         data.setBoolean("combine", this.combine);
         data.setBoolean("beSubstitute", this.beSubstitute);
         data.setBoolean("priorization", this.prioritize);
         data.setBoolean("inverted", this.inverted);
         data.setInteger("activePage", this.activePage);
-        this.crafting.markDirty();
-        this.output.markDirty();
+        this.craftingEx.markDirty();
+        this.outputEx.markDirty();
         this.upgrades.markDirty();
         this.pattern.markDirty();
+        this.crafting.markDirty();
         NBTTagCompound tileMsg = new NBTTagCompound();
         if (tile != null) {
             tile.writeToNBT(tileMsg);

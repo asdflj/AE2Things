@@ -39,12 +39,13 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
             AE2Thing.proxy.netHandler.sendToServer(new CPacketTransferRecipe(out, in, true, shift));
         } else if (firstGui instanceof GuiWirelessDualInterfaceTerminal) {
             boolean priority = ((GuiWirelessDualInterfaceTerminal) firstGui).container.prioritize;
+            boolean craft = shouldCraft(recipe);
             List<com.glodblock.github.nei.object.OrderStack<?>> in = com.glodblock.github.nei.recipes.FluidRecipe
                 .getPackageInputs(recipe, recipeIndex, priority);
             List<com.glodblock.github.nei.object.OrderStack<?>> out = com.glodblock.github.nei.recipes.FluidRecipe
                 .getPackageOutputs(recipe, recipeIndex, !notUseOther(recipe));
             AE2Thing.proxy.netHandler
-                .sendToServer(new CPacketTransferRecipe(transfer(in), transfer(out), false, shift));
+                .sendToServer(new CPacketTransferRecipe(transfer(in), transfer(out), craft, shift));
         }
     }
 
@@ -59,6 +60,11 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
             out.add(new OrderStack<>(stack.getStack(), stack.getIndex()));
         }
         return out;
+    }
+
+    private boolean shouldCraft(IRecipeHandler recipeHandler) {
+        TemplateRecipeHandler tRecipe = (TemplateRecipeHandler) recipeHandler;
+        return craftSet.contains(tRecipe.getOverlayIdentifier());
     }
 
 }

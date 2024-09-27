@@ -47,6 +47,9 @@ import appeng.api.util.IInterfaceViewable;
 import appeng.container.guisync.GuiSync;
 import appeng.container.implementations.ContainerInterfaceTerminal;
 import appeng.container.slot.AppEngSlot;
+import appeng.container.slot.SlotFakeCraftingMatrix;
+import appeng.container.slot.SlotPatternOutputs;
+import appeng.container.slot.SlotPatternTerm;
 import appeng.core.AELog;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInterfaceTerminalUpdate;
@@ -64,6 +67,10 @@ public class ContainerWirelessDualInterfaceTerminal extends ContainerMonitor
 
     public final ContainerInterfaceTerminal delegateContainer;
     private final PatternContainer patternPanel;
+
+    @GuiSync(97)
+    public boolean craftingMode = true;
+
     @GuiSync(96)
     public boolean substitute = false;
 
@@ -120,6 +127,18 @@ public class ContainerWirelessDualInterfaceTerminal extends ContainerMonitor
         }
     }
 
+    @Override
+    public void putStackInSlot(int slot, ItemStack item) {
+        super.putStackInSlot(slot, item);
+        this.patternPanel.getAndUpdateOutput();
+    }
+
+    @Override
+    public void putStacksInSlots(final ItemStack[] par1ArrayOfItemStack) {
+        super.putStacksInSlots(par1ArrayOfItemStack);
+        this.patternPanel.getAndUpdateOutput();
+    }
+
     public void detectAndSendChanges() {
         if (Platform.isClient()) {
             return;
@@ -155,7 +174,8 @@ public class ContainerWirelessDualInterfaceTerminal extends ContainerMonitor
             delegateContainer.doAction(player, action, slotId, id);
         } else if (id == -1) {
             Slot s = this.inventorySlots.get(slotId);
-            if (s instanceof SlotPatternFake) {
+            if (((s instanceof SlotPatternFake) || (s instanceof SlotFakeCraftingMatrix)
+                || (s instanceof SlotPatternTerm))) {
                 if (action == InventoryAction.MOVE_REGION) {
                     super.doAction(player, InventoryAction.MOVE_REGION, slotId, id);
                     return;
@@ -166,7 +186,8 @@ public class ContainerWirelessDualInterfaceTerminal extends ContainerMonitor
                 }
                 Slot slot = getSlot(slotId);
                 ItemStack stack = player.inventory.getItemStack();
-                if (Util.getFluidFromItem(stack) == null || Util.getFluidFromItem(stack).amount <= 0) {
+                if (Util.getFluidFromItem(stack) == null || Util.getFluidFromItem(stack).amount <= 0
+                    || this.isCraftingMode()) {
                     super.doAction(player, action, slotId, id);
                     return;
                 }
@@ -195,12 +216,11 @@ public class ContainerWirelessDualInterfaceTerminal extends ContainerMonitor
             }
         } else if (id == -2) {
             super.doAction(player, action, slotId, id);
-
         }
     }
 
     protected boolean validPatternSlot(Slot slot) {
-        return slot instanceof SlotPatternFake;
+        return slot instanceof SlotPatternFake || slot instanceof SlotPatternOutputs;
     }
 
     @Override
@@ -365,4 +385,18 @@ public class ContainerWirelessDualInterfaceTerminal extends ContainerMonitor
         ItemStack newStack) {
 
     }
+
+    public void setCraftingMode(final boolean craftingMode) {
+        this.craftingMode = craftingMode;
+    }
+
+    public boolean isCraftingMode() {
+        return this.craftingMode;
+    }
+
+    public void setCrafting(boolean craftingMode) {
+        this.craftingMode = craftingMode;
+        this.it.setCraftingRecipe(craftingMode);
+    }
+
 }
