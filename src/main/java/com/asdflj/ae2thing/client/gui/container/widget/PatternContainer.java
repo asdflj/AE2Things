@@ -154,7 +154,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost, I
                 patternInv,
                 this.cOut,
                 224 + 92,
-                -110,
+                -31,
                 this,
                 0,
                 this.container));
@@ -163,7 +163,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost, I
             for (int x = 0; x < 3; x++) {
                 this.addMESlotToContainer(
                     this.craftingSlots[x
-                        + y * 3] = new SlotFakeCraftingMatrix(this.crafting, x + y * 3, 224 + x * 18, -128 + y * 18));
+                        + y * 3] = new SlotFakeCraftingMatrix(this.crafting, x + y * 3, 224 + x * 18, -49 + y * 18));
             }
         }
 

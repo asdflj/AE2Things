@@ -42,6 +42,8 @@ import appeng.client.gui.widgets.ISortSource;
 import appeng.client.me.InternalSlotME;
 import appeng.client.me.SlotME;
 import appeng.container.slot.AppEngSlot;
+import appeng.container.slot.SlotFakeCraftingMatrix;
+import appeng.container.slot.SlotPatternTerm;
 import appeng.container.slot.SlotRestrictedInput;
 import appeng.core.localization.GuiText;
 import appeng.util.IConfigManagerHost;
@@ -286,10 +288,14 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
     @Override
     protected void repositionSlots() {
         for (final Object obj : this.inventorySlots.inventorySlots) {
-            if(obj instanceof SlotPatternFake psp){
-                psp.yDisplayPosition = this.ySize + psp.getY() - this.viewHeight - 78 - 4;
-            } else if (obj instanceof SlotRestrictedInput sri) {
-                sri.yDisplayPosition = this.ySize + sri.getY() - this.viewHeight - 78 - 4;
+            if(obj instanceof SlotPatternFake s){
+                s.yDisplayPosition = this.ySize + s.getY() - this.viewHeight - 78 - 4;
+            } else if (obj instanceof SlotRestrictedInput s) {
+                s.yDisplayPosition = this.ySize + s.getY() - this.viewHeight - 78 - 4;
+            } else if (obj instanceof SlotFakeCraftingMatrix s) {
+                s.yDisplayPosition = this.ySize + s.getY() - this.viewHeight - 78 - 4;
+            } else if (obj instanceof SlotPatternTerm s) {
+                s.yDisplayPosition = this.ySize + s.getY() - this.viewHeight - 78 - 4;
             } else if (obj instanceof final AppEngSlot slot) {
                 slot.yDisplayPosition = this.ySize + slot.getY() - 78 - 4;
             }
