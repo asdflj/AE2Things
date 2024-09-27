@@ -2,11 +2,11 @@ package com.asdflj.ae2thing.client.gui;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -16,11 +16,8 @@ import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import com.asdflj.ae2thing.AE2Thing;
-import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.container.ContainerMonitor;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
@@ -45,6 +42,8 @@ import appeng.client.gui.widgets.ISortSource;
 import appeng.client.me.InternalSlotME;
 import appeng.client.me.SlotME;
 import appeng.container.slot.AppEngSlot;
+import appeng.container.slot.SlotFakeCraftingMatrix;
+import appeng.container.slot.SlotPatternTerm;
 import appeng.container.slot.SlotRestrictedInput;
 import appeng.core.localization.GuiText;
 import appeng.util.IConfigManagerHost;
@@ -65,8 +64,8 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
     public GuiWirelessDualInterfaceTerminal(InventoryPlayer inventoryPlayer, ITerminalHost te) {
         super(inventoryPlayer, te);
         container = (ContainerWirelessDualInterfaceTerminal) this.inventorySlots;
-        this.panels.add(new PatternPanel(this, container));
         this.itemPanel = new ItemPanel(this, container, this.configSrc, this);
+        this.panels.add(new PatternPanel(this, container));
         this.panels.add(this.itemPanel);
         ((ContainerMonitor) this.inventorySlots).setGui(this);
         this.baseXSize = this.xSize;
@@ -74,7 +73,7 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
 
     @Override
     public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
-        for (IAEBasePanel panel : this.panels) {
+        for (IAEBasePanel panel : this.getActivePanels()) {
             panel.drawFG(offsetX, offsetY, mouseX, mouseY);
         }
         super.drawFG(offsetX, offsetY, mouseX, mouseY);
@@ -82,10 +81,16 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
 
     @Override
     public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
-        for (IAEBasePanel panel : this.panels) {
+        for (IAEBasePanel panel : this.getActivePanels()) {
             panel.drawBG(offsetX, offsetY, mouseX, mouseY);
         }
         super.drawBG(offsetX, offsetY, mouseX, mouseY);
+    }
+
+    private List<IAEBasePanel> getActivePanels() {
+        return this.panels.stream()
+            .filter(IAEBasePanel::isActive)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -96,7 +101,7 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
             if (activePanel != null && this.mouse != null) {
                 activePanel.move(mouseX - mouse.x, mouseY - mouse.y);
             } else {
-                for (IAEBasePanel panel : this.panels) {
+                for (IAEBasePanel panel : this.getActivePanels()) {
                     if (panel.draggable()) {
                         rectangle = panel.getRectangle();
                         if (mouseX > rectangle.x() && mouseX < rectangle.x() + rectangle.width()
@@ -110,7 +115,7 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
                 }
             }
         }
-        for (IAEBasePanel panel : this.panels) {
+        for (IAEBasePanel panel : this.getActivePanels()) {
             panel.drawScreen(mouseX, mouseY, btn);
         }
         if (this.itemPanel.getRepo()
@@ -152,13 +157,15 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
 
     @Override
     protected void mouseClicked(int xCoord, int yCoord, int btn) {
-        this.panels.forEach(p -> p.mouseClicked(xCoord, yCoord, btn));
+        this.getActivePanels()
+            .forEach(p -> p.mouseClicked(xCoord, yCoord, btn));
         super.mouseClicked(xCoord, yCoord, btn);
     }
 
     @Override
     protected void mouseClickMove(final int x, final int y, final int c, final long d) {
-        this.panels.forEach(panel -> panel.mouseClickMove(x, y, c, d));
+        this.getActivePanels()
+            .forEach(panel -> panel.mouseClickMove(x, y, c, d));
         this.dragging = true;
         super.mouseClickMove(x, y, c, d);
     }
@@ -175,7 +182,7 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
 
     @Override
     protected void handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton) {
-        for (IAEBasePanel panel : this.panels) {
+        for (IAEBasePanel panel : this.getActivePanels()) {
             if (panel.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton)) return;
         }
         if (slotIdx < 0) return;
@@ -184,7 +191,7 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
 
     @Override
     protected boolean mouseWheelEvent(int mouseX, int mouseY, int wheel) {
-        for (IAEBasePanel panel : this.panels) {
+        for (IAEBasePanel panel : this.getActivePanels()) {
             if (panel.mouseWheelEvent(mouseX, mouseY, wheel)) return true;
         }
         return super.mouseWheelEvent(mouseX, mouseY, wheel);
@@ -193,7 +200,7 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
     @Override
     protected void keyTyped(char character, int key) {
         this.xSize = baseXSize;
-        for (IAEBasePanel panel : this.panels) {
+        for (IAEBasePanel panel : this.getActivePanels()) {
             if (!this.checkHotbarKeys(key) && panel.keyTyped(character, key)) return;
         }
         super.keyTyped(character, key);
@@ -236,7 +243,7 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
 
     @Override
     public boolean hideItemPanelSlot(int x, int y, int w, int h) {
-        for (IAEBasePanel panel : this.panels) {
+        for (IAEBasePanel panel : this.getActivePanels()) {
             if (panel.hideItemPanelSlot(x, y, w, h)) return true;
         }
         return false;
@@ -258,6 +265,16 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
     }
 
     @Override
+    public RenderItem getRenderItem() {
+        return itemRender;
+    }
+
+    @Override
+    public Slot getSlot(int mouseX, int mouseY) {
+        return super.getSlot(mouseX, mouseY);
+    }
+
+    @Override
     protected void actionPerformed(final GuiButton btn) {
         if (this.craftingStatusBtn == btn) {
             AE2Thing.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.CRAFTING_STATUS_ITEM));
@@ -271,10 +288,14 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
     @Override
     protected void repositionSlots() {
         for (final Object obj : this.inventorySlots.inventorySlots) {
-            if(obj instanceof SlotPatternFake psp){
-                psp.yDisplayPosition = this.ySize + psp.getY() - this.viewHeight - 78 - 4;
-            } else if (obj instanceof SlotRestrictedInput sri) {
-                sri.yDisplayPosition = this.ySize + sri.getY() - this.viewHeight - 78 - 4;
+            if(obj instanceof SlotPatternFake s){
+                s.yDisplayPosition = this.ySize + s.getY() - this.viewHeight - 78 - 4;
+            } else if (obj instanceof SlotRestrictedInput s) {
+                s.yDisplayPosition = this.ySize + s.getY() - this.viewHeight - 78 - 4;
+            } else if (obj instanceof SlotFakeCraftingMatrix s) {
+                s.yDisplayPosition = this.ySize + s.getY() - this.viewHeight - 78 - 4;
+            } else if (obj instanceof SlotPatternTerm s) {
+                s.yDisplayPosition = this.ySize + s.getY() - this.viewHeight - 78 - 4;
             } else if (obj instanceof final AppEngSlot slot) {
                 slot.yDisplayPosition = this.ySize + slot.getY() - 78 - 4;
             }
@@ -298,21 +319,24 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
 
     @Override
     public void postUpdate(List<IAEItemStack> list) {
-        this.panels.stream()
+        this.getActivePanels()
+            .stream()
             .filter(p -> p instanceof IGuiMonitor)
             .forEach(p -> ((IGuiMonitor) p).postUpdate(list));
     }
 
     @Override
     public void setScrollBar() {
-        this.panels.stream()
+        this.getActivePanels()
+            .stream()
             .filter(p -> p instanceof IGuiMonitor)
             .forEach(p -> ((IGuiMonitor) p).setScrollBar());
     }
 
     @Override
     public void postFluidUpdate(List<IAEFluidStack> list) {
-        this.panels.stream()
+        this.getActivePanels()
+            .stream()
             .filter(p -> p instanceof IGuiMonitor)
             .forEach(p -> ((IGuiMonitor) p).postFluidUpdate(list));
     }
@@ -345,100 +369,9 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
 
     @Override
     public void updateSetting(IConfigManager manager, Enum settingName, Enum newValue) {
-        this.panels.stream()
+        this.getActivePanels()
+            .stream()
             .filter(p -> p instanceof IConfigManagerHost)
             .forEach(p -> ((IConfigManagerHost) p).updateSetting(manager, settingName, newValue));
-    }
-
-    @Override
-    public void drawHistorySelection(int x, int y, String text, int width, List<String> searchHistory) {
-        final int maxRows = AE2ThingAPI.maxSelectionRows;
-        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        RenderHelper.disableStandardItemLighting();
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        String[] var4 = null;
-        final List<String> history = new ArrayList<>(searchHistory);
-        Collections.reverse(history);
-
-        if (history.size() > maxRows) {
-            for (int i = 1; i < history.size(); i++) {
-                if (text.equals(history.get(i))) {
-                    int max = Math.min(history.size(), i + maxRows - 1);
-                    int min = Math.max(0, max - maxRows);
-                    var4 = history.subList(min, max)
-                        .toArray(new String[0]);
-                    break;
-                }
-            }
-        }
-        if (var4 == null) {
-            var4 = history.subList(0, Math.min(history.size(), 5))
-                .toArray(new String[0]);
-        }
-        if (var4.length > 0) {
-            int var5 = width;
-            int var6;
-            int var7;
-
-            for (var6 = 0; var6 < var4.length; ++var6) {
-                var7 = this.fontRendererObj.getStringWidth(var4[var6]) + 8;
-
-                if (var7 > var5) {
-                    var5 = var7;
-                }
-            }
-
-            var6 = x + 3;
-            var7 = y + 15;
-            int var9 = 8;
-
-            if (var4.length > 1) {
-                var9 += 2 + (var4.length - 1) * 10;
-            }
-
-            if (this.guiTop + var7 + var9 + 6 > this.height) {
-                var7 = this.height - var9 - this.guiTop - 6;
-            }
-
-            this.zLevel = 300.0F;
-            itemRender.zLevel = 300.0F;
-            final int var10 = -267386864;
-            this.drawGradientRect(var6 - 3, var7 - 4, var6 + var5 + 3, var7 - 3, var10, var10);
-            this.drawGradientRect(var6 - 3, var7 + var9 + 3, var6 + var5 + 3, var7 + var9 + 4, var10, var10);
-            this.drawGradientRect(var6 - 3, var7 - 3, var6 + var5 + 3, var7 + var9 + 3, var10, var10);
-            this.drawGradientRect(var6 - 4, var7 - 3, var6 - 3, var7 + var9 + 3, var10, var10);
-            this.drawGradientRect(var6 + var5 + 3, var7 - 3, var6 + var5 + 4, var7 + var9 + 3, var10, var10);
-            final int var11 = 1347420415;
-            final int var12 = (var11 & 16711422) >> 1 | var11 & -16777216;
-            this.drawGradientRect(var6 - 3, var7 - 3 + 1, var6 - 3 + 1, var7 + var9 + 3 - 1, var11, var12);
-            this.drawGradientRect(var6 + var5 + 2, var7 - 3 + 1, var6 + var5 + 3, var7 + var9 + 3 - 1, var11, var12);
-            this.drawGradientRect(var6 - 3, var7 - 3, var6 + var5 + 3, var7 - 3 + 1, var11, var11);
-            this.drawGradientRect(var6 - 3, var7 + var9 + 2, var6 + var5 + 3, var7 + var9 + 3, var12, var12);
-
-            for (int var13 = 0; var13 < var4.length; ++var13) {
-                String var14 = var4[var13];
-                if (var14.equals(text)) {
-                    var14 = "> " + var14;
-                    var14 = '\u00a7' + Integer.toHexString(15) + var14;
-                } else {
-                    var14 = "\u00a77" + var14;
-                }
-
-                this.fontRendererObj.drawStringWithShadow(var14, var6, var7, -1);
-
-                if (var13 == 0) {
-                    var7 += 2;
-                }
-
-                var7 += 10;
-            }
-
-            this.zLevel = 0.0F;
-            itemRender.zLevel = 0.0F;
-        }
-        GL11.glPopAttrib();
-
     }
 }

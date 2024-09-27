@@ -14,6 +14,7 @@ import com.glodblock.github.common.item.ItemFluidDrop;
 import appeng.api.config.ActionItems;
 import appeng.api.config.Settings;
 import appeng.api.storage.ITerminalHost;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.container.slot.AppEngSlot;
@@ -25,7 +26,7 @@ import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
 import appeng.util.item.AEItemStack;
 
-public class GuiCraftingTerminal extends GuiMonitor {
+public class GuiCraftingTerminal extends GuiMonitor implements IGuiMonitorTerminal {
 
     public ContainerCraftingTerminal monitorableContainer;
 
@@ -114,6 +115,11 @@ public class GuiCraftingTerminal extends GuiMonitor {
         if (this.searchField != null) {
             this.searchField.drawTextBox();
         }
+    }
+
+    @Override
+    public void postFluidUpdate(List<IAEFluidStack> list) {
+
     }
 
     @Override

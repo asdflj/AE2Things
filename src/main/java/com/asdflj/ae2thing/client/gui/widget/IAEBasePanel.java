@@ -46,4 +46,10 @@ public interface IAEBasePanel extends IDraggable {
 
     default void onGuiClosed() {}
 
+    default boolean isActive() {
+        return true;
+    }
+
+    default void setActive(final boolean active) {}
+
 }

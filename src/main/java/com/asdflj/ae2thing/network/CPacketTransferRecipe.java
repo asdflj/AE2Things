@@ -120,9 +120,12 @@ public class CPacketTransferRecipe implements IMessage {
                     c.onCraftMatrixChanged(outputSlot);
                 } else if (c instanceof ContainerWirelessDualInterfaceTerminal ciw) {
                     boolean combine = ciw.combine;
+                    ciw.setCraftingMode(message.isCraft);
+                    ciw.setCrafting(message.isCraft);
                     IPatternTerminal pt = ciw.getContainer()
                         .getPatternTerminal();
-                    IInventory inputSlot = pt.getInventoryByName(Constants.CRAFTING_EX);
+                    IInventory inputSlot = pt
+                        .getInventoryByName(message.isCraft ? Constants.CRAFTING : Constants.CRAFTING_EX);
                     IInventory outputSlot = pt.getInventoryByName(Constants.OUTPUT_EX);
                     for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
                         inputSlot.setInventorySlotContents(i, null);

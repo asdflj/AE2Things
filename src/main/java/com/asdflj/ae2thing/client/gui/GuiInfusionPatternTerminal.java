@@ -1,5 +1,8 @@
 package com.asdflj.ae2thing.client.gui;
 
+import static com.asdflj.ae2thing.api.Constants.MODE_CRAFTING;
+import static com.asdflj.ae2thing.api.Constants.MODE_PROCESSING;
+
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
@@ -49,8 +52,6 @@ public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiMonito
     protected final ItemStack[] myCurrentViewCells = new ItemStack[5];
     protected GuiImgButton encodeBtn;
     protected GuiImgButton doubleBtn;
-    private static final int MODE_CRAFTING = 1;
-    private static final int MODE_PROCESSING = 0;
     protected final GuiScrollbar processingScrollBar = new GuiScrollbar();
 
     public GuiInfusionPatternTerminal(InventoryPlayer inventory, ITerminalHost inv) {
@@ -130,7 +131,11 @@ public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiMonito
     }
 
     protected String getBackground() {
-        return "gui/pattern.png";
+        if (this.container.isCraftingMode()) {
+            return "gui/pattern1.png";
+        } else {
+            return "gui/pattern.png";
+        }
     }
 
     @Override

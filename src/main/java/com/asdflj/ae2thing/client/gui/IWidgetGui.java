@@ -3,6 +3,8 @@ package com.asdflj.ae2thing.client.gui;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.inventory.Slot;
 
 import com.asdflj.ae2thing.client.gui.widget.IAEBasePanel;
 
@@ -20,4 +22,8 @@ public interface IWidgetGui {
     IAEBasePanel getActivePanel();
 
     List<InternalSlotME> getMeSlots();
+
+    RenderItem getRenderItem();
+
+    Slot getSlot(final int mouseX, final int mouseY);
 }
