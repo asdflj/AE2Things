@@ -38,6 +38,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.IConfigManager;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiTabButton;
+import appeng.client.gui.widgets.IDropToFillTextField;
 import appeng.client.gui.widgets.ISortSource;
 import appeng.client.me.InternalSlotME;
 import appeng.client.me.SlotME;
@@ -48,8 +49,8 @@ import appeng.container.slot.SlotRestrictedInput;
 import appeng.core.localization.GuiText;
 import appeng.util.IConfigManagerHost;
 
-public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
-    implements IWidgetGui, IGuiDrawSlot, IGuiMonitorTerminal, ISortSource, IConfigManagerHost, IGuiSelection {
+public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless implements IWidgetGui, IGuiDrawSlot,
+    IGuiMonitorTerminal, ISortSource, IConfigManagerHost, IGuiSelection, IDropToFillTextField {
 
     public ContainerWirelessDualInterfaceTerminal container;
     private GuiTabButton craftingStatusBtn;
@@ -91,6 +92,20 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless
         return this.panels.stream()
             .filter(IAEBasePanel::isActive)
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isOverTextField(int mousex, int mousey) {
+        if (super.isOverTextField(mousex, mousey)) {
+            return true;
+        }
+        return this.itemPanel.isOverTextField(mousex, mousey);
+    }
+
+    @Override
+    public void setTextFieldValue(String displayName, int mousex, int mousey, ItemStack stack) {
+        super.setTextFieldValue(displayName, mousex, mousey, stack);
+        this.itemPanel.setTextFieldValue(displayName, mousex, mousey, stack);
     }
 
     @Override
