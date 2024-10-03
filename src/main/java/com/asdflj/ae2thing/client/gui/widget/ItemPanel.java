@@ -101,7 +101,7 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitor, IConfigManagerHost,
         this.history = Ae2ReflectClient.getHistory(LayoutManager.searchField);
     }
 
-    protected void saveSearchString() {
+    public void saveSearchString() {
         if (ModAndClassUtil.NEI && isNEISearch()
             && !this.searchField.getText()
                 .isEmpty()) {
@@ -333,6 +333,7 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitor, IConfigManagerHost,
 
     @Override
     public void setTextFieldValue(String displayName, int mousex, int mousey, ItemStack stack) {
+        if (!searchField.isMouseIn(mousex, mousey)) return;
         if (ModAndClassUtil.THE && AspectUtil.getAspectFromJar(stack) != null) {
             setSearchString(
                 Objects.requireNonNull(AspectUtil.getAspectFromJar(stack))
