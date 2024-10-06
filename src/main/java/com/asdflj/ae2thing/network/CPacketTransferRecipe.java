@@ -145,6 +145,7 @@ public class CPacketTransferRecipe implements IMessage {
                     transferPack(message.outputs, outputSlot);
                     c.onCraftMatrixChanged(inputSlot);
                     c.onCraftMatrixChanged(outputSlot);
+                    ciw.saveChanges();
                 }
             }
 
