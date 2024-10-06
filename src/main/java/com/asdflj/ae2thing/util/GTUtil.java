@@ -18,7 +18,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.enums.ItemList;
 import gregtech.api.metatileentity.BaseMetaTileEntity;
-import gregtech.common.tileentities.machines.GT_MetaTileEntity_Hatch_CraftingInput_ME;
 
 public class GTUtil {
 
@@ -38,8 +37,7 @@ public class GTUtil {
 
     public static void setDataStick(int x, int y, int z, EntityPlayer player, World w) {
         TileEntity tile = w.getTileEntity(x, y, z);
-        if (tile != null && (tile instanceof BaseMetaTileEntity bmte
-            && bmte.getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_CraftingInput_ME)) {
+        if (tile instanceof BaseMetaTileEntity bmte && bmte.getMetaTileEntity() instanceof IInterfaceViewable) {
             ItemStack dataStick = player.inventory.getItemStack();
             if (ItemList.Tool_DataStick.isStackEqual(dataStick, false, true)) {
                 NBTTagCompound tag = new NBTTagCompound();

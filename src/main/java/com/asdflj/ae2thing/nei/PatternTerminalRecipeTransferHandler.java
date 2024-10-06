@@ -41,7 +41,7 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
             boolean priority = ((GuiWirelessDualInterfaceTerminal) firstGui).container.prioritize;
             boolean craft = shouldCraft(recipe);
             List<com.glodblock.github.nei.object.OrderStack<?>> in = com.glodblock.github.nei.recipes.FluidRecipe
-                .getPackageInputs(recipe, recipeIndex, priority);
+                .getPackageInputs(recipe, recipeIndex, !craft && priority);
             List<com.glodblock.github.nei.object.OrderStack<?>> out = com.glodblock.github.nei.recipes.FluidRecipe
                 .getPackageOutputs(recipe, recipeIndex, !notUseOther(recipe));
             AE2Thing.proxy.netHandler

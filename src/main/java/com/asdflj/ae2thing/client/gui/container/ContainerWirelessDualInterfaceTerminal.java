@@ -370,7 +370,9 @@ public class ContainerWirelessDualInterfaceTerminal extends ContainerMonitor
 
     @Override
     public void saveChanges() {
-
+        if (Platform.isServer()) {
+            this.it.saveSettings();
+        }
     }
 
     @Override
