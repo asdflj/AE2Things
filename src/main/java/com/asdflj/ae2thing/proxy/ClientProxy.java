@@ -7,7 +7,9 @@ import java.awt.Point;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.GuiScreenEvent;
 
+import com.asdflj.ae2thing.client.gui.BaseMEGui;
 import com.asdflj.ae2thing.client.gui.GuiMonitor;
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.item.ItemPhial;
@@ -80,4 +82,12 @@ public class ClientProxy extends CommonProxy {
         }
 
     }
+
+    @SubscribeEvent
+    public void initGuiEvent(GuiScreenEvent.InitGuiEvent.Post event) {
+        if (event.gui instanceof BaseMEGui bg) {
+            bg.initDone();
+        }
+    }
+
 }

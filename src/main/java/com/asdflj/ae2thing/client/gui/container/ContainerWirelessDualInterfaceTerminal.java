@@ -27,6 +27,7 @@ import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
 import com.asdflj.ae2thing.client.gui.container.widget.PatternContainer;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
 import com.asdflj.ae2thing.inventory.item.INetworkTerminal;
+import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 import com.asdflj.ae2thing.util.Ae2Reflect;
 import com.asdflj.ae2thing.util.GTUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
@@ -97,7 +98,14 @@ public class ContainerWirelessDualInterfaceTerminal extends ContainerMonitor
         this.delegateContainer = new ContainerInterfaceTerminal(ip, (IActionHost) monitorable);
         this.it = (IPatternTerminal) monitorable;
         this.setMonitor();
+        this.lockSlot();
         this.bindPlayerInventory(ip, 14, 0);
+    }
+
+    private void lockSlot() {
+        if (this.it instanceof WirelessTerminal wirelessTerminal) {
+            this.lockPlayerInventorySlot(wirelessTerminal.getInventorySlot());
+        }
     }
 
     @Override

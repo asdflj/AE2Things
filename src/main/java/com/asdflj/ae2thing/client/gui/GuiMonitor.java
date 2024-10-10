@@ -812,4 +812,9 @@ public abstract class GuiMonitor extends BaseMEGui
     public AEBaseGui getAEBaseGui() {
         return this;
     }
+
+    @Override
+    public int getOffsetY() {
+        return offsetY;
+    }
 }
