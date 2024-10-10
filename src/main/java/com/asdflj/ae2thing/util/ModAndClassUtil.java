@@ -9,6 +9,7 @@ import cpw.mods.fml.common.Loader;
 
 public final class ModAndClassUtil {
 
+    public static boolean NEE = false;
     public static boolean GT5NH = false;
     public static boolean GT5 = false;
     public static boolean NEI = false;
@@ -20,6 +21,7 @@ public final class ModAndClassUtil {
     public static boolean WAILA = false;
     public static boolean IC2 = false;
     public static boolean NECHAR = false;
+    public static boolean BOTANIA = false;
 
     public static boolean isTypeFilter;
     public static boolean isCraftStatus;
@@ -71,5 +73,7 @@ public final class ModAndClassUtil {
         if (Loader.isModLoaded("Waila")) WAILA = true;
         if (Loader.isModLoaded("IC2")) IC2 = true;
         if (Loader.isModLoaded("nechar")) NECHAR = true;
+        if (Loader.isModLoaded("neenergistics")) NEE = true;
+        if (Loader.isModLoaded("Botania")) BOTANIA = true;
     }
 }
