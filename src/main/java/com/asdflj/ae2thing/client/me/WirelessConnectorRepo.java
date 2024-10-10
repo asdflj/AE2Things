@@ -111,7 +111,7 @@ public class WirelessConnectorRepo implements IDisplayRepo {
         this.searchString = searchString;
     }
 
-    private enum SearchMode {
+    public enum SearchMode {
 
         POS("#"),
         COLOR("~"),
@@ -142,6 +142,10 @@ public class WirelessConnectorRepo implements IDisplayRepo {
                     } else {
                         return "";
                     }
+        }
+
+        public String getPrefix() {
+            return this.prefix;
         }
 
         public static ImmutablePair<SearchMode, String> searchWhat(String text) {

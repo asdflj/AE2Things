@@ -2,12 +2,16 @@ package com.asdflj.ae2thing.common.item;
 
 import java.util.EnumSet;
 
+import net.bdew.ae2stuff.machines.wireless.TileWireless;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.ForgeEventFactory;
 
+import com.asdflj.ae2thing.client.gui.GuiWirelessConnectorTerminal;
+import com.asdflj.ae2thing.client.me.WirelessConnectorRepo;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.inventory.item.IItemInventory;
@@ -77,6 +81,19 @@ public abstract class ItemBaseWirelessTerminal extends ToolWirelessTerminal impl
         }
 
         return item;
+    }
+
+    @Override
+    public boolean onItemUseFirst(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side,
+        float hitX, float hitY, float hitZ) {
+        if (Platform.isClient()) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te instanceof TileWireless) {
+                GuiWirelessConnectorTerminal.memoryText = String
+                    .format("%s%s,%s,%s", WirelessConnectorRepo.SearchMode.POS.getPrefix(), x, y, z);
+            }
+        }
+        return super.onItemUseFirst(itemstack, player, world, x, y, z, side, hitX, hitY, hitZ);
     }
 
     protected abstract GuiType guiGuiType(ItemStack item);
