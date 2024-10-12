@@ -6,12 +6,15 @@ item.creative_fluid_cell.lava.name=创造ME流体存储元件(岩浆)
 item.part_infusion_pattern_terminal.name=ME注魔样板终端
 item.part_thaumatorium_interface.name=ME炼金接口
 item.part_wireless_connector_terminal.name=ME无线连接终端
+item.part_mana_export.name=ME魔力输出总线
+item.part_mana_import.name=ME魔力输入总线
 item.wireless_dual_interface_terminal.name=ME无线二合一接口终端
 item.wireless_connector_terminal.name=ME无线连接终端
 tile.fishbig.name=鱼大
 tile.essentia_discretizer.name=源质离散器
 tile.infusion_interface.name=ME注魔接口
 tile.ex_io_port.name=ME扩展IO端口
+fluid.mana=魔力
 
 ae2thing.tooltip.shift_for_more=§r> 按 §3Shift§r 显示更多信息
 ae2thing.tooltip.linked=已链接
@@ -41,7 +44,8 @@ ae2thing.gui.wireless_connector_terminal.highlight=无线连接器已高亮，�
 ae2thing.gui.wireless_connector_terminal.in_other_dim=无线连接器位于 %d 世界，无法高亮显示
 ae2thing.gui.infusion_interface=ME注魔接口
 ae2thing.gui.part_thaumatorium_interface=ME炼金接口
-
+ae2thing.gui.part_mana_export=ME魔力输出总线
+ae2thing.gui.part_mana_import=ME魔力输入总线
 ae2thing.key.open_terminal=打开终端
 
 itemGroup.ae2thing=AE2 Thing

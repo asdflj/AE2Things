@@ -12,6 +12,7 @@ import com.asdflj.ae2thing.client.gui.GuiCraftConfirm;
 import com.asdflj.ae2thing.client.gui.GuiCraftingStatus;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
+import com.asdflj.ae2thing.client.gui.GuiManaIO;
 import com.asdflj.ae2thing.client.gui.GuiPatternValueAmount;
 import com.asdflj.ae2thing.client.gui.GuiRenamer;
 import com.asdflj.ae2thing.client.gui.GuiWirelessConnectorTerminal;
@@ -20,10 +21,12 @@ import com.asdflj.ae2thing.client.gui.container.ContainerCellLink;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftConfirm;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerManaIO;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
 import com.asdflj.ae2thing.client.gui.container.ContainerRenamer;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
+import com.asdflj.ae2thing.common.parts.SharedManaBus;
 import com.asdflj.ae2thing.common.parts.THPart;
 import com.asdflj.ae2thing.inventory.ItemCellLinkInventory;
 import com.google.common.collect.ImmutableList;
@@ -201,6 +204,18 @@ public enum GuiType {
         @Override
         protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
             return new GuiCraftAmount(player.inventory, inv);
+        }
+    }),
+    MANA_BUS_IO(new PartGuiFactory<>(SharedManaBus.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, SharedManaBus inv) {
+            return new ContainerManaIO(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, SharedManaBus inv) {
+            return new GuiManaIO(player.inventory, inv);
         }
     }),
     CELL_LINK(new ItemGuiFactory<>(ItemCellLinkInventory.class) {

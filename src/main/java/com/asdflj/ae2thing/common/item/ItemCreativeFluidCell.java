@@ -15,7 +15,6 @@ import com.asdflj.ae2thing.common.storage.FluidCellInventoryHandler;
 import com.asdflj.ae2thing.common.storage.ITFluidCellInventoryHandler;
 import com.asdflj.ae2thing.common.storage.infinityCell.CreativeFluidCellInventory;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
-import com.asdflj.ae2thing.loader.IRegister;
 import com.glodblock.github.api.FluidCraftAPI;
 import com.glodblock.github.common.storage.IFluidCellInventory;
 import com.glodblock.github.common.storage.IStorageFluidCell;
@@ -33,7 +32,7 @@ import appeng.items.contents.CellUpgrades;
 import appeng.tile.inventory.AppEngInternalInventory;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class ItemCreativeFluidCell extends BaseCellItem implements IStorageFluidCell, IRegister<ItemCreativeFluidCell> {
+public class ItemCreativeFluidCell extends BaseCellItem implements IStorageFluidCell {
 
     public static final ItemStack water_bucket = new ItemStack(Items.water_bucket, 1);
     public static final ItemStack lava_bucket = new ItemStack(Items.lava_bucket, 1);

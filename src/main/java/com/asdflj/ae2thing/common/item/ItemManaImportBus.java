@@ -1,29 +1,28 @@
 package com.asdflj.ae2thing.common.item;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.asdflj.ae2thing.AE2Thing;
-import com.asdflj.ae2thing.common.parts.PartWirelessConnectorTerminal;
+import com.asdflj.ae2thing.common.parts.PartManaImportBus;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
 import com.asdflj.ae2thing.util.NameConst;
 
 import appeng.api.AEApi;
-import appeng.api.parts.IPart;
 import appeng.api.parts.IPartItem;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemPartWirelessConnectorTerminal extends BaseItem implements IPartItem {
+public class ItemManaImportBus extends BaseItem implements IPartItem {
 
-    public ItemPartWirelessConnectorTerminal() {
+    public ItemManaImportBus() {
         this.setMaxStackSize(64);
-        this.setUnlocalizedName(NameConst.ITEM_PART_WIRELESS_CONNECTOR_TERMINAL);
+        this.setUnlocalizedName(NameConst.ITEM_PART_MANA_IMPORT);
         AEApi.instance()
             .partHelper()
             .setItemBusRenderer(this);
@@ -31,8 +30,8 @@ public class ItemPartWirelessConnectorTerminal extends BaseItem implements IPart
 
     @Nullable
     @Override
-    public IPart createPartFromItemStack(ItemStack is) {
-        return new PartWirelessConnectorTerminal(is);
+    public PartManaImportBus createPartFromItemStack(ItemStack is) {
+        return new PartManaImportBus(is);
     }
 
     @Override
@@ -44,8 +43,8 @@ public class ItemPartWirelessConnectorTerminal extends BaseItem implements IPart
     }
 
     @Override
-    public ItemPartWirelessConnectorTerminal register() {
-        GameRegistry.registerItem(this, NameConst.ITEM_PART_WIRELESS_CONNECTOR_TERMINAL, AE2Thing.MODID);
+    public ItemManaImportBus register() {
+        GameRegistry.registerItem(this, NameConst.ITEM_PART_MANA_IMPORT, AE2Thing.MODID);
         setCreativeTab(AE2ThingTabs.INSTANCE);
         return this;
     }

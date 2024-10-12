@@ -15,7 +15,6 @@ import com.asdflj.ae2thing.common.storage.ICellInventoryHandler;
 import com.asdflj.ae2thing.common.storage.ITCellInventory;
 import com.asdflj.ae2thing.common.storage.infinityCell.InfinityItemStorageCellInventory;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
-import com.asdflj.ae2thing.loader.IRegister;
 import com.asdflj.ae2thing.util.NameConst;
 
 import appeng.api.AEApi;
@@ -37,8 +36,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemInfinityStorageCell extends BaseCellItem
-    implements IStorageCell, IItemGroup, IRegister<ItemInfinityStorageCell> {
+public class ItemInfinityStorageCell extends BaseCellItem implements IStorageCell, IItemGroup {
 
     private final int perType = 1;
     private final double idleDrain = 2000D;

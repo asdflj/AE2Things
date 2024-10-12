@@ -6,12 +6,15 @@ item.creative_fluid_cell.lava.name=Creative ME Fluid Storage Cell (Lava)
 item.part_infusion_pattern_terminal.name=ME Infusion Pattern Terminal
 item.part_thaumatorium_interface.name=ME Thaumatorium Interface
 item.part_wireless_connector_terminal.name=ME Wireless Connector Terminal
+item.part_mana_export.name=ME Mana Export Bus
+item.part_mana_import.name=ME Mana Import Bus
 item.wireless_dual_interface_terminal.name=ME Wireless Dual Interface Terminal
 item.wireless_connector_terminal.name=ME Wireless Connector Terminal
 tile.fishbig.name=FishBig
 tile.essentia_discretizer.name=Essentia Discretizer
 tile.infusion_interface.name=ME Infusion Interface
 tile.ex_io_port.name=ME Extended IO Port
+fluid.mana=Mana
 
 ae2thing.tooltip.shift_for_more=§r> Hold §3Shift§r for more information
 ae2thing.tooltip.linked=Linked
@@ -41,6 +44,8 @@ ae2thing.gui.wireless_connector_terminal.highlight=The wireless connector is now
 ae2thing.gui.wireless_connector_terminal.in_other_dim=Wireless connector located at dimension: %d and cant be highlighted
 ae2thing.gui.infusion_interface=ME Infusion Interface
 ae2thing.gui.part_thaumatorium_interface=ME Thaumatorium Interface
+ae2thing.gui.part_mana_export=ME Mana Export Bus
+ae2thing.gui.part_mana_import=ME Mana Import Bus
 ae2thing.key.open_terminal=Open Terminal
 
 itemGroup.ae2thing=AE2 Thing

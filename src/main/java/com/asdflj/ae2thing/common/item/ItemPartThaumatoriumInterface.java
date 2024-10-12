@@ -11,7 +11,6 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.common.parts.PartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
 import com.asdflj.ae2thing.util.NameConst;
-import com.glodblock.github.loader.IRegister;
 
 import appeng.api.AEApi;
 import appeng.api.parts.IPartItem;
@@ -19,8 +18,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemPartThaumatoriumInterface extends BaseItem
-    implements IPartItem, IRegister<ItemPartThaumatoriumInterface> {
+public class ItemPartThaumatoriumInterface extends BaseItem implements IPartItem {
 
     public ItemPartThaumatoriumInterface() {
         this.setMaxStackSize(64);

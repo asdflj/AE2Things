@@ -11,7 +11,6 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.common.parts.PartInfusionPatternTerminal;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
 import com.asdflj.ae2thing.util.NameConst;
-import com.glodblock.github.loader.IRegister;
 
 import appeng.api.AEApi;
 import appeng.api.parts.IPart;
@@ -20,8 +19,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemPartInfusionPatternTerminal extends BaseItem
-    implements IPartItem, IRegister<ItemPartInfusionPatternTerminal> {
+public class ItemPartInfusionPatternTerminal extends BaseItem implements IPartItem {
 
     public ItemPartInfusionPatternTerminal() {
         this.setMaxStackSize(64);

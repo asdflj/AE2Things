@@ -14,7 +14,6 @@ import com.asdflj.ae2thing.common.storage.ITFluidCellInventory;
 import com.asdflj.ae2thing.common.storage.ITFluidCellInventoryHandler;
 import com.asdflj.ae2thing.common.storage.infinityCell.InfinityFluidStorageCellInventory;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
-import com.asdflj.ae2thing.loader.IRegister;
 import com.asdflj.ae2thing.util.NameConst;
 import com.glodblock.github.api.FluidCraftAPI;
 import com.glodblock.github.common.storage.IStorageFluidCell;
@@ -34,8 +33,7 @@ import appeng.items.contents.CellUpgrades;
 import appeng.util.Platform;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class ItemInfinityStorageFluidCell extends BaseCellItem
-    implements IStorageFluidCell, IRegister<ItemInfinityStorageFluidCell> {
+public class ItemInfinityStorageFluidCell extends BaseCellItem implements IStorageFluidCell {
 
     private final int perType = 1;
     private final double idleDrain = 2000D;

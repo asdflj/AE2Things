@@ -11,12 +11,14 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.Tags;
+import com.asdflj.ae2thing.common.ManaFluid;
 import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
@@ -36,7 +38,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     public static final ItemStack GLASS_BOTTLE = new ItemStack(glass_bottle, 1);
     public static int maxPinSize = 9;
     public static int maxSelectionRows = 5;
-
+    public static final Fluid Mana = new ManaFluid();
     private static final AE2ThingAPI API = new AE2ThingAPI();
 
     private final Set<Class<? extends Item>> backpackItems = new HashSet<>();
@@ -176,6 +178,11 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     @Override
     public String getVersion() {
         return Tags.VERSION;
+    }
+
+    @Override
+    public Fluid getMana() {
+        return Mana;
     }
 
 }
