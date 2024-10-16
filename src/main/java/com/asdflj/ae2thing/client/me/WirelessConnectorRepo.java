@@ -3,6 +3,7 @@ package com.asdflj.ae2thing.client.me;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,7 @@ import com.asdflj.ae2thing.util.Info;
 import com.asdflj.ae2thing.util.NeCharUtil;
 import com.asdflj.ae2thing.util.Util;
 
+import appeng.api.util.DimensionalCoord;
 import appeng.client.gui.widgets.IScrollSource;
 
 public class WirelessConnectorRepo implements IDisplayRepo {
@@ -79,6 +81,25 @@ public class WirelessConnectorRepo implements IDisplayRepo {
             }
         }
         this.dsp.sort(Comparator.comparing(Info::getName, String::compareToIgnoreCase));
+        if (Component.activeInfo != null) {
+            if (!dsp.contains(Component.activeInfo)) {
+                dsp.add(0, Component.activeInfo);
+            }
+            if (Component.activeInfo.link) {
+                DimensionalCoord b = Component.activeInfo.b;
+                Optional<Info> info = this.infos.stream()
+                    .filter(i -> i.a.equals(b))
+                    .findFirst();
+                if (info.isPresent() && !dsp.contains(info.get())) {
+                    if (!this.dsp.isEmpty()){
+                        dsp.add(1, info.get());
+                    }else{
+                        dsp.add(0, info.get());
+                    }
+                }
+            }
+
+        }
     }
 
     @Override
@@ -103,7 +124,7 @@ public class WirelessConnectorRepo implements IDisplayRepo {
 
     @Override
     public String getSearchString() {
-        return "";
+        return this.searchString;
     }
 
     @Override
