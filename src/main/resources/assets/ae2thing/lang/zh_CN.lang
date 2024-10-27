@@ -46,6 +46,8 @@ ae2thing.gui.infusion_interface=ME注魔接口
 ae2thing.gui.part_thaumatorium_interface=ME炼金接口
 ae2thing.gui.part_mana_export=ME魔力输出总线
 ae2thing.gui.part_mana_import=ME魔力输入总线
+ae2thing.gui.infusion_terminal.crafting_pattern=注魔和坩埚样板
+ae2thing.gui.infusion_terminal.processing_pattern=蒸馏样板
 ae2thing.key.open_terminal=打开终端
 
 itemGroup.ae2thing=AE2 Thing

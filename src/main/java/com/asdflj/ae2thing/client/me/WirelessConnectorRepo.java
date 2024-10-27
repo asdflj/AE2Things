@@ -91,9 +91,9 @@ public class WirelessConnectorRepo implements IDisplayRepo {
                     .filter(i -> i.a.equals(b))
                     .findFirst();
                 if (info.isPresent() && !dsp.contains(info.get())) {
-                    if (!this.dsp.isEmpty()){
+                    if (!this.dsp.isEmpty()) {
                         dsp.add(1, info.get());
-                    }else{
+                    } else {
                         dsp.add(0, info.get());
                     }
                 }

@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import com.asdflj.ae2thing.util.Util;
+import com.glodblock.github.util.Util;
 
 import appeng.api.AEApi;
 import appeng.api.storage.StorageChannel;

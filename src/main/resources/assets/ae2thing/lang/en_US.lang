@@ -46,6 +46,8 @@ ae2thing.gui.infusion_interface=ME Infusion Interface
 ae2thing.gui.part_thaumatorium_interface=ME Thaumatorium Interface
 ae2thing.gui.part_mana_export=ME Mana Export Bus
 ae2thing.gui.part_mana_import=ME Mana Import Bus
+ae2thing.gui.infusion_terminal.crafting_pattern=Infusion & Crucible Pattern
+ae2thing.gui.infusion_terminal.processing_pattern=Distillation Pattern
 ae2thing.key.open_terminal=Open Terminal
 
 itemGroup.ae2thing=AE2 Thing

@@ -21,8 +21,8 @@ import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
 import com.asdflj.ae2thing.common.parts.PartInfusionPatternTerminal;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
-import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
+import com.glodblock.github.util.Util;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
