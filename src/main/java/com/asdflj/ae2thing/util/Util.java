@@ -32,12 +32,10 @@ import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
-import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.DimensionalCoord;
 import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.util.Platform;
-import appeng.util.item.AEFluidStack;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -170,16 +168,6 @@ public class Util {
         return null;
     }
 
-    public static IAEFluidStack loadFluidStackFromNBT(final NBTTagCompound i) {
-        final FluidStack t = FluidRegistry.getFluidStack(i.getString("FluidName"), 1);
-        if (t == null) return null;
-        final AEFluidStack fluid = AEFluidStack.create(t);
-        fluid.setStackSize(i.getLong("Cnt"));
-        fluid.setCountRequestable(i.getLong("Req"));
-        fluid.setCraftable(i.getBoolean("Craft"));
-        return fluid;
-    }
-
     public static List<Integer> getBackpackSlot(EntityPlayer player) {
         List<Integer> result = new ArrayList<>();
         for (int x = 0; x < player.inventory.mainInventory.length; x++) {
@@ -191,18 +179,6 @@ public class Util {
             }
         }
         return result;
-    }
-
-    public static void writeItemStackToNBT(ItemStack itemStack, NBTTagCompound tag) {
-        itemStack.writeToNBT(tag);
-        tag.setInteger(Constants.COUNT, itemStack.stackSize);
-    }
-
-    public static ItemStack loadItemStackFromNBT(NBTTagCompound tag) {
-        ItemStack itemStack = ItemStack.loadItemStackFromNBT(tag);
-        if (itemStack == null) return null;
-        itemStack.stackSize = tag.getInteger(Constants.COUNT);
-        return itemStack;
     }
 
     @SideOnly(Side.CLIENT)
@@ -255,8 +231,8 @@ public class Util {
 
         @Override
         public void writeToNBT(NBTTagCompound data) {
-            data.setInteger("side", this.side.ordinal());
-            data.setString("name", this.name);
+            data.setInteger(Constants.SIDE, this.side.ordinal());
+            data.setString(Constants.NAME, this.name);
             super.writeToNBT(data);
         }
 
@@ -266,8 +242,8 @@ public class Util {
                 data.getInteger("y"),
                 data.getInteger("z"),
                 data.getInteger("dim"),
-                ForgeDirection.getOrientation(data.getInteger("side")),
-                data.getString("name"));
+                ForgeDirection.getOrientation(data.getInteger(Constants.SIDE)),
+                data.getString(Constants.NAME));
         }
 
     }

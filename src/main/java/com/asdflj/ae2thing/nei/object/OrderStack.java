@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.asdflj.ae2thing.util.Util;
+import com.glodblock.github.util.Util;
 
 import codechicken.nei.PositionedStack;
 

@@ -2,12 +2,15 @@ package com.asdflj.ae2thing.client.gui;
 
 import static com.asdflj.ae2thing.api.Constants.MODE_CRAFTING;
 import static com.asdflj.ae2thing.api.Constants.MODE_PROCESSING;
+import static com.asdflj.ae2thing.util.NameConst.GUI_INFUSION_TERMINAL_CRAFTING;
+import static com.asdflj.ae2thing.util.NameConst.GUI_INFUSION_TERMINAL_PROCESSING;
+import static thaumicenergistics.common.blocks.BlockEnum.DISTILLATION_ENCODER;
 
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -40,6 +43,7 @@ import appeng.core.localization.GuiColors;
 import appeng.core.localization.GuiText;
 import appeng.helpers.InventoryAction;
 import appeng.util.item.AEItemStack;
+import thaumcraft.common.config.ConfigBlocks;
 
 public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiMonitorTerminal {
 
@@ -53,6 +57,8 @@ public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiMonito
     protected GuiImgButton encodeBtn;
     protected GuiImgButton doubleBtn;
     protected final GuiScrollbar processingScrollBar = new GuiScrollbar();
+    final ItemStack RUNIC_MATRIX = new ItemStack(ConfigBlocks.blockStoneDevice, 1, 2);
+    final ItemStack THE_DISTILLATION_ENCODER = new ItemStack(DISTILLATION_ENCODER.getBlock(), 1);
 
     public GuiInfusionPatternTerminal(InventoryPlayer inventory, ITerminalHost inv) {
         super(new ContainerInfusionPatternTerminal(inventory, inv));
@@ -145,15 +151,15 @@ public class GuiInfusionPatternTerminal extends GuiMonitor implements IGuiMonito
             this.tabCraftButton = new GuiTabButton(
                 this.guiLeft + 173,
                 this.guiTop + this.ySize - 177,
-                new ItemStack(Blocks.crafting_table),
-                GuiText.CraftingPattern.getLocal(),
+                RUNIC_MATRIX,
+                I18n.format(GUI_INFUSION_TERMINAL_CRAFTING),
                 itemRender));
         this.buttonList.add(
             this.tabProcessButton = new GuiTabButton(
                 this.guiLeft + 173,
                 this.guiTop + this.ySize - 177,
-                new ItemStack(Blocks.furnace),
-                GuiText.ProcessingPattern.getLocal(),
+                THE_DISTILLATION_ENCODER,
+                I18n.format(GUI_INFUSION_TERMINAL_PROCESSING),
                 itemRender));
         this.buttonList.add(
             this.clearBtn = new GuiImgButton(

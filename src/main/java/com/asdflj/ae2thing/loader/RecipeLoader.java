@@ -11,6 +11,8 @@ import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_FLUID_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_WIRELESS_CONNECTOR_TERMINAL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.MANA_EXPORT_BUS;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.MANA_IMPORT_BUS;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.THAUMATRIUM_INTERFACE;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.WIRELESS_CONNECTOR_TERMINAL;
 import static com.glodblock.github.loader.ItemAndBlockHolder.CELL_HOUSING;
@@ -147,6 +149,20 @@ public class RecipeLoader implements Runnable {
             GameRegistry.addShapelessRecipe(INFUSION_INTERFACE.stack(), THAUMATRIUM_INTERFACE.stack());
             GameRegistry.addShapelessRecipe(THAUMATRIUM_INTERFACE.stack(), INFUSION_INTERFACE.stack());
 
+        }
+        if (ModAndClassUtil.BOTANIA) {
+            GameRegistry.addShapelessRecipe(
+                MANA_IMPORT_BUS.stack(),
+                com.glodblock.github.loader.ItemAndBlockHolder.FLUID_IMPORT_BUS.stack());
+            GameRegistry.addShapelessRecipe(
+                MANA_EXPORT_BUS.stack(),
+                com.glodblock.github.loader.ItemAndBlockHolder.FLUID_EXPORT_BUS.stack());
+            GameRegistry.addShapelessRecipe(
+                com.glodblock.github.loader.ItemAndBlockHolder.FLUID_IMPORT_BUS.stack(),
+                MANA_IMPORT_BUS.stack());
+            GameRegistry.addShapelessRecipe(
+                com.glodblock.github.loader.ItemAndBlockHolder.FLUID_EXPORT_BUS.stack(),
+                MANA_EXPORT_BUS.stack());
         }
         GameRegistry.addRecipe(new ShapedOreRecipe(BLOCK_FISH_BIG.stack(), "FFF", "F F", "FFF", 'F', FISH));
         GameRegistry.addRecipe(

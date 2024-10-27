@@ -51,6 +51,9 @@ public class NameConst {
     public static final String GUI_TERMINAL_STORE_ACTION = GUI_TERMINAL + "store_action";
     public static final String GUI_TERMINAL_LEFT_CLICK = GUI_TERMINAL + "left_click";
     public static final String GUI_TERMINAL_RIGHT_CLICK = GUI_TERMINAL + "right_click";
+    public static final String GUI_INFUSION_TERMINAL = GUI_KEY + "infusion_terminal.";
+    public static final String GUI_INFUSION_TERMINAL_CRAFTING = GUI_INFUSION_TERMINAL + "crafting_pattern";
+    public static final String GUI_INFUSION_TERMINAL_PROCESSING = GUI_INFUSION_TERMINAL + "processing_pattern";
     public static final String GUI_WIRELESS_CONNECTOR_TERMINAL = GUI_KEY + "wireless_connector_terminal.";
     public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_NAME = GUI_WIRELESS_CONNECTOR_TERMINAL + "name";
     public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_POS = GUI_WIRELESS_CONNECTOR_TERMINAL + "pos";

@@ -1,8 +1,11 @@
 package com.asdflj.ae2thing.client;
 
+import java.util.Arrays;
+
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 
+import com.asdflj.ae2thing.client.icon.Fluids;
 import com.asdflj.ae2thing.client.textures.Texture;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -16,6 +19,8 @@ public class ClientHelper {
             for (final Texture cb : Texture.values()) {
                 cb.registerIcon(ev.map);
             }
+            Arrays.stream(Fluids.values())
+                .forEach(fluids -> fluids.registerIcon(ev.map));
         }
     }
 
