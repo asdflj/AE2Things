@@ -236,4 +236,10 @@ public abstract class BaseMEGui extends AEBaseMEGui implements IGuiSelection {
         }
         GL11.glPopAttrib();
     }
+
+    public abstract int getOffsetY();
+
+    public void initDone() {
+
+    }
 }

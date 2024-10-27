@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.asdflj.ae2thing.common.storage.StorageManager;
@@ -50,4 +51,6 @@ public interface IAE2ThingAPI {
     ItemStack getDefaultFluidContainer();
 
     String getVersion();
+
+    Fluid getMana();
 }

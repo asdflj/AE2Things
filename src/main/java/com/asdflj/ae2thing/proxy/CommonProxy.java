@@ -5,6 +5,7 @@ import static thaumicenergistics.common.fluids.GaseousEssentia.registerGases;
 import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
@@ -39,6 +40,11 @@ public class CommonProxy {
             .bus()
             .register(this);
         ModAndClassUtil.init();
+        if (ModAndClassUtil.BOTANIA) {
+            FluidRegistry.registerFluid(
+                AE2ThingAPI.instance()
+                    .getMana());
+        }
     }
 
     @SubscribeEvent
@@ -89,6 +95,14 @@ public class CommonProxy {
                 .register(TileInfusionInterface.class);
             InterfaceTerminalRegistry.instance()
                 .register(PartThaumatoriumInterface.class);
+        }
+        if (ModAndClassUtil.BOTANIA) {
+            Upgrades.SPEED.registerItem(ItemAndBlockHolder.MANA_EXPORT_BUS.stack(), 4);
+            Upgrades.SUPERSPEED.registerItem(ItemAndBlockHolder.MANA_EXPORT_BUS.stack(), 4);
+            Upgrades.REDSTONE.registerItem(ItemAndBlockHolder.MANA_EXPORT_BUS.stack(), 1);
+            Upgrades.SPEED.registerItem(ItemAndBlockHolder.MANA_IMPORT_BUS.stack(), 4);
+            Upgrades.SUPERSPEED.registerItem(ItemAndBlockHolder.MANA_IMPORT_BUS.stack(), 4);
+            Upgrades.REDSTONE.registerItem(ItemAndBlockHolder.MANA_IMPORT_BUS.stack(), 1);
         }
 
     }

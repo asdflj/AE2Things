@@ -11,6 +11,8 @@ import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
 import com.asdflj.ae2thing.common.item.ItemCreativeFluidCell;
 import com.asdflj.ae2thing.common.item.ItemInfinityStorageCell;
 import com.asdflj.ae2thing.common.item.ItemInfinityStorageFluidCell;
+import com.asdflj.ae2thing.common.item.ItemManaExportBus;
+import com.asdflj.ae2thing.common.item.ItemManaImportBus;
 import com.asdflj.ae2thing.common.item.ItemPartInfusionPatternTerminal;
 import com.asdflj.ae2thing.common.item.ItemPartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.item.ItemPartWirelessConnectorTerminal;
@@ -29,6 +31,8 @@ public class ItemAndBlockHolder implements Runnable {
     public static ItemPartThaumatoriumInterface THAUMATRIUM_INTERFACE;
     public static BlockInfusionInterface INFUSION_INTERFACE;
     public static ItemPhial PHIAL;
+    public static ItemManaImportBus MANA_IMPORT_BUS;
+    public static ItemManaExportBus MANA_EXPORT_BUS;
     public static BlockEssentiaDiscretizer ESSENTIA_DISCRETIZER;
     public static ItemInfinityStorageCell ITEM_INFINITY_CELL = new ItemInfinityStorageCell().register();
     public static ItemInfinityStorageFluidCell ITEM_INFINITY_FLUID_CELL = new ItemInfinityStorageFluidCell().register();
@@ -56,6 +60,10 @@ public class ItemAndBlockHolder implements Runnable {
             INFUSION_INTERFACE = new BlockInfusionInterface().register();
             PHIAL = new ItemPhial().register();
             ESSENTIA_DISCRETIZER = new BlockEssentiaDiscretizer().register();
+        }
+        if (ModAndClassUtil.BOTANIA) {
+            MANA_IMPORT_BUS = new ItemManaImportBus().register();
+            MANA_EXPORT_BUS = new ItemManaExportBus().register();
         }
     }
 }

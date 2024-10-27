@@ -170,6 +170,7 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
         extraOptionsText.add(ButtonToolTips.HighlightInterface.getLocal());
     }
 
+    @Override
     public int getOffsetY() {
         return this.offsetY;
     }

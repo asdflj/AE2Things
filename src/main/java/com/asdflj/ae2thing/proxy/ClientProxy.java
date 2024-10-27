@@ -4,10 +4,15 @@ import static codechicken.lib.gui.GuiDraw.getMousePosition;
 
 import java.awt.Point;
 
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 
+import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.client.gui.BaseMEGui;
 import com.asdflj.ae2thing.client.gui.GuiMonitor;
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.item.ItemPhial;
@@ -80,4 +85,19 @@ public class ClientProxy extends CommonProxy {
         }
 
     }
+
+    @SubscribeEvent
+    public void initGuiEvent(GuiScreenEvent.InitGuiEvent.Post event) {
+        if (event.gui instanceof BaseMEGui bg) {
+            bg.initDone();
+        }
+    }
+
+    @SubscribeEvent
+    public void textureEvent(TextureStitchEvent.Post event) {
+        AE2ThingAPI.instance()
+            .getMana()
+            .setIcons(BlockLiquid.getLiquidIcon("water_still"), BlockLiquid.getLiquidIcon("water_flow"));
+    }
+
 }

@@ -24,7 +24,6 @@ import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.inventory.item.BackpackTerminalInventory;
 import com.asdflj.ae2thing.inventory.item.IItemInventory;
-import com.asdflj.ae2thing.loader.IRegister;
 import com.asdflj.ae2thing.util.BlockPos;
 import com.asdflj.ae2thing.util.NameConst;
 
@@ -37,8 +36,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.util.Platform;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class ItemBackpackTerminal extends BaseItem
-    implements IRegister<ItemBackpackTerminal>, IItemInventory, IStorageItemCell, IItemInventoryHandler {
+public class ItemBackpackTerminal extends BaseItem implements IItemInventory, IStorageItemCell, IItemInventoryHandler {
 
     public ItemBackpackTerminal() {
         super();

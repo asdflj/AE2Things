@@ -16,11 +16,13 @@ public class NameConst {
     public static final String ITEM_WIRELESS_CONNECTOR_TERMINAL = "wireless_connector_terminal";
     public static final String ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL = "wireless_dual_interface_terminal";
     public static final String ITEM_PHIAL = "phial";
+    public static final String ITEM_PART_MANA_IMPORT = "part_mana_import";
+    public static final String ITEM_PART_MANA_EXPORT = "part_mana_export";
     public static final String BLOCK_FISHBIG = "fishbig";
     public static final String BLOCK_ESSENTIA_DISCRETIZER = "essentia_discretizer";
     public static final String BLOCK_INFUSION_INTERFACE = "infusion_interface";
     public static final String BLOCK_EX_IO_PORT = "ex_io_port";
-
+    public static final String MANA = "mana";
     public static final String TT_KEY = AE2Thing.MODID + ".tooltip.";
     public static final String TT_SHIFT_FOR_MORE = TT_KEY + "shift_for_more";
     public static final String TT_LINKED = TT_KEY + "linked";
@@ -63,5 +65,7 @@ public class NameConst {
         + "highlight";
     public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_IN_OTHER_DIM = GUI_WIRELESS_CONNECTOR_TERMINAL
         + "in_other_dim";
+    public static final String GUI_MANA_IMPORT = GUI_KEY + ITEM_PART_MANA_IMPORT;
+    public static final String GUI_MANA_EXPORT = GUI_KEY + ITEM_PART_MANA_EXPORT;
 
 }
