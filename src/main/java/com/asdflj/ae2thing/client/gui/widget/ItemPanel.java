@@ -23,6 +23,7 @@ import com.asdflj.ae2thing.client.me.AdvItemRepo;
 import com.asdflj.ae2thing.network.CPacketFluidUpdate;
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
+import com.asdflj.ae2thing.util.GTUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
@@ -272,6 +273,11 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitor, IConfigManagerHost,
         if (btn == 1 && this.searchField.isMouseIn(xCoord, yCoord)) {
             setSearchString("", true);
         }
+        this.scrollbar.click(this.parent, xCoord - this.parent.getGuiLeft(), yCoord - this.parent.getGuiTop());
+
+        if (ModAndClassUtil.CORE_MOD && GTUtil.compareVersion(GTUtil.CoreModVersion) == 1) {
+            return;
+        }
         boolean flag = btn == this.parent.mc.gameSettings.keyBindPickBlock.getKeyCode() + 100;
         Slot slot = this.getSlotAtPosition(xCoord, yCoord);
         if (slot != null && (btn == 0 || btn == 1 || flag)) {
@@ -283,7 +289,6 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitor, IConfigManagerHost,
                 this.handleMouseClick(slot, slot.getSlotIndex(), btn, 0);
             }
         }
-        this.scrollbar.click(this.parent, xCoord - this.parent.getGuiLeft(), yCoord - this.parent.getGuiTop());
     }
 
     private Slot getSlotAtPosition(int mouseX, int mouseY) {
