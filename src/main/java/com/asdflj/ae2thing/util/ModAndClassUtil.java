@@ -22,6 +22,7 @@ public final class ModAndClassUtil {
     public static boolean IC2 = false;
     public static boolean NECHAR = false;
     public static boolean BOTANIA = false;
+    public static boolean CORE_MOD = false;
 
     public static boolean isTypeFilter;
     public static boolean isCraftStatus;
@@ -75,5 +76,6 @@ public final class ModAndClassUtil {
         if (Loader.isModLoaded("nechar")) NECHAR = true;
         if (Loader.isModLoaded("neenergistics")) NEE = true;
         if (Loader.isModLoaded("Botania")) BOTANIA = true;
+        if (Loader.isModLoaded("dreamcraft")) CORE_MOD = true;
     }
 }
