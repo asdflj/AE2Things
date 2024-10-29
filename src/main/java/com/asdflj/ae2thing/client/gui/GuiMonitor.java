@@ -27,21 +27,18 @@ import com.asdflj.ae2thing.client.gui.widget.THGuiTextField;
 import com.asdflj.ae2thing.client.me.AdvItemRepo;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
-import com.asdflj.ae2thing.network.CPacketFluidUpdate;
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.asdflj.ae2thing.util.NameConst;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
-import com.glodblock.github.util.Util;
 
 import appeng.api.config.CraftingStatus;
 import appeng.api.config.SearchBoxMode;
 import appeng.api.config.Settings;
 import appeng.api.config.TerminalStyle;
 import appeng.api.config.YesNo;
-import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.IConfigManager;
 import appeng.client.gui.AEBaseGui;
@@ -126,36 +123,7 @@ public abstract class GuiMonitor extends BaseMEGui
     protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
         saveSearchString();
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        if (slot instanceof SlotME sme) {
-            ItemStack cs = player.inventory.getItemStack();
-            if (ctrlDown == 0) {
-                if (sme.getHasStack() && sme.getStack()
-                    .getItem() instanceof ItemFluidDrop
-                    && sme.getAEStack()
-                        .getStackSize() != 0) {
-                    if (cs == null
-                        || (Util.FluidUtil.isEmpty(cs) || (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(cs)
-                            && AspectUtil.isEmptyEssentiaContainer(cs)))) {
-                        IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(sme.getAEStack());
-                        AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
-                        return;
-                    }
-                }
-            } else if (ctrlDown == 1
-                && (Util.FluidUtil.isFilled(cs) || (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(cs)
-                    && !AspectUtil.isEmptyEssentiaContainer(cs)))) {
-                        AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(null, isShiftKeyDown()));
-                        return;
-                    }
-            if (mouseButton == 3 && player.capabilities.isCreativeMode
-                && sme.getHasStack()
-                && !sme.getAEStack()
-                    .isCraftable()
-                && sme.getStack()
-                    .getItem() instanceof ItemFluidDrop) {
-                return;
-            }
-        }
+        if (updateFluidContainer(slot, slotIdx, ctrlDown, mouseButton)) return;
 
         if (slot instanceof SlotFake) {
             InventoryAction action = ctrlDown == 1 ? InventoryAction.SPLIT_OR_PLACE_SINGLE

@@ -21,6 +21,7 @@ import com.asdflj.ae2thing.client.gui.container.BaseMonitor.FluidMonitor;
 import com.asdflj.ae2thing.client.gui.container.BaseMonitor.ItemMonitor;
 import com.asdflj.ae2thing.inventory.item.INetworkTerminal;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
+import com.asdflj.ae2thing.util.HBMAeAddonUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
@@ -268,11 +269,14 @@ public abstract class ContainerMonitor extends BaseNetworkContainer
         if (targetStack == null) return;
         // The primary output itemstack
         if (fluid != null && ((ModAndClassUtil.THE && AspectUtil.isEmptyEssentiaContainer(targetStack)
-            && AspectUtil.isEssentiaGas(fluid)) || com.glodblock.github.util.Util.FluidUtil.isEmpty(targetStack))) {
+            && AspectUtil.isEssentiaGas(fluid))
+            || (ModAndClassUtil.HBM_AE_ADDON && HBMAeAddonUtil.getItemIsEmptyContainer(targetStack, fluid))
+            || Util.FluidUtil.isEmpty(targetStack))) {
             // Situation 1.a: Empty fluid container, and nonnull slot
             extractFluid(fluid, player, slotIndex, shift);
-        } else if (!com.glodblock.github.util.Util.FluidUtil.isEmpty(targetStack)
-            || !AspectUtil.isEmptyEssentiaContainer(targetStack)) {
+        } else if ((Util.FluidUtil.isFluidContainer(targetStack) && !Util.FluidUtil.isEmpty(targetStack))
+            || (ModAndClassUtil.THE && !AspectUtil.isEmptyEssentiaContainer(targetStack))
+            || (ModAndClassUtil.HBM_AE_ADDON && HBMAeAddonUtil.getItemHasFluidType(targetStack))) {
                 // Situation 2.a: We are holding a non-empty container.
                 insertFluid(player, slotIndex, shift);
                 // End of situation 2.a
@@ -331,6 +335,14 @@ public abstract class ContainerMonitor extends BaseNetworkContainer
                 return;
             }
             fluidStackPerContainer = FluidContainerRegistry.getFluidForFilledItem(targetStack);
+            fluidPerContainer = fluidStackPerContainer.amount;
+            partialInsertSupported = false;
+        } else if (ModAndClassUtil.HBM_AE_ADDON && HBMAeAddonUtil.getItemHasFluidType(targetStack)) {
+            ItemStack emptyTank = com.hbm.inventory.FluidContainerRegistry.getEmptyContainer(targetStack);
+            if (emptyTank == null) {
+                return;
+            }
+            fluidStackPerContainer = HBMAeAddonUtil.getFluidPerContainer(targetStack);
             fluidPerContainer = fluidStackPerContainer.amount;
             partialInsertSupported = false;
         } else {
@@ -422,6 +434,15 @@ public abstract class ContainerMonitor extends BaseNetworkContainer
             } else {
                 partialTanksStack = null;
             }
+        } else if (ModAndClassUtil.HBM_AE_ADDON && HBMAeAddonUtil.getItemHasFluidType(targetStack)) {
+            if (emptiedTanks > 0) {
+                emptiedTanksStack = com.hbm.inventory.FluidContainerRegistry.getEmptyContainer(targetStack);
+                emptiedTanksStack.stackSize = emptiedTanks;
+            } else {
+                emptiedTanksStack = null;
+            }
+            // Not possible > see Step 2 and Step 3
+            partialTanksStack = null;
         } else {
             if (emptiedTanks > 0) {
                 emptiedTanksStack = FluidContainerRegistry.drainFluidContainer(targetStack);
@@ -522,9 +543,13 @@ public abstract class ContainerMonitor extends BaseNetworkContainer
         } else if (FluidContainerRegistry.isContainer(targetStack)) {
             fluidPerContainer = FluidContainerRegistry.getContainerCapacity(clientRequestedFluidStack, targetStack);
             partialInsertSupported = false;
-        } else {
-            return;
-        }
+        } else if (ModAndClassUtil.HBM_AE_ADDON
+            && HBMAeAddonUtil.getItemIsEmptyContainer(targetStack, clientRequestedFluid)) {
+                fluidPerContainer = HBMAeAddonUtil.getEmptyContainerAmount(targetStack, clientRequestedFluid);
+                partialInsertSupported = false;
+            } else {
+                return;
+            }
 
         // Step 2: determine fluid in network
         final IAEFluidStack totalRequestedFluid = clientRequestedFluid.copy();
@@ -597,26 +622,49 @@ public abstract class ContainerMonitor extends BaseNetworkContainer
             } else {
                 partialTanksStack = null;
             }
-        } else {
-            if (filledTanks > 0) {
-                FluidStack toInsert = extracted.getFluidStack()
-                    .copy();
-                toInsert.amount = fluidPerContainer;
-                filledTanksStack = FluidContainerRegistry.fillFluidContainer(toInsert, targetStack);
-                filledTanksStack.stackSize = filledTanks;
+        } else if (ModAndClassUtil.HBM_AE_ADDON
+            && HBMAeAddonUtil.getItemIsEmptyContainer(targetStack, clientRequestedFluid)) {
+                if (filledTanks > 0) {
+                    filledTanksStack = targetStack.copy();
+                    filledTanksStack.stackSize = 1;
+                    FluidStack toInsert = extracted.getFluidStack()
+                        .copy();
+                    toInsert.amount = fluidPerContainer;
+                    filledTanksStack = HBMAeAddonUtil.getFillContainer(targetStack, clientRequestedFluid);
+                    filledTanksStack.stackSize = filledTanks;
+                } else {
+                    filledTanksStack = null;
+                }
+                if (partialTanks > 0) {
+                    partialTanksStack = targetStack.copy();
+                    partialTanksStack.stackSize = 1;
+                    FluidStack toInsert = extracted.getFluidStack()
+                        .copy();
+                    toInsert.amount = partialFill;
+                    partialTanksStack = HBMAeAddonUtil.getFillContainer(targetStack, clientRequestedFluid);
+                } else {
+                    partialTanksStack = null;
+                }
             } else {
-                filledTanksStack = null;
+                if (filledTanks > 0) {
+                    FluidStack toInsert = extracted.getFluidStack()
+                        .copy();
+                    toInsert.amount = fluidPerContainer;
+                    filledTanksStack = FluidContainerRegistry.fillFluidContainer(toInsert, targetStack);
+                    filledTanksStack.stackSize = filledTanks;
+                } else {
+                    filledTanksStack = null;
+                }
+                if (partialFill > 0) {
+                    // User has a setup that causes discrepancy between simulation and modulation. Likely double storage
+                    // bus.
+                    // We cant have partially filled containers -> user will receive a fluid packet as last resort
+                    IAEFluidStack overflow = extracted.copy();
+                    overflow.setStackSize(partialFill);
+                    dropItem(ItemFluidPacket.newStack(overflow));
+                }
+                partialTanksStack = null;
             }
-            if (partialFill > 0) {
-                // User has a setup that causes discrepancy between simulation and modulation. Likely double storage
-                // bus.
-                // We cant have partially filled containers -> user will receive a fluid packet as last resort
-                IAEFluidStack overflow = extracted.copy();
-                overflow.setStackSize(partialFill);
-                dropItem(ItemFluidPacket.newStack(overflow));
-            }
-            partialTanksStack = null;
-        }
 
         // Done. Put the output in the inventory or ground, and update stack size.
         // We can assume slotIndex == -1, since we don't actually allow extraction via shift click.

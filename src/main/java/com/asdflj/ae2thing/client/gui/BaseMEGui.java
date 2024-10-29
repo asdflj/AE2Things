@@ -4,30 +4,42 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.widget.IGuiSelection;
+import com.asdflj.ae2thing.network.CPacketFluidUpdate;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
+import com.asdflj.ae2thing.util.HBMAeAddonUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
+import com.glodblock.github.hbmaeaddon.util.HBMUtil;
 import com.glodblock.github.util.Util;
 
 import appeng.api.config.SearchBoxMode;
 import appeng.api.config.Settings;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
 import appeng.client.gui.AEBaseMEGui;
+import appeng.client.me.SlotME;
 import appeng.core.AEConfig;
 import codechicken.nei.LayoutManager;
 import codechicken.nei.util.TextHistory;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import thaumcraft.api.aspects.Aspect;
 
 public abstract class BaseMEGui extends AEBaseMEGui implements IGuiSelection {
@@ -53,6 +65,9 @@ public abstract class BaseMEGui extends AEBaseMEGui implements IGuiSelection {
         } else if (Util.FluidUtil.isFluidContainer(is)) {
             FluidStack fs = Util.FluidUtil.getFluidFromContainer(is);
             return fs.getLocalizedName();
+        } else if (ModAndClassUtil.HBM_AE_ADDON && HBMAeAddonUtil.getItemHasFluidType(is)) {
+            return HBMUtil.getFluidType(is)
+                .getLocalizedName();
         } else {
             return is.getDisplayName();
         }
@@ -60,8 +75,48 @@ public abstract class BaseMEGui extends AEBaseMEGui implements IGuiSelection {
 
     protected boolean isFilledContainer(ItemStack is) {
         if (is == null) return false;
-        return (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(is) && !AspectUtil.isEmptyEssentiaContainer(is))
-            || (Util.FluidUtil.isFluidContainer(is) && Util.FluidUtil.isFilled(is));
+        return (Util.FluidUtil.isFluidContainer(is) && Util.FluidUtil.isFilled(is))
+            || (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(is) && !AspectUtil.isEmptyEssentiaContainer(is))
+            || (ModAndClassUtil.HBM_AE_ADDON && HBMAeAddonUtil.getItemHasFluidType(is));
+    }
+
+    private boolean isEmptyContainer(ItemStack is, IAEFluidStack fs) {
+        if (is == null) return false;
+        return Util.FluidUtil.isEmpty(is)
+            || (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(is) && AspectUtil.isEmptyEssentiaContainer(is))
+            || (ModAndClassUtil.HBM_AE_ADDON && HBMAeAddonUtil.getItemIsEmptyContainer(is, fs));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean updateFluidContainer(Slot slot, int slotIdx, int ctrlDown, int mouseButton) {
+        final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        if (slot instanceof SlotME sme) {
+            ItemStack cs = player.inventory.getItemStack();
+            if (ctrlDown == 0) {
+                if (sme.getHasStack() && sme.getStack()
+                    .getItem() instanceof ItemFluidDrop
+                    && sme.getAEStack()
+                        .getStackSize() != 0) {
+                    if (cs == null || isEmptyContainer(cs, ItemFluidDrop.getAeFluidStack(sme.getAEStack()))) {
+                        IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(sme.getAEStack());
+                        AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
+                        return true;
+                    }
+                }
+            } else if (ctrlDown == 1 && isFilledContainer(cs)) {
+                AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(null, isShiftKeyDown()));
+                return true;
+            }
+            if (mouseButton == 3 && player.capabilities.isCreativeMode
+                && sme.getHasStack()
+                && !sme.getAEStack()
+                    .isCraftable()
+                && sme.getStack()
+                    .getItem() instanceof ItemFluidDrop) {
+                return false;
+            }
+        }
+        return false;
     }
 
     protected void drawContainerActionTooltip(int x, int y, String message) {

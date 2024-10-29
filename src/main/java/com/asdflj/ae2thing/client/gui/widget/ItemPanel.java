@@ -17,17 +17,16 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.client.gui.BaseMEGui;
 import com.asdflj.ae2thing.client.gui.IWidgetGui;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.me.AdvItemRepo;
-import com.asdflj.ae2thing.network.CPacketFluidUpdate;
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.GTUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
-import com.glodblock.github.util.Util;
 
 import appeng.api.config.SearchBoxMode;
 import appeng.api.config.Settings;
@@ -35,7 +34,6 @@ import appeng.api.config.TerminalStyle;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.IConfigManager;
-import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.client.gui.widgets.IDropToFillTextField;
@@ -59,7 +57,7 @@ import codechicken.nei.util.TextHistory;
 
 public class ItemPanel implements IAEBasePanel, IGuiMonitor, IConfigManagerHost, IDropToFillTextField {
 
-    private final AEBaseGui parent;
+    private final BaseMEGui parent;
     private final IWidgetGui gui;
     private final ContainerWirelessDualInterfaceTerminal container;
     private final int perRow;
@@ -355,36 +353,7 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitor, IConfigManagerHost,
         if (slotIdx < 0) return false;
         saveSearchString();
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        if (slot instanceof SlotME sme) {
-            ItemStack cs = player.inventory.getItemStack();
-            if (ctrlDown == 0) {
-                if (sme.getHasStack() && sme.getStack()
-                    .getItem() instanceof ItemFluidDrop
-                    && sme.getAEStack()
-                        .getStackSize() != 0) {
-                    if (cs == null
-                        || (Util.FluidUtil.isEmpty(cs) || (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(cs)
-                            && AspectUtil.isEmptyEssentiaContainer(cs)))) {
-                        IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(sme.getAEStack());
-                        AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
-                        return true;
-                    }
-                }
-            } else if (ctrlDown == 1
-                && (Util.FluidUtil.isFilled(cs) || (ModAndClassUtil.THE && AspectUtil.isEssentiaContainer(cs)
-                    && !AspectUtil.isEmptyEssentiaContainer(cs)))) {
-                        AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(null, isShiftKeyDown()));
-                        return true;
-                    }
-            if (mouseButton == 3 && player.capabilities.isCreativeMode
-                && sme.getHasStack()
-                && !sme.getAEStack()
-                    .isCraftable()
-                && sme.getStack()
-                    .getItem() instanceof ItemFluidDrop) {
-                return true;
-            }
-        }
+        if (this.parent.updateFluidContainer(slot, slotIdx, ctrlDown, mouseButton)) return true;
 
         if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
             if (!(slot instanceof SlotPatternTerm)) {

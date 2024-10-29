@@ -8,12 +8,11 @@ import net.minecraft.inventory.Slot;
 
 import com.asdflj.ae2thing.client.gui.widget.IAEBasePanel;
 
-import appeng.client.gui.AEBaseGui;
 import appeng.client.me.InternalSlotME;
 
 public interface IWidgetGui {
 
-    AEBaseGui getGui();
+    BaseMEGui getGui();
 
     boolean hideItemPanelSlot(int x, int y, int w, int h);
 
