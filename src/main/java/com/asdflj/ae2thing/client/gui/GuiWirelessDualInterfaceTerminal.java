@@ -245,7 +245,7 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless i
     }
 
     @Override
-    public AEBaseGui getGui() {
+    public BaseMEGui getGui() {
         return this;
     }
 
