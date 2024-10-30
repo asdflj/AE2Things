@@ -22,7 +22,7 @@ public class NameConst {
     public static final String BLOCK_ESSENTIA_DISCRETIZER = "essentia_discretizer";
     public static final String BLOCK_INFUSION_INTERFACE = "infusion_interface";
     public static final String BLOCK_EX_IO_PORT = "ex_io_port";
-    public static final String MANA = "mana";
+    public static final String MANA = "botania.mana";
     public static final String TT_KEY = AE2Thing.MODID + ".tooltip.";
     public static final String TT_SHIFT_FOR_MORE = TT_KEY + "shift_for_more";
     public static final String TT_LINKED = TT_KEY + "linked";
