@@ -14,7 +14,7 @@ tile.fishbig.name=鱼大
 tile.essentia_discretizer.name=源质离散器
 tile.infusion_interface.name=ME注魔接口
 tile.ex_io_port.name=ME扩展IO端口
-fluid.mana=魔力
+fluid.botania.mana=魔力
 
 ae2thing.tooltip.shift_for_more=§r> 按 §3Shift§r 显示更多信息
 ae2thing.tooltip.linked=已链接
