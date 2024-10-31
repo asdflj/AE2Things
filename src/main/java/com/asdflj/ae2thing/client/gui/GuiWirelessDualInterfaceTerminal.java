@@ -7,12 +7,9 @@ import java.util.stream.Collectors;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -29,7 +26,6 @@ import com.asdflj.ae2thing.client.gui.widget.ItemPanel;
 import com.asdflj.ae2thing.client.gui.widget.PatternPanel;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
-import com.asdflj.ae2thing.util.NameConst;
 
 import appeng.api.config.Settings;
 import appeng.api.storage.ITerminalHost;
@@ -41,7 +37,6 @@ import appeng.client.gui.widgets.GuiTabButton;
 import appeng.client.gui.widgets.IDropToFillTextField;
 import appeng.client.gui.widgets.ISortSource;
 import appeng.client.me.InternalSlotME;
-import appeng.client.me.SlotME;
 import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.SlotFakeCraftingMatrix;
 import appeng.container.slot.SlotPatternTerm;
@@ -147,25 +142,6 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless i
             }
         } else {
             super.drawScreen(mouseX, mouseY, btn);
-        }
-        EntityPlayer player = this.mc.thePlayer;
-        ItemStack is = player.inventory.getItemStack();
-        if (isFilledContainer(is)) {
-            Slot s = this.getSlot(mouseX, mouseY);
-            if (s instanceof SlotME) {
-                List<String> message = new ArrayList<>();
-                message.add(
-                    "\u00a77" + I18n.format(
-                        NameConst.GUI_TERMINAL_STORE_ACTION,
-                        I18n.format(NameConst.GUI_TERMINAL_LEFT_CLICK),
-                        EnumChatFormatting.WHITE + is.getDisplayName() + EnumChatFormatting.RESET));
-                message.add(
-                    "\u00a77" + I18n.format(
-                        NameConst.GUI_TERMINAL_STORE_ACTION,
-                        I18n.format(NameConst.GUI_TERMINAL_RIGHT_CLICK),
-                        EnumChatFormatting.WHITE + getContainerDisplayName(is) + EnumChatFormatting.RESET));
-                drawContainerActionTooltip(mouseX, mouseY, String.join("\n", message));
-            }
         }
         this.xSize = fullXSize;
     }

@@ -1,19 +1,16 @@
 package com.asdflj.ae2thing.client.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
@@ -30,7 +27,6 @@ import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
-import com.asdflj.ae2thing.util.NameConst;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 
@@ -692,25 +688,6 @@ public abstract class GuiMonitor extends BaseMEGui
                 searchField.getText(),
                 searchField.width,
                 list);
-        }
-        EntityPlayer player = this.mc.thePlayer;
-        ItemStack is = player.inventory.getItemStack();
-        if (isFilledContainer(is)) {
-            Slot s = this.getSlot(mouseX, mouseY);
-            if (s instanceof SlotME) {
-                List<String> message = new ArrayList<>();
-                message.add(
-                    "\u00a77" + I18n.format(
-                        NameConst.GUI_TERMINAL_STORE_ACTION,
-                        I18n.format(NameConst.GUI_TERMINAL_LEFT_CLICK),
-                        EnumChatFormatting.WHITE + is.getDisplayName() + EnumChatFormatting.RESET));
-                message.add(
-                    "\u00a77" + I18n.format(
-                        NameConst.GUI_TERMINAL_STORE_ACTION,
-                        I18n.format(NameConst.GUI_TERMINAL_RIGHT_CLICK),
-                        EnumChatFormatting.WHITE + getContainerDisplayName(is) + EnumChatFormatting.RESET));
-                drawContainerActionTooltip(mouseX, mouseY, String.join("\n", message));
-            }
         }
     }
 
