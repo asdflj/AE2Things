@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.BaseMEGui;
@@ -120,7 +121,9 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitor, IConfigManagerHost,
 
     @Override
     public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
+        GL11.glTranslatef(0f, 0f, 100f);
         this.scrollbar.draw(this.parent);
+        GL11.glTranslatef(0f, 0f, -100f);
         if (AEConfig.instance.preserveSearchBar && searchField != null && searchField.isMouseIn(mouseX, mouseY))
             this.parent.drawTooltip(this.absX - offsetX, this.absY - 20, 0, searchField.getMessage());
         if (ModAndClassUtil.NEI && searchField != null
