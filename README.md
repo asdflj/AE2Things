@@ -29,4 +29,6 @@ support infusion intercepter
 **Wireless Connector Terminal**</br>
 Can easily manage ae2 stuff wireless connector
 ![wireless_connector.png](blob/wireless_connector.png)</br>
+**ME Fluid Packet Encoder**</br>
+![fluid_packet_encoder.gif](blob/fluid_packet_encoder.gif)</br>
 ![fishbig.png](blob/fishbig.png)
