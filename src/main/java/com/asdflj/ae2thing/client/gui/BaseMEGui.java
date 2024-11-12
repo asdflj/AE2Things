@@ -7,10 +7,12 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
@@ -23,6 +25,7 @@ import com.asdflj.ae2thing.network.CPacketFluidUpdate;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.HBMAeAddonUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.NameConst;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 import com.glodblock.github.hbmaeaddon.util.HBMUtil;
@@ -198,6 +201,34 @@ public abstract class BaseMEGui extends AEBaseMEGui implements IGuiSelection {
             itemRender.zLevel = 0.0F;
         }
         GL11.glPopAttrib();
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float btn) {
+        super.drawScreen(mouseX, mouseY, btn);
+        this.drawFluidContainerTooltip(mouseX, mouseY);
+    }
+
+    public void drawFluidContainerTooltip(int mouseX, int mouseY) {
+        EntityPlayer player = this.mc.thePlayer;
+        ItemStack is = player.inventory.getItemStack();
+        if (isFilledContainer(is)) {
+            Slot s = this.getSlot(mouseX, mouseY);
+            if (s instanceof SlotME) {
+                List<String> message = new ArrayList<>();
+                message.add(
+                    "\u00a77" + I18n.format(
+                        NameConst.GUI_TERMINAL_STORE_ACTION,
+                        I18n.format(NameConst.GUI_TERMINAL_LEFT_CLICK),
+                        EnumChatFormatting.WHITE + is.getDisplayName() + EnumChatFormatting.RESET));
+                message.add(
+                    "\u00a77" + I18n.format(
+                        NameConst.GUI_TERMINAL_STORE_ACTION,
+                        I18n.format(NameConst.GUI_TERMINAL_RIGHT_CLICK),
+                        EnumChatFormatting.WHITE + getContainerDisplayName(is) + EnumChatFormatting.RESET));
+                drawContainerActionTooltip(mouseX, mouseY, String.join("\n", message));
+            }
+        }
     }
 
     @Override

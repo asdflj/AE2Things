@@ -20,6 +20,7 @@ public class NameConst {
     public static final String ITEM_PART_MANA_EXPORT = "part_mana_export";
     public static final String BLOCK_FISHBIG = "fishbig";
     public static final String BLOCK_ESSENTIA_DISCRETIZER = "essentia_discretizer";
+    public static final String BLOCK_FLUID_PACKET_ENCODER = "fluid_packet_encoder";
     public static final String BLOCK_INFUSION_INTERFACE = "infusion_interface";
     public static final String BLOCK_EX_IO_PORT = "ex_io_port";
     public static final String MANA = "botania.mana";
@@ -34,6 +35,8 @@ public class NameConst {
     public static final String TT_CRAFTING_COMPLETE = TT_KEY + "crafting_complete";
     public static final String TT_INTERFACE_TERMINAL = TT_KEY + "wireless_dual_interface_terminal.";
     public static final String TT_INTERFACE_TERMINAL_DESC = TT_INTERFACE_TERMINAL + "desc";
+    public static final String TT_FLUID_PACKET_ENCODER = TT_KEY + "fluid_packet_encoder.";
+    public static final String TT_FLUID_PACKET_ENCODER_DESC = TT_FLUID_PACKET_ENCODER + "desc";
 
     public static final String MAGNET = AE2Thing.MODID + ".magnet.";
     public static final String MAGNET_OFF = MAGNET + "off";
@@ -68,6 +71,7 @@ public class NameConst {
         + "highlight";
     public static final String GUI_WIRELESS_CONNECTOR_TERMINAL_IN_OTHER_DIM = GUI_WIRELESS_CONNECTOR_TERMINAL
         + "in_other_dim";
+    public static final String GUI_FLUID_PACKET_ENCODER = GUI_KEY + "fluid_packet_encoder";
     public static final String GUI_MANA_IMPORT = GUI_KEY + ITEM_PART_MANA_IMPORT;
     public static final String GUI_MANA_EXPORT = GUI_KEY + ITEM_PART_MANA_EXPORT;
 

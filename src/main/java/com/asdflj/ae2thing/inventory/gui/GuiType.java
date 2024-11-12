@@ -11,6 +11,7 @@ import com.asdflj.ae2thing.client.gui.GuiCraftAmount;
 import com.asdflj.ae2thing.client.gui.GuiCraftConfirm;
 import com.asdflj.ae2thing.client.gui.GuiCraftingStatus;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
+import com.asdflj.ae2thing.client.gui.GuiFluidPacketEncoder;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiManaIO;
 import com.asdflj.ae2thing.client.gui.GuiPatternValueAmount;
@@ -20,6 +21,7 @@ import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerCellLink;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftConfirm;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerFluidPacketEncoder;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerManaIO;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
@@ -28,6 +30,7 @@ import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTermin
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.common.parts.SharedManaBus;
 import com.asdflj.ae2thing.common.parts.THPart;
+import com.asdflj.ae2thing.common.tile.TileFluidPacketEncoder;
 import com.asdflj.ae2thing.inventory.ItemCellLinkInventory;
 import com.google.common.collect.ImmutableList;
 
@@ -228,6 +231,18 @@ public enum GuiType {
         @Override
         protected Object createClientGui(EntityPlayer player, ItemCellLinkInventory inv) {
             return new GuiCellLink(player.inventory, inv);
+        }
+    }),
+    FLUID_PACKET_ENCODER(new TileGuiFactory<>(TileFluidPacketEncoder.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, TileFluidPacketEncoder inv) {
+            return new ContainerFluidPacketEncoder(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, TileFluidPacketEncoder inv) {
+            return new GuiFluidPacketEncoder(player.inventory, inv);
         }
     });
 

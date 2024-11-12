@@ -50,7 +50,7 @@ public interface IGuiDrawSlot {
             return true;
 
         FluidStack fluidStack;
-        if (stack.getItem() instanceof ItemFluidPacket) {
+        if (stack.getItem() instanceof ItemFluidPacket && !(slot instanceof SlotME)) {
             fluidStack = ItemFluidPacket.getFluidStack(stack);
             if (fluidStack == null || fluidStack.amount <= 0) {
                 return true;
@@ -123,6 +123,7 @@ public interface IGuiDrawSlot {
         }
 
         Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+        GL11.glTranslatef(0f, 0f, 100.0f);
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -134,6 +135,7 @@ public interface IGuiDrawSlot {
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glColor3f(1, 1, 1);
+        GL11.glTranslatef(0.0f, 0.0f, -100.0f);
     }
 
     AEBaseGui getAEBaseGui();

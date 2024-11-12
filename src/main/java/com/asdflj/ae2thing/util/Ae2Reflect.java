@@ -15,6 +15,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.container.implementations.ContainerInterfaceTerminal;
 import appeng.me.storage.MEInventoryHandler;
 import appeng.me.storage.MEPassThrough;
+import appeng.tile.inventory.AppEngInternalAEInventory;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.tile.storage.TileIOPort;
 import appeng.util.ConfigManager;
@@ -32,6 +33,7 @@ public class Ae2Reflect {
     private static final Method mIOPort_shouldMove;
     private static final Method mIOPort_moveSlot;
     private static final Field fContainerInterfaceTerminal_tracked;
+    private static final Field fAppEngInternalAEInventory_inv;
 
     static {
         try {
@@ -52,6 +54,7 @@ public class Ae2Reflect {
             mIOPort_shouldMove = reflectMethod(TileIOPort.class, "shouldMove", IMEInventory.class, IMEInventory.class);
             mIOPort_moveSlot = reflectMethod(TileIOPort.class, "moveSlot", int.class);
             fContainerInterfaceTerminal_tracked = reflectField(ContainerInterfaceTerminal.class, "tracked");
+            fAppEngInternalAEInventory_inv = reflectField(AppEngInternalAEInventory.class, "inv");
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -152,6 +155,10 @@ public class Ae2Reflect {
 
     public static Map getTracked(ContainerInterfaceTerminal obj) {
         return Ae2Reflect.readField(obj, fContainerInterfaceTerminal_tracked);
+    }
+
+    public static IAEItemStack[] getInv(AppEngInternalAEInventory obj) {
+        return Ae2Reflect.readField(obj, fAppEngInternalAEInventory_inv);
     }
 
 }
