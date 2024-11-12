@@ -24,7 +24,7 @@ ae2thing.tooltip.wireless_dual_interface_terminal.desc=Dual interface terminal, 
 ae2thing.tooltip.cell_link.desc=You can right click to open link gui to link other cell,\nIt will link every same uuid cell,\nAbuse cell link may lead to lag.
 ae2thing.tooltip.cell_link.disable=Link cell is disable
 ae2thing.tooltip.crafting_complete=Item: %s x%s Crafting Complete
-ae2thing.tooltip.fluid_packet_encoder.desc=The Fluid Encoder can encode Fluid packets. It has to be connected to a ME System and a place to store the liquid in otherwise it won't work.
+ae2thing.tooltip.fluid_packet_encoder.desc=The Fluid Encoder can encode fluid packets. It has to be connected to a ME System and a place to store the liquid in otherwise it won't work. Use pipe to extract fluid packet.
 
 ae2thing.magnet.off=Off
 ae2thing.magnet.inv=Pickup to inventory
