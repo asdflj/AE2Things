@@ -188,7 +188,8 @@ public class TileFluidPacketEncoder extends AENetworkInvTile
                 output.setInventorySlotContentsNoCallBack(0, null);
                 return;
             }
-            is.stackSize = (int) (stored.getStackSize() / this.value);
+            is.stackSize = (stored.getStackSize() / this.value) > Integer.MAX_VALUE ? Integer.MAX_VALUE
+                : (int) (stored.getStackSize() / this.value);
         } catch (Exception ignored) {
             is.stackSize = 0;
         }
