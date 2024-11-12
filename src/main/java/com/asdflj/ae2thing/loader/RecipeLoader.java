@@ -4,6 +4,7 @@ import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BACKPACK_MANAGER;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BLOCK_FISH_BIG;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ESSENTIA_DISCRETIZER;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.EX_IO_PORT;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.FLUID_PACKET_ENCODER;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.INFUSION_INTERFACE;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.INFUSION_PATTERN_TERMINAL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_CREATIVE_WATER_CELL;
@@ -115,6 +116,12 @@ public class RecipeLoader implements Runnable {
             ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL.stack(),
             WIRELESS_INTERFACE_TERM,
             FLUID_TERMINAL_EX.stack());
+        GameRegistry.addShapelessRecipe(
+            FLUID_PACKET_ENCODER.stack(),
+            com.glodblock.github.loader.ItemAndBlockHolder.DECODER.stack());
+        GameRegistry.addShapelessRecipe(
+            com.glodblock.github.loader.ItemAndBlockHolder.DECODER.stack(),
+            FLUID_PACKET_ENCODER.stack());
         if (ModAndClassUtil.THE) {
             final ItemStack THAUMIUM_INGOT = new ItemStack(itemResource, 1, 2);
             final ItemStack RUNIC_MATRIX = new ItemStack(ConfigBlocks.blockStoneDevice, 1, 2);

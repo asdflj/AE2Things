@@ -14,6 +14,7 @@ import com.asdflj.ae2thing.network.CPacketRenamer;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.network.CPacketTransferRecipe;
+import com.asdflj.ae2thing.network.CPacketValueConfig;
 import com.asdflj.ae2thing.network.SPacketMEFluidInvUpdate;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
 import com.asdflj.ae2thing.network.SPacketSetItemAmount;
@@ -55,6 +56,7 @@ public class ChannelLoader implements Runnable {
         netHandler.registerMessage(new CPacketCraftRequest.Handler(), CPacketCraftRequest.class, id++, Side.SERVER);
         netHandler.registerMessage(new CPacketTransferRecipe.Handler(), CPacketTransferRecipe.class, id++, Side.SERVER);
         netHandler.registerMessage(new CPacketRenamer.Handler(), CPacketRenamer.class, id++, Side.SERVER);
+        netHandler.registerMessage(new CPacketValueConfig.Handler(), CPacketValueConfig.class, id++, Side.SERVER);
     }
 
     public static void sendPacketToAllPlayers(Packet packet, World world) {

@@ -1,6 +1,7 @@
 package com.asdflj.ae2thing.common.block;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.render.RenderBlockExIOPort;
@@ -11,6 +12,9 @@ import com.asdflj.ae2thing.util.NameConst;
 
 import appeng.block.AEBaseItemBlock;
 import appeng.block.storage.BlockIOPort;
+import appeng.core.features.ActivityState;
+import appeng.core.features.BlockStackSrc;
+import appeng.tile.AEBaseTile;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -40,6 +44,12 @@ public class BlockExIOPort extends BlockIOPort implements IRegister<BlockExIOPor
         GameRegistry.registerTileEntity(TileExIOPort.class, NameConst.BLOCK_EX_IO_PORT);
         setCreativeTab(AE2ThingTabs.INSTANCE);
         return this;
+    }
+
+    @Override
+    public void setTileEntity(final Class<? extends TileEntity> clazz) {
+        AEBaseTile.registerTileItem(clazz, new BlockStackSrc(this, 0, ActivityState.Enabled));
+        super.setTileEntity(clazz);
     }
 
     @Override

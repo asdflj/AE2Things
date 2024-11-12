@@ -14,6 +14,7 @@ tile.fishbig.name=鱼大
 tile.essentia_discretizer.name=源质离散器
 tile.infusion_interface.name=ME注魔接口
 tile.ex_io_port.name=ME扩展IO端口
+tile.fluid_packet_encoder.name=ME流体封包编码器
 fluid.botania.mana=魔力
 
 ae2thing.tooltip.shift_for_more=§r> 按 §3Shift§r 显示更多信息
@@ -23,6 +24,7 @@ ae2thing.tooltip.wireless_dual_interface_terminal.desc=二合一接口终端,支
 ae2thing.tooltip.cell_link.desc=你可以右键打开GUI去链接其他硬盘,\n它会链接所有相同uuid的元件,\n滥用元件链接可能导致tps低下.
 ae2thing.tooltip.cell_link.disable=链接功能已禁用
 ae2thing.tooltip.crafting_complete=物品: %s x%s 制作完成
+ae2thing.tooltip.fluid_packet_encoder.desc=流体封包编码器可以编码液体数据包。它必须与ME系统连接，并且网络内可以储存流体，否则它就无法工作.
 
 ae2thing.magnet.off=关闭
 ae2thing.magnet.inv=拾取到物品栏
@@ -48,6 +50,7 @@ ae2thing.gui.part_mana_export=ME魔力输出总线
 ae2thing.gui.part_mana_import=ME魔力输入总线
 ae2thing.gui.infusion_terminal.crafting_pattern=注魔和坩埚样板
 ae2thing.gui.infusion_terminal.processing_pattern=蒸馏样板
+ae2thing.gui.fluid_packet_encoder=ME流体封包编码器
 ae2thing.key.open_terminal=打开终端
 
 itemGroup.ae2thing=AE2 Thing

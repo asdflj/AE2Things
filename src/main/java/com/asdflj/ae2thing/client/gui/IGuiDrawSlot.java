@@ -50,7 +50,7 @@ public interface IGuiDrawSlot {
             return true;
 
         FluidStack fluidStack;
-        if (stack.getItem() instanceof ItemFluidPacket) {
+        if (stack.getItem() instanceof ItemFluidPacket && !(slot instanceof SlotME)) {
             fluidStack = ItemFluidPacket.getFluidStack(stack);
             if (fluidStack == null || fluidStack.amount <= 0) {
                 return true;

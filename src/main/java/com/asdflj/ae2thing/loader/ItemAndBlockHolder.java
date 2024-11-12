@@ -6,6 +6,7 @@ import static com.asdflj.ae2thing.common.item.ItemCreativeFluidCell.water_bucket
 import com.asdflj.ae2thing.common.block.BlockEssentiaDiscretizer;
 import com.asdflj.ae2thing.common.block.BlockExIOPort;
 import com.asdflj.ae2thing.common.block.BlockFishBig;
+import com.asdflj.ae2thing.common.block.BlockFluidPacketEncoder;
 import com.asdflj.ae2thing.common.block.BlockInfusionInterface;
 import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
 import com.asdflj.ae2thing.common.item.ItemCreativeFluidCell;
@@ -34,6 +35,7 @@ public class ItemAndBlockHolder implements Runnable {
     public static ItemManaImportBus MANA_IMPORT_BUS;
     public static ItemManaExportBus MANA_EXPORT_BUS;
     public static BlockEssentiaDiscretizer ESSENTIA_DISCRETIZER;
+    public static BlockFluidPacketEncoder FLUID_PACKET_ENCODER = new BlockFluidPacketEncoder().register();
     public static ItemInfinityStorageCell ITEM_INFINITY_CELL = new ItemInfinityStorageCell().register();
     public static ItemInfinityStorageFluidCell ITEM_INFINITY_FLUID_CELL = new ItemInfinityStorageFluidCell().register();
     public static ItemPartWirelessConnectorTerminal WIRELESS_CONNECTOR_TERMINAL = new ItemPartWirelessConnectorTerminal()

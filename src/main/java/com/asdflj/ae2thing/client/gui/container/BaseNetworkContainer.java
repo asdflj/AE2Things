@@ -33,6 +33,11 @@ public class BaseNetworkContainer extends AEBaseContainer {
         }
     }
 
+    public BaseNetworkContainer(InventoryPlayer ip, Object anchor) {
+        super(ip, anchor);
+        this.player = ip.player;;
+    }
+
     protected void updatePowerStatus() {
         try {
             if (this.terminal == null) return;
