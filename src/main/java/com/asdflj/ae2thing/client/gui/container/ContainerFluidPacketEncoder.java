@@ -15,6 +15,7 @@ import appeng.api.config.SecurityPermissions;
 import appeng.container.guisync.GuiSync;
 import appeng.container.slot.IOptionalSlotHost;
 import appeng.container.slot.OptionalSlotFake;
+import appeng.container.slot.SlotFake;
 import appeng.tile.inventory.AppEngInternalAEInventory;
 import appeng.util.Platform;
 import cpw.mods.fml.relauncher.Side;
@@ -29,6 +30,7 @@ public class ContainerFluidPacketEncoder extends BaseNetworkContainer implements
     public long EmitterValue = 0;
 
     private final TileFluidPacketEncoder tile;
+    private OptionalSlotFakeTypeOnly slot;
 
     private static class OptionalSlotFakeTypeOnly extends OptionalSlotFake {
 
@@ -73,13 +75,17 @@ public class ContainerFluidPacketEncoder extends BaseNetworkContainer implements
         final IInventory inv = getFakeFluidInv();
         final int y = 40;
         final int x = 80 + 44;
-        this.addSlotToContainer(new OptionalSlotFakeTypeOnly(inv, this.tile, this, 0, x, y, 0, 0, 0));
+        this.addSlotToContainer(slot = new OptionalSlotFakeTypeOnly(inv, this.tile, this, 0, x, y, 0, 0, 0));
     }
 
     @SideOnly(Side.CLIENT)
     public void setTextField(final GuiTextField level) {
         this.textField = level;
         this.textField.setText(String.valueOf(this.EmitterValue));
+    }
+
+    public SlotFake getConfigSlot() {
+        return this.slot;
     }
 
     @Override

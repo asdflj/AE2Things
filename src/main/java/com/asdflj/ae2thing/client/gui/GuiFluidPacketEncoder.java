@@ -1,9 +1,16 @@
 package com.asdflj.ae2thing.client.gui;
 
+import java.awt.*;
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.input.Keyboard;
 
@@ -12,15 +19,24 @@ import com.asdflj.ae2thing.client.gui.container.ContainerFluidPacketEncoder;
 import com.asdflj.ae2thing.common.tile.TileFluidPacketEncoder;
 import com.asdflj.ae2thing.network.CPacketValueConfig;
 import com.asdflj.ae2thing.util.NameConst;
+import com.glodblock.github.util.Util;
 
 import appeng.client.gui.AEBaseGui;
+import appeng.container.slot.SlotFake;
 import appeng.core.AEConfig;
 import appeng.core.localization.GuiColors;
 import appeng.core.localization.GuiText;
+import appeng.core.sync.network.NetworkHandler;
+import appeng.core.sync.packets.PacketNEIDragClick;
 import appeng.util.calculators.ArithHelper;
 import appeng.util.calculators.Calculator;
+import codechicken.nei.VisiblityData;
+import codechicken.nei.api.INEIGuiHandler;
+import codechicken.nei.api.TaggedInventoryArea;
+import cpw.mods.fml.common.Optional;
 
-public class GuiFluidPacketEncoder extends AEBaseGui {
+@Optional.Interface(modid = "NotEnoughItems", iface = "codechicken.nei.api.INEIGuiHandler")
+public class GuiFluidPacketEncoder extends AEBaseGui implements INEIGuiHandler {
 
     private GuiTextField level;
     private GuiButton plus1;
@@ -179,5 +195,44 @@ public class GuiFluidPacketEncoder extends AEBaseGui {
             }
 
         }
+    }
+
+    private Rectangle getSlotArea(SlotFake slot) {
+        return new Rectangle(guiLeft + slot.getX(), guiTop + slot.getY(), 16, 16);
+    }
+
+    @Override
+    public VisiblityData modifyVisiblity(GuiContainer gui, VisiblityData currentVisibility) {
+        return currentVisibility;
+    }
+
+    @Override
+    public Iterable<Integer> getItemSpawnSlots(GuiContainer gui, ItemStack item) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<TaggedInventoryArea> getInventoryAreas(GuiContainer gui) {
+        return null;
+    }
+
+    @Override
+    public boolean handleDragNDrop(GuiContainer gui, int mouseX, int mouseY, ItemStack draggedStack, int button) {
+        FluidStack fluidStack = Util.getFluidFromItem(draggedStack);
+        if (fluidStack != null) {
+            SlotFake slot = cvb.getConfigSlot();
+            if (getSlotArea(slot).contains(mouseX, mouseY)) {
+                slot.putStack(draggedStack);
+                NetworkHandler.instance.sendToServer(new PacketNEIDragClick(draggedStack, slot.getSlotIndex()));
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hideItemPanelSlot(GuiContainer gui, int x, int y, int w, int h) {
+        return false;
     }
 }
