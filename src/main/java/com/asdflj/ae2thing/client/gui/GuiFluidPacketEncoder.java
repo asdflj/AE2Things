@@ -1,6 +1,6 @@
 package com.asdflj.ae2thing.client.gui;
 
-import java.awt.*;
+import java.awt.Rectangle;
 import java.util.Collections;
 import java.util.List;
 

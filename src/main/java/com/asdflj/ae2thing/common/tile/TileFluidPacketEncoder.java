@@ -37,6 +37,7 @@ import appeng.tile.grid.AENetworkInvTile;
 import appeng.tile.inventory.AppEngInternalAEInventory;
 import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
+import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
 import io.netty.buffer.ByteBuf;
 
@@ -204,10 +205,13 @@ public class TileFluidPacketEncoder extends AENetworkInvTile
         } else if (inv == this.output && removedStack != null && removedStack.stackSize > 0) {
             try {
                 IAEFluidStack fs = AEFluidStack.create(ItemFluidPacket.getFluidStack(removedStack));
-                this.getProxy()
-                    .getStorage()
-                    .getFluidInventory()
-                    .extractItems(fs, Actionable.MODULATE, source);
+                if (fs != null) {
+                    fs.setStackSize(fs.getStackSize() * removedStack.stackSize);
+                    this.getProxy()
+                        .getStorage()
+                        .getFluidInventory()
+                        .extractItems(fs, Actionable.MODULATE, source);
+                }
             } catch (Exception ignored) {
 
             }
@@ -249,6 +253,17 @@ public class TileFluidPacketEncoder extends AENetworkInvTile
             return this.config;
         }
         return null;
+    }
+
+    @Override
+    public boolean canExtractItem(int slotIndex, ItemStack extractedItem, int side) {
+        if (slotIndex == 0 && extractedItem != null
+            && this.output.getStackInSlot(0) != null
+            && Platform.isSameItemPrecise(extractedItem, this.output.getStackInSlot(0))) {
+            ItemStack is = this.output.getStackInSlot(0);
+            return is.stackSize >= extractedItem.stackSize;
+        }
+        return false;
     }
 
     @TileEvent(TileEventType.WORLD_NBT_READ)
