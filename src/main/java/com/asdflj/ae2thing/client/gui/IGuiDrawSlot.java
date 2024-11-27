@@ -60,21 +60,13 @@ public interface IGuiDrawSlot {
             IAEItemStack fake = stack.copy();
             fake.setStackSize(fluidStack.amount);
             aeRenderItem.setAeStack(fake);
-            if (!display) {
-                GL11.glTranslatef(0.0f, 0.0f, 200.0f);
-                aeRenderItem.renderItemOverlayIntoGUI(
-                    mc.fontRenderer,
-                    mc.getTextureManager(),
-                    fake.getItemStack(),
-                    slot.xDisplayPosition,
-                    slot.yDisplayPosition);
-                GL11.glTranslatef(0.0f, 0.0f, -200.0f);
-            }
+            renderStackSize(display, stack, slot);
             return false;
         } else if (stack.getItem() instanceof ItemFluidDrop) {
             fluidStack = ItemFluidDrop.getFluidStack(slot.getStack());
             if (fluidStack == null || fluidStack.getFluid() == null) return true;
             if (ModAndClassUtil.THE && AspectUtil.isEssentiaGas(fluidStack)) {
+                GL11.glTranslatef(0.0f, 0.0f, 150.0f);
                 AspectRender.drawAspect(
                     mc.thePlayer,
                     slot.xDisplayPosition,
@@ -82,35 +74,33 @@ public interface IGuiDrawSlot {
                     this.getzLevel(),
                     AspectUtil.getAspectFromGas(fluidStack),
                     fluidStack.amount <= 0 ? 1 : fluidStack.amount);
+                GL11.glTranslatef(0.0f, 0.0f, -150.0f);
                 IAEItemStack gas = stack.copy()
                     .setStackSize(stack.getStackSize() / AspectUtil.R);
                 aeRenderItem.setAeStack(gas);
-                GL11.glTranslatef(0.0f, 0.0f, 200.0f);
-                if (!display) {
-                    aeRenderItem.renderItemOverlayIntoGUI(
-                        mc.fontRenderer,
-                        mc.getTextureManager(),
-                        gas.getItemStack(),
-                        slot.xDisplayPosition,
-                        slot.yDisplayPosition);
-                }
+                renderStackSize(display, stack, slot);
             } else {
                 this.drawWidget(slot.xDisplayPosition, slot.yDisplayPosition, fluidStack.getFluid());
                 aeRenderItem.setAeStack(stack);
-                GL11.glTranslatef(0.0f, 0.0f, 200.0f);
-                if (!display) {
-                    aeRenderItem.renderItemOverlayIntoGUI(
-                        mc.fontRenderer,
-                        mc.getTextureManager(),
-                        stack.getItemStack(),
-                        slot.xDisplayPosition,
-                        slot.yDisplayPosition);
-                }
+                renderStackSize(display, stack, slot);
             }
-            GL11.glTranslatef(0.0f, 0.0f, -200.0f);
             return false;
         }
         return true;
+    }
+
+    default void renderStackSize(boolean display, IAEItemStack stack, Slot slot) {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (!display) {
+            GL11.glTranslatef(0.0f, 0.0f, 200.0f);
+            aeRenderItem.renderItemOverlayIntoGUI(
+                mc.fontRenderer,
+                mc.getTextureManager(),
+                stack.getItemStack(),
+                slot.xDisplayPosition,
+                slot.yDisplayPosition);
+            GL11.glTranslatef(0.0f, 0.0f, -200.0f);
+        }
     }
 
     default void drawWidget(int posX, int posY, Fluid fluid) {
