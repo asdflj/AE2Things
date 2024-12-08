@@ -31,7 +31,6 @@ import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.GuiText;
 import appeng.integration.IntegrationRegistry;
 import appeng.integration.IntegrationType;
-import appeng.integration.modules.NEI;
 
 public class GuiWirelessConnectorTerminal extends AEBaseGui {
 

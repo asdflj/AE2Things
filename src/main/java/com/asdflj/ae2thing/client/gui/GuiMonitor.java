@@ -677,8 +677,8 @@ public abstract class GuiMonitor extends BaseMEGui
         } else {
             super.drawScreen(mouseX, mouseY, btn);
         }
-        if (AEConfig.instance.preserveSearchBar && searchField != null)
-            handleTooltip(mouseX, mouseY, searchField.getTooltipProvider());
+        if (searchField == null) return;
+        if (AEConfig.instance.preserveSearchBar) handleTooltip(mouseX, mouseY, searchField.getTooltipProvider());
         if (ModAndClassUtil.NEI && this.searchField.isMouseIn(mouseX, mouseY) && this.isNEISearch()) {
             // draw selection
             List<String> list = Ae2ReflectClient.getHistoryList(this.history);

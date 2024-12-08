@@ -86,7 +86,7 @@ public class THGuiTextField extends GuiTextField {
     }
 
     public void handleTooltip(int mouseX, int mouseY, AEBaseGui gui, int offsetY) {
-        if (isMouseIn(mouseX, mouseY) && this.tooltip != null && !"".equals(this.tooltip)) {
+        if (isMouseIn(mouseX, mouseY) && this.tooltip != null && !this.tooltip.isEmpty()) {
             int length = 0;
             for (String s : this.getMessage()
                 .split("\n")) {

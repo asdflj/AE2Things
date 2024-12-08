@@ -129,7 +129,7 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitor, IConfigManagerHost,
         if (ModAndClassUtil.NEI && searchField != null
             && this.searchField.isMouseIn(mouseX, mouseY)
             && this.isNEISearch()
-            && this.parent instanceof IGuiSelection) {
+            && this.parent != null) {
             // draw selection
             List<String> list = Ae2ReflectClient.getHistoryList(this.history);
             ((IGuiSelection) this.parent).drawHistorySelection(

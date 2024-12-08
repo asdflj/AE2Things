@@ -163,10 +163,8 @@ public class TileExIOPort extends TileIOPort implements IPowerChannelState {
                             return TickRateModulation.IDLE;
                         }
 
-                        return TickRateModulation.URGENT;
-                    } else {
-                        return TickRateModulation.URGENT;
                     }
+                    return TickRateModulation.URGENT;
                 }
             }
         } catch (final GridAccessException e) {

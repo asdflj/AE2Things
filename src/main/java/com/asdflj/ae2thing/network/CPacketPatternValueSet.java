@@ -89,7 +89,7 @@ public class CPacketPatternValueSet implements IMessage {
                                 if (Util.isFluidPacket(stack)) {
                                     FluidStack fluidStack = ItemFluidPacket.getFluidStack(stack);
                                     if (fluidStack != null) {
-                                        fluidStack = ItemFluidPacket.getFluidStack(stack)
+                                        fluidStack = Objects.requireNonNull(ItemFluidPacket.getFluidStack(stack))
                                             .copy();
                                         fluidStack.amount = message.amount;
                                     }

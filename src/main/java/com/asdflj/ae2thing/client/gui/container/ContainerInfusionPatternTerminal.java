@@ -179,7 +179,7 @@ public class ContainerInfusionPatternTerminal extends BasePatternContainerMonito
     @Override
     public void onSlotChange(Slot s) {
         if (s == this.patternSlotOUT || s == this.craftingSlots[0] && Platform.isServer()) {
-            if (s == this.patternSlotOUT && s.getStack() != null) {
+            if (s != null && s == this.patternSlotOUT && s.getStack() != null) {
                 ItemStack is = s.getStack();
                 NBTTagCompound data = Platform.openNbtData(is);
                 this.setCrafting(data.getBoolean(TC_CRAFTING));
