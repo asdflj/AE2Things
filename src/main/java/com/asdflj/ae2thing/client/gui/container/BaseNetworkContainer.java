@@ -35,7 +35,7 @@ public class BaseNetworkContainer extends AEBaseContainer {
 
     public BaseNetworkContainer(InventoryPlayer ip, Object anchor) {
         super(ip, anchor);
-        this.player = ip.player;;
+        this.player = ip.player;
     }
 
     protected void updatePowerStatus() {

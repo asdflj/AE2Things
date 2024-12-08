@@ -65,7 +65,7 @@ public class PatternPanel implements IAEBasePanel {
     protected GuiTabButton tabProcessButton;
     protected GuiTabButton tabCraftButton;
     protected final GuiScrollbar processingScrollBar = new GuiScrollbar();
-    private AEBaseContainer inventorySlots;
+    private final AEBaseContainer inventorySlots;
     protected final Set<Slot> drag_click;
     private final int w;
     private final int h;

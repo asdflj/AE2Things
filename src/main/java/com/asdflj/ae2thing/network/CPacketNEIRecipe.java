@@ -43,7 +43,7 @@ public class CPacketNEIRecipe implements IMessage {
     private ItemStack[][] recipe;
     private NBTTagCompound r;
 
-    public CPacketNEIRecipe() {};
+    public CPacketNEIRecipe() {}
 
     public CPacketNEIRecipe(NBTTagCompound r) {
         this.r = r;

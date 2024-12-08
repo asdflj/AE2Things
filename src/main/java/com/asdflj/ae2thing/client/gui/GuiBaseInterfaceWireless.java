@@ -1382,7 +1382,7 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
             for (int idx = 0; idx < brokenRecipes.length; idx++) {
                 if (brokenRecipes[idx] == null) {
                     existsUnknown = true;
-                } else if (brokenRecipes[idx] == true) {
+                } else if (brokenRecipes[idx]) {
                     return true;
                 }
             }

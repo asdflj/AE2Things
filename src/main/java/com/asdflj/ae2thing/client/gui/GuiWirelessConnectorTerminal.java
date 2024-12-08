@@ -35,7 +35,7 @@ import appeng.integration.modules.NEI;
 
 public class GuiWirelessConnectorTerminal extends AEBaseGui {
 
-    private int reservedSpace;
+    private final int reservedSpace;
     public static String memoryText = "";
     private int maxRows;
     private int perRow;

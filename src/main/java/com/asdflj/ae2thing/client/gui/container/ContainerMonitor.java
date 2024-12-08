@@ -253,7 +253,7 @@ public abstract class ContainerMonitor extends BaseNetworkContainer
                         AE2ThingAPI.instance()
                             .getFluidContainer(fluid)),
                     Actionable.MODULATE,
-                    this.getActionSource());;
+                    this.getActionSource());
             if (extractItem != null) {
                 player.inventory.setItemStack(extractItem.getItemStack());
             } else {

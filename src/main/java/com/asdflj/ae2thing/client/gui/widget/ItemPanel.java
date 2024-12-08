@@ -73,14 +73,14 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitor, IConfigManagerHost,
     private final int w;
     private final int h;
     private int offsetY;
-    private boolean showViewBtn = true;
+    private final boolean showViewBtn = true;
     private GuiImgButton SortByBox;
     private GuiImgButton ViewBox;
     private GuiImgButton typeFilter;
     private GuiImgButton SortDirBox;
     private GuiImgButton searchBoxSettings;
     private static String memoryText = "";
-    private TextHistory history;
+    private final TextHistory history;
 
     public ItemPanel(IWidgetGui gui, ContainerWirelessDualInterfaceTerminal container, IConfigManager configSrc,
         ISortSource source) {
