@@ -79,13 +79,10 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless i
     @Override
     public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
         super.drawBG(offsetX, offsetY, mouseX, mouseY);
-        GL11.glPushMatrix();
-        GL11.glTranslatef(0f, 0f, 90.0f);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         for (IAEBasePanel panel : this.getActivePanels()) {
             panel.drawBG(offsetX, offsetY, mouseX, mouseY);
         }
-        GL11.glPopMatrix();
     }
 
     private List<IAEBasePanel> getActivePanels() {
