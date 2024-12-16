@@ -31,13 +31,6 @@ public class BackPackHandler extends BaseBackpackHandler {
         return slotItem.stackSize < slotItem.getMaxStackSize();
     }
 
-    @Override
-    public ItemStack decrStackSize(int index, int count) {
-        ItemStack tmp = super.decrStackSize(index, count);
-        save();
-        return tmp;
-    }
-
     private void save() {
         ((de.eydamos.backpack.inventory.InventoryBackpack) inv).writeToNBT(bs);
     }
