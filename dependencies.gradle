@@ -44,8 +44,10 @@ dependencies {
     api('com.github.GTNewHorizons:ae2stuff:0.8.2-GTNH:dev')
     //backpack
     compile('com.github.GTNewHorizons:AdventureBackpack2:1.1.3-GTNH:dev')
-    compileOnly('com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.3.0-GTNH:dev')
+    compile('com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.3.0-GTNH:dev')
     compileOnly('com.github.GTNewHorizons:ForestryMC:4.8.1:dev')
+    // tic
+    compile('com.github.GTNewHorizons:TinkersConstruct:1.11.5-GTNH:dev')
     // tc
     compileOnly('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
     compileOnly('com.github.GTNewHorizons:ThaumicEnergistics:1.6.18-GTNH:dev') { transitive = false }
@@ -58,6 +60,8 @@ dependencies {
         exclude group: 'com.github.GTNewHorizons', module: 'AE2FluidCraft-Rework'
     }
     compileOnly('com.github.GTNewHorizons:nei-custom-diagram:1.6.6:dev') { transitive = false }
+//    runtimeOnlyNonPublishable("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:GTNHLib:0.5.0:dev")
     // lib
     compile('com.github.GTNewHorizons:Baubles:1.0.3:dev')
     compileOnly("com.github.GTNewHorizons:GTNHLib:0.5.0:dev") { transitive = false }
@@ -72,7 +76,4 @@ dependencies {
     // glodblock
     compileOnly("curse.maven:hbms-nuclear-tech-mod-235439:5534354")
     compileOnly(files("libs/hbmaeaddon-1.4-dev.jar"))
-//    runtimeOnlyNonPublishable("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
-
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:GTNHLib:0.5.0:dev")
 }

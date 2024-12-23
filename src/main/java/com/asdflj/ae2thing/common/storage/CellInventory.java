@@ -301,47 +301,33 @@ public class CellInventory implements ITCellInventory {
         if (request == null) {
             return null;
         }
-
-        final long size = request.getStackSize();
-
-        IAEItemStack results = null;
+        IAEItemStack result = null;
 
         final IAEItemStack l = this.getCellItems()
             .findPrecise(request);
 
-        if (l != null) {
-            results = l.copy();
-
-            if (l.getStackSize() <= size) {
-                results.setStackSize(l.getStackSize());
-
-                if (mode == Actionable.MODULATE) {
-                    if (request.getItem() instanceof ItemFluidDrop) {
-                        extractFluid(Objects.requireNonNull(ItemFluidDrop.getFluidStack(request.getItemStack())));
-                    } else {
-                        extractItem(request.getItemStack());
-                    }
-                    l.setStackSize(0);
+        if (l != null && l.getStackSize() != 0) {
+            result = l.copy();
+            if (mode == Actionable.SIMULATE) {
+                return result.getStackSize() > request.getStackSize() ? request : result;
+            }
+            if (mode == Actionable.MODULATE) {
+                ItemStack extracted;
+                if (request.getItem() instanceof ItemFluidDrop) {
+                    extracted = extractFluid(
+                        Objects.requireNonNull(ItemFluidDrop.getFluidStack(request.getItemStack())));
+                } else {
+                    extracted = extractItem(request.getItemStack());
                 }
-            } else {
-                results.setStackSize(size);
-
-                if (mode == Actionable.MODULATE) {
-                    if (request.getItem() instanceof ItemFluidDrop) {
-                        extractFluid(Objects.requireNonNull(ItemFluidDrop.getFluidStack(request.getItemStack())));
-                    } else {
-                        extractItem(request.getItemStack());
-                    }
-
-                    l.setStackSize(l.getStackSize() - size);
-                }
+                l.decStackSize(extracted.stackSize);
+                result.setStackSize(extracted.stackSize);
             }
         }
 
-        return results;
+        return result;
     }
 
-    private void extractFluid(FluidStack extractFluid) {
+    private ItemStack extractFluid(FluidStack extractFluid) {
         FluidStack extFluid = extractFluid.copy();
         for (BaseBackpackHandler inv : this.fluidInv) {
             for (FluidTank tank : inv.getFluidTanks()) {
@@ -352,15 +338,16 @@ public class CellInventory implements ITCellInventory {
                     extFluid.amount -= result.amount;
                     inv.markFluidAsDirty();
                     if (extFluid.amount <= 0) {
-                        return;
+                        return ItemFluidDrop.newStack(extractFluid);
                     }
                 }
-
             }
         }
+        extFluid.amount = extractFluid.amount - extFluid.amount;
+        return ItemFluidDrop.newStack(extFluid);
     }
 
-    private void extractItem(ItemStack extractItem) {
+    private ItemStack extractItem(ItemStack extractItem) {
         ItemStack extItem = extractItem.copy();
         for (IInventory inv : this.modInv) {
             for (int i = 0; i < inv.getSizeInventory(); i++) {
@@ -370,17 +357,19 @@ public class CellInventory implements ITCellInventory {
                     if (size > extItem.stackSize) {
                         is.splitStack(extItem.stackSize);
                         inv.setInventorySlotContents(i, is.copy());
-                        return;
+                        return extractItem;
                     } else {
                         inv.setInventorySlotContents(i, null);
                         extItem.stackSize -= size;
                     }
                     if (extItem.stackSize <= 0) {
-                        return;
+                        return extractItem;
                     }
                 }
             }
         }
+        extItem.stackSize = extractItem.stackSize - extItem.stackSize;
+        return extItem;
     }
 
     @Override
