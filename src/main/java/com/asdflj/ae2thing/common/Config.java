@@ -19,6 +19,7 @@ public class Config {
     public static boolean wirelessConnectorTerminalColorSelection = true;
     public static boolean wirelessConnectorTerminalInfinityConnectionRange = true;
     public static int exIOPortTransferContentsRate;
+    public static boolean backpackTerminalAddTicSupport = false;
 
     public static void run() {
         loadCategory();
@@ -54,6 +55,8 @@ public class Config {
             256,
             Integer.MAX_VALUE,
             "Set Ex IO Port Transfer Rate. Base transfer quantity = 256. Make sure you have enough power to transfer stack.");
+        backpackTerminalAddTicSupport = Config
+            .getBoolean("Tic", AE2Thing.NAME, false, "Let Backpack Terminal can forge tic tool");
         if (Config.hasChanged()) Config.save();
     }
 
