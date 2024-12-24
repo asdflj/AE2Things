@@ -31,7 +31,9 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.TicUtil;
 import com.glodblock.github.common.storage.CellType;
 
 import appeng.api.AEApi;
@@ -90,7 +92,8 @@ public class RecipeLoader implements Runnable {
                 'D',
                 DIAMOND,
                 'T',
-                CRAFTING_TABLE));
+                ModAndClassUtil.TIC && Config.backpackTerminalAddTicSupport ? TicUtil.getToolStation()
+                    : CRAFTING_TABLE));
         GameRegistry.addRecipe(
             new ShapedOreRecipe(ITEM_INFINITY_CELL.stack(), "CCC", "CCC", "CCC", 'C', AE2_DIGITAL_SINGULARITY_CELL));
         GameRegistry.addRecipe(
