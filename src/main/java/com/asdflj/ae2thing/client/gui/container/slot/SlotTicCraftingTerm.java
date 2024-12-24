@@ -52,13 +52,13 @@ public class SlotTicCraftingTerm extends SlotCraftingTerm {
                     }
 
                     ItemStack result = TicUtil.canModifyItem(tool, items.toArray(new ItemStack[0]));
-                    if (result == null) {
+                    AdaptorPlayerHand ia = new AdaptorPlayerHand(who);
+                    if (result == null || ia.simulateAdd(result) != null) {
                         super.doClick(action, who);
                         return;
                     }
                     Ae2Reflect.makeItem(this, who, result);
                     who.openContainer.onCraftMatrixChanged(this.craftInv);
-                    AdaptorPlayerHand ia = new AdaptorPlayerHand(who);
                     ia.addItems(result);
                     return;
                 }
