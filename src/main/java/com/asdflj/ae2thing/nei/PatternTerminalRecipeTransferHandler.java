@@ -12,6 +12,8 @@ import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.nei.object.OrderStack;
 import com.asdflj.ae2thing.nei.recipes.FluidRecipe;
 import com.asdflj.ae2thing.network.CPacketTransferRecipe;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.PHUtil;
 
 import codechicken.nei.api.IOverlayHandler;
 import codechicken.nei.recipe.IRecipeHandler;
@@ -40,8 +42,11 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
         } else if (firstGui instanceof GuiWirelessDualInterfaceTerminal) {
             boolean priority = ((GuiWirelessDualInterfaceTerminal) firstGui).container.prioritize;
             boolean craft = shouldCraft(recipe);
-            List<com.glodblock.github.nei.object.OrderStack<?>> in = com.glodblock.github.nei.recipes.FluidRecipe
-                .getPackageInputs(recipe, recipeIndex, !craft && priority);
+            List<com.glodblock.github.nei.object.OrderStack<?>> in;
+            in = com.glodblock.github.nei.recipes.FluidRecipe.getPackageInputs(recipe, recipeIndex, !craft && priority);
+            if (ModAndClassUtil.PH && !craft) {
+                in = PHUtil.transfer(in);
+            }
             List<com.glodblock.github.nei.object.OrderStack<?>> out = com.glodblock.github.nei.recipes.FluidRecipe
                 .getPackageOutputs(recipe, recipeIndex, !notUseOther(recipe));
             AE2Thing.proxy.netHandler

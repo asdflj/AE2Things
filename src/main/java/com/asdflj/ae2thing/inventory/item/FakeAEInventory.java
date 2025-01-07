@@ -2,7 +2,6 @@ package com.asdflj.ae2thing.inventory.item;
 
 import java.util.Iterator;
 
-import com.asdflj.ae2thing.util.Ae2Reflect;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -134,7 +133,9 @@ public class FakeAEInventory implements IInventory, Iterable<ItemStack> {
     @Override
     public void setInventorySlotContents(final int slot, final ItemStack newItemStack) {
         final ItemStack oldStack = this.getStackInSlot(slot);
-        this.inv[slot] = AEApi.instance().storage().createItemStack(newItemStack);
+        this.inv[slot] = AEApi.instance()
+            .storage()
+            .createItemStack(newItemStack);
 
         if (this.te != null && Platform.isServer()) {
             ItemStack removed = oldStack;
