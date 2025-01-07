@@ -8,9 +8,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 import com.asdflj.ae2thing.client.gui.BaseMEGui;
 import com.asdflj.ae2thing.client.gui.GuiMonitor;
+import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.item.ItemPhial;
 import com.asdflj.ae2thing.loader.KeybindLoader;
@@ -51,6 +53,7 @@ public class ClientProxy extends CommonProxy {
         (new ListenerLoader()).run();
         (new RenderLoader()).run();
         (new KeybindLoader()).run();
+        MinecraftForge.EVENT_BUS.register(new BlockPosHighlighter());
     }
 
     private ItemStack getStackMouseOver(GuiContainer window) {
