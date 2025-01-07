@@ -4,7 +4,6 @@ import java.util.Collections;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ChatComponentText;
 
 import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
 import com.asdflj.ae2thing.util.Info;
@@ -30,16 +29,11 @@ public class HighLightButton extends BaseGuiButton {
     public void onClick() {
         Info info = component.getInfo();
         if (info != null) {
-            if (mc.thePlayer.worldObj.provider.dimensionId != info.a.getDimension()) {
-                mc.thePlayer.addChatComponentMessage(
-                    new ChatComponentText(
-                        I18n.format(NameConst.GUI_WIRELESS_CONNECTOR_TERMINAL_IN_OTHER_DIM, info.a.getDimension())));
-            }
             BlockPosHighlighter.highlightBlocks(
                 mc.thePlayer,
                 Collections.singletonList(info.a),
                 PlayerMessages.InterfaceHighlighted.getName(),
-                PlayerMessages.InterfaceInOtherDim.getName());
+                I18n.format(NameConst.GUI_WIRELESS_CONNECTOR_TERMINAL_IN_OTHER_DIM, info.a.getDimension()));
             mc.thePlayer.closeScreen();
         }
     }
