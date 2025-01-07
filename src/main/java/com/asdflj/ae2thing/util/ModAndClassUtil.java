@@ -25,6 +25,7 @@ public final class ModAndClassUtil {
     public static boolean HBM_AE_ADDON = false;
     public static boolean CORE_MOD = false;
     public static boolean TIC = false;
+    public static boolean PH = false;
 
     public static boolean isTypeFilter;
     public static boolean isCraftStatus;
@@ -81,5 +82,6 @@ public final class ModAndClassUtil {
         if (Loader.isModLoaded("dreamcraft")) CORE_MOD = true;
         if (Loader.isModLoaded("hbmaeaddon")) HBM_AE_ADDON = true;
         if (Loader.isModLoaded("TConstruct")) TIC = true;
+        if (Loader.isModLoaded("programmablehatches")) PH = true;
     }
 }

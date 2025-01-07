@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+FMLCorePluginContainsFMLMod: true
+FMLAT: ae2thing.cfg
+FMLCorePlugin: com.asdflj.github.coremod.AE2ThingCore
+

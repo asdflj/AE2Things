@@ -7,11 +7,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.asdflj.ae2thing.api.Constants;
-import com.asdflj.ae2thing.util.Ae2Reflect;
+import com.asdflj.ae2thing.inventory.item.FakeAEInventory;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.util.Util;
 
-import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.implementations.IPowerChannelState;
@@ -25,7 +24,6 @@ import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.api.util.AECableType;
@@ -43,20 +41,6 @@ import io.netty.buffer.ByteBuf;
 
 public class TileFluidPacketEncoder extends AENetworkInvTile
     implements IPowerChannelState, IStackWatcherHost, IAEAppEngInventory {
-
-    private static class FakeAEInventory extends AppEngInternalAEInventory {
-
-        public FakeAEInventory(IAEAppEngInventory te, int s) {
-            super(te, s);
-        }
-
-        public void setInventorySlotContentsNoCallBack(final int slot, final ItemStack newItemStack) {
-            IAEItemStack[] inv = Ae2Reflect.getInv(this);
-            inv[slot] = AEApi.instance()
-                .storage()
-                .createItemStack(newItemStack);
-        }
-    }
 
     private boolean isPowered = false;
     private final AppEngInternalAEInventory config = new AppEngInternalAEInventory(this, 1);

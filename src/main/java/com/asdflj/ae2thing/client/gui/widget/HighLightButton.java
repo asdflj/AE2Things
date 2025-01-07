@@ -1,14 +1,16 @@
 package com.asdflj.ae2thing.client.gui.widget;
 
+import java.util.Collections;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ChatComponentText;
 
+import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
 import com.asdflj.ae2thing.util.Info;
 import com.asdflj.ae2thing.util.NameConst;
 
-import appeng.api.util.WorldCoord;
-import appeng.client.render.BlockPosHighlighter;
+import appeng.core.localization.PlayerMessages;
 
 public class HighLightButton extends BaseGuiButton {
 
@@ -33,22 +35,11 @@ public class HighLightButton extends BaseGuiButton {
                     new ChatComponentText(
                         I18n.format(NameConst.GUI_WIRELESS_CONNECTOR_TERMINAL_IN_OTHER_DIM, info.a.getDimension())));
             }
-            WorldCoord playerPos = new WorldCoord(
-                (int) mc.thePlayer.posX,
-                (int) mc.thePlayer.posY,
-                (int) mc.thePlayer.posZ);
-            BlockPosHighlighter.highlightBlock(
-                info.a,
-                System.currentTimeMillis() + 500 * WorldCoord.getTaxicabDistance(info.a, playerPos),
-                true);
-            mc.thePlayer.addChatComponentMessage(
-                new ChatComponentText(
-                    I18n.format(
-                        NameConst.GUI_WIRELESS_CONNECTOR_TERMINAL_HIGHLIGHT,
-                        info.a.x,
-                        info.a.y,
-                        info.a.z,
-                        info.a.getDimension())));
+            BlockPosHighlighter.highlightBlocks(
+                mc.thePlayer,
+                Collections.singletonList(info.a),
+                PlayerMessages.InterfaceHighlighted.getName(),
+                PlayerMessages.InterfaceInOtherDim.getName());
             mc.thePlayer.closeScreen();
         }
     }

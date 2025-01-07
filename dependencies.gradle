@@ -34,20 +34,20 @@
  * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
-    api('com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-464-GTNH:dev')
-    api('com.github.GTNewHorizons:NotEnoughItems:2.6.40-GTNH:dev')
+    api('com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-518-GTNH:dev') //gtnh-272 ver 484
+    api('com.github.GTNewHorizons:NotEnoughItems:2.7.13-GTNH:dev')
     api('curse.maven:cofh-core-69162:2388751')
     api('com.github.GTNewHorizons:waila:1.8.0:dev')
-    api('com.github.GTNewHorizons:AE2FluidCraft-Rework:1.3.39-gtnh:dev') {
+    api('com.github.GTNewHorizons:AE2FluidCraft-Rework:1.4.14-gtnh:dev') {
         exclude group: 'com.github.GTNewHorizons', module: 'Applied-Energistics-2-Unofficial'
     }
-    api('com.github.GTNewHorizons:ae2stuff:0.8.2-GTNH:dev')
+    api('com.github.GTNewHorizons:ae2stuff:0.9.0-GTNH:dev')
     //backpack
     compile('com.github.GTNewHorizons:AdventureBackpack2:1.1.3-GTNH:dev')
     compile('com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.3.0-GTNH:dev')
     compileOnly('com.github.GTNewHorizons:ForestryMC:4.8.1:dev')
     // tic
-    compile('com.github.GTNewHorizons:TinkersConstruct:1.11.5-GTNH:dev')
+    compileOnly('com.github.GTNewHorizons:TinkersConstruct:1.11.5-GTNH:dev')
     // tc
     compileOnly('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
     compileOnly('com.github.GTNewHorizons:ThaumicEnergistics:1.6.18-GTNH:dev') { transitive = false }
@@ -55,16 +55,16 @@ dependencies {
     compileOnly 'curse.maven:thaumcraft-nei-plugin-225095:2241913'
     compileOnly('com.github.GTNewHorizons:TCNEIAdditions:1.4.0:dev')
     // gt
-    compileOnly('com.github.GTNewHorizons:NewHorizonsCoreMod:2.6.59:dev')
-    compileOnly('com.github.GTNewHorizons:GT5-Unofficial:5.09.50.28:dev') {
+    compile('com.github.GTNewHorizons:GT5-Unofficial:5.09.51.06:dev'){
         exclude group: 'com.github.GTNewHorizons', module: 'AE2FluidCraft-Rework'
     }
-    compileOnly('com.github.GTNewHorizons:nei-custom-diagram:1.6.6:dev') { transitive = false }
+    compileOnly('com.github.GTNewHorizons:NewHorizonsCoreMod:2.6.59:dev')
+    compileOnly('com.github.GTNewHorizons:nei-custom-diagram:1.7.1:dev') { transitive = false }
 //    runtimeOnlyNonPublishable("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:GTNHLib:0.5.0:dev")
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:GTNHLib:0.5.22:dev")
     // lib
     compile('com.github.GTNewHorizons:Baubles:1.0.3:dev')
-    compileOnly("com.github.GTNewHorizons:GTNHLib:0.5.0:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:GTNHLib:0.5.22:dev") { transitive = false }
     compileOnly("com.github.GTNewHorizons:Hodgepodge:2.4.5:dev") { transitive = false }
     compileOnly('com.github.GTNewHorizons:BetterP2P:1.2.1:dev')
     compileOnly('com.github.GTNewHorizons:NotEnoughEnergistics:1.6.4:dev')
@@ -76,4 +76,64 @@ dependencies {
     // glodblock
     compileOnly("curse.maven:hbms-nuclear-tech-mod-235439:5534354")
     compileOnly(files("libs/hbmaeaddon-1.4-dev.jar"))
+
+    //programmablehatches
+    compileOnlyApi(files("libs/programmablehatches-0.1.1p5-dev.jar"))
+//    api("com.github.GTNewHorizons:NotEnoughEnergistics:1.6.4:dev")
+//    api("com.github.GTNewHorizons:OpenComputers:1.11.0-GTNH:dev")
+//
+//    api("com.github.GTNewHorizons:ForgeMultipart:1.5.0:dev") { transitive = false }
+//    api("com.github.GTNewHorizons:CraftTweaker:3.4.0:dev") { transitive = false }
+//    api("com.github.GTNewHorizons:ProjectRed:4.10.5-GTNH:dev")
+//    api("com.github.GTNewHorizons:MrTJPCore:1.2.1:dev")
+//
+//    api('com.github.GTNewHorizons:Navigator:1.0.15:dev')
+//    runtimeOnlyNonPublishable(rfg.deobf('maven.modrinth:journeymap:5.2.6'))
+//
+//    api("com.github.GTNewHorizons:ironchest:6.0.87:dev")
+//    runtimeOnlyNonPublishable("com.github.GTNewHorizons:DuraDisplay:1.3.4:dev")
+//    api("com.github.GTNewHorizons:AppleCore:3.3.4:dev") { transitive = false }
+//    api("com.github.GTNewHorizons:BuildCraft:7.1.39:dev") { transitive = false }
+//    api("com.github.GTNewHorizons:EnderIO:2.8.22:dev") { transitive = false }
+//    api("com.github.GTNewHorizons:ForestryMC:4.9.19:dev") { transitive = false }
+//    api("com.github.GTNewHorizons:ProjectRed:4.10.5-GTNH:dev") { transitive = false }
+//    api("com.github.GTNewHorizons:Railcraft:9.15.15:dev") { transitive = false }
+//    //compileOnly("TGregworks:TGregworks:1.7.10-GTNH-1.0.26:deobf") {transitive = false}
+//    compileOnly("com.github.GTNewHorizons:ThaumicBases:1.7.7:dev") { transitive = false }
+//    api("com.github.GTNewHorizons:EnderCore:0.4.6:dev") { transitive = false }
+//    compileOnly('com.github.GTNewHorizons:VisualProspecting:1.3.28:dev') { transitive = false }
+//    api("com.github.GTNewHorizons:Galaxy-Space-GTNH:1.1.100-GTNH:dev") { transitive = false }
+//
+//    api("com.github.GTNewHorizons:Galacticraft:3.2.8-GTNH:dev") { transitive = false }
+//    api("com.github.GTNewHorizons:TinkersConstruct:1.12.16-GTNH:dev")
+//
+//    api("com.github.GTNewHorizons:Chisel:2.15.3-GTNH:dev") { transitive = false }
+//    api("com.github.GTNewHorizons:Translocators:1.2.1:dev") { transitive = false }
+//    api rfg.deobf("curse.maven:cofh-core-69162:2388751")
+//    api("com.github.GTNewHorizons:Nuclear-Control:2.6.7:dev") { transitive = false }
+//    api("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev") { transitive = false }
+//    implementation("com.github.GTNewHorizons:Hodgepodge:2.6.0:dev")
+//    api('com.github.GTNewHorizons:Botania:1.12.1-GTNH:dev') { transitive = false }
+//    api('com.github.GTNewHorizons:HoloInventory:2.4.13-GTNH:dev') { transitive = false }
+//    api rfg.deobf("curse.maven:extra-utilities-225561:2264384")
+//    compileOnly rfg.deobf('curse.maven:minefactory-reloaded-66672:2366150')
+//    api("com.github.GTNewHorizons:OpenComputers:1.10.27-GTNH:dev") {transitive = false}
+//    // https://www.curseforge.com/minecraft/mc-mods/advancedsolarpanels
+//    api rfg.deobf('curse.maven:advsolar-362768:2885953')
+//    api('com.github.GTNewHorizons:ThaumicEnergistics:1.6.27-GTNH:dev') {transitive =  false}
+//    api("com.github.GTNewHorizons:BloodMagic:1.6.9:dev") { transitive = false }
+//    api("com.github.GTNewHorizons:CraftTweaker:3.4.0:dev") { transitive = false }
+//    compileOnly("com.github.GTNewHorizons:BetterLoadingScreen:1.7.0-GTNH:dev") { transitive = false }
+//    compileOnly rfg.deobf("curse.maven:biomes-o-plenty-220318:2499612")
+//
+//    compileOnly('com.github.GTNewHorizons:SC2:2.2.0:dev') {transitive=false}
+//    compileOnly('com.github.GTNewHorizons:Binnie:2.4.4:dev') {transitive = false}
+//    api('curse.maven:PlayerAPI-228969:2248928') {transitive=false}
+//    api('com.github.GTNewHorizons:BlockRenderer6343:1.2.16:dev'){transitive=false}
+//
+//    compileOnly("com.google.auto.value:auto-value-annotations:1.10.1") { transitive = false }
+//    annotationProcessor("com.google.auto.value:auto-value:1.10.1")
+//    devOnlyNonPublishable("com.github.GTNewHorizons:Infernal-Mobs:1.10.0-GTNH:dev")
+//
+//    api("com.github.GTNewHorizons:Avaritia:1.56:dev")
 }

@@ -3,13 +3,16 @@ package com.asdflj.ae2thing.coremod.hooker;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.parts.PartThaumatoriumInterface;
+import com.asdflj.ae2thing.common.tile.TileExIOPort;
 import com.asdflj.ae2thing.common.tile.TileInfusionInterface;
 import com.asdflj.ae2thing.inventory.EssentiaInventoryAdaptor;
 import com.asdflj.ae2thing.inventory.ThaumatoriumInventoryAdapter;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 
 import appeng.api.parts.IPart;
+import appeng.tile.storage.TileIOPort;
 import appeng.util.InventoryAdaptor;
 import thaumcraft.common.tiles.TileThaumatorium;
 
@@ -41,6 +44,15 @@ public class CoreModHooks {
                 tile.addToContainer(tile.currentSuction, ess);
             }
         }
+    }
+
+    public static long getItemsToMove(TileIOPort ioPort, long base) {
+        if (ioPort instanceof TileExIOPort) {
+            return Config.exIOPortTransferContentsRate * base;
+        } else {
+            return base;
+        }
+
     }
 
 }
