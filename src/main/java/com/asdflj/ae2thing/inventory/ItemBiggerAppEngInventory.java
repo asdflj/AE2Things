@@ -38,6 +38,11 @@ public class ItemBiggerAppEngInventory extends BiggerAppEngInventory {
     }
 
     @Override
+    public void markDirty(int slotIndex) {
+        this.markDirty();
+    }
+
+    @Override
     public void setInventorySlotContents(int slot, ItemStack newItemStack) {
         final ItemStack oldStack = this.inv[slot];
         this.inv[slot] = newItemStack;
