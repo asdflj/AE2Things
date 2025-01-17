@@ -5,6 +5,7 @@ import static codechicken.lib.gui.GuiDraw.getMousePosition;
 import java.awt.Point;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -19,6 +20,7 @@ import com.asdflj.ae2thing.loader.KeybindLoader;
 import com.asdflj.ae2thing.loader.ListenerLoader;
 import com.asdflj.ae2thing.loader.RenderLoader;
 import com.asdflj.ae2thing.nei.recipes.DefaultExtractorLoader;
+import com.asdflj.ae2thing.util.FindITUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 
 import codechicken.nei.LayoutManager;
@@ -43,6 +45,9 @@ public class ClientProxy extends CommonProxy {
             if (ModAndClassUtil.THE) {
                 ItemPhial.getItems()
                     .forEach(API::hideItem);
+            }
+            if (ModAndClassUtil.FIND_IT) {
+                FindITUtil.instance.run();
             }
         }
     }
@@ -93,4 +98,26 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
+    @SubscribeEvent
+    public void onClientPostTick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+
+        // `WorldClient` is only available on the client-side, thus effectively checking if the game is running on
+        // the client. We are only interested in highlighting slots when the player is in a GUI; the operation is
+        // bound client-side.
+        if (Minecraft.getMinecraft().theWorld == null) {
+            return;
+        }
+
+        // We are only interested in GUIs that contain some kind of inventory.
+        final GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+        if (!(screen instanceof GuiContainer)) {
+            return;
+        }
+        if (ModAndClassUtil.FIND_IT) {
+            FindITUtil.instance.highlighter();
+        }
+    }
 }
