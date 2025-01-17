@@ -30,11 +30,14 @@ import appeng.container.slot.SlotRestrictedInput;
 import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.guihook.IContainerDrawHandler;
 import codechicken.nei.guihook.IContainerInputHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class FindITUtil implements Runnable {
 
     private static SlotHighlighter slotHighlighter;
-    private List<CellPos> cellPosList = new ArrayList<CellPos>();
+    private final List<CellPos> cellPosList = new ArrayList<>();
     public static FindITUtil instance = new FindITUtil();
     private long expirationTime = 0;
 
