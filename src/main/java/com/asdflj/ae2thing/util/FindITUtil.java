@@ -3,6 +3,7 @@ package com.asdflj.ae2thing.util;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -15,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import org.jetbrains.annotations.NotNull;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
 import com.gtnh.findit.FindIt;
 import com.gtnh.findit.FindItConfig;
 import com.gtnh.findit.FindItNetwork;
@@ -55,10 +57,22 @@ public class FindITUtil implements Runnable {
         }
     }
 
-    public void setSlotHighlighter(List<CellPos> cellPosList) {
+    public void setSlotHighlighter(List<CellPos> cellPosList, boolean closeGui) {
         this.cellPosList.clear();
         this.cellPosList.addAll(cellPosList);
         this.expirationTime = System.currentTimeMillis() + FindItConfig.ITEM_HIGHLIGHTING_DURATION * 1000L;
+        List<DimensionalCoord> list = cellPosList.stream()
+            .map(CellPos::getCoord)
+            .collect(Collectors.toList());
+        BlockPosHighlighter.highlightBlocks(
+            Minecraft.getMinecraft().thePlayer,
+            list,
+            NameConst.NEI_FIND_CELL_ITEM_HIGHLIGHT,
+            NameConst.NEI_FIND_CELL_ITEM_IN_OTHER_DIM);
+        if (Minecraft.getMinecraft().currentScreen != null && closeGui) {
+            Minecraft.getMinecraft().thePlayer.closeScreen();
+        }
+
     }
 
     public void highlighter() {

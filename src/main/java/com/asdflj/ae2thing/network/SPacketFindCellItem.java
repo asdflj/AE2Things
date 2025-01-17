@@ -5,18 +5,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
 import com.asdflj.ae2thing.util.CellPos;
 import com.asdflj.ae2thing.util.FindITUtil;
-import com.asdflj.ae2thing.util.NameConst;
 
-import appeng.api.util.DimensionalCoord;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -69,16 +64,7 @@ public class SPacketFindCellItem implements IMessage {
 
         @Override
         public IMessage onMessage(SPacketFindCellItem message, MessageContext ctx) {
-            List<DimensionalCoord> list = message.cellPosList.stream()
-                .map(CellPos::getCoord)
-                .collect(Collectors.toList());
-            BlockPosHighlighter.highlightBlocks(
-                Minecraft.getMinecraft().thePlayer,
-                list,
-                NameConst.NEI_FIND_CELL_ITEM_HIGHLIGHT,
-                NameConst.NEI_FIND_CELL_ITEM_IN_OTHER_DIM);
-            FindITUtil.instance.setSlotHighlighter(message.cellPosList);
-            Minecraft.getMinecraft().thePlayer.closeScreen();
+            FindITUtil.instance.setSlotHighlighter(message.cellPosList, true);
             return null;
         }
     }
