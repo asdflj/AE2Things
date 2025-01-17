@@ -74,5 +74,9 @@ public class NameConst {
     public static final String GUI_FLUID_PACKET_ENCODER = GUI_KEY + "fluid_packet_encoder";
     public static final String GUI_MANA_IMPORT = GUI_KEY + ITEM_PART_MANA_IMPORT;
     public static final String GUI_MANA_EXPORT = GUI_KEY + ITEM_PART_MANA_EXPORT;
+    public static final String NEI_kEY = AE2Thing.MODID + ".nei.";
+    public static final String NEI_FIND_CELL_ITEM = NEI_kEY + "find_cell_item.";
+    public static final String NEI_FIND_CELL_ITEM_HIGHLIGHT = NEI_FIND_CELL_ITEM + "highlight";
+    public static final String NEI_FIND_CELL_ITEM_IN_OTHER_DIM = NEI_FIND_CELL_ITEM + "in_other_dim";
 
 }

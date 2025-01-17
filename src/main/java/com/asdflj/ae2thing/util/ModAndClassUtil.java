@@ -26,7 +26,7 @@ public final class ModAndClassUtil {
     public static boolean CORE_MOD = false;
     public static boolean TIC = false;
     public static boolean PH = false;
-
+    public static boolean FIND_IT = false;
     public static boolean isTypeFilter;
     public static boolean isCraftStatus;
     public static boolean isDoubleButton;
@@ -83,5 +83,6 @@ public final class ModAndClassUtil {
         if (Loader.isModLoaded("hbmaeaddon")) HBM_AE_ADDON = true;
         if (Loader.isModLoaded("TConstruct")) TIC = true;
         if (Loader.isModLoaded("programmablehatches")) PH = true;
+        if (Loader.isModLoaded("findit")) FIND_IT = true;
     }
 }

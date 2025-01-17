@@ -21,6 +21,7 @@ import com.asdflj.ae2thing.Tags;
 import com.asdflj.ae2thing.common.fluids.Mana;
 import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
+import com.asdflj.ae2thing.network.CPacketFindCellItem;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
@@ -183,6 +184,11 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     @Override
     public Fluid getMana() {
         return Mana;
+    }
+
+    @Override
+    public void findCellItem(ItemStack item) {
+        AE2Thing.proxy.netHandler.sendToServer(new CPacketFindCellItem(item));
     }
 
 }

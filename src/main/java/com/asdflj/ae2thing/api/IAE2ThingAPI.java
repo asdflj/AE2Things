@@ -53,4 +53,6 @@ public interface IAE2ThingAPI {
     String getVersion();
 
     Fluid getMana();
+
+    void findCellItem(ItemStack item);
 }
