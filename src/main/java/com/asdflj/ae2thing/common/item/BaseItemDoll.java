@@ -7,18 +7,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-import com.asdflj.ae2thing.common.block.BaseBlockContainer;
+import com.asdflj.ae2thing.common.block.BaseDollBlockContainer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemFishBig extends ItemBlock {
+public class BaseItemDoll extends ItemBlock {
 
-    private final BaseBlockContainer blockType;
+    private final BaseDollBlockContainer blockType;
 
-    public ItemFishBig(Block id) {
+    public BaseItemDoll(Block id) {
         super(id);
-        this.blockType = (BaseBlockContainer) id;
+        this.blockType = (BaseDollBlockContainer) id;
     }
 
     @Override

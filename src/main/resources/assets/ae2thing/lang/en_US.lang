@@ -11,6 +11,7 @@ item.part_mana_import.name=ME Mana Import Bus
 item.wireless_dual_interface_terminal.name=ME Wireless Dual Interface Terminal
 item.wireless_connector_terminal.name=ME Wireless Connector Terminal
 tile.fishbig.name=FishBig
+tile.MDDyue.name=MDDyue
 tile.essentia_discretizer.name=Essentia Discretizer
 tile.infusion_interface.name=ME Infusion Interface
 tile.ex_io_port.name=ME Extended IO Port

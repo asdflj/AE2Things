@@ -3,9 +3,9 @@ package com.asdflj.ae2thing.loader;
 import static com.asdflj.ae2thing.common.item.ItemCreativeFluidCell.lava_bucket;
 import static com.asdflj.ae2thing.common.item.ItemCreativeFluidCell.water_bucket;
 
+import com.asdflj.ae2thing.common.block.BaseDollBlockContainer;
 import com.asdflj.ae2thing.common.block.BlockEssentiaDiscretizer;
 import com.asdflj.ae2thing.common.block.BlockExIOPort;
-import com.asdflj.ae2thing.common.block.BlockFishBig;
 import com.asdflj.ae2thing.common.block.BlockFluidPacketEncoder;
 import com.asdflj.ae2thing.common.block.BlockInfusionInterface;
 import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
@@ -52,7 +52,10 @@ public class ItemAndBlockHolder implements Runnable {
         lava_bucket).register();
     public static BlockExIOPort EX_IO_PORT = new BlockExIOPort().register();
 
-    public static BlockFishBig BLOCK_FISH_BIG = new BlockFishBig().register();
+    public static BaseDollBlockContainer BLOCK_FISHBIG = new BaseDollBlockContainer(NameConst.BLOCK_FISHBIG)
+        .register();
+
+    public static BaseDollBlockContainer BLOCK_MDDyue = new BaseDollBlockContainer(NameConst.BLOCK_MDDyue).register();
 
     @Override
     public void run() {

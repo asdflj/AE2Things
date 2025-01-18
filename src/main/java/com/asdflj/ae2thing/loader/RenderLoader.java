@@ -1,11 +1,12 @@
 package com.asdflj.ae2thing.loader;
 
-import com.asdflj.ae2thing.client.render.ItemFishBigRender;
+import com.asdflj.ae2thing.client.render.ItemDollRender;
 
 public class RenderLoader implements Runnable {
 
     @Override
     public void run() {
-        new ItemFishBigRender();
+        new ItemDollRender(ItemAndBlockHolder.BLOCK_FISHBIG);
+        new ItemDollRender(ItemAndBlockHolder.BLOCK_MDDyue);
     }
 }

@@ -1,13 +1,21 @@
 package com.asdflj.ae2thing.client.render;
 
-import static com.asdflj.ae2thing.client.render.ItemFishBigRender.render;
-
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-public class RenderBlockFishBig extends TileEntitySpecialRenderer {
+import com.asdflj.ae2thing.common.block.BaseDollBlockContainer;
+
+public class RenderDollBlock extends TileEntitySpecialRenderer {
+
+    private final ItemDollRender render;
+
+    public RenderDollBlock(ItemDollRender itemDollRender) {
+        super();
+        this.render = itemDollRender;
+
+    }
 
     @Override
     public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float partialTickTime) {
@@ -21,7 +29,10 @@ public class RenderBlockFishBig extends TileEntitySpecialRenderer {
         } else if (orientation == 3) {
             GL11.glRotatef(180, 0, 1, 0);
         }
-        render(true);
+        if (tileentity.blockType instanceof BaseDollBlockContainer doll) {
+            this.render.render(true, doll.name);
+        }
+
         GL11.glPopMatrix();
     }
 }

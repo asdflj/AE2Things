@@ -19,6 +19,7 @@ public class NameConst {
     public static final String ITEM_PART_MANA_IMPORT = "part_mana_import";
     public static final String ITEM_PART_MANA_EXPORT = "part_mana_export";
     public static final String BLOCK_FISHBIG = "fishbig";
+    public static final String BLOCK_MDDyue = "MDDyue";
     public static final String BLOCK_ESSENTIA_DISCRETIZER = "essentia_discretizer";
     public static final String BLOCK_FLUID_PACKET_ENCODER = "fluid_packet_encoder";
     public static final String BLOCK_INFUSION_INTERFACE = "infusion_interface";
