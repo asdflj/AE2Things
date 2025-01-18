@@ -1,33 +1,39 @@
 package com.asdflj.ae2thing.common.block;
 
+import java.util.List;
+
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-import com.asdflj.ae2thing.common.item.ItemFishBig;
+import com.asdflj.ae2thing.common.item.BaseItemDoll;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
-import com.asdflj.ae2thing.common.tile.TileFishBig;
+import com.asdflj.ae2thing.common.tile.TileDoll;
 import com.asdflj.ae2thing.loader.IRegister;
-import com.asdflj.ae2thing.util.NameConst;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class BlockFishBig extends BaseBlockContainer implements IRegister<BlockFishBig> {
+public class BaseDollBlockContainer extends BlockContainer implements IRegister<BaseDollBlockContainer> {
 
-    public BlockFishBig() {
+    public String name;
+
+    public BaseDollBlockContainer(String name) {
         super(Material.iron);
-        this.setBlockName(NameConst.BLOCK_FISHBIG);
+        this.name = name;
+        this.setBlockName(this.name);
         this.setHardness(2.0f);
         this.setResistance(10.0F);
     }
 
     @Override
-    public BlockFishBig register() {
-        GameRegistry.registerBlock(this, ItemFishBig.class, NameConst.BLOCK_FISHBIG);
-        GameRegistry.registerTileEntity(TileFishBig.class, NameConst.BLOCK_FISHBIG);
+    public BaseDollBlockContainer register() {
+        GameRegistry.registerBlock(this, BaseItemDoll.class, this.name);
+        GameRegistry.registerTileEntity(TileDoll.class, this.name);
         setCreativeTab(AE2ThingTabs.INSTANCE);
         return this;
     }
@@ -70,7 +76,13 @@ public class BlockFishBig extends BaseBlockContainer implements IRegister<BlockF
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileFishBig();
+        return new TileDoll();
     }
 
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> toolTip,
+        boolean advancedToolTips) {}
+
+    public ItemStack stack() {
+        return new ItemStack(this, 1);
+    }
 }

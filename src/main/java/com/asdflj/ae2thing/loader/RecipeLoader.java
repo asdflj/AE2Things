@@ -1,7 +1,8 @@
 package com.asdflj.ae2thing.loader;
 
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BACKPACK_MANAGER;
-import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BLOCK_FISH_BIG;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BLOCK_FISHBIG;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BLOCK_MDDyue;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ESSENTIA_DISCRETIZER;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.EX_IO_PORT;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.FLUID_PACKET_ENCODER;
@@ -47,6 +48,7 @@ public class RecipeLoader implements Runnable {
     public static final ItemStack CRAFTING_TABLE = new ItemStack(Blocks.crafting_table, 1);
     public static final ItemStack DIAMOND = new ItemStack(Items.diamond, 1);
     public static final ItemStack FISH = new ItemStack(Items.fish);
+    public static final ItemStack EGG = new ItemStack(Items.egg);
     public static final ItemStack AE2_PATTERN_TERM = new ItemStack(
         GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"),
         1,
@@ -174,7 +176,8 @@ public class RecipeLoader implements Runnable {
                 com.glodblock.github.loader.ItemAndBlockHolder.FLUID_EXPORT_BUS.stack(),
                 MANA_EXPORT_BUS.stack());
         }
-        GameRegistry.addRecipe(new ShapedOreRecipe(BLOCK_FISH_BIG.stack(), "FFF", "F F", "FFF", 'F', FISH));
+        GameRegistry.addRecipe(new ShapedOreRecipe(BLOCK_FISHBIG.stack(), "FFF", "F F", "FFF", 'F', FISH));
+        GameRegistry.addRecipe(new ShapedOreRecipe(BLOCK_MDDyue.stack(), "EEE", "E E", "EEE", 'E',EGG));
         GameRegistry.addRecipe(
             new ShapelessOreRecipe(ITEM_CREATIVE_WATER_CELL, CELL_HOUSING.stack(1, 1), CellType.Cell64kPart.stack(1)));
     }

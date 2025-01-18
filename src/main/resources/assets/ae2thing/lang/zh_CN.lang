@@ -11,6 +11,7 @@ item.part_mana_import.name=ME魔力输入总线
 item.wireless_dual_interface_terminal.name=ME无线二合一接口终端
 item.wireless_connector_terminal.name=ME无线连接终端
 tile.fishbig.name=鱼大
+tile.MDDyue.name=猫蛋蛋
 tile.essentia_discretizer.name=源质离散器
 tile.infusion_interface.name=ME注魔接口
 tile.ex_io_port.name=ME扩展IO端口
