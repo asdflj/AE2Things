@@ -177,7 +177,7 @@ public class RecipeLoader implements Runnable {
                 MANA_EXPORT_BUS.stack());
         }
         GameRegistry.addRecipe(new ShapedOreRecipe(BLOCK_FISHBIG.stack(), "FFF", "F F", "FFF", 'F', FISH));
-        GameRegistry.addRecipe(new ShapedOreRecipe(BLOCK_MDDyue.stack(), "EEE", "E E", "EEE", 'E',EGG));
+        GameRegistry.addRecipe(new ShapedOreRecipe(BLOCK_MDDyue.stack(), "EEE", "E E", "EEE", 'E', EGG));
         GameRegistry.addRecipe(
             new ShapelessOreRecipe(ITEM_CREATIVE_WATER_CELL, CELL_HOUSING.stack(1, 1), CellType.Cell64kPart.stack(1)));
     }

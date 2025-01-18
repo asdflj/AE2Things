@@ -44,7 +44,7 @@ dependencies {
     api('com.github.GTNewHorizons:ae2stuff:0.9.0-GTNH:dev')
 
     // nei findit
-    compile('com.github.GTNewHorizons:FindIt:1.3.10:dev')
+    compileOnly('com.github.GTNewHorizons:FindIt:1.3.10:dev')
 
     //backpack
     compile('com.github.GTNewHorizons:AdventureBackpack2:1.1.3-GTNH:dev')

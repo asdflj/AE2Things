@@ -52,8 +52,7 @@ public class ItemAndBlockHolder implements Runnable {
         lava_bucket).register();
     public static BlockExIOPort EX_IO_PORT = new BlockExIOPort().register();
 
-    public static BaseDollBlockContainer BLOCK_FISHBIG = new BaseDollBlockContainer(NameConst.BLOCK_FISHBIG)
-        .register();
+    public static BaseDollBlockContainer BLOCK_FISHBIG = new BaseDollBlockContainer(NameConst.BLOCK_FISHBIG).register();
 
     public static BaseDollBlockContainer BLOCK_MDDyue = new BaseDollBlockContainer(NameConst.BLOCK_MDDyue).register();
 
