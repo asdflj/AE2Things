@@ -31,10 +31,8 @@ public class ItemDollRender implements IItemRenderer {
         private final ResourceLocation hair;
         private final ResourceLocation hair2;
         private final ResourceLocation head;
-        private final String name;
 
         public Resource(String name) {
-            this.name = name;
             leg = new ResourceLocation(AE2Thing.MODID, String.format("textures/blocks/%s/leg.png", name));
             leg2 = new ResourceLocation(AE2Thing.MODID, String.format("textures/blocks/%s/leg2.png", name));
             arm = new ResourceLocation(AE2Thing.MODID, String.format("textures/blocks/%s/arm.png", name));
@@ -48,7 +46,7 @@ public class ItemDollRender implements IItemRenderer {
 
     public static IModelCustom modelDoll = AdvancedModelLoader.loadModel(AE2Thing.resource("models/doll.obj"));
     public static HashMap<String, Resource> resources = new HashMap<>();
-    private String name;
+    private final String name;
 
     public ItemDollRender(BaseDollBlockContainer blockContainer) {
         this.name = blockContainer.name;
