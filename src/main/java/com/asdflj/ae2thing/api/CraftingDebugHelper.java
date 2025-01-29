@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -182,5 +183,9 @@ public class CraftingDebugHelper implements ICraftingCallback {
 
     public static HashMap<Long, LimitedSizeLinkedList<CraftingInfo>> getHistory() {
         return history;
+    }
+
+    public static CraftingDebugCardObject getObject(ItemStack itemStack) {
+        return new CraftingDebugCardObject(itemStack);
     }
 }

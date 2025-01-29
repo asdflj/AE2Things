@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.CraftingDebugCardObject;
+import com.asdflj.ae2thing.api.CraftingDebugHelper;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
 import com.asdflj.ae2thing.util.NameConst;
 
@@ -40,7 +41,7 @@ public class ItemCraftingDebugCard extends BaseItem {
     public boolean onItemUseFirst(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side,
         float hitX, float hitY, float hitZ) {
         if (player.isSneaking()) {
-            CraftingDebugCardObject obj = new CraftingDebugCardObject(itemstack);
+            CraftingDebugCardObject obj = CraftingDebugHelper.getObject(itemstack);
             obj.setMode(obj.getNextMode());
             if (Platform.isServer()) {
                 player.addChatComponentMessage(
@@ -50,7 +51,7 @@ public class ItemCraftingDebugCard extends BaseItem {
         } else if (Platform.isServer()) {
             TileEntity te = world.getTileEntity(x, y, z);
             if (te instanceof TileController tc) {
-                CraftingDebugCardObject obj = new CraftingDebugCardObject(itemstack);
+                CraftingDebugCardObject obj = CraftingDebugHelper.getObject(itemstack);
                 obj.sendMessageToPlayer(tc, player);
             }
         }
@@ -70,7 +71,7 @@ public class ItemCraftingDebugCard extends BaseItem {
     @Override
     protected void addCheckedInformation(ItemStack stack, EntityPlayer player, List<String> toolTip,
         boolean displayMoreInfo) {
-        CraftingDebugCardObject obj = new CraftingDebugCardObject(stack);
+        CraftingDebugCardObject obj = CraftingDebugHelper.getObject(stack);
         toolTip.add(I18n.format(NameConst.CRAFTING_DEBUG_CARD_NAME_CURRENT_MODE) + " " + getMode(obj));
     }
 }
