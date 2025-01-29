@@ -29,6 +29,7 @@ public interface Constants {
     String OUTPUT_EX = "output_ex";
     String UPGRADES = "upgrades";
     String PLAYER = "player";
+    String DEBUG_CARD_MODE = "debug_card_mode";
     int MODE_CRAFTING = 1;
     int MODE_PROCESSING = 0;
 }

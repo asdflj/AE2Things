@@ -23,12 +23,15 @@ import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.network.CPacketFindCellItem;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
+import com.asdflj.ae2thing.util.Ae2Reflect;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 import com.glodblock.github.util.Util;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.me.Grid;
+import appeng.util.ReadableNumberConverter;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -46,6 +49,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     private StorageManager storageManager = null;
     private final List<IAEItemStack> pinItems = new ArrayList<>();
     private ItemStack fluidContainer = BUCKET;
+    public static final ReadableNumberConverter readableNumber = ReadableNumberConverter.INSTANCE;
 
     public static AE2ThingAPI instance() {
         return API;
@@ -189,6 +193,18 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     @Override
     public void findCellItem(ItemStack item) {
         AE2Thing.proxy.netHandler.sendToServer(new CPacketFindCellItem(item));
+    }
+
+    @Override
+    public long getStorageMyID(Grid grid) {
+        return Ae2Reflect.getMyStorage(grid)
+            .getID();
+    }
+
+    @Override
+    public CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> getHistory(Grid grid) {
+        return CraftingDebugHelper.getHistory()
+            .getOrDefault(getStorageMyID(grid), new CraftingDebugHelper.LimitedSizeLinkedList<>());
     }
 
 }

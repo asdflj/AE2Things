@@ -10,6 +10,7 @@ item.part_mana_export.name=ME Mana Export Bus
 item.part_mana_import.name=ME Mana Import Bus
 item.wireless_dual_interface_terminal.name=ME Wireless Dual Interface Terminal
 item.wireless_connector_terminal.name=ME Wireless Connector Terminal
+item.crafting_debug_card.name=Crafting Debug Card
 tile.fishbig.name=FishBig
 tile.MDDyue.name=MDDyue
 tile.essentia_discretizer.name=Essentia Discretizer
@@ -25,6 +26,19 @@ ae2thing.tooltip.wireless_dual_interface_terminal.desc=Dual interface terminal, 
 ae2thing.tooltip.cell_link.desc=You can right click to open link gui to link other cell,\nIt will link every same uuid cell,\nAbuse cell link may lead to lag.
 ae2thing.tooltip.cell_link.disable=Link cell is disable
 ae2thing.tooltip.fluid_packet_encoder.desc=The Fluid Encoder can encode fluid packets. Use pipe to extract fluid packet. It has to be connected to a ME System and a place to store the liquid in otherwise it won't work.
+
+ae2thing.message.crafting_debug_card.request_type=Request type: 
+ae2thing.message.crafting_debug_card.request_type.machine=Machine
+ae2thing.message.crafting_debug_card.request_type.player=Player
+ae2thing.message.crafting_debug_card.request_type.everything=Everything
+ae2thing.message.crafting_debug_card.start_time=Start time: 
+ae2thing.message.crafting_debug_card.usage_time=Crafting simulate usage time: 
+ae2thing.message.crafting_debug_card.name=Name: 
+ae2thing.message.crafting_debug_card.network_id=Network ID: 
+ae2thing.message.crafting_debug_card.pos=Pos: %s, %s, %s
+ae2thing.message.crafting_debug_card.stack=Item name: %s Size: %s
+ae2thing.message.crafting_debug_card.no_history=Current ME network no crafting history
+ae2thing.crafting_debug_card.current_mode=Current Mode: 
 
 ae2thing.magnet.off=Off
 ae2thing.magnet.inv=Pickup to inventory

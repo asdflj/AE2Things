@@ -8,6 +8,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import appeng.api.util.DimensionalCoord;
+
 public class BlockPos {
 
     private final int x;
@@ -34,6 +36,10 @@ public class BlockPos {
         this.y = te.yCoord;
         this.z = te.zCoord;
         this.w = te.getWorldObj();
+    }
+
+    public BlockPos(DimensionalCoord dimensionalCoord) {
+        this(dimensionalCoord.x, dimensionalCoord.y, dimensionalCoord.z, dimensionalCoord.getWorld());
     }
 
     public BlockPos getOffSet(ForgeDirection face) {

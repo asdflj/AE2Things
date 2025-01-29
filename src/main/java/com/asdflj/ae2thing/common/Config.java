@@ -20,6 +20,7 @@ public class Config {
     public static boolean wirelessConnectorTerminalInfinityConnectionRange = true;
     public static int exIOPortTransferContentsRate;
     public static boolean backpackTerminalAddTicSupport = false;
+    public static int craftingHistorySize = 100;
 
     public static void run() {
         loadCategory();
@@ -57,6 +58,8 @@ public class Config {
             "Set Ex IO Port Transfer Rate. Base transfer quantity = 256. Make sure you have enough power to transfer stack.");
         backpackTerminalAddTicSupport = Config
             .getBoolean("Tic", AE2Thing.NAME, false, "Let Backpack Terminal can forge tic tool");
+        craftingHistorySize = Config
+            .getInt("crafting history size", AE2Thing.NAME, 200, 100, 300, "crafting history size");
         if (Config.hasChanged()) Config.save();
     }
 

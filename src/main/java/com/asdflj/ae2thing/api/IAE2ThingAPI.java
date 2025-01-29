@@ -12,6 +12,7 @@ import com.asdflj.ae2thing.common.storage.StorageManager;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.me.Grid;
 
 @SuppressWarnings("unused")
 public interface IAE2ThingAPI {
@@ -55,4 +56,8 @@ public interface IAE2ThingAPI {
     Fluid getMana();
 
     void findCellItem(ItemStack item);
+
+    long getStorageMyID(Grid grid);
+
+    CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> getHistory(Grid grid);
 }

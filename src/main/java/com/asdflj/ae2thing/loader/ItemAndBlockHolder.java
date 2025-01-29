@@ -9,6 +9,7 @@ import com.asdflj.ae2thing.common.block.BlockExIOPort;
 import com.asdflj.ae2thing.common.block.BlockFluidPacketEncoder;
 import com.asdflj.ae2thing.common.block.BlockInfusionInterface;
 import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
+import com.asdflj.ae2thing.common.item.ItemCraftingDebugCard;
 import com.asdflj.ae2thing.common.item.ItemCreativeFluidCell;
 import com.asdflj.ae2thing.common.item.ItemInfinityStorageCell;
 import com.asdflj.ae2thing.common.item.ItemInfinityStorageFluidCell;
@@ -30,6 +31,7 @@ public class ItemAndBlockHolder implements Runnable {
     public static ItemBackpackTerminal BACKPACK_MANAGER = new ItemBackpackTerminal().register();
     public static ItemPartInfusionPatternTerminal INFUSION_PATTERN_TERMINAL;
     public static ItemPartThaumatoriumInterface THAUMATRIUM_INTERFACE;
+    public static ItemCraftingDebugCard CRAFTING_DEBUG_CARD = new ItemCraftingDebugCard().register();
     public static BlockInfusionInterface INFUSION_INTERFACE;
     public static ItemPhial PHIAL;
     public static ItemManaImportBus MANA_IMPORT_BUS;
