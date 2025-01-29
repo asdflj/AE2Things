@@ -4,8 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
+import appeng.api.util.DimensionalCoord;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -31,10 +35,10 @@ import appeng.parts.AEBasePart;
 import appeng.util.Platform;
 
 public class CraftingDebugHelper implements ICraftingCallback {
-
     private static final HashMap<Long, LimitedSizeLinkedList<CraftingInfo>> history = new HashMap<>();
     private static final int LIMIT = Config.craftingHistorySize;
     private final CraftingInfo info;
+    private final ICraftingCallback callback;
 
     public static class LimitedSizeLinkedList<E> extends LinkedList<E> {
 
@@ -73,7 +77,7 @@ public class CraftingDebugHelper implements ICraftingCallback {
         public final CraftingMode mode;
         public boolean isPlayer;
         public long requestSize;
-        public ForgeDirection direction;
+        public ForgeDirection direction = ForgeDirection.UNKNOWN;
 
         private String getName(IActionHost via, String name) {
             if (via instanceof ICustomNameObject o) {
@@ -116,8 +120,73 @@ public class CraftingDebugHelper implements ICraftingCallback {
             this.requestSize = item.getStackSize();
         }
 
+        public CraftingInfo(long id,String name,long startTime,long endTime,String itemName,byte mode,long requestSize,byte direction,boolean isPlayer,BlockPos pos) {
+            this.id = id;
+            this.name = name;
+            this.startTime = startTime;
+            this.endTime = endTime;
+            this.itemName = itemName;
+            this.requestSize = requestSize;
+            this.mode = CraftingMode.values()[mode];
+            this.direction = ForgeDirection.getOrientation(direction);
+            this.isPlayer = isPlayer;
+            this.pos = pos;
+        }
+
         public boolean isPart() {
-            return this.direction != null;
+            return this.direction != ForgeDirection.UNKNOWN;
+        }
+
+        public void writeToNBT(NBTTagCompound tag){
+            tag.setLong("nid",this.id);
+            tag.setString("name",this.name);
+            tag.setLong("startTime",this.startTime);
+            tag.setLong("endTime",this.endTime);
+            tag.setString("itemName",this.itemName);
+            tag.setByte("mode", (byte) this.mode.ordinal());
+            tag.setLong("requestSize",this.requestSize);
+            tag.setByte("direction", (byte) this.direction.ordinal());
+            tag.setBoolean("isPlayer",this.isPlayer);
+            if(!this.isPlayer) this.pos.getDimensionalCoord().writeToNBT(tag);
+        }
+
+        public static void writeToNBTList(List<CraftingInfo> infos,NBTTagCompound tag,long networkID){
+            NBTTagList list = new NBTTagList();
+            for (CraftingInfo info : infos) {
+                NBTTagCompound data = new NBTTagCompound();
+                info.writeToNBT(data);
+                list.appendTag(data);
+            }
+            tag.setTag("infos", list);
+            tag.setInteger("size", infos.size());
+            tag.setLong("networkID", networkID);
+        }
+        public static LimitedSizeLinkedList<CraftingInfo> readFromNBTList(NBTTagCompound tag){
+            LimitedSizeLinkedList<CraftingInfo> infos = new LimitedSizeLinkedList<>();
+            NBTTagList list = tag.getTagList("infos", 10);
+            for (int i = 0; i < list.tagCount(); i++) {
+                NBTTagCompound data = list.getCompoundTagAt(i);
+                infos.add(CraftingInfo.readFromNBT(data));
+            }
+            return infos;
+        }
+
+        public static CraftingInfo readFromNBT(NBTTagCompound tag){
+            long id = tag.getLong("nid");
+            String name = tag.getString("name");
+            long startTime = tag.getLong("startTime");
+            long endTime = tag.getLong("endTime");
+            String itemName = tag.getString("itemName");
+            byte mode = tag.getByte("mode");
+            long requestSize = tag.getLong("requestSize");
+            byte direction = tag.getByte("direction");
+            boolean isPlayer = tag.getBoolean("isPlayer");
+            BlockPos pos = null;
+            if(isPlayer){
+                DimensionalCoord dimensionalCoord =  DimensionalCoord.readFromNBT(tag);
+                pos = new BlockPos(dimensionalCoord);
+            }
+            return new CraftingInfo(id,name,startTime,endTime,itemName,mode,requestSize,direction,isPlayer,pos);
         }
 
         public void setStartTime(long startTime) {
@@ -149,7 +218,7 @@ public class CraftingDebugHelper implements ICraftingCallback {
     }
 
     public CraftingDebugHelper(final World world, final IGrid meGrid, final BaseActionSource actionSource,
-        final IAEItemStack what, final CraftingMode craftingMode) {
+        final IAEItemStack what, final CraftingMode craftingMode,ICraftingCallback callback) {
         long id = AE2ThingAPI.instance()
             .getStorageMyID((Grid) meGrid);
         history.putIfAbsent(id, new LimitedSizeLinkedList<>());
@@ -162,14 +231,13 @@ public class CraftingDebugHelper implements ICraftingCallback {
         this.info.setStartTime(System.currentTimeMillis());
         history.get(id)
             .add(info);
+        this.callback = callback;
     }
 
     public static void craftingHelper(final CraftingJobV2 jobV2, final World world, final IGrid meGrid,
         final BaseActionSource actionSource, final IAEItemStack what, final CraftingMode craftingMode,
         final ICraftingCallback callback) {
-        if (callback == null) {
-            Ae2Reflect.setCallback(jobV2, new CraftingDebugHelper(world, meGrid, actionSource, what, craftingMode));
-        }
+        Ae2Reflect.setCallback(jobV2, new CraftingDebugHelper(world, meGrid, actionSource, what, craftingMode,callback));
     }
 
     public static void remove(GridStorage gridStorage) {
@@ -179,6 +247,7 @@ public class CraftingDebugHelper implements ICraftingCallback {
     @Override
     public void calculationComplete(ICraftingJob job) {
         this.info.setEndTime(System.currentTimeMillis());
+        this.callback.calculationComplete(job);
     }
 
     public static HashMap<Long, LimitedSizeLinkedList<CraftingInfo>> getHistory() {

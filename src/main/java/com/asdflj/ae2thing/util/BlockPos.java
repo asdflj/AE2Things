@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -45,6 +46,10 @@ public class BlockPos {
     public BlockPos getOffSet(ForgeDirection face) {
         return new BlockPos(this.x + face.offsetX, this.y + face.offsetY, this.z + face.offsetZ, this.w);
     }
+    public DimensionalCoord getDimensionalCoord() {
+        return new DimensionalCoord(this.w,this.x,this.y,this.z);
+    }
+
 
     public BlockPos getOffSet(int x, int y, int z) {
         return new BlockPos(this.x + x, this.y + y, this.z + z, this.w);

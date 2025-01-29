@@ -207,4 +207,9 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
             .getOrDefault(getStorageMyID(grid), new CraftingDebugHelper.LimitedSizeLinkedList<>());
     }
 
+    @Override
+    public void pushHistory(long networkID, CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos) {
+        CraftingDebugHelper.getHistory().remove(networkID);
+        CraftingDebugHelper.getHistory().put(networkID, infos);
+    }
 }

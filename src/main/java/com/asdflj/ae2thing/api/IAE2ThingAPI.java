@@ -60,4 +60,6 @@ public interface IAE2ThingAPI {
     long getStorageMyID(Grid grid);
 
     CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> getHistory(Grid grid);
+
+    void pushHistory(long networkID, CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos);
 }
