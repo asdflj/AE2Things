@@ -208,8 +208,11 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     }
 
     @Override
-    public void pushHistory(long networkID, CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos) {
-        CraftingDebugHelper.getHistory().remove(networkID);
-        CraftingDebugHelper.getHistory().put(networkID, infos);
+    public void pushHistory(long networkID,
+        CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos) {
+        CraftingDebugHelper.getHistory()
+            .remove(networkID);
+        CraftingDebugHelper.getHistory()
+            .put(networkID, infos);
     }
 }

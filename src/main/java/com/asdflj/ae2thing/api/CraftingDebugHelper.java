@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import appeng.api.util.DimensionalCoord;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -27,6 +26,7 @@ import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.util.DimensionalCoord;
 import appeng.crafting.v2.CraftingJobV2;
 import appeng.helpers.ICustomNameObject;
 import appeng.me.Grid;
@@ -35,6 +35,7 @@ import appeng.parts.AEBasePart;
 import appeng.util.Platform;
 
 public class CraftingDebugHelper implements ICraftingCallback {
+
     private static final HashMap<Long, LimitedSizeLinkedList<CraftingInfo>> history = new HashMap<>();
     private static final int LIMIT = Config.craftingHistorySize;
     private final CraftingInfo info;
@@ -120,7 +121,8 @@ public class CraftingDebugHelper implements ICraftingCallback {
             this.requestSize = item.getStackSize();
         }
 
-        public CraftingInfo(long id,String name,long startTime,long endTime,String itemName,byte mode,long requestSize,byte direction,boolean isPlayer,BlockPos pos) {
+        public CraftingInfo(long id, String name, long startTime, long endTime, String itemName, byte mode,
+            long requestSize, byte direction, boolean isPlayer, BlockPos pos) {
             this.id = id;
             this.name = name;
             this.startTime = startTime;
@@ -137,20 +139,21 @@ public class CraftingDebugHelper implements ICraftingCallback {
             return this.direction != ForgeDirection.UNKNOWN;
         }
 
-        public void writeToNBT(NBTTagCompound tag){
-            tag.setLong("nid",this.id);
-            tag.setString("name",this.name);
-            tag.setLong("startTime",this.startTime);
-            tag.setLong("endTime",this.endTime);
-            tag.setString("itemName",this.itemName);
+        public void writeToNBT(NBTTagCompound tag) {
+            tag.setLong("nid", this.id);
+            tag.setString("name", this.name);
+            tag.setLong("startTime", this.startTime);
+            tag.setLong("endTime", this.endTime);
+            tag.setString("itemName", this.itemName);
             tag.setByte("mode", (byte) this.mode.ordinal());
-            tag.setLong("requestSize",this.requestSize);
+            tag.setLong("requestSize", this.requestSize);
             tag.setByte("direction", (byte) this.direction.ordinal());
-            tag.setBoolean("isPlayer",this.isPlayer);
-            if(!this.isPlayer) this.pos.getDimensionalCoord().writeToNBT(tag);
+            tag.setBoolean("isPlayer", this.isPlayer);
+            if (!this.isPlayer) this.pos.getDimensionalCoord()
+                .writeToNBT(tag);
         }
 
-        public static void writeToNBTList(List<CraftingInfo> infos,NBTTagCompound tag,long networkID){
+        public static void writeToNBTList(List<CraftingInfo> infos, NBTTagCompound tag, long networkID) {
             NBTTagList list = new NBTTagList();
             for (CraftingInfo info : infos) {
                 NBTTagCompound data = new NBTTagCompound();
@@ -161,7 +164,8 @@ public class CraftingDebugHelper implements ICraftingCallback {
             tag.setInteger("size", infos.size());
             tag.setLong("networkID", networkID);
         }
-        public static LimitedSizeLinkedList<CraftingInfo> readFromNBTList(NBTTagCompound tag){
+
+        public static LimitedSizeLinkedList<CraftingInfo> readFromNBTList(NBTTagCompound tag) {
             LimitedSizeLinkedList<CraftingInfo> infos = new LimitedSizeLinkedList<>();
             NBTTagList list = tag.getTagList("infos", 10);
             for (int i = 0; i < list.tagCount(); i++) {
@@ -171,7 +175,7 @@ public class CraftingDebugHelper implements ICraftingCallback {
             return infos;
         }
 
-        public static CraftingInfo readFromNBT(NBTTagCompound tag){
+        public static CraftingInfo readFromNBT(NBTTagCompound tag) {
             long id = tag.getLong("nid");
             String name = tag.getString("name");
             long startTime = tag.getLong("startTime");
@@ -182,11 +186,21 @@ public class CraftingDebugHelper implements ICraftingCallback {
             byte direction = tag.getByte("direction");
             boolean isPlayer = tag.getBoolean("isPlayer");
             BlockPos pos = null;
-            if(isPlayer){
-                DimensionalCoord dimensionalCoord =  DimensionalCoord.readFromNBT(tag);
+            if (isPlayer) {
+                DimensionalCoord dimensionalCoord = DimensionalCoord.readFromNBT(tag);
                 pos = new BlockPos(dimensionalCoord);
             }
-            return new CraftingInfo(id,name,startTime,endTime,itemName,mode,requestSize,direction,isPlayer,pos);
+            return new CraftingInfo(
+                id,
+                name,
+                startTime,
+                endTime,
+                itemName,
+                mode,
+                requestSize,
+                direction,
+                isPlayer,
+                pos);
         }
 
         public void setStartTime(long startTime) {
@@ -218,7 +232,7 @@ public class CraftingDebugHelper implements ICraftingCallback {
     }
 
     public CraftingDebugHelper(final World world, final IGrid meGrid, final BaseActionSource actionSource,
-        final IAEItemStack what, final CraftingMode craftingMode,ICraftingCallback callback) {
+        final IAEItemStack what, final CraftingMode craftingMode, ICraftingCallback callback) {
         long id = AE2ThingAPI.instance()
             .getStorageMyID((Grid) meGrid);
         history.putIfAbsent(id, new LimitedSizeLinkedList<>());
@@ -237,7 +251,8 @@ public class CraftingDebugHelper implements ICraftingCallback {
     public static void craftingHelper(final CraftingJobV2 jobV2, final World world, final IGrid meGrid,
         final BaseActionSource actionSource, final IAEItemStack what, final CraftingMode craftingMode,
         final ICraftingCallback callback) {
-        Ae2Reflect.setCallback(jobV2, new CraftingDebugHelper(world, meGrid, actionSource, what, craftingMode,callback));
+        Ae2Reflect
+            .setCallback(jobV2, new CraftingDebugHelper(world, meGrid, actionSource, what, craftingMode, callback));
     }
 
     public static void remove(GridStorage gridStorage) {
