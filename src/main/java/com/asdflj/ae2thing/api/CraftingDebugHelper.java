@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.api;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,7 +16,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.util.Ae2Reflect;
-import com.asdflj.ae2thing.util.BlockPos;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.annotations.Expose;
 
 import appeng.api.config.CraftingMode;
 import appeng.api.networking.IGrid;
@@ -69,15 +78,23 @@ public class CraftingDebugHelper implements ICraftingCallback {
 
     public static class CraftingInfo {
 
+        @Expose
         public String name = "";
-        public BlockPos pos;
+        @Expose
+        public DimensionalCoord pos;
+        @Expose
         public long startTime = 0;
+        @Expose
         public long endTime = 0;
+        @Expose
         public final String itemName;
         public final long id;
         public final CraftingMode mode;
+        @Expose
         public boolean isPlayer;
+        @Expose
         public long requestSize;
+        @Expose
         public ForgeDirection direction = ForgeDirection.UNKNOWN;
 
         private String getName(IActionHost via, String name) {
@@ -97,14 +114,14 @@ public class CraftingDebugHelper implements ICraftingCallback {
                 this.isPlayer = true;
             } else if (actionSource instanceof MachineSource ms) {
                 if (ms.via instanceof AEBasePart part) {
-                    this.pos = new BlockPos(part.getLocation());
+                    this.pos = part.getLocation();
                     this.name = getName(
                         ms.via,
                         part.getItemStack()
                             .getDisplayName());
                     this.direction = part.getSide();
                 } else if (ms.via instanceof TileEntity te) {
-                    this.pos = new BlockPos(te);
+                    this.pos = new DimensionalCoord(te);
                     this.name = getName(
                         ms.via,
                         te.getBlockType()
@@ -122,7 +139,7 @@ public class CraftingDebugHelper implements ICraftingCallback {
         }
 
         public CraftingInfo(long id, String name, long startTime, long endTime, String itemName, byte mode,
-            long requestSize, byte direction, boolean isPlayer, BlockPos pos) {
+            long requestSize, byte direction, boolean isPlayer, DimensionalCoord pos) {
             this.id = id;
             this.name = name;
             this.startTime = startTime;
@@ -149,8 +166,7 @@ public class CraftingDebugHelper implements ICraftingCallback {
             tag.setLong("requestSize", this.requestSize);
             tag.setByte("direction", (byte) this.direction.ordinal());
             tag.setBoolean("isPlayer", this.isPlayer);
-            if (!this.isPlayer) this.pos.getDimensionalCoord()
-                .writeToNBT(tag);
+            if (!this.isPlayer && this.pos != null) this.pos.writeToNBT(tag);
         }
 
         public static void writeToNBTList(List<CraftingInfo> infos, NBTTagCompound tag, long networkID) {
@@ -185,10 +201,9 @@ public class CraftingDebugHelper implements ICraftingCallback {
             long requestSize = tag.getLong("requestSize");
             byte direction = tag.getByte("direction");
             boolean isPlayer = tag.getBoolean("isPlayer");
-            BlockPos pos = null;
-            if (isPlayer) {
-                DimensionalCoord dimensionalCoord = DimensionalCoord.readFromNBT(tag);
-                pos = new BlockPos(dimensionalCoord);
+            DimensionalCoord pos = null;
+            if (!isPlayer) {
+                pos = DimensionalCoord.readFromNBT(tag);
             }
             return new CraftingInfo(
                 id,
@@ -262,7 +277,9 @@ public class CraftingDebugHelper implements ICraftingCallback {
     @Override
     public void calculationComplete(ICraftingJob job) {
         this.info.setEndTime(System.currentTimeMillis());
-        this.callback.calculationComplete(job);
+        if (this.callback != null) {
+            this.callback.calculationComplete(job);
+        }
     }
 
     public static HashMap<Long, LimitedSizeLinkedList<CraftingInfo>> getHistory() {
@@ -271,5 +288,34 @@ public class CraftingDebugHelper implements ICraftingCallback {
 
     public static CraftingDebugCardObject getObject(ItemStack itemStack) {
         return new CraftingDebugCardObject(itemStack);
+    }
+
+    public static Gson getGson() {
+        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+            .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+            .registerTypeAdapter(ForgeDirection.class, new ForgeDirectionSerializer())
+            .registerTypeAdapter(DimensionalCoord.class, new DimensionalCoordSerializer())
+            .create();
+    }
+
+    private static class ForgeDirectionSerializer implements JsonSerializer<ForgeDirection> {
+
+        public JsonElement serialize(ForgeDirection src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.name());
+        }
+    }
+
+    private static class DimensionalCoordSerializer implements JsonSerializer<DimensionalCoord> {
+
+        @Override
+        public JsonElement serialize(DimensionalCoord src, Type typeOfSrc, JsonSerializationContext context) {
+            if (src == null) return null;
+            JsonObject o = new JsonObject();
+            o.addProperty("X", src.x);
+            o.addProperty("Y", src.y);
+            o.addProperty("Z", src.z);
+            o.addProperty("Dim", src.getDimension());
+            return o;
+        }
     }
 }

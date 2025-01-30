@@ -97,7 +97,8 @@ public class NameConst {
     public static final String MESSAGE_CRAFTING_DEBUG_CARD_POS = MESSAGE_CRAFTING_DEBUG_CARD + "pos";
     public static final String MESSAGE_CRAFTING_DEBUG_CARD_STACK = MESSAGE_CRAFTING_DEBUG_CARD + "stack";
     public static final String MESSAGE_CRAFTING_DEBUG_CARD_NO_HISTORY = MESSAGE_CRAFTING_DEBUG_CARD + "no_history";
-    public static final String CRAFTING_DEBUG_CARD_NAME_CURRENT_MODE = AE2Thing.MODID
-        + ".crafting_debug_card.current_mode";
+    public static final String CRAFTING_DEBUG_CARD = AE2Thing.MODID + ".crafting_debug_card.";
+    public static final String CRAFTING_DEBUG_CARD_CURRENT_MODE = CRAFTING_DEBUG_CARD + "current_mode";
+    public static final String CRAFTING_DEBUG_CARD_EXPORT_FILE = CRAFTING_DEBUG_CARD + "export_file";
 
 }

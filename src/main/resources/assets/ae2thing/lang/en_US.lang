@@ -35,10 +35,11 @@ ae2thing.message.crafting_debug_card.start_time=Start time:
 ae2thing.message.crafting_debug_card.usage_time=Crafting simulate usage time: 
 ae2thing.message.crafting_debug_card.name=Name: 
 ae2thing.message.crafting_debug_card.network_id=Network ID: 
-ae2thing.message.crafting_debug_card.pos=Pos: %s, %s, %s
+ae2thing.message.crafting_debug_card.pos=Pos: X: %s, Y: %s, Z: %s Dimension: %s
 ae2thing.message.crafting_debug_card.stack=Item name: %s Size: %s
 ae2thing.message.crafting_debug_card.no_history=Current ME network no crafting history
 ae2thing.crafting_debug_card.current_mode=Current Mode: 
+ae2thing.crafting_debug_card.export_file=Full crafting history export to %s
 
 ae2thing.magnet.off=Off
 ae2thing.magnet.inv=Pickup to inventory

@@ -16,6 +16,7 @@ import com.asdflj.ae2thing.network.CPacketSwitchGuis;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.network.CPacketTransferRecipe;
 import com.asdflj.ae2thing.network.CPacketValueConfig;
+import com.asdflj.ae2thing.network.SPacketCraftingDebugCardUpdate;
 import com.asdflj.ae2thing.network.SPacketFindCellItem;
 import com.asdflj.ae2thing.network.SPacketMEFluidInvUpdate;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
@@ -43,6 +44,11 @@ public class ChannelLoader implements Runnable {
         netHandler.registerMessage(
             new SPacketWirelessConnectorUpdate.Handler(),
             SPacketWirelessConnectorUpdate.class,
+            id++,
+            Side.CLIENT);
+        netHandler.registerMessage(
+            new SPacketCraftingDebugCardUpdate.Handler(),
+            SPacketCraftingDebugCardUpdate.class,
             id++,
             Side.CLIENT);
         netHandler.registerMessage(new SPacketSwitchBack.Handler(), SPacketSwitchBack.class, id++, Side.CLIENT);

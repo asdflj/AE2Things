@@ -3,18 +3,26 @@ package com.asdflj.ae2thing.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 
+import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.network.SPacketCraftingDebugCardUpdate;
 import com.asdflj.ae2thing.util.NameConst;
 
 import appeng.me.Grid;
 import appeng.tile.networking.TileController;
 import appeng.util.Platform;
 import appeng.util.ReadableNumberConverter;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class CraftingDebugCardObject {
 
@@ -48,29 +56,58 @@ public class CraftingDebugCardObject {
             .ordinal() + 1) % Mode.values().length];
     }
 
-    public void sendMessageToPlayer(TileController tc, EntityPlayer player) {
-        try {
-            Grid grid = (Grid) tc.getProxy()
-                .getGrid();
-            List<String> text = getHistoryText(grid);
-            if (!text.isEmpty()) {
-                for (String s : text) {
-                    player.addChatComponentMessage(new ChatComponentText(s));
-                }
-            } else {
-                player.addChatComponentMessage(
-                    new ChatComponentText(I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_NO_HISTORY)));
+    @SideOnly(Side.CLIENT)
+    public static void sendMessageToPlayer(long networkID, Mode mode) {
+        CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos = AE2ThingAPI.instance()
+            .getHistory(networkID);
+        if (infos.isEmpty()) return;
+        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        List<String> text = getHistoryText(infos, mode);
+        if (!text.isEmpty()) {
+            for (String s : text) {
+                player.addChatComponentMessage(new ChatComponentText(s));
             }
-        } catch (Exception ignored) {}
+        } else {
+            player.addChatComponentMessage(
+                new ChatComponentText(I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_NO_HISTORY)));
+        }
     }
 
-    public List<String> getHistoryText(Grid grid) {
+    public void sendRecordToPlayer(Grid grid, EntityPlayer player) {
+        if (grid == null) return;
+        long id = AE2ThingAPI.instance()
+            .getStorageMyID(grid);
+        if (FMLCommonHandler.instance()
+            .getSide() == Side.SERVER) {
+            AE2Thing.proxy.netHandler.sendTo(
+                new SPacketCraftingDebugCardUpdate(
+                    id,
+                    AE2ThingAPI.instance()
+                        .getHistory(grid),
+                    this.getMode()),
+                (EntityPlayerMP) player);
+        } else {
+            sendMessageToPlayer(id, this.getMode());
+            AE2ThingAPI.instance()
+                .saveHistory();
+        }
+    }
+
+    public Grid getGrid(TileController tc) {
+        try {
+            return (Grid) tc.getProxy()
+                .getGrid();
+        } catch (Exception ignored) {}
+        return null;
+    }
+
+    @SideOnly(Side.CLIENT)
+    private static List<String> getHistoryText(
+        CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> history, Mode mode) {
         List<String> msg = new ArrayList<>();
-        CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> history = AE2ThingAPI.instance()
-            .getHistory(grid);
         for (CraftingDebugHelper.CraftingInfo info : history) {
-            if (this.getMode() == Mode.Player && !info.isPlayer) continue;
-            if (this.getMode() == Mode.Machine && info.isPlayer) continue;
+            if (mode == Mode.Player && !info.isPlayer) continue;
+            if (mode == Mode.Machine && info.isPlayer) continue;
             msg.add("------------------------------------------------");
             msg.add(I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_NETWORK_ID) + info.getNetworkID());
             msg.add(
@@ -81,9 +118,10 @@ public class CraftingDebugCardObject {
                 msg.add(
                     I18n.format(
                         NameConst.MESSAGE_CRAFTING_DEBUG_CARD_POS,
-                        info.pos.getX(),
-                        info.pos.getY(),
-                        info.pos.getZ()));
+                        info.pos.x,
+                        info.pos.y,
+                        info.pos.z,
+                        info.pos.getDimension()));
             }
             msg.add(I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_NAME) + info.name);
             msg.add(I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_START_TIME) + info.getFormatStartTime());
