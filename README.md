@@ -31,5 +31,7 @@ Can easily manage ae2 stuff wireless connector
 ![wireless_connector.png](blob/wireless_connector.png)</br>
 **ME Fluid Packet Encoder**</br>
 ![fluid_packet_encoder.gif](blob/fluid_packet_encoder.gif)</br>
+**Crafting Debug Card**</br>
+![crafting_debug_card.gif](blob/crafting_debug_card.gif)</br>
 FishBig and MDDyue
 ![doll_2.png](blob/doll_2.png)
