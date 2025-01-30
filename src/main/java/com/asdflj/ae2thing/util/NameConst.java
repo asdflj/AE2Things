@@ -18,6 +18,7 @@ public class NameConst {
     public static final String ITEM_PHIAL = "phial";
     public static final String ITEM_PART_MANA_IMPORT = "part_mana_import";
     public static final String ITEM_PART_MANA_EXPORT = "part_mana_export";
+    public static final String ITEM_CRAFTING_DEBUG_CARD = "crafting_debug_card";
     public static final String BLOCK_FISHBIG = "fishbig";
     public static final String BLOCK_MDDyue = "MDDyue";
     public static final String BLOCK_ESSENTIA_DISCRETIZER = "essentia_discretizer";
@@ -36,6 +37,8 @@ public class NameConst {
     public static final String TT_CRAFTING_COMPLETE = TT_KEY + "crafting_complete";
     public static final String TT_INTERFACE_TERMINAL = TT_KEY + "wireless_dual_interface_terminal.";
     public static final String TT_INTERFACE_TERMINAL_DESC = TT_INTERFACE_TERMINAL + "desc";
+    public static final String TT_CRAFTING_DEBUG_CARD = TT_KEY + "crafting_debug_card.";
+    public static final String TT_CRAFTING_DEBUG_CARD_DESC = TT_CRAFTING_DEBUG_CARD + "desc";
     public static final String TT_FLUID_PACKET_ENCODER = TT_KEY + "fluid_packet_encoder.";
     public static final String TT_FLUID_PACKET_ENCODER_DESC = TT_FLUID_PACKET_ENCODER + "desc";
 
@@ -75,9 +78,29 @@ public class NameConst {
     public static final String GUI_FLUID_PACKET_ENCODER = GUI_KEY + "fluid_packet_encoder";
     public static final String GUI_MANA_IMPORT = GUI_KEY + ITEM_PART_MANA_IMPORT;
     public static final String GUI_MANA_EXPORT = GUI_KEY + ITEM_PART_MANA_EXPORT;
-    public static final String NEI_kEY = AE2Thing.MODID + ".nei.";
-    public static final String NEI_FIND_CELL_ITEM = NEI_kEY + "find_cell_item.";
+    public static final String NEI_KEY = AE2Thing.MODID + ".nei.";
+    public static final String NEI_FIND_CELL_ITEM = NEI_KEY + "find_cell_item.";
     public static final String NEI_FIND_CELL_ITEM_HIGHLIGHT = NEI_FIND_CELL_ITEM + "highlight";
     public static final String NEI_FIND_CELL_ITEM_IN_OTHER_DIM = NEI_FIND_CELL_ITEM + "in_other_dim";
+
+    public static final String MESSAGE_KEY = AE2Thing.MODID + ".message.";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD = MESSAGE_KEY + "crafting_debug_card.";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_REQUEST_TYPE = MESSAGE_CRAFTING_DEBUG_CARD + "request_type";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_REQUEST_TYPE_MACHINE = MESSAGE_CRAFTING_DEBUG_CARD_REQUEST_TYPE
+        + ".machine";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_REQUEST_TYPE_PLAYER = MESSAGE_CRAFTING_DEBUG_CARD_REQUEST_TYPE
+        + ".player";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_REQUEST_TYPE_EVERYTHING = MESSAGE_CRAFTING_DEBUG_CARD_REQUEST_TYPE
+        + ".everything";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_NAME = MESSAGE_CRAFTING_DEBUG_CARD + "name";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_START_TIME = MESSAGE_CRAFTING_DEBUG_CARD + "start_time";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_USAGE_TIME = MESSAGE_CRAFTING_DEBUG_CARD + "usage_time";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_NETWORK_ID = MESSAGE_CRAFTING_DEBUG_CARD + "network_id";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_POS = MESSAGE_CRAFTING_DEBUG_CARD + "pos";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_STACK = MESSAGE_CRAFTING_DEBUG_CARD + "stack";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_NO_HISTORY = MESSAGE_CRAFTING_DEBUG_CARD + "no_history";
+    public static final String CRAFTING_DEBUG_CARD = AE2Thing.MODID + ".crafting_debug_card.";
+    public static final String CRAFTING_DEBUG_CARD_CURRENT_MODE = CRAFTING_DEBUG_CARD + "current_mode";
+    public static final String CRAFTING_DEBUG_CARD_EXPORT_FILE = CRAFTING_DEBUG_CARD + "export_file";
 
 }

@@ -2,15 +2,21 @@ package com.asdflj.ae2thing.api;
 
 import static net.minecraft.init.Items.glass_bottle;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -23,12 +29,17 @@ import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.network.CPacketFindCellItem;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
+import com.asdflj.ae2thing.util.Ae2Reflect;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.NameConst;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 import com.glodblock.github.util.Util;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.me.Grid;
+import appeng.util.ReadableNumberConverter;
+import cpw.mods.fml.relauncher.FMLInjectionData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -46,6 +57,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     private StorageManager storageManager = null;
     private final List<IAEItemStack> pinItems = new ArrayList<>();
     private ItemStack fluidContainer = BUCKET;
+    public static final ReadableNumberConverter readableNumber = ReadableNumberConverter.INSTANCE;
 
     public static AE2ThingAPI instance() {
         return API;
@@ -189,6 +201,51 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     @Override
     public void findCellItem(ItemStack item) {
         AE2Thing.proxy.netHandler.sendToServer(new CPacketFindCellItem(item));
+    }
+
+    @Override
+    public long getStorageMyID(Grid grid) {
+        return Ae2Reflect.getMyStorage(grid)
+            .getID();
+    }
+
+    @Override
+    public CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> getHistory(Grid grid) {
+        return CraftingDebugHelper.getHistory()
+            .getOrDefault(getStorageMyID(grid), new CraftingDebugHelper.LimitedSizeLinkedList<>());
+    }
+
+    @Override
+    public CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> getHistory(long networkID) {
+        return CraftingDebugHelper.getHistory()
+            .getOrDefault(networkID, new CraftingDebugHelper.LimitedSizeLinkedList<>());
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void pushHistory(long networkID,
+        CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos) {
+        CraftingDebugHelper.getHistory()
+            .clear();
+        CraftingDebugHelper.getHistory()
+            .put(networkID, infos);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void saveHistory() {
+        if (CraftingDebugHelper.getHistory()
+            .isEmpty()) return;
+        String json = CraftingDebugHelper.getGson()
+            .toJson(CraftingDebugHelper.getHistory());
+        File file = new File((File) FMLInjectionData.data()[6], Constants.DEBUG_CARD_EXPORT_FILENAME);
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(json);
+            EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+            player.addChatComponentMessage(
+                new ChatComponentText(
+                    I18n.format(NameConst.CRAFTING_DEBUG_CARD_EXPORT_FILE, Constants.DEBUG_CARD_EXPORT_FILENAME)));
+        } catch (Exception ignored) {}
     }
 
 }

@@ -6,6 +6,7 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 
+import com.asdflj.ae2thing.coremod.transform.CraftingJobV2Transformer;
 import com.asdflj.ae2thing.coremod.transform.FluidConvertingInventoryAdaptorTransformer;
 import com.asdflj.ae2thing.coremod.transform.GuiDualInterfaceTransformer;
 import com.asdflj.ae2thing.coremod.transform.PlatformTransformer;
@@ -23,6 +24,7 @@ public class ClassTransformer implements IClassTransformer {
             case "thaumcraft.common.tiles.TileThaumatorium" -> tform = TileThaumatoriumTransformer.INSTANCE;
             case "com.glodblock.github.client.gui.GuiDualInterface" -> tform = GuiDualInterfaceTransformer.INSTANCE;
             case "appeng.tile.storage.TileIOPort" -> tform = TileIOPortTransformer.INSTANCE;
+            case "appeng.crafting.v2.CraftingJobV2", "appeng.me.GridStorage" -> tform = CraftingJobV2Transformer.INSTANCE;
             default -> {
                 return code;
             }

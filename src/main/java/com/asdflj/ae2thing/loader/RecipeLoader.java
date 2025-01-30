@@ -3,6 +3,7 @@ package com.asdflj.ae2thing.loader;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BACKPACK_MANAGER;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BLOCK_FISHBIG;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.BLOCK_MDDyue;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.CRAFTING_DEBUG_CARD;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ESSENTIA_DISCRETIZER;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.EX_IO_PORT;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.FLUID_PACKET_ENCODER;
@@ -80,9 +81,23 @@ public class RecipeLoader implements Runnable {
         GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
         1,
         56);
+    public static final ItemStack AE2_MEMORY_CARD = AEApi.instance()
+        .definitions()
+        .items()
+        .memoryCard()
+        .maybeStack(1)
+        .get();
+
+    public static final ItemStack AE2_CRAFTING_CARD = AEApi.instance()
+        .definitions()
+        .materials()
+        .cardCrafting()
+        .maybeStack(1)
+        .get();
 
     @Override
     public void run() {
+        GameRegistry.addShapelessRecipe(CRAFTING_DEBUG_CARD.stack(), AE2_MEMORY_CARD, AE2_CRAFTING_CARD);
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
                 BACKPACK_MANAGER.stack(),

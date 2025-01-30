@@ -27,6 +27,7 @@ import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
+import com.mojang.authlib.GameProfile;
 
 import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
@@ -34,6 +35,7 @@ import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.DimensionalCoord;
+import appeng.core.worlddata.WorldData;
 import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.util.Platform;
 import cpw.mods.fml.common.ModContainer;
@@ -46,6 +48,13 @@ public class Util {
 
     public static boolean isSameDimensionalCoord(DimensionalCoord a, DimensionalCoord b) {
         return a != null && b != null && a.x == b.x && a.y == b.y && a.z == b.z && a.getDimension() == b.getDimension();
+    }
+
+    public static int getPlayerID(EntityPlayer player) {
+        final GameProfile profile = player.getGameProfile();
+        return WorldData.instance()
+            .playerData()
+            .getPlayerID(profile);
     }
 
     private static int randTickSeed = 0;

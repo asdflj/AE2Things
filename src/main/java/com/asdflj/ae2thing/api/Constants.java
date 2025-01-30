@@ -29,6 +29,8 @@ public interface Constants {
     String OUTPUT_EX = "output_ex";
     String UPGRADES = "upgrades";
     String PLAYER = "player";
+    String DEBUG_CARD_MODE = "debug_card_mode";
+    String DEBUG_CARD_EXPORT_FILENAME = "history.json";
     int MODE_CRAFTING = 1;
     int MODE_PROCESSING = 0;
 }
