@@ -38,7 +38,7 @@ ae2thing.message.crafting_debug_card.network_id=网络ID:
 ae2thing.message.crafting_debug_card.pos=位置: %s, %s, %s 维度: %s
 ae2thing.message.crafting_debug_card.stack=物品名字: %s 数量: %s
 ae2thing.message.crafting_debug_card.no_history=当前模式ME网络没有合成记录
-ae2thing.crafting_debug_card.current_mode=当前模式: 
+ae2thing.crafting_debug_card.current_mode=模式: 
 ae2thing.crafting_debug_card.export_file=所有合成历史记录导出到 §4%s§r
 
 ae2thing.magnet.off=关闭
