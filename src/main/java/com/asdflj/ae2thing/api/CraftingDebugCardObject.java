@@ -26,7 +26,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class CraftingDebugCardObject {
 
-    private final ItemStack item;
     private final NBTTagCompound data;
     private Mode currentMode;
 
@@ -37,7 +36,6 @@ public class CraftingDebugCardObject {
     }
 
     public CraftingDebugCardObject(ItemStack itemStack) {
-        this.item = itemStack;
         this.data = Platform.openNbtData(itemStack);
         this.currentMode = Mode.values()[this.data.getByte(Constants.DEBUG_CARD_MODE)];
     }
@@ -105,10 +103,10 @@ public class CraftingDebugCardObject {
     private static List<String> getHistoryText(
         CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> history, Mode mode) {
         List<String> msg = new ArrayList<>();
+        if (history.isEmpty()) return msg;
         for (CraftingDebugHelper.CraftingInfo info : history) {
             if (mode == Mode.Player && !info.isPlayer) continue;
             if (mode == Mode.Machine && info.isPlayer) continue;
-            msg.add("------------------------------------------------");
             msg.add(I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_NETWORK_ID) + info.getNetworkID());
             msg.add(
                 I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_REQUEST_TYPE) + I18n.format(
@@ -134,6 +132,9 @@ public class CraftingDebugCardObject {
                     info.itemName,
                     ReadableNumberConverter.INSTANCE.toSlimReadableForm(info.requestSize)));
             msg.add("------------------------------------------------");
+        }
+        if (!msg.isEmpty()) {
+            msg.add(0, "------------------------------------------------");
         }
         return msg;
     }

@@ -1,5 +1,7 @@
 package com.asdflj.ae2thing.common.item;
 
+import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
+
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
@@ -14,6 +16,7 @@ import com.asdflj.ae2thing.api.CraftingDebugCardObject;
 import com.asdflj.ae2thing.api.CraftingDebugHelper;
 import com.asdflj.ae2thing.common.tabs.AE2ThingTabs;
 import com.asdflj.ae2thing.util.NameConst;
+import com.glodblock.github.util.RenderUtil;
 
 import appeng.tile.networking.TileController;
 import appeng.util.Platform;
@@ -69,9 +72,14 @@ public class ItemCraftingDebugCard extends BaseItem {
     }
 
     @Override
-    protected void addCheckedInformation(ItemStack stack, EntityPlayer player, List<String> toolTip,
+    protected void addCheckedInformation(ItemStack stack, EntityPlayer player, List<String> lines,
         boolean displayMoreInfo) {
         CraftingDebugCardObject obj = CraftingDebugHelper.getObject(stack);
-        toolTip.add(I18n.format(NameConst.CRAFTING_DEBUG_CARD_CURRENT_MODE) + " " + getMode(obj));
+        lines.add(I18n.format(NameConst.CRAFTING_DEBUG_CARD_CURRENT_MODE) + " " + getMode(obj));
+        if (isShiftKeyDown()) {
+            lines.addAll(RenderUtil.listFormattedStringToWidth(I18n.format(NameConst.TT_CRAFTING_DEBUG_CARD_DESC)));
+        } else {
+            lines.add(I18n.format(NameConst.TT_SHIFT_FOR_MORE));
+        }
     }
 }
