@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 
+import com.asdflj.ae2thing.inventory.item.INetworkTerminal;
 import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 
 import appeng.api.config.Actionable;
@@ -13,6 +14,7 @@ import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.storage.ITerminalHost;
 import appeng.container.AEBaseContainer;
 import appeng.container.guisync.GuiSync;
+import appeng.me.helpers.ChannelPowerSrc;
 import appeng.util.Platform;
 
 public class BaseNetworkContainer extends AEBaseContainer {
@@ -28,8 +30,16 @@ public class BaseNetworkContainer extends AEBaseContainer {
     public BaseNetworkContainer(InventoryPlayer ip, ITerminalHost host) {
         super(ip, host);
         this.player = ip.player;
+        if (Platform.isClient()) return;
         if (host instanceof WirelessTerminal) {
             this.terminal = (WirelessTerminal) host;
+            this.setPowerSource(this.terminal);
+        } else if (this instanceof INetworkTerminal it) {
+            this.setPowerSource(
+                new ChannelPowerSrc(
+                    it.getGridNode(),
+                    it.getGrid()
+                        .getCache(IEnergyGrid.class)));
         }
     }
 
@@ -40,7 +50,6 @@ public class BaseNetworkContainer extends AEBaseContainer {
 
     protected void updatePowerStatus() {
         try {
-            if (this.terminal == null) return;
             if (this.getNetworkNode() != null) {
                 this.setPowered(
                     this.getNetworkNode()
@@ -56,6 +65,7 @@ public class BaseNetworkContainer extends AEBaseContainer {
     }
 
     private IGridNode getNetworkNode() {
+        if (this.terminal == null) return null;
         return this.terminal.getGridNode();
     }
 

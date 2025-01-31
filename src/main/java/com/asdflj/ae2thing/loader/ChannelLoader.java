@@ -1,72 +1,102 @@
 package com.asdflj.ae2thing.loader;
 
+import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.world.World;
 
 import com.asdflj.ae2thing.AE2Thing;
-import com.asdflj.ae2thing.network.CPacketCraftRequest;
-import com.asdflj.ae2thing.network.CPacketFindCellItem;
-import com.asdflj.ae2thing.network.CPacketFluidUpdate;
-import com.asdflj.ae2thing.network.CPacketInventoryAction;
-import com.asdflj.ae2thing.network.CPacketNEIRecipe;
-import com.asdflj.ae2thing.network.CPacketPatternValueSet;
-import com.asdflj.ae2thing.network.CPacketRenamer;
-import com.asdflj.ae2thing.network.CPacketSwitchGuis;
-import com.asdflj.ae2thing.network.CPacketTerminalBtns;
-import com.asdflj.ae2thing.network.CPacketTransferRecipe;
-import com.asdflj.ae2thing.network.CPacketValueConfig;
-import com.asdflj.ae2thing.network.SPacketCraftingDebugCardUpdate;
-import com.asdflj.ae2thing.network.SPacketFindCellItem;
-import com.asdflj.ae2thing.network.SPacketMEFluidInvUpdate;
-import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
-import com.asdflj.ae2thing.network.SPacketSetItemAmount;
-import com.asdflj.ae2thing.network.SPacketStringUpdate;
-import com.asdflj.ae2thing.network.SPacketSwitchBack;
-import com.asdflj.ae2thing.network.SPacketWirelessConnectorUpdate;
 import com.asdflj.ae2thing.network.wrapper.AE2ThingNetworkWrapper;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.relauncher.Side;
 
 public class ChannelLoader implements Runnable {
 
     public static final ChannelLoader INSTANCE = new ChannelLoader();
 
+    public static Set<Class<?>> getClasses(String packageName) throws IOException {
+        ClassLoader classLoader = Thread.currentThread()
+            .getContextClassLoader();
+        assert classLoader != null;
+        String path = packageName.replace('.', '/');
+        Enumeration<URL> resources = classLoader.getResources(path);
+        Set<Class<?>> classes = new LinkedHashSet<>();
+        while (resources.hasMoreElements()) {
+            URL resource = resources.nextElement();
+            if ("jar".equals(resource.getProtocol())) {
+                processJarFile(classes, resource, packageName);
+            }
+        }
+        return classes;
+    }
+
+    private static void processJarFile(Set<Class<?>> classes, URL jarFileUrl, String packageName) {
+        JarFile jarFile = null;
+        try {
+            JarURLConnection jarURLConnection = (JarURLConnection) jarFileUrl.openConnection();
+            if (jarURLConnection != null) {
+                jarFile = jarURLConnection.getJarFile();
+                if (jarFile != null) {
+                    Enumeration<JarEntry> jarEntries = jarFile.entries();
+                    while (jarEntries.hasMoreElements()) {
+                        JarEntry jarEntry = jarEntries.nextElement();
+                        String jarEntryName = jarEntry.getName();
+                        if (jarEntryName.startsWith(packageName.replace('.', '/') + '/')
+                            && jarEntryName.endsWith(".class")) {
+                            String className = jarEntryName.substring(0, jarEntryName.lastIndexOf("."))
+                                .replaceAll("/", ".");
+                            try {
+                                classes.add(Class.forName(className));
+                            } catch (ClassNotFoundException ignored) {
+
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException ignored) {} finally {
+            if (jarFile != null) {
+                try {
+                    jarFile.close();
+                } catch (IOException ignored) {}
+            }
+        }
+    }
+
     @Override
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void run() {
         int id = 0;
         AE2ThingNetworkWrapper netHandler = AE2Thing.proxy.netHandler;
-        netHandler
-            .registerMessage(new SPacketMEItemInvUpdate.Handler(), SPacketMEItemInvUpdate.class, id++, Side.CLIENT);
-        netHandler
-            .registerMessage(new SPacketMEFluidInvUpdate.Handler(), SPacketMEFluidInvUpdate.class, id++, Side.CLIENT);
-        netHandler.registerMessage(new SPacketSetItemAmount.Handler(), SPacketSetItemAmount.class, id++, Side.CLIENT);
-        netHandler.registerMessage(
-            new SPacketWirelessConnectorUpdate.Handler(),
-            SPacketWirelessConnectorUpdate.class,
-            id++,
-            Side.CLIENT);
-        netHandler.registerMessage(
-            new SPacketCraftingDebugCardUpdate.Handler(),
-            SPacketCraftingDebugCardUpdate.class,
-            id++,
-            Side.CLIENT);
-        netHandler.registerMessage(new SPacketSwitchBack.Handler(), SPacketSwitchBack.class, id++, Side.CLIENT);
-        netHandler.registerMessage(new SPacketStringUpdate.Handler(), SPacketStringUpdate.class, id++, Side.CLIENT);
-        netHandler.registerMessage(new SPacketFindCellItem.Handler(), SPacketFindCellItem.class, id++, Side.CLIENT);
-        netHandler.registerMessage(new CPacketNEIRecipe.Handler(), CPacketNEIRecipe.class, id++, Side.SERVER);
-        netHandler.registerMessage(new CPacketSwitchGuis.Handler(), CPacketSwitchGuis.class, id++, Side.SERVER);
-        netHandler.registerMessage(new CPacketFluidUpdate.Handler(), CPacketFluidUpdate.class, id++, Side.SERVER);
-        netHandler.registerMessage(new CPacketTerminalBtns.Handler(), CPacketTerminalBtns.class, id++, Side.SERVER);
-        netHandler
-            .registerMessage(new CPacketPatternValueSet.Handler(), CPacketPatternValueSet.class, id++, Side.SERVER);
-        netHandler
-            .registerMessage(new CPacketInventoryAction.Handler(), CPacketInventoryAction.class, id++, Side.SERVER);
-        netHandler.registerMessage(new CPacketCraftRequest.Handler(), CPacketCraftRequest.class, id++, Side.SERVER);
-        netHandler.registerMessage(new CPacketTransferRecipe.Handler(), CPacketTransferRecipe.class, id++, Side.SERVER);
-        netHandler.registerMessage(new CPacketRenamer.Handler(), CPacketRenamer.class, id++, Side.SERVER);
-        netHandler.registerMessage(new CPacketValueConfig.Handler(), CPacketValueConfig.class, id++, Side.SERVER);
-        netHandler.registerMessage(new CPacketFindCellItem.Handler(), CPacketFindCellItem.class, id++, Side.SERVER);
+        try {
+            Set<Class<?>> result = getClasses("com.asdflj.ae2thing.network");
+            for (Class<?> aClass : result) {
+                if (aClass.getName()
+                    .endsWith("Handler")) {
+                    Class c = Class.forName(
+                        aClass.getName()
+                            .replace("$Handler", ""));
+                    IMessageHandler cls = (IMessageHandler) aClass.getConstructor()
+                        .newInstance();
+                    netHandler.registerMessage(
+                        cls,
+                        c,
+                        id++,
+                        c.getSimpleName()
+                            .startsWith("C") ? Side.SERVER : Side.CLIENT);
+                }
+            }
+        } catch (Exception ignored) {}
+
     }
 
     public static void sendPacketToAllPlayers(Packet packet, World world) {
