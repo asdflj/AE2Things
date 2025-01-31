@@ -19,7 +19,6 @@ import org.lwjgl.input.Mouse;
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.container.ContainerMonitor;
-import com.asdflj.ae2thing.client.gui.widget.IGuiSelection;
 import com.asdflj.ae2thing.client.gui.widget.THGuiTextField;
 import com.asdflj.ae2thing.client.me.AdvItemRepo;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
@@ -69,7 +68,7 @@ import appeng.util.Platform;
 import codechicken.nei.util.TextHistory;
 
 public abstract class GuiMonitor extends BaseMEGui
-    implements IConfigManagerHost, ISortSource, IDropToFillTextField, IGuiDrawSlot, IGuiSelection {
+    implements IConfigManagerHost, ISortSource, IDropToFillTextField, IGuiDrawSlot {
 
     protected GuiImgButton clearBtn;
     public static int craftingGridOffsetX;
