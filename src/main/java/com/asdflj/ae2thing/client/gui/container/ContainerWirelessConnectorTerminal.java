@@ -15,9 +15,11 @@ import net.minecraft.util.EnumChatFormatting;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.Constants;
+import com.asdflj.ae2thing.inventory.item.INetworkTerminal;
 import com.asdflj.ae2thing.network.SPacketWirelessConnectorUpdate;
 import com.asdflj.ae2thing.util.Util;
 
+import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IMachineSet;
 import appeng.api.storage.ITerminalHost;
@@ -27,7 +29,7 @@ import appeng.hooks.TickHandler;
 import appeng.me.Grid;
 import appeng.util.Platform;
 
-public class ContainerWirelessConnectorTerminal extends BaseNetworkContainer {
+public class ContainerWirelessConnectorTerminal extends BaseNetworkContainer implements INetworkTerminal {
 
     private final List<TileWireless> wirelessTiles = new ArrayList<>();
 
@@ -39,14 +41,14 @@ public class ContainerWirelessConnectorTerminal extends BaseNetworkContainer {
         if (Platform.isServer()) {
             wirelessTiles.clear();
             if (!hasPower) return;
-            if (terminal.getGrid() == null) return;
+            if (this.getGrid() == null) return;
             int playerID = Security.getPlayerId(player.getGameProfile());
             for (Grid grid : TickHandler.INSTANCE.getGridList()) {
                 IMachineSet set = grid.getMachines(TileWireless.class);
                 if (set.isEmpty()) continue;
                 for (IGridNode node : set) {
                     TileWireless tile = (TileWireless) node.getGridBlock();
-                    if (terminal.getGrid() != null && terminal.getGrid()
+                    if (this.getGrid() != null && this.getGrid()
                         .equals(grid)) {
                         wirelessTiles.add(tile);
                     } else {
@@ -149,4 +151,14 @@ public class ContainerWirelessConnectorTerminal extends BaseNetworkContainer {
         }
     }
 
+    @Override
+    public IGrid getGrid() {
+        return getGridNode().getGrid();
+    }
+
+    @Override
+    public IGridNode getGridNode() {
+        return this.getActionHost()
+            .getActionableNode();
+    }
 }

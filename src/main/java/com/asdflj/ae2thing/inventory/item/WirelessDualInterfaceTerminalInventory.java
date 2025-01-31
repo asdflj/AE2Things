@@ -27,7 +27,6 @@ import appeng.api.implementations.ICraftingPatternItem;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
-import appeng.api.networking.security.IActionHost;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.IConfigManager;
@@ -38,7 +37,7 @@ import appeng.util.ConfigManager;
 import appeng.util.Platform;
 
 public class WirelessDualInterfaceTerminalInventory extends WirelessTerminal
-    implements IActionHost, IGridHost, IPatternTerminal, IClickableInTerminal, IAEAppEngInventory {
+    implements IGridHost, IPatternTerminal, IClickableInTerminal, IAEAppEngInventory {
 
     protected AppEngInternalInventory craftingEx;
     protected AppEngInternalInventory outputEx;
