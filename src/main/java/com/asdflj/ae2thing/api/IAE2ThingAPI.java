@@ -35,11 +35,13 @@ public interface IAE2ThingAPI {
 
     void setStorageManager(StorageManager manager);
 
-    List<IAEItemStack> getPinItems();
+    List<IAEItemStack> getPinnedItems();
 
-    void setPinItems(List<IAEItemStack> items);
+    void addPinnedItem(IAEItemStack item);
 
-    void togglePinItems(IAEItemStack stack);
+    void setPinnedItems(List<IAEItemStack> items);
+
+    void togglePinnedItems(IAEItemStack stack);
 
     void openBackpackTerminal();
 
@@ -59,11 +61,11 @@ public interface IAE2ThingAPI {
 
     long getStorageMyID(Grid grid);
 
-    CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> getHistory(Grid grid);
+    LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> getHistory(Grid grid);
 
-    CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> getHistory(long networkID);
+    LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> getHistory(long networkID);
 
-    void pushHistory(long networkID, CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos);
+    void pushHistory(long networkID, LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos);
 
     void saveHistory();
 }

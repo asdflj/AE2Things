@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.CraftingDebugCardObject;
 import com.asdflj.ae2thing.api.CraftingDebugHelper;
+import com.asdflj.ae2thing.api.LimitedSizeLinkedList;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -20,17 +21,16 @@ import io.netty.buffer.Unpooled;
 public class SPacketCraftingDebugCardUpdate implements IMessage {
 
     private NBTTagCompound data;
-    private CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos;
+    private LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos;
     private long networkID;
     private CraftingDebugCardObject.Mode mode;
 
     public SPacketCraftingDebugCardUpdate(long networkID,
-        CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos) {
+        LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos) {
         this(networkID, infos, CraftingDebugCardObject.Mode.Everything);
     }
 
-    public SPacketCraftingDebugCardUpdate(long networkID,
-        CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos,
+    public SPacketCraftingDebugCardUpdate(long networkID, LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos,
         CraftingDebugCardObject.Mode mode) {
         this.infos = infos;
         this.data = new NBTTagCompound();

@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "minVersion": "0",
+  "refmap": "mixins.ae2thing.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [],
+  "client": [],
+  "server": []
+}

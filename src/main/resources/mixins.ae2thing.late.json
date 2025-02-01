@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0",
+  "package": "com.asdflj.ae2thing.coremod.mixin",
+  "refmap": "mixins.ae2thing.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [],
+  "client": [
+    "MixinAEBaseGui",
+    "MixinGuiCraftConfirm",
+    "MixinItemRepo"
+  ],
+  "server": []
+}
