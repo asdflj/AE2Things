@@ -17,7 +17,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.asdflj.ae2thing.AE2Thing;
-import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.container.ContainerMonitor;
 import com.asdflj.ae2thing.client.gui.widget.THGuiTextField;
 import com.asdflj.ae2thing.client.me.AdvItemRepo;
@@ -247,11 +246,6 @@ public abstract class GuiMonitor extends BaseMEGui
                         if (slotItem != null) {
                             action = InventoryAction.CREATIVE_DUPLICATE;
                         }
-                    } else if (stack != null && this instanceof GuiCraftingTerminal) {
-                        AE2ThingAPI.instance()
-                            .togglePinItems(stack);
-                        this.repo.updateView();
-                        return;
                     } else break;
                 default:
                 case 4: // drop item:

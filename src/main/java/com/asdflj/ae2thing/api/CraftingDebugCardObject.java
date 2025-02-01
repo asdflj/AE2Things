@@ -56,7 +56,7 @@ public class CraftingDebugCardObject {
 
     @SideOnly(Side.CLIENT)
     public static void sendMessageToPlayer(long networkID, Mode mode) {
-        CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos = AE2ThingAPI.instance()
+        LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos = AE2ThingAPI.instance()
             .getHistory(networkID);
         EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
         if (infos.isEmpty()) {
@@ -104,8 +104,8 @@ public class CraftingDebugCardObject {
     }
 
     @SideOnly(Side.CLIENT)
-    private static List<String> getHistoryText(
-        CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> history, Mode mode) {
+    private static List<String> getHistoryText(LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> history,
+        Mode mode) {
         List<String> msg = new ArrayList<>();
         if (history.isEmpty()) return msg;
         for (CraftingDebugHelper.CraftingInfo info : history) {

@@ -37,6 +37,7 @@ public interface IGuiDrawSlot {
             stack = ((SlotME) slot).getAEStack();
         } else if (slot instanceof SlotInaccessible) {
             stack = AEItemStack.create(drawStack);
+            drawStack.stackSize = 0;
             ((SlotInaccessible) slot).setDisplay(true);
             display = true;
         } else if (slot instanceof SlotPatternFake) {

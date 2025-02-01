@@ -4,7 +4,6 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -14,7 +13,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.util.Ae2Reflect;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -46,35 +44,8 @@ import appeng.util.Platform;
 public class CraftingDebugHelper implements ICraftingCallback {
 
     private static final HashMap<Long, LimitedSizeLinkedList<CraftingInfo>> history = new HashMap<>();
-    private static final int LIMIT = Config.craftingHistorySize;
     private final CraftingInfo info;
     private final ICraftingCallback callback;
-
-    public static class LimitedSizeLinkedList<E> extends LinkedList<E> {
-
-        private final int limit;
-
-        public LimitedSizeLinkedList() {
-            super();
-            this.limit = LIMIT;
-        }
-
-        @Override
-        public boolean add(E e) {
-            if (size() >= limit) {
-                removeFirst();
-            }
-            return super.add(e);
-        }
-
-        @Override
-        public void push(E e) {
-            if (size() >= limit) {
-                removeLast();
-            }
-            super.push(e);
-        }
-    }
 
     public static class CraftingInfo {
 

@@ -3,7 +3,6 @@ package com.asdflj.ae2thing.client.me;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
@@ -19,7 +18,6 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 
-import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
@@ -113,11 +111,6 @@ public class AdvItemRepo extends ItemRepo implements Runnable {
         super.postUpdate(is);
     }
 
-    private void setAsEmpty(int i) {
-        this.view.add(i, null);
-        this.dsp.add(i, null);
-    }
-
     @Override
     public void updateView() {
         if (this.hasCache()) {
@@ -128,33 +121,6 @@ public class AdvItemRepo extends ItemRepo implements Runnable {
             }
         } else {
             super.updateView();
-            this.setPinItems();
-        }
-    }
-
-    protected void setPinItems() {
-        final List<IAEItemStack> pinItems = AE2ThingAPI.instance()
-            .getPinItems();
-        if (!pinItems.isEmpty()) {
-            for (int i = 0; i < AE2ThingAPI.maxPinSize; i++) {
-                if (i >= pinItems.size()) {
-                    this.setAsEmpty(i);
-                    continue;
-                }
-                IAEItemStack is = pinItems.get(i);
-                if (this.list.findPrecise(is) != null) {
-                    int idx = this.view.indexOf(is);
-                    IAEItemStack viewStack = this.list.findPrecise(is);
-                    if (idx != -1) {
-                        this.view.remove(idx);
-                        this.dsp.remove(idx);
-                        this.view.add(i, viewStack);
-                        this.dsp.add(i, viewStack.getItemStack());
-                        continue;
-                    }
-                }
-                this.setAsEmpty(i);
-            }
         }
     }
 

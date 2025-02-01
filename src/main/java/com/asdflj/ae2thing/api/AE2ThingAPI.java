@@ -24,6 +24,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.Tags;
+import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.fluids.Mana;
 import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
@@ -52,10 +53,10 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     public static int maxSelectionRows = 5;
     public static final Fluid Mana = new Mana();
     private static final AE2ThingAPI API = new AE2ThingAPI();
-
+    public static final int CRAFTING_HISTORY_SIZE = Config.craftingHistorySize;
     private final Set<Class<? extends Item>> backpackItems = new HashSet<>();
     private StorageManager storageManager = null;
-    private final List<IAEItemStack> pinItems = new ArrayList<>();
+    private final LimitedSizeLinkedList<IAEItemStack> pinItems = new LimitedSizeLinkedList<>(maxPinSize);
     private ItemStack fluidContainer = BUCKET;
     public static final ReadableNumberConverter readableNumber = ReadableNumberConverter.INSTANCE;
 
@@ -127,26 +128,36 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     }
 
     @Override
-    public List<IAEItemStack> getPinItems() {
+    public List<IAEItemStack> getPinnedItems() {
         return this.pinItems;
     }
 
     @Override
-    public void setPinItems(List<IAEItemStack> items) {
-        this.pinItems.clear();
-        this.pinItems.addAll(items);
+    public void addPinnedItem(IAEItemStack item) {
+        if (item == null) return;
+        if (!this.pinItems.contains(item)) this.pinItems.add(item);
     }
 
     @Override
-    public void togglePinItems(IAEItemStack stack) {
+    public void setPinnedItems(List<IAEItemStack> items) {
+        if (items == null || items.isEmpty()) {
+            this.pinItems.clear();
+            return;
+        }
+        List<IAEItemStack> list = new ArrayList<>();
+        for (IAEItemStack item : this.pinItems) {
+            if (items.contains(item)) {
+                list.add(item);
+            }
+        }
+        this.pinItems.clear();
+        this.pinItems.addAll(list);
+    }
+
+    @Override
+    public void togglePinnedItems(IAEItemStack stack) {
         if (stack == null || this.pinItems.remove(stack)) return;
         this.pinItems.add(stack);
-        if (this.pinItems.size() > maxPinSize) {
-            List<IAEItemStack> tmp = new ArrayList<>(
-                this.pinItems.subList(this.pinItems.size() - maxPinSize, this.pinItems.size()));
-            this.pinItems.clear();
-            this.pinItems.addAll(tmp);
-        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -210,21 +221,20 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     }
 
     @Override
-    public CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> getHistory(Grid grid) {
+    public LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> getHistory(Grid grid) {
         return CraftingDebugHelper.getHistory()
-            .getOrDefault(getStorageMyID(grid), new CraftingDebugHelper.LimitedSizeLinkedList<>());
+            .getOrDefault(getStorageMyID(grid), new LimitedSizeLinkedList<>());
     }
 
     @Override
-    public CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> getHistory(long networkID) {
+    public LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> getHistory(long networkID) {
         return CraftingDebugHelper.getHistory()
-            .getOrDefault(networkID, new CraftingDebugHelper.LimitedSizeLinkedList<>());
+            .getOrDefault(networkID, new LimitedSizeLinkedList<>());
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void pushHistory(long networkID,
-        CraftingDebugHelper.LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos) {
+    public void pushHistory(long networkID, LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos) {
         CraftingDebugHelper.getHistory()
             .clear();
         CraftingDebugHelper.getHistory()
