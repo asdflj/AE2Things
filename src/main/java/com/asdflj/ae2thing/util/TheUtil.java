@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.util;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -11,7 +12,10 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.helpers.IInterfaceHost;
 import appeng.util.item.AEFluidStack;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import thaumcraft.api.aspects.Aspect;
+import thaumicenergistics.api.gui.IWidgetHost;
 import thaumicenergistics.common.fluids.GaseousEssentia;
 import thaumicenergistics.common.items.ItemCraftingAspect;
 
@@ -36,5 +40,10 @@ public class TheUtil {
         } else {
             return I18n.format(displayName);
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static boolean isTerminal() {
+        return Minecraft.getMinecraft().currentScreen instanceof IWidgetHost;
     }
 }

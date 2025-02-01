@@ -17,6 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.IWidgetGui;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.TheUtil;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
@@ -50,7 +52,7 @@ public abstract class MixinItemRepo {
         remap = false)
     public boolean add(ArrayList<Object> view, Object o) {
         GuiScreen gui = mc.currentScreen;
-        if (gui instanceof IWidgetGui) {
+        if (gui instanceof IWidgetGui || (ModAndClassUtil.THE && TheUtil.isTerminal())) {
             return view.add(o);
         } else if (o instanceof IAEItemStack is && AE2ThingAPI.instance()
             .getPinnedItems()
@@ -64,7 +66,7 @@ public abstract class MixinItemRepo {
     @Inject(method = "updateView", at = @At(value = "TAIL"), remap = false)
     public void update(CallbackInfo ci) {
         GuiScreen gui = mc.currentScreen;
-        if (gui instanceof IWidgetGui) {
+        if (gui instanceof IWidgetGui || (ModAndClassUtil.THE && TheUtil.isTerminal())) {
             return;
         }
         final List<IAEItemStack> pinItems = AE2ThingAPI.instance()

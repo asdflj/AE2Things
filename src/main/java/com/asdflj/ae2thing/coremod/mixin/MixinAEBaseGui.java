@@ -1,9 +1,11 @@
 package com.asdflj.ae2thing.coremod.mixin;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -21,6 +23,7 @@ import com.glodblock.github.client.gui.GuiFluidMonitor;
 
 import appeng.client.gui.AEBaseGui;
 import appeng.client.me.InternalSlotME;
+import appeng.client.me.SlotME;
 
 @Mixin(value = AEBaseGui.class)
 public abstract class MixinAEBaseGui extends GuiScreen {
@@ -34,8 +37,8 @@ public abstract class MixinAEBaseGui extends GuiScreen {
     @Shadow(remap = false)
     protected abstract List<InternalSlotME> getMeSlots();
 
-    @Shadow
-    public abstract void initGui();
+    @Shadow(remap = false)
+    protected abstract List<Slot> getInventorySlots();
 
     @Inject(
         method = "drawGuiContainerBackgroundLayer",
@@ -50,9 +53,22 @@ public abstract class MixinAEBaseGui extends GuiScreen {
                 .isEmpty())
             return;
         if (Minecraft.getMinecraft().currentScreen instanceof GuiFluidMonitor || this instanceof IWidgetGui) return;
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.bindTexture();
-        this.drawTexturedModalRect(this.getGuiLeft() + 8, this.getGuiTop() + 17, 0, 0, 195, 18);
+        Optional<Slot> slot = this.getInventorySlots()
+            .stream()
+            .filter(s -> s instanceof SlotME)
+            .findFirst();
+        if (slot.isPresent()) {
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            this.bindTexture();
+            this.drawTexturedModalRect(
+                this.getGuiLeft() + slot.get().xDisplayPosition - 1,
+                this.getGuiTop() + 17,
+                0,
+                0,
+                195,
+                18);
+        }
+
     }
 
     private void bindTexture() {

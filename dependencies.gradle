@@ -43,6 +43,9 @@ dependencies {
     }
     api('com.github.GTNewHorizons:ae2stuff:0.9.0-GTNH:dev')
 
+    //wct
+    compileOnly("com.github.GTNewHorizons:WirelessCraftingTerminal:1.12.0:dev")
+
     // nei findit
     compileOnly('com.github.GTNewHorizons:FindIt:1.3.10:dev')
 
