@@ -17,8 +17,7 @@ public class AE2LatePlugin implements ILateMixinLoader {
 
     @Override
     public List<String> getMixins(Set<String> loadedMods) {
-        var list = Lists.newArrayList("MixinAEBaseGui");
-        return list;
+        return Lists.newArrayList("MixinAEBaseGui", "MixinGuiCraftConfirm", "MixinItemRepo");
     }
 
 }
