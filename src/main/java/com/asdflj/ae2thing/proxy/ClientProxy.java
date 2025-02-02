@@ -10,8 +10,11 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTerminal;
 
+import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.BaseMEGui;
+import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiMonitor;
 import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
 import com.asdflj.ae2thing.common.Config;
@@ -22,7 +25,17 @@ import com.asdflj.ae2thing.loader.RenderLoader;
 import com.asdflj.ae2thing.nei.recipes.DefaultExtractorLoader;
 import com.asdflj.ae2thing.util.FindITUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.glodblock.github.client.gui.GuiFluidCraftingWireless;
+import com.glodblock.github.client.gui.GuiFluidPatternExWireless;
+import com.glodblock.github.client.gui.GuiFluidPatternTerminal;
+import com.glodblock.github.client.gui.GuiFluidPatternTerminalEx;
+import com.glodblock.github.client.gui.GuiFluidPatternWireless;
 
+import appeng.client.gui.implementations.GuiCraftingTerm;
+import appeng.client.gui.implementations.GuiMEMonitorable;
+import appeng.client.gui.implementations.GuiPatternTerm;
+import appeng.client.gui.implementations.GuiPatternTermEx;
+import appeng.client.gui.implementations.GuiWirelessTerm;
 import codechicken.nei.LayoutManager;
 import codechicken.nei.api.API;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -59,6 +72,34 @@ public class ClientProxy extends CommonProxy {
         (new RenderLoader()).run();
         (new KeybindLoader()).run();
         MinecraftForge.EVENT_BUS.register(new BlockPosHighlighter());
+        AE2ThingAPI.instance()
+            .registerTerminal(GuiMEMonitorable.class);
+        AE2ThingAPI.instance()
+            .registerTerminal(GuiCraftingTerm.class);
+        AE2ThingAPI.instance()
+            .registerTerminal(GuiPatternTerm.class);
+        AE2ThingAPI.instance()
+            .registerTerminal(GuiPatternTermEx.class);
+        AE2ThingAPI.instance()
+            .registerTerminal(GuiFluidPatternTerminalEx.class);
+        AE2ThingAPI.instance()
+            .registerTerminal(GuiFluidPatternTerminal.class);
+        AE2ThingAPI.instance()
+            .registerTerminal(GuiFluidPatternExWireless.class);
+        AE2ThingAPI.instance()
+            .registerTerminal(GuiFluidPatternWireless.class);
+        AE2ThingAPI.instance()
+            .registerTerminal(GuiFluidCraftingWireless.class);
+        AE2ThingAPI.instance()
+            .registerTerminal(GuiWirelessTerm.class);
+        if (ModAndClassUtil.WCT) {
+            AE2ThingAPI.instance()
+                .registerTerminal(GuiWirelessCraftingTerminal.class);
+        }
+        if (ModAndClassUtil.THE) {
+            AE2ThingAPI.instance()
+                .registerTerminal(GuiInfusionPatternTerminal.class);
+        }
     }
 
     private ItemStack getStackMouseOver(GuiContainer window) {

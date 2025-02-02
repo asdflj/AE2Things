@@ -13,7 +13,6 @@ import com.asdflj.ae2thing.client.gui.IGuiMonitorTerminal;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IDisplayRepo;
-import appeng.client.gui.AEBaseGui;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -76,24 +75,8 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
                     }
                     gmt.setPlayerInv(is);
                 }
-            } else if (gs instanceof AEBaseGui) {
-                if (message.ref == -2) {
-                    AE2ThingAPI.instance()
-                        .setPinnedItems((List) message.list);
-                    try {
-                        IDisplayRepo repo = this.getRepo(
-                            gs.getClass(),
-                            gs.getClass()
-                                .getDeclaredFields(),
-                            gs);
-                        if (repo == null) return null;
-                        if (repo.getRowSize() != AE2ThingAPI.maxPinSize) return null;
-                        repo.updateView();
-                    } catch (Exception e) {
-                        return null;
-                    }
-
-                }
+            } else if (message.ref == -2) {
+                AE2ThingAPI.pinnedCache.addAll((List) message.list);
             } else if (gs == null) {
                 Minecraft mc = Minecraft.getMinecraft();
                 EntityClientPlayerMP player = mc.thePlayer;

@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.api;
 
+import java.util.HashSet;
 import java.util.List;
 
 import net.minecraft.inventory.IInventory;
@@ -12,12 +13,17 @@ import com.asdflj.ae2thing.common.storage.StorageManager;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.client.gui.AEBaseGui;
 import appeng.me.Grid;
 
 @SuppressWarnings("unused")
 public interface IAE2ThingAPI {
 
     boolean isBlacklistedInStorage(Item item);
+
+    void registerTerminal(Class<? extends AEBaseGui> clazz);
+
+    HashSet<Class<? extends AEBaseGui>> getTerminal();
 
     void blacklistItemInStorage(Class<? extends Item> item);
 
