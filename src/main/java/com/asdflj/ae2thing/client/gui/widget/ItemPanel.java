@@ -647,4 +647,10 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitor, IConfigManagerHost,
     public AdvItemRepo getRepo() {
         return repo;
     }
+
+    @Override
+    public void handleKeyboardInput() {
+        this.getRepo()
+            .setPausedMethod();
+    }
 }

@@ -26,7 +26,7 @@ import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
 import appeng.util.item.AEItemStack;
 
-public class GuiCraftingTerminal extends GuiMonitor implements IGuiMonitorTerminal {
+public class GuiCraftingTerminal extends GuiMonitor {
 
     public ContainerCraftingTerminal monitorableContainer;
 

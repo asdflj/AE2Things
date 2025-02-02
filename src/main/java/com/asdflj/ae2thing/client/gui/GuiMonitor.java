@@ -67,7 +67,7 @@ import appeng.util.Platform;
 import codechicken.nei.util.TextHistory;
 
 public abstract class GuiMonitor extends BaseMEGui
-    implements IConfigManagerHost, ISortSource, IDropToFillTextField, IGuiDrawSlot {
+    implements IConfigManagerHost, ISortSource, IDropToFillTextField, IGuiDrawSlot, IGuiMonitorTerminal {
 
     protected GuiImgButton clearBtn;
     public static int craftingGridOffsetX;
@@ -754,5 +754,17 @@ public abstract class GuiMonitor extends BaseMEGui
     @Override
     public int getOffsetY() {
         return offsetY;
+    }
+
+    @Override
+    public AdvItemRepo getRepo() {
+        return repo;
+    }
+
+    @Override
+    public void handleKeyboardInput() {
+        this.getRepo()
+            .setPausedMethod();
+        super.handleKeyboardInput();
     }
 }
