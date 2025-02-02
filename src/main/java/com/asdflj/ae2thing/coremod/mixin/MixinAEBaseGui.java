@@ -17,9 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
-import com.asdflj.ae2thing.client.gui.IWidgetGui;
 import com.asdflj.ae2thing.network.CPacketNetworkCraftingItems;
-import com.glodblock.github.client.gui.GuiFluidMonitor;
 
 import appeng.client.gui.AEBaseGui;
 import appeng.client.me.InternalSlotME;
@@ -46,13 +44,15 @@ public abstract class MixinAEBaseGui extends GuiScreen {
         remap = false)
     @SuppressWarnings({ "unchecked" })
     private void drawPin(float f, int x, int y, CallbackInfo ci) {
+        if (!AE2ThingAPI.instance()
+            .getTerminal()
+            .contains(this.getClass())) return;
         if (this.getMeSlots()
             .isEmpty()
             || AE2ThingAPI.instance()
                 .getPinnedItems()
                 .isEmpty())
             return;
-        if (Minecraft.getMinecraft().currentScreen instanceof GuiFluidMonitor || this instanceof IWidgetGui) return;
         Optional<Slot> slot = this.getInventorySlots()
             .stream()
             .filter(s -> s instanceof SlotME)
@@ -80,7 +80,20 @@ public abstract class MixinAEBaseGui extends GuiScreen {
 
     @Inject(method = "initGui", at = @At("HEAD"))
     private void initGui(CallbackInfo ci) {
+        if (!AE2ThingAPI.instance()
+            .getTerminal()
+            .contains(this.getClass())) return;
         CPacketNetworkCraftingItems p = new CPacketNetworkCraftingItems();
         AE2Thing.proxy.netHandler.sendToServer(p);
+    }
+
+    @Inject(method = "onGuiClosed", at = @At("HEAD"))
+    public void onGuiClosed(CallbackInfo ci) {
+        if (!AE2ThingAPI.instance()
+            .getTerminal()
+            .contains(this.getClass())) return;
+        AE2ThingAPI.instance()
+            .setPinnedItems(AE2ThingAPI.pinnedCache);
+        AE2ThingAPI.pinnedCache.clear();
     }
 }

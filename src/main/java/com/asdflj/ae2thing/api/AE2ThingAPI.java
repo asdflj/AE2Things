@@ -38,6 +38,7 @@ import com.glodblock.github.util.Util;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.client.gui.AEBaseGui;
 import appeng.me.Grid;
 import appeng.util.ReadableNumberConverter;
 import cpw.mods.fml.relauncher.FMLInjectionData;
@@ -59,6 +60,8 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     private final LimitedSizeLinkedList<IAEItemStack> pinItems = new LimitedSizeLinkedList<>(maxPinSize);
     private ItemStack fluidContainer = BUCKET;
     public static final ReadableNumberConverter readableNumber = ReadableNumberConverter.INSTANCE;
+    public static final List<IAEItemStack> pinnedCache = new ArrayList<>();
+    private static final HashSet<Class<? extends AEBaseGui>> TERMINAL = new HashSet<>();
 
     public static AE2ThingAPI instance() {
         return API;
@@ -80,6 +83,16 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
             }
         }
         return false;
+    }
+
+    @Override
+    public void registerTerminal(Class<? extends AEBaseGui> clazz) {
+        TERMINAL.add(clazz);
+    }
+
+    @Override
+    public HashSet<Class<? extends AEBaseGui>> getTerminal() {
+        return TERMINAL;
     }
 
     @Override

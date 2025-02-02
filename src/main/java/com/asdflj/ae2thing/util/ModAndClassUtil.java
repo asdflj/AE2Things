@@ -19,6 +19,7 @@ public final class ModAndClassUtil {
     public static boolean HODGEPODGE = false;
     public static boolean THE = false;
     public static boolean WAILA = false;
+    public static boolean WCT = false;
     public static boolean IC2 = false;
     public static boolean NECHAR = false;
     public static boolean BOTANIA = false;
@@ -84,5 +85,6 @@ public final class ModAndClassUtil {
         if (Loader.isModLoaded("TConstruct")) TIC = true;
         if (Loader.isModLoaded("programmablehatches")) PH = true;
         if (Loader.isModLoaded("findit")) FIND_IT = true;
+        if (Loader.isModLoaded("ae2wct")) WCT = true;
     }
 }
