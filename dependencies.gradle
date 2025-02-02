@@ -34,14 +34,14 @@
  * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
-    api('com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-518-GTNH:dev') //gtnh-272 ver 484
+    api('com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-533-GTNH:dev') //gtnh-272 ver 484
     api('com.github.GTNewHorizons:NotEnoughItems:2.7.13-GTNH:dev')
     api('curse.maven:cofh-core-69162:2388751')
     api('com.github.GTNewHorizons:waila:1.8.0:dev')
-    api('com.github.GTNewHorizons:AE2FluidCraft-Rework:1.4.14-gtnh:dev') {
+    api('com.github.GTNewHorizons:AE2FluidCraft-Rework:1.4.28-gtnh:dev') {
         exclude group: 'com.github.GTNewHorizons', module: 'Applied-Energistics-2-Unofficial'
     }
-    api('com.github.GTNewHorizons:ae2stuff:0.9.0-GTNH:dev')
+    api('com.github.GTNewHorizons:ae2stuff:0.9.4-GTNH:dev')
 
     //wct
     compileOnly("com.github.GTNewHorizons:WirelessCraftingTerminal:1.12.0:dev")
@@ -56,11 +56,11 @@ dependencies {
     // tic
     compileOnly('com.github.GTNewHorizons:TinkersConstruct:1.11.5-GTNH:dev')
     // tc
-    compileOnly('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
-    compileOnly('com.github.GTNewHorizons:ThaumicEnergistics:1.6.18-GTNH:dev') { transitive = false }
-    compileOnly('com.github.GTNewHorizons:thaumicinsurgence:0.3.1:dev')
-    compileOnly 'curse.maven:thaumcraft-nei-plugin-225095:2241913'
-    compileOnly('com.github.GTNewHorizons:TCNEIAdditions:1.4.0:dev')
+    compile('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
+    compile('com.github.GTNewHorizons:ThaumicEnergistics:1.6.18-GTNH:dev') { transitive = false }
+    compile('com.github.GTNewHorizons:thaumicinsurgence:0.3.1:dev')
+    compile 'curse.maven:thaumcraft-nei-plugin-225095:2241913'
+    compile('com.github.GTNewHorizons:TCNEIAdditions:1.4.0:dev')
     // gt
     compileOnly('com.github.GTNewHorizons:GT5-Unofficial:5.09.51.06:dev'){
         exclude group: 'com.github.GTNewHorizons', module: 'AE2FluidCraft-Rework'

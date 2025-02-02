@@ -25,6 +25,7 @@ import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
 import com.asdflj.ae2thing.client.gui.widget.IGuiSelection;
 import com.asdflj.ae2thing.client.gui.widget.ItemPanel;
 import com.asdflj.ae2thing.client.gui.widget.PatternPanel;
+import com.asdflj.ae2thing.client.me.AdvItemRepo;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
 
@@ -327,6 +328,11 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless i
     }
 
     @Override
+    public AdvItemRepo getRepo() {
+        return this.itemPanel.getRepo();
+    }
+
+    @Override
     public void postFluidUpdate(List<IAEFluidStack> list) {
         this.getActivePanels()
             .stream()
@@ -366,5 +372,13 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless i
             .stream()
             .filter(p -> p instanceof IConfigManagerHost)
             .forEach(p -> ((IConfigManagerHost) p).updateSetting(manager, settingName, newValue));
+    }
+
+    @Override
+    public void handleKeyboardInput() {
+        if (this.itemPanel != null) {
+            this.itemPanel.handleKeyboardInput();
+        }
+        super.handleKeyboardInput();
     }
 }

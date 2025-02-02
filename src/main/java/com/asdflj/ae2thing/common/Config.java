@@ -20,7 +20,7 @@ public class Config {
     public static boolean wirelessConnectorTerminalInfinityConnectionRange = true;
     public static int exIOPortTransferContentsRate;
     public static boolean backpackTerminalAddTicSupport = false;
-    public static int craftingHistorySize = 100;
+    public static int craftingHistorySize = 200;
 
     public static void run() {
         loadCategory();
