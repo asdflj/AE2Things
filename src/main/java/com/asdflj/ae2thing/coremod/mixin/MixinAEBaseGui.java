@@ -19,6 +19,7 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.network.CPacketNetworkCraftingItems;
 
+import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.me.InternalSlotME;
 import appeng.client.me.SlotME;
@@ -69,6 +70,42 @@ public abstract class MixinAEBaseGui extends GuiScreen {
                 18);
         }
 
+    }
+
+    private void drawPlus(int x, int y) {
+        float startX = x + 12.5f;
+        float startY = y + 0.25f;
+        float endX = startX + 3f;
+        float endY = startY + 3f;
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glPushMatrix();
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glLineWidth(3.0F);
+        GL11.glBegin(GL11.GL_LINES);
+        GL11.glVertex2f(startX, startY + 1.5f);
+        GL11.glVertex2f(endX, startY + 1.5f);
+        GL11.glEnd();
+        GL11.glBegin(GL11.GL_LINES);
+        GL11.glVertex2f(startX + 1.5f, startY);
+        GL11.glVertex2f(startX + 1.5f, endY);
+        GL11.glEnd();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glPopMatrix();
+    }
+
+    @Inject(method = "drawAESlot", at = @At("HEAD"), remap = false)
+    private void drawAESlot(Slot slotIn, CallbackInfo ci) {
+        if (slotIn instanceof SlotME slotME && slotME.getHasStack()) {
+            IAEItemStack is = slotME.getAEStack();
+            if (is.isCraftable()) {
+                int x = slotIn.xDisplayPosition;
+                int y = slotIn.yDisplayPosition;
+                drawPlus(x, y);
+            }
+        }
     }
 
     private void bindTexture() {
