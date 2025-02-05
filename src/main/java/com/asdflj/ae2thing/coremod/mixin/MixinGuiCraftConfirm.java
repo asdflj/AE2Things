@@ -25,7 +25,7 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
         super(container);
     }
 
-    @Inject(method = "actionPerformed", at = @At(value = "HEAD"), remap = false)
+    @Inject(method = { "actionPerformed", "func_146284_a" }, at = @At(value = "HEAD"), remap = false)
     private void actionPerformed(GuiButton btn, CallbackInfo ci) {
         if (btn == start && this.inventorySlots instanceof ContainerCraftConfirm ccc) {
             AE2ThingAPI.instance()
