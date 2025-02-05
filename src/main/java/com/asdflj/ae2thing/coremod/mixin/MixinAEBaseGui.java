@@ -23,6 +23,8 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.me.InternalSlotME;
 import appeng.client.me.SlotME;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 
 @Mixin(value = AEBaseGui.class)
 public abstract class MixinAEBaseGui extends GuiScreen {
@@ -38,6 +40,8 @@ public abstract class MixinAEBaseGui extends GuiScreen {
 
     @Shadow(remap = false)
     protected abstract List<Slot> getInventorySlots();
+
+    private static boolean drawPlus = false;
 
     @Inject(
         method = "drawGuiContainerBackgroundLayer",
@@ -73,7 +77,7 @@ public abstract class MixinAEBaseGui extends GuiScreen {
     }
 
     private void drawPlus(int x, int y) {
-        float startX = x + 12.5f;
+        float startX = x + 0.5f;
         float startY = y + 0.25f;
         float endX = startX + 3f;
         float endY = startY + 3f;
@@ -98,13 +102,38 @@ public abstract class MixinAEBaseGui extends GuiScreen {
 
     @Inject(method = "drawAESlot", at = @At("HEAD"), remap = false)
     private void drawAESlot(Slot slotIn, CallbackInfo ci) {
-        if (slotIn instanceof SlotME slotME && slotME.getHasStack()) {
+        if (drawPlus && slotIn instanceof SlotME slotME && slotME.getHasStack()) {
             IAEItemStack is = slotME.getAEStack();
-            if (is.isCraftable()) {
+            if (is.isCraftable() && is.getStackSize() > 0) {
                 int x = slotIn.xDisplayPosition;
                 int y = slotIn.yDisplayPosition;
                 drawPlus(x, y);
             }
+        }
+    }
+
+    private static String getModVersion() {
+        Optional<ModContainer> mod = Loader.instance()
+            .getActiveModList()
+            .stream()
+            .filter(
+                x -> x.getModId()
+                    .equals("appliedenergistics2"))
+            .findFirst();
+        if (mod.isPresent()) {
+            return mod.get()
+                .getVersion();
+        }
+        return "";
+    }
+
+    private static void setCanDrawPlus() {
+        String version = getModVersion();
+        try {
+            int v = Integer.valueOf(version.split("-")[2]);
+            drawPlus = v < 536;
+        } catch (Exception ignored) {
+            drawPlus = false;
         }
     }
 
@@ -132,5 +161,9 @@ public abstract class MixinAEBaseGui extends GuiScreen {
         AE2ThingAPI.instance()
             .setPinnedItems(AE2ThingAPI.pinnedCache);
         AE2ThingAPI.pinnedCache.clear();
+    }
+
+    static {
+        setCanDrawPlus();
     }
 }
