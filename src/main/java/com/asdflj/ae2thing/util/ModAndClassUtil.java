@@ -22,6 +22,7 @@ public final class ModAndClassUtil {
     public static boolean WCT = false;
     public static boolean IC2 = false;
     public static boolean NECHAR = false;
+    public static boolean NECH = false;
     public static boolean BOTANIA = false;
     public static boolean HBM_AE_ADDON = false;
     public static boolean CORE_MOD = false;
@@ -78,6 +79,7 @@ public final class ModAndClassUtil {
         if (Loader.isModLoaded("Waila")) WAILA = true;
         if (Loader.isModLoaded("IC2")) IC2 = true;
         if (Loader.isModLoaded("nechar")) NECHAR = true;
+        if (Loader.isModLoaded("nech")) NECH = true;
         if (Loader.isModLoaded("neenergistics")) NEE = true;
         if (Loader.isModLoaded("Botania")) BOTANIA = true;
         if (Loader.isModLoaded("dreamcraft")) CORE_MOD = true;

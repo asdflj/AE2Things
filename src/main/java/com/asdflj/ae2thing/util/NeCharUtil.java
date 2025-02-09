@@ -13,14 +13,28 @@ public class NeCharUtil {
 
     public NeCharUtil() {
         try {
-            Class<?> c = Class.forName("net.moecraft.nechar.NotEnoughCharacters");
-            Field f = c.getField("CONTEXT");
-            this.o = f.get(null);
-            this.m = this.o.getClass()
-                .getMethod("contains", String.class, String.class);
-        } catch (Exception e) {
+            if (ModAndClassUtil.NECHAR) {
+                notEnoughCharacters(); // 官方版本
+            } else if (ModAndClassUtil.NECH) {
+                neverEnoughCharacters(); // 私货版本
+            }
+        } catch (Exception ignored) {}
+    }
 
-        }
+    private void notEnoughCharacters() throws Exception {
+        Class<?> c = Class.forName("net.moecraft.nechar.NotEnoughCharacters");
+        Field f = c.getField("CONTEXT");
+        this.o = f.get(null);
+        this.m = this.o.getClass()
+            .getMethod("contains", String.class, String.class);
+    }
+
+    private void neverEnoughCharacters() throws Exception {
+        Class<?> c = Class.forName("dev.vfyjxf.nech.utils.Match");
+        Field f = c.getField("context");
+        this.o = f.get(null);
+        this.m = this.o.getClass()
+            .getMethod("contains", String.class, String.class);
     }
 
     private boolean _contains(String input, String text) {
@@ -32,7 +46,7 @@ public class NeCharUtil {
     }
 
     public boolean contains(String input, String text) {
-        if (ModAndClassUtil.NECHAR) {
+        if (ModAndClassUtil.NECHAR || ModAndClassUtil.NECH) {
             return this._contains(input, text);
         } else {
             return text.contains(input);
@@ -40,7 +54,7 @@ public class NeCharUtil {
     }
 
     public boolean matcher(Pattern p, CharSequence text) {
-        if (ModAndClassUtil.NECHAR) {
+        if (ModAndClassUtil.NECHAR || ModAndClassUtil.NECH) {
             return this._contains(p.pattern(), (String) text);
         } else {
             return p.matcher(text)
