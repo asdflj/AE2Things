@@ -2,6 +2,7 @@ package com.asdflj.ae2thing.client.adapter;
 
 import java.util.Objects;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
@@ -10,6 +11,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.asdflj.ae2thing.api.ICraftingTerminalAdapter;
 import com.glodblock.github.client.gui.container.ContainerCraftingWireless;
 import com.glodblock.github.inventory.item.IWirelessTerminal;
+
+import codechicken.nei.recipe.IRecipeHandler;
 
 public class FCCraftingTerminal implements ICraftingTerminalAdapter {
 
@@ -26,5 +29,10 @@ public class FCCraftingTerminal implements ICraftingTerminalAdapter {
     @Override
     public Class<? extends Container> getContainer() {
         return ContainerCraftingWireless.class;
+    }
+
+    @Override
+    public void moveItems(GuiContainer firstGui, IRecipeHandler recipe, int recipeIndex) {
+
     }
 }

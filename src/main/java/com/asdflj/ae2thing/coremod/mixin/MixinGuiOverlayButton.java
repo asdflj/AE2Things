@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.api.ICraftingTerminalAdapter;
 import com.asdflj.ae2thing.client.event.CraftTracking;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.Util;
@@ -69,7 +71,10 @@ public abstract class MixinGuiOverlayButton {
 
     @Inject(method = "overlayRecipe", at = @At("TAIL"), remap = false)
     public void overlayRecipe(boolean shift, CallbackInfo ci) {
-        if (!AEBaseGui.isCtrlKeyDown()) return;
+        if (GuiScreen.isShiftKeyDown()) {
+            moveItems();
+        }
+        if (!GuiScreen.isCtrlKeyDown()) return;
         final List<PositionedStack> ingredients = this.handler.getIngredientStacks(recipeIndex);
         IItemList<IAEItemStack> list = null;
         if (AE2ThingAPI.instance()
@@ -127,6 +132,17 @@ public abstract class MixinGuiOverlayButton {
         }
         if (this.items != null) {
             MinecraftForge.EVENT_BUS.post(new CraftTracking(this.items));
+        }
+    }
+
+    private void moveItems() {
+        if (AE2ThingAPI.instance()
+            .getCraftingTerminal()
+            .containsKey(this.firstGui.getClass())) {
+            ICraftingTerminalAdapter adapter = AE2ThingAPI.instance()
+                .getCraftingTerminal()
+                .get(this.firstGui.getClass());
+            adapter.moveItems(this.firstGui, this.handler, this.recipeIndex);
         }
     }
 

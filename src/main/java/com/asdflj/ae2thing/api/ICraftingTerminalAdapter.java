@@ -1,9 +1,12 @@
 package com.asdflj.ae2thing.api;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import codechicken.nei.recipe.IRecipeHandler;
 
 public interface ICraftingTerminalAdapter {
 
@@ -14,4 +17,6 @@ public interface ICraftingTerminalAdapter {
     void openGui(EntityPlayerMP player, TileEntity tile, ForgeDirection face, Object target);
 
     Class<? extends Container> getContainer();
+
+    void moveItems(GuiContainer firstGui, IRecipeHandler recipe, int recipeIndex);
 }
