@@ -9,7 +9,8 @@
   "client": [
     "MixinAEBaseGui",
     "MixinGuiCraftConfirm",
-    "MixinItemRepo"
+    "MixinItemRepo",
+    "MixinIOverlayHandler"
   ],
   "server": []
 }
