@@ -34,7 +34,10 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IDisplayRepo;
 import appeng.api.util.DimensionalCoord;
+import appeng.client.gui.AEBaseGui;
+import appeng.client.me.ItemRepo;
 import appeng.core.worlddata.WorldData;
 import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.util.Platform;
@@ -215,6 +218,27 @@ public class Util {
                 .getItem() instanceof ItemPotion) {
             return fillStack.right;
         }
+        return null;
+    }
+
+    public static IDisplayRepo getDisplayRepo(AEBaseGui gui) {
+        return getDisplayRepo(gui, gui.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    private static IDisplayRepo getDisplayRepo(AEBaseGui gui, Class<? extends AEBaseGui> clazz) {
+        try {
+            if (clazz == AEBaseGui.class) {
+                return null;
+            }
+            for (Field f : clazz.getDeclaredFields()) {
+                if (f.getType() == IDisplayRepo.class || f.getType() == ItemRepo.class) {
+                    f.setAccessible(true);
+                    return (IDisplayRepo) f.get(gui);
+                }
+            }
+            return getDisplayRepo(gui, (Class<? extends AEBaseGui>) clazz.getSuperclass());
+        } catch (Exception ignored) {}
         return null;
     }
 

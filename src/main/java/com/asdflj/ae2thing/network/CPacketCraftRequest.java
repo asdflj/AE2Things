@@ -9,6 +9,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.api.ICraftingTerminalAdapter;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
@@ -20,7 +22,10 @@ import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.crafting.ICraftingJob;
+import appeng.api.networking.security.IActionHost;
+import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.container.implementations.ContainerCraftConfirm;
@@ -105,9 +110,10 @@ public class CPacketCraftRequest implements IMessage {
         @Nullable
         @Override
         public IMessage onMessage(CPacketCraftRequest message, MessageContext ctx) {
-            if (ctx.getServerHandler().playerEntity.openContainer instanceof final ContainerCraftAmount cca) {
-                EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-                final Object target = cca.getTarget();
+            EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+            Object target;
+            if (player.openContainer instanceof final ContainerCraftAmount cca) {
+                target = cca.getTarget();
                 if (target instanceof final IGridHost gh) {
                     final IGridNode gn = gh.getGridNode(ForgeDirection.UNKNOWN);
 
@@ -169,6 +175,61 @@ public class CPacketCraftRequest implements IMessage {
                             }
                         }
                     } catch (final Throwable e) {
+                        if (futureJob != null) {
+                            futureJob.cancel(true);
+                        }
+                        AELog.debug(e);
+                    }
+                }
+            } else if (player.openContainer instanceof AEBaseContainer c) {
+                target = c.getTarget();
+                if (target instanceof final IGridHost gh) {
+                    final IGridNode gn = gh.getGridNode(ForgeDirection.UNKNOWN);
+
+                    if (gn == null) {
+                        return null;
+                    }
+
+                    final IGrid g = gn.getGrid();
+                    if (g == null) {
+                        return null;
+                    }
+                    Future<ICraftingJob> futureJob = null;
+                    try {
+                        final ICraftingGrid cg = g.getCache(ICraftingGrid.class);
+                        if (cg instanceof CraftingGridCache cgc) {
+
+                            futureJob = cgc.beginCraftingJob(
+                                player.getEntityWorld(),
+                                ((IActionHost)target).getActionableNode().getGrid(),
+                                new PlayerSource(player, (IActionHost)target),
+                                message.item,
+                                message.craftingMode,
+                                null);
+                        } else {
+                            futureJob = cg.beginCraftingJob(
+                                player.getEntityWorld(),
+                                ((IActionHost)target).getActionableNode().getGrid(),
+                                new PlayerSource(player, (IActionHost)target),
+                                message.item,
+                                null);
+                        }
+                        final ContainerOpenContext context = c.getOpenContext();
+                        if (context != null) {
+                            for (ICraftingTerminalAdapter adapter:AE2ThingAPI.instance().getCraftingTerminal().values()){
+                                if(player.openContainer.getClass() == adapter.getContainer()){
+                                    final TileEntity te = context.getTile();
+                                    adapter.openGui(player,te,context.getSide(),target);
+                                }
+                            }
+                            if (player.openContainer instanceof final ContainerCraftConfirm ccc) {
+                                ccc.setItemToCraft(message.item);
+                                ccc.setAutoStart(message.heldShift);
+                                ccc.setJob(futureJob);
+                                ccc.detectAndSendChanges();
+                            }
+                        }
+                    } catch (Exception e) {
                         if (futureJob != null) {
                             futureJob.cancel(true);
                         }

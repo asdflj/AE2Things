@@ -71,3 +71,7 @@ ae2thing.nei.find_cell_item.in_other_dim=ME Storage Cell at dimension: %d and ca
 ae2thing.key.open_terminal=Open Terminal
 
 itemGroup.ae2thing=AE2 Thing
+
+
+nei.gui.request_missing_item=Request missing items
+nei.gui.request_missing_item.key=CTRL + Click
