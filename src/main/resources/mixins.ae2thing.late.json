@@ -12,7 +12,8 @@
     "MixinItemRepo",
     "MixinIOverlayHandler",
     "MixinNEEContainerDrawHandler",
-    "MixinGuiOverlayButton"
+    "MixinGuiOverlayButton",
+    "MixinGuiUtils"
   ],
   "server": []
 }
