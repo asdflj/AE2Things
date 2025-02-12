@@ -44,7 +44,7 @@ public abstract class MixinAEBaseGui extends GuiScreen {
     private static boolean drawPlus = false;
 
     @Inject(
-        method = "drawGuiContainerBackgroundLayer",
+        method = { "drawGuiContainerBackgroundLayer", "func_146976_a" },
         at = @At(value = "INVOKE", target = "Lappeng/client/gui/AEBaseGui;drawBG(IIII)V", shift = At.Shift.AFTER),
         remap = false)
     @SuppressWarnings({ "unchecked" })
