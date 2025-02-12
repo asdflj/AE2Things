@@ -96,7 +96,7 @@ public abstract class MixinGuiOverlayButton {
                     .copy())
             .collect(Collectors.toCollection(ArrayList::new));
 
-        for (PositionedStack stack : ingredients) {
+        out: for (PositionedStack stack : ingredients) {
             Optional<ItemStack> used = invStacks.stream()
                 .filter(is -> is.stackSize > 0 && stack.contains(is))
                 .findAny();
@@ -115,7 +115,7 @@ public abstract class MixinGuiOverlayButton {
                 for (IAEItemStack is : list.findFuzzy(item, FuzzyMode.IGNORE_ALL)) {
                     if (is.getStackSize() > 0 && stack.contains(is.getItemStack())) {
                         is.decStackSize(1);
-                        break;
+                        continue out;
                     }
                 }
                 if (stored != null && stored.isCraftable()) {
