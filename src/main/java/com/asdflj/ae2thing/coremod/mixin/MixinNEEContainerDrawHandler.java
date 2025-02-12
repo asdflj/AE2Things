@@ -16,4 +16,9 @@ public abstract class MixinNEEContainerDrawHandler {
     private void drawCraftingHelperTooltip(GuiRecipe guiRecipe, int mouseX, int mouseY, CallbackInfo ci) {
         ci.cancel();
     }
+
+    @Inject(method = "initIngredientTracker", at = @At(value = "HEAD"), remap = false, cancellable = true)
+    private void initIngredientTracker(GuiRecipe gui, CallbackInfo ci) {
+        ci.cancel();
+    }
 }
