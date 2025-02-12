@@ -12,6 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.spongepowered.asm.mixin.Mixin;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
 import com.asdflj.ae2thing.nei.AEItemOverlayState;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.Util;
@@ -39,14 +40,16 @@ public interface MixinIOverlayHandler extends IOverlayHandler {
         final List<GuiOverlayButton.ItemOverlayState> itemPresenceSlots = new ArrayList<>();
         final List<PositionedStack> ingredients = recipe.getIngredientStacks(recipeIndex);
         IItemList<IAEItemStack> list = null;
-        if (AE2ThingAPI.instance()
+        if (firstGui instanceof IGuiMonitor gm) {
+            list = Ae2ReflectClient.getList(gm.getRepo());
+        } else if (AE2ThingAPI.instance()
             .getTerminal()
             .contains(firstGui.getClass())) {
-            IDisplayRepo repo = Util.getDisplayRepo((AEBaseGui) firstGui);
-            if (repo instanceof ItemRepo) {
-                list = Ae2ReflectClient.getList((ItemRepo) repo);
+                IDisplayRepo repo = Util.getDisplayRepo((AEBaseGui) firstGui);
+                if (repo instanceof ItemRepo) {
+                    list = Ae2ReflectClient.getList((ItemRepo) repo);
+                }
             }
-        }
         final List<ItemStack> invStacks = firstGui.inventorySlots.inventorySlots.stream()
             .filter(
                 s -> s != null && s.getStack() != null
