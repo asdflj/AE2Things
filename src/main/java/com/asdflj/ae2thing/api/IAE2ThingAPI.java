@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.api;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import com.asdflj.ae2thing.common.storage.StorageManager;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IItemList;
 import appeng.client.gui.AEBaseGui;
 import appeng.me.Grid;
 
@@ -74,4 +76,14 @@ public interface IAE2ThingAPI {
     void pushHistory(long networkID, LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos);
 
     void saveHistory();
+
+    void registerCraftingTerminal(Class<? extends AEBaseGui> terminal, ICraftingTerminalAdapter adapter);
+
+    HashMap<Class<? extends AEBaseGui>, ICraftingTerminalAdapter> getCraftingTerminal();
+
+    void addTrackingMissingItem(IAEItemStack is);
+
+    IItemList<IAEItemStack> getTrakingMissingItems();
+
+    void clearTrakingMissingItems();
 }

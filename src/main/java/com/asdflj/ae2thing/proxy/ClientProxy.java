@@ -1,6 +1,7 @@
 package com.asdflj.ae2thing.proxy;
 
 import static codechicken.lib.gui.GuiDraw.getMousePosition;
+import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
 import java.awt.Point;
 
@@ -12,7 +13,12 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTerminal;
 
+import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.client.adapter.AECraftingTerminal;
+import com.asdflj.ae2thing.client.adapter.FCCraftingTerminal;
+import com.asdflj.ae2thing.client.adapter.WCTCraftingTerminal;
+import com.asdflj.ae2thing.client.event.CraftTracking;
 import com.asdflj.ae2thing.client.gui.BaseMEGui;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiMonitor;
@@ -23,6 +29,7 @@ import com.asdflj.ae2thing.loader.KeybindLoader;
 import com.asdflj.ae2thing.loader.ListenerLoader;
 import com.asdflj.ae2thing.loader.RenderLoader;
 import com.asdflj.ae2thing.nei.recipes.DefaultExtractorLoader;
+import com.asdflj.ae2thing.network.CPacketCraftRequest;
 import com.asdflj.ae2thing.util.FindITUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.client.gui.GuiFluidCraftingWireless;
@@ -31,6 +38,8 @@ import com.glodblock.github.client.gui.GuiFluidPatternTerminal;
 import com.glodblock.github.client.gui.GuiFluidPatternTerminalEx;
 import com.glodblock.github.client.gui.GuiFluidPatternWireless;
 
+import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IItemList;
 import appeng.client.gui.implementations.GuiCraftingTerm;
 import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.client.gui.implementations.GuiPatternTerm;
@@ -40,6 +49,7 @@ import codechicken.nei.LayoutManager;
 import codechicken.nei.api.API;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 
@@ -61,6 +71,28 @@ public class ClientProxy extends CommonProxy {
             }
             if (ModAndClassUtil.FIND_IT) {
                 FindITUtil.instance.run();
+            }
+        }
+    }
+
+    @Override
+    public void preInit(FMLPreInitializationEvent event) {
+        super.preInit(event);
+    }
+
+    @SubscribeEvent
+    public void trackingMissingItems(CraftTracking c) {
+        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+        IItemList<IAEItemStack> list = AE2ThingAPI.instance()
+            .getTrakingMissingItems();
+        if (screen != null && !list.isEmpty()
+            && AE2ThingAPI.instance()
+                .getCraftingTerminal()
+                .containsKey(screen.getClass())) {
+            for (IAEItemStack is : list) {
+                AE2Thing.proxy.netHandler.sendToServer(new CPacketCraftRequest(is, isShiftKeyDown()));
+                is.reset();
+                break;
             }
         }
     }
@@ -92,9 +124,16 @@ public class ClientProxy extends CommonProxy {
             .registerTerminal(GuiFluidCraftingWireless.class);
         AE2ThingAPI.instance()
             .registerTerminal(GuiWirelessTerm.class);
+
+        AE2ThingAPI.instance()
+            .registerCraftingTerminal(GuiCraftingTerm.class, new AECraftingTerminal());
+        AE2ThingAPI.instance()
+            .registerCraftingTerminal(GuiFluidCraftingWireless.class, new FCCraftingTerminal());
         if (ModAndClassUtil.WCT) {
             AE2ThingAPI.instance()
                 .registerTerminal(GuiWirelessCraftingTerminal.class);
+            AE2ThingAPI.instance()
+                .registerCraftingTerminal(GuiWirelessCraftingTerminal.class, new WCTCraftingTerminal());
         }
         if (ModAndClassUtil.THE) {
             AE2ThingAPI.instance()
@@ -137,6 +176,17 @@ public class ClientProxy extends CommonProxy {
         if (event.gui instanceof BaseMEGui bg) {
             bg.initDone();
         }
+        if (AE2ThingAPI.instance()
+            .getCraftingTerminal()
+            .containsKey(event.gui.getClass())) {
+            MinecraftForge.EVENT_BUS.post(new CraftTracking());
+        }
+
+    }
+
+    @SubscribeEvent
+    public void initGuiEvent(GuiScreenEvent.InitGuiEvent.Pre event) {
+
     }
 
     @SubscribeEvent

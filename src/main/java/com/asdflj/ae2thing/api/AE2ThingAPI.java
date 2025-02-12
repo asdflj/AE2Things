@@ -5,6 +5,7 @@ import static net.minecraft.init.Items.glass_bottle;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,8 +37,10 @@ import com.asdflj.ae2thing.util.NameConst;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 import com.glodblock.github.util.Util;
 
+import appeng.api.AEApi;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IItemList;
 import appeng.client.gui.AEBaseGui;
 import appeng.me.Grid;
 import appeng.util.ReadableNumberConverter;
@@ -62,6 +65,10 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     public static final ReadableNumberConverter readableNumber = ReadableNumberConverter.INSTANCE;
     public static final List<IAEItemStack> pinnedCache = new ArrayList<>();
     private static final HashSet<Class<? extends AEBaseGui>> TERMINAL = new HashSet<>();
+    private static final HashMap<Class<? extends AEBaseGui>, ICraftingTerminalAdapter> CRAFTING_TERMINAL = new HashMap<>();
+    private final IItemList<IAEItemStack> tracking = AEApi.instance()
+        .storage()
+        .createPrimitiveItemList();
 
     public static AE2ThingAPI instance() {
         return API;
@@ -269,6 +276,31 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
                 new ChatComponentText(
                     I18n.format(NameConst.CRAFTING_DEBUG_CARD_EXPORT_FILE, Constants.DEBUG_CARD_EXPORT_FILENAME)));
         } catch (Exception ignored) {}
+    }
+
+    @Override
+    public void registerCraftingTerminal(Class<? extends AEBaseGui> terminal, ICraftingTerminalAdapter adapter) {
+        CRAFTING_TERMINAL.put(terminal, adapter);
+    }
+
+    @Override
+    public HashMap<Class<? extends AEBaseGui>, ICraftingTerminalAdapter> getCraftingTerminal() {
+        return CRAFTING_TERMINAL;
+    }
+
+    @Override
+    public void addTrackingMissingItem(IAEItemStack is) {
+        tracking.add(is);
+    }
+
+    @Override
+    public IItemList<IAEItemStack> getTrakingMissingItems() {
+        return tracking;
+    }
+
+    @Override
+    public void clearTrakingMissingItems() {
+        tracking.resetStatus();
     }
 
 }

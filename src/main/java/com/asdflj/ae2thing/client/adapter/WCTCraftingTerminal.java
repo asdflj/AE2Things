@@ -1,0 +1,30 @@
+package com.asdflj.ae2thing.client.adapter;
+
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
+import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
+import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
+
+import com.asdflj.ae2thing.api.ICraftingTerminalAdapter;
+
+public class WCTCraftingTerminal implements ICraftingTerminalAdapter {
+
+    @Override
+    public void openGui(EntityPlayerMP player, TileEntity tile, ForgeDirection face, Object target) {
+        WCTGuiHandler.launchGui(
+            Reference.GUI_CRAFT_CONFIRM,
+            player,
+            player.worldObj,
+            (int) player.posX,
+            (int) player.posY,
+            (int) player.posZ);
+    }
+
+    @Override
+    public Class<? extends Container> getContainer() {
+        return ContainerWirelessCraftingTerminal.class;
+    }
+}

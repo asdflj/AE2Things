@@ -10,7 +10,9 @@
     "MixinAEBaseGui",
     "MixinGuiCraftConfirm",
     "MixinItemRepo",
-    "MixinIOverlayHandler"
+    "MixinIOverlayHandler",
+    "MixinNEEContainerDrawHandler",
+    "MixinGuiOverlayButton"
   ],
   "server": []
 }

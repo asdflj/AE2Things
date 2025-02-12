@@ -96,5 +96,4 @@ public interface MixinIOverlayHandler extends IOverlayHandler {
 
         return itemPresenceSlots;
     }
-
 }

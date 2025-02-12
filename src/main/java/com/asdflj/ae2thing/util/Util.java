@@ -37,6 +37,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IDisplayRepo;
 import appeng.api.util.DimensionalCoord;
 import appeng.client.gui.AEBaseGui;
+import appeng.client.me.ItemRepo;
 import appeng.core.worlddata.WorldData;
 import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.util.Platform;
@@ -231,7 +232,7 @@ public class Util {
                 return null;
             }
             for (Field f : clazz.getDeclaredFields()) {
-                if (f.getType() == IDisplayRepo.class) {
+                if (f.getType() == IDisplayRepo.class || f.getType() == ItemRepo.class) {
                     f.setAccessible(true);
                     return (IDisplayRepo) f.get(gui);
                 }

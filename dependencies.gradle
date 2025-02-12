@@ -48,7 +48,8 @@ dependencies {
 
     // nei findit
     compileOnly('com.github.GTNewHorizons:FindIt:1.3.10:dev')
-
+    //nee
+//    compileOnly('com.github.GTNewHorizons:NotEnoughEnergistics:1.7.0:dev')
     //backpack
     compile('com.github.GTNewHorizons:AdventureBackpack2:1.1.3-GTNH:dev')
     compile('com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.3.0-GTNH:dev')
