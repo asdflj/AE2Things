@@ -87,7 +87,7 @@ public interface MixinIOverlayHandler extends IOverlayHandler {
                         .isCraftable();
                 } else if (fs == null) {
                     for (IAEItemStack is : list.findFuzzy(item, FuzzyMode.IGNORE_ALL)) {
-                        if (is.getStackSize() > 0 && stack.contains(is.getItemStack())) {
+                        if (stack.contains(is.getItemStack())) {
                             found = true;
                             if (is.isCraftable()) {
                                 isCraftable = true;
