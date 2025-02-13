@@ -1,5 +1,7 @@
 package com.asdflj.ae2thing.client.gui.container;
 
+import static com.asdflj.ae2thing.api.Constants.MessageType.UPDATE_PLAYER_ITEM;
+
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
@@ -491,7 +493,7 @@ public abstract class ContainerMonitor extends BaseNetworkContainer
                 shouldSendStack = false;
             }
         }
-        SPacketMEItemInvUpdate packet = new SPacketMEItemInvUpdate((byte) 1);
+        SPacketMEItemInvUpdate packet = new SPacketMEItemInvUpdate(UPDATE_PLAYER_ITEM);
         if (shouldSendStack) {
             packet.appendItem(
                 AEApi.instance()
@@ -685,7 +687,7 @@ public abstract class ContainerMonitor extends BaseNetworkContainer
             player.inventory.setItemStack(null);
             shouldSendStack = false;
         }
-        SPacketMEItemInvUpdate packet = new SPacketMEItemInvUpdate((byte) 1);
+        SPacketMEItemInvUpdate packet = new SPacketMEItemInvUpdate(UPDATE_PLAYER_ITEM);
         if (shouldSendStack) {
             packet.appendItem(
                 AEApi.instance()

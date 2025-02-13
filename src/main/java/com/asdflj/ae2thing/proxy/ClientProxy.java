@@ -52,6 +52,7 @@ import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
 
 public class ClientProxy extends CommonProxy {
 
@@ -154,6 +155,9 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     public void tickEvent(TickEvent.PlayerTickEvent event) {
+        AE2ThingAPI.instance()
+            .getPinned()
+            .updateCraftingItems();
         if (Config.backPackTerminalFillItemName && refreshTick + 500 < System.currentTimeMillis()
             && ModAndClassUtil.NEI) {
             if (Minecraft.getMinecraft().currentScreen instanceof GuiMonitor gim) {
@@ -167,7 +171,6 @@ public class ClientProxy extends CommonProxy {
                 }
             }
         }
-
     }
 
     @SubscribeEvent
@@ -180,12 +183,13 @@ public class ClientProxy extends CommonProxy {
             .containsKey(event.gui.getClass())) {
             MinecraftForge.EVENT_BUS.post(new CraftTracking());
         }
-
     }
 
     @SubscribeEvent
     public void initGuiEvent(GuiScreenEvent.InitGuiEvent.Pre event) {
-
+        AE2ThingAPI.instance()
+            .getPinned()
+            .prune();
     }
 
     @SubscribeEvent
@@ -209,5 +213,12 @@ public class ClientProxy extends CommonProxy {
         if (ModAndClassUtil.FIND_IT) {
             FindITUtil.instance.highlighter();
         }
+    }
+
+    @SubscribeEvent
+    public void ClientDisconnectionFromServerEvent(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+        AE2ThingAPI.instance()
+            .getPinned()
+            .clear();
     }
 }

@@ -1,5 +1,7 @@
 package com.asdflj.ae2thing.util;
 
+import static com.asdflj.ae2thing.api.Constants.MessageType.UPDATE_PLAYER_ITEM;
+
 import java.util.Optional;
 
 import net.minecraft.client.Minecraft;
@@ -55,7 +57,7 @@ public class GTUtil {
                 dataStick
                     .setStackDisplayName("Crafting Input Buffer Link Data Stick (" + x + ", " + y + ", " + z + ")");
                 player.addChatMessage(new ChatComponentText("Saved Link Data to Data Stick"));
-                SPacketMEItemInvUpdate packet = new SPacketMEItemInvUpdate((byte) 1);
+                SPacketMEItemInvUpdate packet = new SPacketMEItemInvUpdate(UPDATE_PLAYER_ITEM);
                 packet.appendItem(AEItemStack.create(dataStick));
                 AE2Thing.proxy.netHandler.sendTo(packet, (EntityPlayerMP) player);
             }

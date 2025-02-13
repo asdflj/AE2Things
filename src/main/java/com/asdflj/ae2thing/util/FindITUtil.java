@@ -93,6 +93,7 @@ public class FindITUtil implements Runnable {
         }
         if (c.getTarget() instanceof TileEntity t) {
             HashSet<Slot> slots = getSlots(c, t);
+            if (slots.isEmpty()) return;
             slotHighlighter.highlightSlots(guiContainer, slots, FindItConfig.ITEM_HIGHLIGHTING_COLOR);
         }
     }
@@ -102,6 +103,7 @@ public class FindITUtil implements Runnable {
         for (CellPos cellPos : cellPosList) {
             if (cellPos.getCoord()
                 .equals(new DimensionalCoord(t))) {
+                if (cellPos.getSlot() == -1) continue;
                 for (int i = 0; i < c.inventorySlots.size(); i++) {
                     Slot s = c.inventorySlots.get(i);
                     if (s instanceof SlotRestrictedInput si && si.getSlotIndex() == cellPos.getSlot()) {

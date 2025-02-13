@@ -15,5 +15,7 @@
     "MixinGuiOverlayButton",
     "MixinGuiUtils"
   ],
-  "server": []
+  "server": [
+    "MixinContainerCraftConfirm"
+  ]
 }

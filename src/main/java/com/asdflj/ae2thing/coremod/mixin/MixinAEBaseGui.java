@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.coremod.mixin;
 
+import java.awt.Color;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
-import com.asdflj.ae2thing.network.CPacketNetworkCraftingItems;
+import com.asdflj.ae2thing.api.Pinned;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
@@ -42,6 +43,7 @@ public abstract class MixinAEBaseGui extends GuiScreen {
     protected abstract List<Slot> getInventorySlots();
 
     private static boolean drawPlus = false;
+    private Color color;
 
     @Inject(
         method = { "drawGuiContainerBackgroundLayer", "func_146976_a" },
@@ -49,6 +51,7 @@ public abstract class MixinAEBaseGui extends GuiScreen {
         remap = false)
     @SuppressWarnings({ "unchecked" })
     private void drawPin(float f, int x, int y, CallbackInfo ci) {
+        color = getDynamicColor();
         if (!AE2ThingAPI.instance()
             .getTerminal()
             .contains(this.getClass())) return;
@@ -116,6 +119,44 @@ public abstract class MixinAEBaseGui extends GuiScreen {
         }
     }
 
+    @Inject(method = "drawAESlot", at = @At("TAIL"), remap = false)
+    private void drawAESlotBG(Slot slotIn, CallbackInfo ci) {
+        if (slotIn instanceof SlotME slotME && slotME.getHasStack()) {
+            int x = slotIn.xDisplayPosition;
+            int y = slotIn.yDisplayPosition;
+            IAEItemStack item = ((SlotME) slotIn).getAEStack();
+            Pinned.PinInfo info = AE2ThingAPI.instance()
+                .getPinned()
+                .getPinInfo(item);
+            if (AE2ThingAPI.instance()
+                .isPinnedItem(item) && info != null
+                && !info.canPrune) {
+                drawSlotBG(x, y);
+            }
+        }
+    }
+
+    private Color getDynamicColor() {
+        long time = System.currentTimeMillis();
+        float hue = (time % 2000) / 2000.0F;
+        Color c = Color.getHSBColor(hue, 1.0F, 1.0F);
+        return new Color(c.getRed(), c.getGreen(), c.getBlue(), 128);
+    }
+
+    private void drawSlotBG(int x, int y) {
+        if (color == null) return;
+        int width = 16;
+        int height = 16;
+        GL11.glPushMatrix();
+        GL11.glTranslatef(0.0f, 0.0f, 250.0f);
+        drawRect(x - 1, y - 1, x + width + 1, y, color.getRGB());
+        drawRect(x - 1, y + height + 1, x + width + 1, y + height, color.getRGB());
+        drawRect(x - 1, y, x, y + height, color.getRGB());
+        drawRect(x + width, y, x + width + 1, y + height, color.getRGB());
+        GL11.glTranslatef(0.0f, 0.0f, -250.0f);
+        GL11.glPopMatrix();
+    }
+
     private static String getModVersion() {
         Optional<ModContainer> mod = Loader.instance()
             .getActiveModList()
@@ -146,25 +187,6 @@ public abstract class MixinAEBaseGui extends GuiScreen {
         Minecraft.getMinecraft()
             .getTextureManager()
             .bindTexture(loc);
-    }
-
-    @Inject(method = "initGui", at = @At("HEAD"))
-    private void initGui(CallbackInfo ci) {
-        if (!AE2ThingAPI.instance()
-            .getTerminal()
-            .contains(this.getClass())) return;
-        CPacketNetworkCraftingItems p = new CPacketNetworkCraftingItems();
-        AE2Thing.proxy.netHandler.sendToServer(p);
-    }
-
-    @Inject(method = "onGuiClosed", at = @At("HEAD"))
-    public void onGuiClosed(CallbackInfo ci) {
-        if (!AE2ThingAPI.instance()
-            .getTerminal()
-            .contains(this.getClass())) return;
-        AE2ThingAPI.instance()
-            .setPinnedItems(AE2ThingAPI.pinnedCache);
-        AE2ThingAPI.pinnedCache.clear();
     }
 
     static {
