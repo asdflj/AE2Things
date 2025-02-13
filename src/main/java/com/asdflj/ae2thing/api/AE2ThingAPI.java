@@ -159,6 +159,12 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     }
 
     @Override
+    public boolean isPinnedItem(IAEItemStack item) {
+        if (item == null) return false;
+        return new HashSet<>(this.pinItems).contains(item);
+    }
+
+    @Override
     public void setPinnedItems(List<IAEItemStack> items) {
         if (items == null || items.isEmpty()) {
             this.pinItems.clear();

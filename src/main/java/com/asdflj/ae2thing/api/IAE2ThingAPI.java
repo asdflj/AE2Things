@@ -47,6 +47,8 @@ public interface IAE2ThingAPI {
 
     void addPinnedItem(IAEItemStack item);
 
+    boolean isPinnedItem(IAEItemStack item);
+
     void setPinnedItems(List<IAEItemStack> items);
 
     void togglePinnedItems(IAEItemStack stack);

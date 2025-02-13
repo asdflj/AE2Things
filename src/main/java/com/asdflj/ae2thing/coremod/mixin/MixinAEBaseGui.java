@@ -81,8 +81,10 @@ public abstract class MixinAEBaseGui extends GuiScreen {
         float startY = y + 0.25f;
         float endX = startX + 3f;
         float endY = startY + 3f;
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glPushMatrix();
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glTranslatef(0f, 0f, 250);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -97,6 +99,8 @@ public abstract class MixinAEBaseGui extends GuiScreen {
         GL11.glEnd();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
+        GL11.glTranslatef(0f, 0f, -250);
+        GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
     }
 
