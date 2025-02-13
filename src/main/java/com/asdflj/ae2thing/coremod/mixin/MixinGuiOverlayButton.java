@@ -35,8 +35,8 @@ import appeng.client.gui.AEBaseGui;
 import appeng.client.me.ItemRepo;
 import appeng.util.item.AEItemStack;
 import codechicken.nei.PositionedStack;
+import codechicken.nei.api.IGuiContainerOverlay;
 import codechicken.nei.recipe.GuiOverlayButton;
-import codechicken.nei.recipe.GuiUsageRecipe;
 import codechicken.nei.recipe.IRecipeHandler;
 
 @Mixin(GuiOverlayButton.class)
@@ -57,10 +57,12 @@ public abstract class MixinGuiOverlayButton {
     @Inject(method = "handleHotkeys", at = @At("TAIL"), remap = false)
     private void handleHotkeys(GuiContainer gui, int mousex, int mousey, Map<String, String> hotkeys,
         CallbackInfoReturnable<Map<String, String>> cir) {
-        if (gui instanceof GuiUsageRecipe gur) {
-            if (AE2ThingAPI.instance()
+        if (gui instanceof IGuiContainerOverlay gur) {
+            if (gur.getFirstScreen() != null && AE2ThingAPI.instance()
                 .getCraftingTerminal()
-                .containsKey(gur.firstGui.getClass())) {
+                .containsKey(
+                    gur.getFirstScreen()
+                        .getClass())) {
                 hotkeys.put(translate("gui.request_missing_item.key"), translate("gui.request_missing_item"));
             }
         }
