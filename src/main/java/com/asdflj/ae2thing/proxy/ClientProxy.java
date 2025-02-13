@@ -83,8 +83,7 @@ public class ClientProxy extends CommonProxy {
     @SubscribeEvent
     public void trackingMissingItems(CraftTracking c) {
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-        IItemList<IAEItemStack> list = AE2ThingAPI.instance()
-            .getTrakingMissingItems();
+        IItemList<IAEItemStack> list = c.getItems();
         if (screen != null && !list.isEmpty()
             && AE2ThingAPI.instance()
                 .getCraftingTerminal()

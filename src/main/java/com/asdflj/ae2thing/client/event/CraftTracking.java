@@ -18,4 +18,9 @@ public class CraftTracking extends Event {
                 .addTrackingMissingItem(stack);
         }
     }
+
+    public IItemList<IAEItemStack> getItems() {
+        return AE2ThingAPI.instance()
+            .getTrakingMissingItems();
+    }
 }

@@ -25,7 +25,6 @@ import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.ICraftingTerminalAdapter;
 import com.asdflj.ae2thing.client.event.CraftTracking;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
-import com.asdflj.ae2thing.util.Util;
 
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
@@ -74,13 +73,16 @@ public abstract class MixinGuiOverlayButton {
         if (GuiScreen.isShiftKeyDown()) {
             moveItems();
         }
-        if (!GuiScreen.isCtrlKeyDown()) return;
+        if (!GuiScreen.isCtrlKeyDown() || !(firstGui instanceof AEBaseGui gui)) return;
         final List<PositionedStack> ingredients = this.handler.getIngredientStacks(recipeIndex);
         IItemList<IAEItemStack> list = null;
         if (AE2ThingAPI.instance()
             .getCraftingTerminal()
-            .containsKey(firstGui.getClass())) {
-            IDisplayRepo repo = Util.getDisplayRepo((AEBaseGui) firstGui);
+            .containsKey(gui.getClass())) {
+            IDisplayRepo repo = AE2ThingAPI.instance()
+                .getCraftingTerminal()
+                .get(gui.getClass())
+                .gerRepo(gui);
             if (repo instanceof ItemRepo) {
                 list = copyItemList(Ae2ReflectClient.getList((ItemRepo) repo));
             }
