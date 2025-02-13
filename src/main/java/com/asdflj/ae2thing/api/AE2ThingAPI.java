@@ -4,7 +4,6 @@ import static net.minecraft.init.Items.glass_bottle;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -53,17 +52,16 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     public static final ItemStack BUCKET = new ItemStack(Items.bucket, 1);
     public static final ItemStack PHIAL = createEmptyPhial();
     public static final ItemStack GLASS_BOTTLE = new ItemStack(glass_bottle, 1);
-    public static int maxPinSize = 9;
+
     public static int maxSelectionRows = 5;
     public static final Fluid Mana = new Mana();
     private static final AE2ThingAPI API = new AE2ThingAPI();
     public static final int CRAFTING_HISTORY_SIZE = Config.craftingHistorySize;
     private final Set<Class<? extends Item>> backpackItems = new HashSet<>();
     private StorageManager storageManager = null;
-    private final LimitedSizeLinkedList<IAEItemStack> pinItems = new LimitedSizeLinkedList<>(maxPinSize);
+
     private ItemStack fluidContainer = BUCKET;
     public static final ReadableNumberConverter readableNumber = ReadableNumberConverter.INSTANCE;
-    public static final List<IAEItemStack> pinnedCache = new ArrayList<>();
     private static final HashSet<Class<? extends AEBaseGui>> TERMINAL = new HashSet<>();
     private static final HashMap<Class<? extends AEBaseGui>, ICraftingTerminalAdapter> CRAFTING_TERMINAL = new HashMap<>();
     private final IItemList<IAEItemStack> tracking = AEApi.instance()
@@ -149,35 +147,36 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
 
     @Override
     public List<IAEItemStack> getPinnedItems() {
-        return this.pinItems;
+        return this.getPinned()
+            .getPinnedItems();
     }
 
     @Override
     public void addPinnedItem(IAEItemStack item) {
-        if (item == null) return;
-        if (!this.pinItems.contains(item)) this.pinItems.add(item);
+        this.getPinned()
+            .add(item);
     }
 
     @Override
-    public void setPinnedItems(List<IAEItemStack> items) {
-        if (items == null || items.isEmpty()) {
-            this.pinItems.clear();
-            return;
-        }
-        List<IAEItemStack> list = new ArrayList<>();
-        for (IAEItemStack item : this.pinItems) {
-            if (items.contains(item)) {
-                list.add(item);
-            }
-        }
-        this.pinItems.clear();
-        this.pinItems.addAll(list);
+    public boolean isPinnedItem(IAEItemStack item) {
+        return this.getPinned()
+            .isPinnedItem(item);
+    }
+
+    @Override
+    public Pinned getPinned() {
+        return Pinned.INSTANCE;
+    }
+
+    @Override
+    public void updatePinnedItems(List<IAEItemStack> items) {
+        getPinned().updatePinnedItems(items);
     }
 
     @Override
     public void togglePinnedItems(IAEItemStack stack) {
-        if (stack == null || this.pinItems.remove(stack)) return;
-        this.pinItems.add(stack);
+        this.getPinned()
+            .togglePinnedItems(stack);
     }
 
     @SideOnly(Side.CLIENT)

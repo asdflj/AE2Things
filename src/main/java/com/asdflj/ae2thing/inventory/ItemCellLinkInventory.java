@@ -1,5 +1,7 @@
 package com.asdflj.ae2thing.inventory;
 
+import static com.asdflj.ae2thing.api.Constants.MessageType.UPDATE_PLAYER_CURRENT_ITEM;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -37,7 +39,7 @@ public class ItemCellLinkInventory extends BiggerAppEngInventory implements Base
             StorageManager m = AE2ThingAPI.instance()
                 .getStorageManager();
             m.getStorage(this.is, this.player);
-            SPacketMEItemInvUpdate piu = new SPacketMEItemInvUpdate((byte) -1);
+            SPacketMEItemInvUpdate piu = new SPacketMEItemInvUpdate(UPDATE_PLAYER_CURRENT_ITEM);
             piu.appendItem(AEItemStack.create(this.is));
             AE2Thing.proxy.netHandler.sendTo(piu, (EntityPlayerMP) player);
         }

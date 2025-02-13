@@ -33,4 +33,23 @@ public interface Constants {
     String DEBUG_CARD_EXPORT_FILENAME = "history.json";
     int MODE_CRAFTING = 1;
     int MODE_PROCESSING = 0;
+
+    enum MessageType {
+
+        UPDATE_ITEMS(0),
+        UPDATE_PLAYER_ITEM(1),
+        UPDATE_PLAYER_CURRENT_ITEM(-1),
+        UPDATE_PINNED_ITEMS(-2),
+        ADD_PINNED_ITEM(-3);
+
+        public final byte type;
+
+        MessageType(int t) {
+            this.type = (byte) t;
+        }
+
+        MessageType(byte t) {
+            this.type = t;
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.asdflj.ae2thing.network;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.api.Constants;
 
 import appeng.api.networking.crafting.ICraftingCPU;
 import appeng.api.networking.crafting.ICraftingGrid;
@@ -32,17 +33,19 @@ public class CPacketNetworkCraftingItems implements IMessage {
         @Override
         public IMessage onMessage(CPacketNetworkCraftingItems message, MessageContext ctx) {
             EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-            if (player.openContainer instanceof AEBaseContainer c && c.getTarget() instanceof IActionHost host) {
-                ICraftingGrid craftingGrid = host.getActionableNode()
-                    .getGrid()
-                    .getCache(ICraftingGrid.class);
-                SPacketMEItemInvUpdate piu = new SPacketMEItemInvUpdate((byte) -2);
-                for (ICraftingCPU cpu : craftingGrid.getCpus()) {
-                    if (cpu.getFinalOutput() == null || !cpu.isBusy()) continue;
-                    piu.appendItem(cpu.getFinalOutput());
+            try {
+                if (player.openContainer instanceof AEBaseContainer c && c.getTarget() instanceof IActionHost host) {
+                    ICraftingGrid craftingGrid = host.getActionableNode()
+                        .getGrid()
+                        .getCache(ICraftingGrid.class);
+                    SPacketMEItemInvUpdate piu = new SPacketMEItemInvUpdate(Constants.MessageType.UPDATE_PINNED_ITEMS);
+                    for (ICraftingCPU cpu : craftingGrid.getCpus()) {
+                        if (cpu.getFinalOutput() == null || !cpu.isBusy()) continue;
+                        piu.appendItem(cpu.getFinalOutput());
+                    }
+                    AE2Thing.proxy.netHandler.sendTo(piu, player);
                 }
-                AE2Thing.proxy.netHandler.sendTo(piu, player);
-            }
+            } catch (Exception ignored) {}
             return null;
         }
     }

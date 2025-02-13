@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.util.CellPos;
+import com.glodblock.github.common.parts.PartFluidStorageBus;
 import com.glodblock.github.util.Util;
 
 import appeng.api.AEApi;
@@ -19,6 +20,7 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.DimensionalCoord;
 import appeng.container.AEBaseContainer;
+import appeng.parts.misc.PartStorageBus;
 import appeng.tile.storage.TileChest;
 import appeng.tile.storage.TileDrive;
 import appeng.util.item.AEFluidStack;
@@ -92,14 +94,31 @@ public class CPacketFindCellItem implements IMessage {
                         }
                     }
                 }
+                for (IGridNode node : ps.via.getActionableNode()
+                    .getGrid()
+                    .getMachines(PartStorageBus.class)) {
+                    if (node.getMachine() instanceof PartStorageBus bus) {
+                        if (findStack(bus.getInternalHandler(), false, message.item)) {
+                            posList.add(new CellPos(new DimensionalCoord(bus.getTile()), bus.getSide()));
+                        }
+                    }
+                }
+                for (IGridNode node : ps.via.getActionableNode()
+                    .getGrid()
+                    .getMachines(PartFluidStorageBus.class)) {
+                    if (node.getMachine() instanceof PartFluidStorageBus bus) {
+                        if (findStack(bus.getInternalHandler(), true, message.item)) {
+                            posList.add(new CellPos(new DimensionalCoord(bus.getTile()), bus.getSide()));
+                        }
+                    }
+                }
                 if (!posList.isEmpty()) AE2Thing.proxy.netHandler.sendTo(new SPacketFindCellItem(posList), player);
             }
 
             return null;
         }
 
-        private boolean findStack(ItemStack cell, boolean isFluid, IAEItemStack request) {
-            IMEInventory inv = getInv(cell, isFluid ? StorageChannel.FLUIDS : StorageChannel.ITEMS);
+        private boolean findStack(IMEInventory inv, boolean isFluid, IAEItemStack request) {
             if (inv == null) return false;
             boolean result;
             if (isFluid) {
@@ -109,6 +128,11 @@ public class CPacketFindCellItem implements IMessage {
                 result = inv.getAvailableItem(request) != null;
             }
             return result;
+        }
+
+        private boolean findStack(ItemStack cell, boolean isFluid, IAEItemStack request) {
+            IMEInventory inv = getInv(cell, isFluid ? StorageChannel.FLUIDS : StorageChannel.ITEMS);
+            return findStack(inv, isFluid, request);
         }
 
         private IMEInventory getInv(final ItemStack is, StorageChannel channel) {

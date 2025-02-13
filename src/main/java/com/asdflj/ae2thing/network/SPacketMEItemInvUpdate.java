@@ -1,6 +1,5 @@
 package com.asdflj.ae2thing.network;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -9,10 +8,10 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.client.gui.IGuiMonitorTerminal;
 
 import appeng.api.storage.data.IAEItemStack;
-import appeng.api.storage.data.IDisplayRepo;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -33,6 +32,10 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
         super(b);
     }
 
+    public SPacketMEItemInvUpdate(Constants.MessageType type) {
+        this(type.type);
+    }
+
     public void appendItem(final IAEItemStack is) {
         list.add(is);
     }
@@ -42,24 +45,6 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
     }
 
     public static class Handler implements IMessageHandler<SPacketMEItemInvUpdate, IMessage> {
-
-        private IDisplayRepo getRepo(Class cls, Field[] fields, GuiScreen screen) {
-            if (cls == null) return null;
-            for (Field f : fields) {
-                if (f.getName()
-                    .equalsIgnoreCase("repo")) {
-                    f.setAccessible(true);
-                    try {
-                        return (IDisplayRepo) f.get(screen);
-                    } catch (Exception e) {}
-                }
-            }
-            return getRepo(
-                cls.getSuperclass(),
-                cls.getSuperclass()
-                    .getDeclaredFields(),
-                screen);
-        }
 
         @Override
         @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -76,7 +61,14 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
                     gmt.setPlayerInv(is);
                 }
             } else if (message.ref == -2) {
-                AE2ThingAPI.pinnedCache.addAll((List) message.list);
+                AE2ThingAPI.instance()
+                    .updatePinnedItems((List) message.list);
+            } else if (message.ref == -3) {
+                if (!message.isEmpty()) {
+                    AE2ThingAPI.instance()
+                        .getPinned()
+                        .add(((IAEItemStack) message.list.get(0)));
+                }
             } else if (gs == null) {
                 Minecraft mc = Minecraft.getMinecraft();
                 EntityClientPlayerMP player = mc.thePlayer;

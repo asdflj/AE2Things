@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import appeng.api.util.DimensionalCoord;
 
@@ -12,9 +13,26 @@ public class CellPos {
     private DimensionalCoord coord;
     private int slot;
 
-    public CellPos(DimensionalCoord dimensionalCoord, int slot) {
-        this.coord = dimensionalCoord;
+    private CellPos(DimensionalCoord dimensionalCoord, int slot, ForgeDirection face) {
+        if (face != ForgeDirection.UNKNOWN) {
+            this.coord = offset(dimensionalCoord, face);
+        } else {
+            this.coord = dimensionalCoord;
+        }
         this.slot = slot;
+
+    }
+
+    public static DimensionalCoord offset(DimensionalCoord d, ForgeDirection face) {
+        return new DimensionalCoord(d.getWorld(), d.x + face.offsetX, d.y + face.offsetY, d.z + face.offsetZ);
+    }
+
+    public CellPos(DimensionalCoord dimensionalCoord, ForgeDirection face) {
+        this(dimensionalCoord, -1, face);
+    }
+
+    public CellPos(DimensionalCoord dimensionalCoord, int slot) {
+        this(dimensionalCoord, slot, ForgeDirection.UNKNOWN);
     }
 
     public CellPos(int x, int y, int z, int dim, int slot) {

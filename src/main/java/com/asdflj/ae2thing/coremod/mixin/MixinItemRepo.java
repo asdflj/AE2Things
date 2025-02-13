@@ -104,7 +104,9 @@ public abstract class MixinItemRepo implements IDisplayRepo, IDisplayRepoExtend 
             return;
         }
 
-        for (int i = 0; i < AE2ThingAPI.maxPinSize; i++) {
+        for (int i = 0; i < AE2ThingAPI.instance()
+            .getPinned()
+            .getMaxPinSize(); i++) {
             if (i >= pinItems.size()) {
                 this.setAsEmpty(i);
                 continue;
