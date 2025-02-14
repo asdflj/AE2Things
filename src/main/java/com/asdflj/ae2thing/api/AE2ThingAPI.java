@@ -304,7 +304,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     public boolean isCraftingTerminal(GuiScreen terminal) {
         if (terminal == null) return false;
         if (terminal instanceof GuiContainer gc && gc.inventorySlots != null) {
-            return CRAFTING_TERMINAL.containsKey(gc.getClass());
+            return CRAFTING_TERMINAL.containsKey(gc.inventorySlots.getClass());
         }
         return false;
     }
