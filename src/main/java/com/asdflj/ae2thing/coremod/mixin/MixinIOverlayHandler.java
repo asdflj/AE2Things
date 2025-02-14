@@ -15,6 +15,7 @@ import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
 import com.asdflj.ae2thing.nei.AEItemOverlayState;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
+import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidDrop;
 
 import appeng.api.config.FuzzyMode;
@@ -44,10 +45,7 @@ public interface MixinIOverlayHandler extends IOverlayHandler {
         } else if (AE2ThingAPI.instance()
             .getTerminal()
             .contains(firstGui.getClass())) {
-                IDisplayRepo repo = AE2ThingAPI.instance()
-                    .getCraftingTerminal()
-                    .get(firstGui.getClass())
-                    .gerRepo((AEBaseGui) firstGui);
+                IDisplayRepo repo = Util.getDisplayRepo((AEBaseGui) firstGui);
                 if (repo instanceof ItemRepo) {
                     list = Ae2ReflectClient.getList((ItemRepo) repo);
                 }
