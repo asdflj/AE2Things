@@ -212,12 +212,12 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
 
     @Override
     public void setDefaultFluidContainer(ItemStack item) {
-        this.fluidContainer = item;
+        fluidContainer = item;
     }
 
     @Override
     public ItemStack getDefaultFluidContainer() {
-        return this.fluidContainer;
+        return fluidContainer;
     }
 
     private boolean canFillContainer(ItemStack is, FluidStack fluidStack) {
