@@ -1,9 +1,9 @@
 package com.asdflj.ae2thing.coremod;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
 import com.gtnewhorizon.gtnhmixins.ILateMixinLoader;
 import com.gtnewhorizon.gtnhmixins.LateMixin;
 
@@ -17,15 +17,7 @@ public class AE2LatePlugin implements ILateMixinLoader {
 
     @Override
     public List<String> getMixins(Set<String> loadedMods) {
-        return Lists.newArrayList(
-            "MixinAEBaseGui",
-            "MixinGuiCraftConfirm",
-            "MixinItemRepo",
-            "MixinGuiOverlayButton",
-            "MixinGuiUtils",
-            "MixinIOverlayHandler",
-            "MixinNEEContainerDrawHandler",
-            "MixinContainerCraftConfirm");
+        return Collections.emptyList();
     }
 
 }
