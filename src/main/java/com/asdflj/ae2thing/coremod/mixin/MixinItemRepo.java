@@ -59,6 +59,7 @@ public abstract class MixinItemRepo implements IDisplayRepo, IDisplayRepoExtend 
 
     private boolean addView(ArrayList<Object> view, Object o) {
         GuiScreen gui = mc.currentScreen;
+        if (gui == null) return view.add(o);;
         if (!AE2ThingAPI.instance()
             .getTerminal()
             .contains(gui.getClass())) {
@@ -93,6 +94,7 @@ public abstract class MixinItemRepo implements IDisplayRepo, IDisplayRepoExtend 
     @Inject(method = "updateView", at = @At(value = "TAIL"), remap = false)
     public void updateViewTail(CallbackInfo ci) {
         GuiScreen gui = mc.currentScreen;
+        if (gui == null) return;
         if (!AE2ThingAPI.instance()
             .getTerminal()
             .contains(gui.getClass())) {
