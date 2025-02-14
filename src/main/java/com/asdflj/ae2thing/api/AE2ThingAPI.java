@@ -60,14 +60,14 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     private static final Fluid mana = new Mana();
     private static final AE2ThingAPI API = new AE2ThingAPI();
     public static final int CRAFTING_HISTORY_SIZE = Config.craftingHistorySize;
-    private final Set<Class<? extends Item>> backpackItems = new HashSet<>();
+    private static final Set<Class<? extends Item>> backpackItems = new HashSet<>();
     private StorageManager storageManager = null;
 
-    private ItemStack fluidContainer = BUCKET;
+    private static ItemStack fluidContainer = BUCKET;
     public static final ReadableNumberConverter readableNumber = ReadableNumberConverter.INSTANCE;
     private static final HashSet<Class<? extends AEBaseGui>> terminal = new HashSet<>();
     private static final HashMap<Class<? extends Container>, ICraftingTerminalAdapter> craftingTerminal = new HashMap<>();
-    private final IItemList<IAEItemStack> tracking = AEApi.instance()
+    private static final IItemList<IAEItemStack> tracking = AEApi.instance()
         .storage()
         .createPrimitiveItemList();
 
