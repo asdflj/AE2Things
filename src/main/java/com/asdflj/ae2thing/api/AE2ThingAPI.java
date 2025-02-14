@@ -57,7 +57,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     public static final ItemStack GLASS_BOTTLE = new ItemStack(glass_bottle, 1);
 
     public static int maxSelectionRows = 5;
-    public static final Fluid Mana = new Mana();
+    private static final Fluid mana = new Mana();
     private static final AE2ThingAPI API = new AE2ThingAPI();
     public static final int CRAFTING_HISTORY_SIZE = Config.craftingHistorySize;
     private final Set<Class<? extends Item>> backpackItems = new HashSet<>();
@@ -65,8 +65,8 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
 
     private ItemStack fluidContainer = BUCKET;
     public static final ReadableNumberConverter readableNumber = ReadableNumberConverter.INSTANCE;
-    private static final HashSet<Class<? extends AEBaseGui>> TERMINAL = new HashSet<>();
-    private static final HashMap<Class<? extends Container>, ICraftingTerminalAdapter> CRAFTING_TERMINAL = new HashMap<>();
+    private static final HashSet<Class<? extends AEBaseGui>> terminal = new HashSet<>();
+    private static final HashMap<Class<? extends Container>, ICraftingTerminalAdapter> craftingTerminal = new HashMap<>();
     private final IItemList<IAEItemStack> tracking = AEApi.instance()
         .storage()
         .createPrimitiveItemList();
@@ -95,12 +95,12 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
 
     @Override
     public void registerTerminal(Class<? extends AEBaseGui> clazz) {
-        TERMINAL.add(clazz);
+        terminal.add(clazz);
     }
 
     @Override
     public HashSet<Class<? extends AEBaseGui>> getTerminal() {
-        return TERMINAL;
+        return terminal;
     }
 
     @Override
@@ -232,7 +232,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
 
     @Override
     public Fluid getMana() {
-        return Mana;
+        return mana;
     }
 
     @Override
@@ -286,17 +286,17 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
 
     @Override
     public void registerCraftingTerminal(ICraftingTerminalAdapter adapter) {
-        CRAFTING_TERMINAL.put(adapter.getContainer(), adapter);
+        craftingTerminal.put(adapter.getContainer(), adapter);
     }
 
     @Override
     public HashMap<Class<? extends Container>, ICraftingTerminalAdapter> getCraftingTerminal() {
-        return CRAFTING_TERMINAL;
+        return craftingTerminal;
     }
 
     @Override
     public boolean isCraftingTerminal(Class<? extends Container> terminal) {
-        return CRAFTING_TERMINAL.containsKey(terminal);
+        return craftingTerminal.containsKey(terminal);
     }
 
     @Override
@@ -304,7 +304,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     public boolean isCraftingTerminal(GuiScreen terminal) {
         if (terminal == null) return false;
         if (terminal instanceof GuiContainer gc && gc.inventorySlots != null) {
-            return CRAFTING_TERMINAL.containsKey(gc.inventorySlots.getClass());
+            return craftingTerminal.containsKey(gc.inventorySlots.getClass());
         }
         return false;
     }
