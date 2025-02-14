@@ -9,6 +9,9 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.client.adapter.AECraftingTerminal;
+import com.asdflj.ae2thing.client.adapter.FCCraftingTerminal;
+import com.asdflj.ae2thing.client.adapter.WCTCraftingTerminal;
 import com.asdflj.ae2thing.common.parts.PartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.common.tile.TileInfusionInterface;
@@ -58,7 +61,16 @@ public class CommonProxy {
         }
     }
 
-    public void init(FMLInitializationEvent event) {}
+    public void init(FMLInitializationEvent event) {
+        AE2ThingAPI.instance()
+            .registerCraftingTerminal(new AECraftingTerminal());
+        AE2ThingAPI.instance()
+            .registerCraftingTerminal(new FCCraftingTerminal());
+        if (ModAndClassUtil.WCT) {
+            AE2ThingAPI.instance()
+                .registerCraftingTerminal(new WCTCraftingTerminal());
+        }
+    }
 
     public void postInit(FMLPostInitializationEvent event) {
         if (ModAndClassUtil.BACKPACK) {

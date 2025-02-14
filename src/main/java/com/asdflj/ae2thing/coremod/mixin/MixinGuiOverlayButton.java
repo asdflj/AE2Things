@@ -59,10 +59,7 @@ public abstract class MixinGuiOverlayButton {
         CallbackInfoReturnable<Map<String, String>> cir) {
         if (gui instanceof IGuiContainerOverlay gur) {
             if (gur.getFirstScreen() != null && AE2ThingAPI.instance()
-                .getCraftingTerminal()
-                .containsKey(
-                    gur.getFirstScreen()
-                        .getClass())) {
+                .isCraftingTerminal(gur.getFirstScreen())) {
                 hotkeys.put(translate("gui.request_missing_item.key"), translate("gui.request_missing_item"));
             }
         }
@@ -79,11 +76,10 @@ public abstract class MixinGuiOverlayButton {
         final List<PositionedStack> ingredients = this.handler.getIngredientStacks(recipeIndex);
         IItemList<IAEItemStack> list = null;
         if (AE2ThingAPI.instance()
-            .getCraftingTerminal()
-            .containsKey(gui.getClass())) {
+            .isCraftingTerminal(gui)) {
             IDisplayRepo repo = AE2ThingAPI.instance()
                 .getCraftingTerminal()
-                .get(gui.getClass())
+                .get(gui.inventorySlots.getClass())
                 .gerRepo(gui);
             if (repo instanceof ItemRepo) {
                 list = copyItemList(Ae2ReflectClient.getList((ItemRepo) repo));
@@ -141,11 +137,10 @@ public abstract class MixinGuiOverlayButton {
 
     private void moveItems() {
         if (AE2ThingAPI.instance()
-            .getCraftingTerminal()
-            .containsKey(this.firstGui.getClass())) {
+            .isCraftingTerminal(this.firstGui)) {
             ICraftingTerminalAdapter adapter = AE2ThingAPI.instance()
                 .getCraftingTerminal()
-                .get(this.firstGui.getClass());
+                .get(this.firstGui.inventorySlots.getClass());
             adapter.moveItems(this.firstGui, this.handler, this.recipeIndex);
         }
     }

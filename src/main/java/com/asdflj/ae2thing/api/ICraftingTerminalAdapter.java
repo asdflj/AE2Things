@@ -11,6 +11,8 @@ import com.asdflj.ae2thing.util.Util;
 import appeng.api.storage.data.IDisplayRepo;
 import appeng.client.gui.AEBaseGui;
 import codechicken.nei.recipe.IRecipeHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public interface ICraftingTerminalAdapter {
 
@@ -24,6 +26,7 @@ public interface ICraftingTerminalAdapter {
 
     void moveItems(GuiContainer firstGui, IRecipeHandler recipe, int recipeIndex);
 
+    @SideOnly(Side.CLIENT)
     default IDisplayRepo gerRepo(AEBaseGui gui) {
         return Util.getDisplayRepo(gui);
     }

@@ -11,8 +11,11 @@ import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -63,7 +66,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     private ItemStack fluidContainer = BUCKET;
     public static final ReadableNumberConverter readableNumber = ReadableNumberConverter.INSTANCE;
     private static final HashSet<Class<? extends AEBaseGui>> TERMINAL = new HashSet<>();
-    private static final HashMap<Class<? extends AEBaseGui>, ICraftingTerminalAdapter> CRAFTING_TERMINAL = new HashMap<>();
+    private static final HashMap<Class<? extends Container>, ICraftingTerminalAdapter> CRAFTING_TERMINAL = new HashMap<>();
     private final IItemList<IAEItemStack> tracking = AEApi.instance()
         .storage()
         .createPrimitiveItemList();
@@ -146,24 +149,28 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public List<IAEItemStack> getPinnedItems() {
         return this.getPinned()
             .getPinnedItems();
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void addPinnedItem(IAEItemStack item) {
         this.getPinned()
             .add(item);
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public boolean isPinnedItem(IAEItemStack item) {
         return this.getPinned()
             .isPinnedItem(item);
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public Pinned getPinned() {
         return Pinned.INSTANCE;
     }
@@ -278,26 +285,44 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     }
 
     @Override
-    public void registerCraftingTerminal(Class<? extends AEBaseGui> terminal, ICraftingTerminalAdapter adapter) {
-        CRAFTING_TERMINAL.put(terminal, adapter);
+    public void registerCraftingTerminal(ICraftingTerminalAdapter adapter) {
+        CRAFTING_TERMINAL.put(adapter.getContainer(), adapter);
     }
 
     @Override
-    public HashMap<Class<? extends AEBaseGui>, ICraftingTerminalAdapter> getCraftingTerminal() {
+    public HashMap<Class<? extends Container>, ICraftingTerminalAdapter> getCraftingTerminal() {
         return CRAFTING_TERMINAL;
     }
 
     @Override
+    public boolean isCraftingTerminal(Class<? extends Container> terminal) {
+        return CRAFTING_TERMINAL.containsKey(terminal);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean isCraftingTerminal(GuiScreen terminal) {
+        if (terminal == null) return false;
+        if (terminal instanceof GuiContainer gc && gc.inventorySlots != null) {
+            return CRAFTING_TERMINAL.containsKey(gc.getClass());
+        }
+        return false;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void addTrackingMissingItem(IAEItemStack is) {
         tracking.add(is);
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IItemList<IAEItemStack> getTrakingMissingItems() {
         return tracking;
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void clearTrakingMissingItems() {
         tracking.resetStatus();
     }

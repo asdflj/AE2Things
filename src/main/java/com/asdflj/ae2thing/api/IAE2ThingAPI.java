@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -81,9 +83,13 @@ public interface IAE2ThingAPI {
 
     void saveHistory();
 
-    void registerCraftingTerminal(Class<? extends AEBaseGui> terminal, ICraftingTerminalAdapter adapter);
+    void registerCraftingTerminal(ICraftingTerminalAdapter adapter);
 
-    HashMap<Class<? extends AEBaseGui>, ICraftingTerminalAdapter> getCraftingTerminal();
+    HashMap<Class<? extends Container>, ICraftingTerminalAdapter> getCraftingTerminal();
+
+    boolean isCraftingTerminal(Class<? extends Container> terminal);
+
+    boolean isCraftingTerminal(GuiScreen terminal);
 
     void addTrackingMissingItem(IAEItemStack is);
 

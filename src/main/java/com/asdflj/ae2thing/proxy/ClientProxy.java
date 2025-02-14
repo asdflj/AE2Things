@@ -15,9 +15,6 @@ import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTermi
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
-import com.asdflj.ae2thing.client.adapter.AECraftingTerminal;
-import com.asdflj.ae2thing.client.adapter.FCCraftingTerminal;
-import com.asdflj.ae2thing.client.adapter.WCTCraftingTerminal;
 import com.asdflj.ae2thing.client.event.CraftTracking;
 import com.asdflj.ae2thing.client.gui.BaseMEGui;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
@@ -85,10 +82,8 @@ public class ClientProxy extends CommonProxy {
     public void trackingMissingItems(CraftTracking c) {
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
         IItemList<IAEItemStack> list = c.getItems();
-        if (screen != null && !list.isEmpty()
-            && AE2ThingAPI.instance()
-                .getCraftingTerminal()
-                .containsKey(screen.getClass())) {
+        if (!list.isEmpty() && AE2ThingAPI.instance()
+            .isCraftingTerminal(screen)) {
             for (IAEItemStack is : list) {
                 AE2Thing.proxy.netHandler.sendToServer(new CPacketCraftRequest(is, isShiftKeyDown()));
                 is.reset();
@@ -124,16 +119,9 @@ public class ClientProxy extends CommonProxy {
             .registerTerminal(GuiFluidCraftingWireless.class);
         AE2ThingAPI.instance()
             .registerTerminal(GuiWirelessTerm.class);
-
-        AE2ThingAPI.instance()
-            .registerCraftingTerminal(GuiCraftingTerm.class, new AECraftingTerminal());
-        AE2ThingAPI.instance()
-            .registerCraftingTerminal(GuiFluidCraftingWireless.class, new FCCraftingTerminal());
         if (ModAndClassUtil.WCT) {
             AE2ThingAPI.instance()
                 .registerTerminal(GuiWirelessCraftingTerminal.class);
-            AE2ThingAPI.instance()
-                .registerCraftingTerminal(GuiWirelessCraftingTerminal.class, new WCTCraftingTerminal());
         }
         if (ModAndClassUtil.THE) {
             AE2ThingAPI.instance()
@@ -179,8 +167,7 @@ public class ClientProxy extends CommonProxy {
             bg.initDone();
         }
         if (AE2ThingAPI.instance()
-            .getCraftingTerminal()
-            .containsKey(event.gui.getClass())) {
+            .isCraftingTerminal(event.gui)) {
             MinecraftForge.EVENT_BUS.post(new CraftTracking());
         }
     }
