@@ -5,7 +5,6 @@ import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
 import java.awt.Point;
 
-import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -18,6 +17,7 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.event.CraftTracking;
 import com.asdflj.ae2thing.client.gui.BaseMEGui;
+import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiMonitor;
 import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
