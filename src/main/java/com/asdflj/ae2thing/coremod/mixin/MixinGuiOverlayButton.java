@@ -69,7 +69,7 @@ public abstract class MixinGuiOverlayButton {
 
     @Inject(method = "overlayRecipe", at = @At("TAIL"), remap = false)
     public void overlayRecipe(boolean shift, CallbackInfo ci) {
-        if (GuiScreen.isShiftKeyDown()) {
+        if (GuiScreen.isShiftKeyDown() || GuiScreen.isCtrlKeyDown()) {
             moveItems();
         }
         if (!GuiScreen.isCtrlKeyDown() || !(firstGui instanceof AEBaseGui gui)) return;
