@@ -110,8 +110,7 @@ public class Pinned {
         GuiScreen gui = Minecraft.getMinecraft().currentScreen;
         if (gui == null) return;
         if (!AE2ThingAPI.instance()
-            .getTerminal()
-            .contains(gui.getClass())) return;
+            .isTerminal(gui)) return;
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastRunTime >= interval || force) {
             CPacketNetworkCraftingItems p = new CPacketNetworkCraftingItems();

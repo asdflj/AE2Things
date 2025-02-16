@@ -43,8 +43,7 @@ public interface MixinIOverlayHandler extends IOverlayHandler {
         if (firstGui instanceof IGuiMonitor gm) {
             list = Ae2ReflectClient.getList(gm.getRepo());
         } else if (AE2ThingAPI.instance()
-            .getTerminal()
-            .contains(firstGui.getClass())) {
+            .isTerminal(firstGui)) {
                 IDisplayRepo repo = Util.getDisplayRepo((AEBaseGui) firstGui);
                 if (repo instanceof ItemRepo) {
                     list = Ae2ReflectClient.getList((ItemRepo) repo);

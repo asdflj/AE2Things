@@ -53,8 +53,7 @@ public abstract class MixinAEBaseGui extends GuiScreen {
     private void drawPin(float f, int x, int y, CallbackInfo ci) {
         color = getDynamicColor();
         if (!AE2ThingAPI.instance()
-            .getTerminal()
-            .contains(this.getClass())) return;
+            .isTerminal(this)) return;
         if (this.getMeSlots()
             .isEmpty()
             || AE2ThingAPI.instance()
@@ -121,6 +120,8 @@ public abstract class MixinAEBaseGui extends GuiScreen {
 
     @Inject(method = "drawAESlot", at = @At("TAIL"), remap = false)
     private void drawAESlotBG(Slot slotIn, CallbackInfo ci) {
+        if (!AE2ThingAPI.instance()
+            .isTerminal(this)) return;
         if (slotIn instanceof SlotME slotME && slotME.getHasStack()) {
             int x = slotIn.xDisplayPosition;
             int y = slotIn.yDisplayPosition;

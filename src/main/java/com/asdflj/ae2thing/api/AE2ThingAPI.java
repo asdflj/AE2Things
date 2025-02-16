@@ -27,6 +27,8 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.Tags;
+import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
+import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.fluids.Mana;
 import com.asdflj.ae2thing.common.storage.StorageManager;
@@ -101,6 +103,17 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     @Override
     public HashSet<Class<? extends AEBaseGui>> getTerminal() {
         return terminal;
+    }
+
+    @Override
+    public boolean isTerminal(GuiScreen gui) {
+        if (gui == null || gui.getClass() == GuiCraftingTerminal.class) {
+            return false;
+        }
+        if (gui instanceof IGuiMonitor) {
+            return true;
+        }
+        return terminal.contains(gui.getClass());
     }
 
     @Override

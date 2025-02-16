@@ -29,6 +29,8 @@ public interface IAE2ThingAPI {
 
     HashSet<Class<? extends AEBaseGui>> getTerminal();
 
+    boolean isTerminal(GuiScreen gui);
+
     void blacklistItemInStorage(Class<? extends Item> item);
 
     void addBackpackItem(Class<? extends Item> item);

@@ -174,9 +174,12 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     public void initGuiEvent(GuiScreenEvent.InitGuiEvent.Pre event) {
-        AE2ThingAPI.instance()
-            .getPinned()
-            .prune();
+        if (AE2ThingAPI.instance()
+            .isTerminal(event.gui)) {
+            AE2ThingAPI.instance()
+                .getPinned()
+                .prune();
+        }
     }
 
     @SubscribeEvent
