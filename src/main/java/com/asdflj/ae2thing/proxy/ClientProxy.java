@@ -5,6 +5,7 @@ import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
 import java.awt.Point;
 
+import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -119,6 +120,8 @@ public class ClientProxy extends CommonProxy {
             .registerTerminal(GuiFluidCraftingWireless.class);
         AE2ThingAPI.instance()
             .registerTerminal(GuiWirelessTerm.class);
+        AE2ThingAPI.instance()
+            .registerTerminalBlackList(GuiCraftingTerminal.class);
         if (ModAndClassUtil.WCT) {
             AE2ThingAPI.instance()
                 .registerTerminal(GuiWirelessCraftingTerminal.class);

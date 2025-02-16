@@ -29,6 +29,8 @@ public interface IAE2ThingAPI {
 
     HashSet<Class<? extends AEBaseGui>> getTerminal();
 
+    void registerTerminalBlackList(Class<? extends AEBaseGui> clazz);
+
     boolean isTerminal(GuiScreen gui);
 
     void blacklistItemInStorage(Class<? extends Item> item);

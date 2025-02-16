@@ -27,7 +27,6 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.Tags;
-import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.fluids.Mana;
@@ -68,6 +67,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     private static ItemStack fluidContainer = BUCKET;
     public static final ReadableNumberConverter readableNumber = ReadableNumberConverter.INSTANCE;
     private static final HashSet<Class<? extends AEBaseGui>> terminal = new HashSet<>();
+    private static final HashSet<Class<? extends AEBaseGui>> terminalBlackList = new HashSet<>();
     private static final HashMap<Class<? extends Container>, ICraftingTerminalAdapter> craftingTerminal = new HashMap<>();
     private static final IItemList<IAEItemStack> tracking = AEApi.instance()
         .storage()
@@ -106,8 +106,14 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     }
 
     @Override
+    public void registerTerminalBlackList(Class<? extends AEBaseGui> clazz) {
+        terminalBlackList.add(clazz);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public boolean isTerminal(GuiScreen gui) {
-        if (gui == null || gui.getClass() == GuiCraftingTerminal.class) {
+        if (gui == null || terminalBlackList.contains(gui.getClass())) {
             return false;
         }
         if (gui instanceof IGuiMonitor) {
