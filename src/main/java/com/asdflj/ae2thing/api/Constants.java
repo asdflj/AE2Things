@@ -52,4 +52,10 @@ public interface Constants {
             this.type = t;
         }
     }
+
+    enum State {
+        RUNNING,
+        FINISHED,
+        CANCELLED
+    }
 }

@@ -23,6 +23,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import appeng.api.config.CraftingMode;
 import appeng.api.networking.IGrid;
@@ -67,12 +68,24 @@ public class CraftingDebugHelper implements ICraftingCallback {
         public long requestSize;
         @Expose
         public ForgeDirection direction = ForgeDirection.UNKNOWN;
+        @Expose
+        public String errorMessage = "";
+        @Expose
+        @SerializedName("simulationState")
+        public Constants.State state = Constants.State.RUNNING;
+        @Expose
+        @SerializedName("missingItems")
+        public boolean simulation = false;
 
         private String getName(IActionHost via, String name) {
             if (via instanceof ICustomNameObject o) {
                 return o.hasCustomName() ? o.getCustomName() : name;
             }
             return name;
+        }
+
+        public String getErrorMessage() {
+            return this.errorMessage;
         }
 
         public String getName() {
@@ -110,7 +123,8 @@ public class CraftingDebugHelper implements ICraftingCallback {
         }
 
         public CraftingInfo(long id, String name, long startTime, long endTime, String itemName, byte mode,
-            long requestSize, byte direction, boolean isPlayer, DimensionalCoord pos) {
+            long requestSize, byte direction, boolean isPlayer, DimensionalCoord pos, String errorMessage,
+            Constants.State state, boolean simulation) {
             this.id = id;
             this.name = name;
             this.startTime = startTime;
@@ -121,6 +135,9 @@ public class CraftingDebugHelper implements ICraftingCallback {
             this.direction = ForgeDirection.getOrientation(direction);
             this.isPlayer = isPlayer;
             this.pos = pos;
+            this.errorMessage = errorMessage;
+            this.state = state;
+            this.simulation = simulation;
         }
 
         public boolean isPart() {
@@ -137,6 +154,9 @@ public class CraftingDebugHelper implements ICraftingCallback {
             tag.setLong("requestSize", this.requestSize);
             tag.setByte("direction", (byte) this.direction.ordinal());
             tag.setBoolean("isPlayer", this.isPlayer);
+            tag.setString("errorMsg", this.errorMessage);
+            tag.setByte("state", (byte) this.state.ordinal());
+            tag.setBoolean("simulation", this.simulation);
             if (!this.isPlayer && this.pos != null) this.pos.writeToNBT(tag);
         }
 
@@ -172,6 +192,9 @@ public class CraftingDebugHelper implements ICraftingCallback {
             long requestSize = tag.getLong("requestSize");
             byte direction = tag.getByte("direction");
             boolean isPlayer = tag.getBoolean("isPlayer");
+            String msg = tag.getString("errorMsg");
+            boolean simulation = tag.getBoolean("simulation");
+            Constants.State state = Constants.State.values()[tag.getByte("state")];
             DimensionalCoord pos = null;
             if (!isPlayer) {
                 pos = DimensionalCoord.readFromNBT(tag);
@@ -186,7 +209,10 @@ public class CraftingDebugHelper implements ICraftingCallback {
                 requestSize,
                 direction,
                 isPlayer,
-                pos);
+                pos,
+                msg,
+                state,
+                simulation);
         }
 
         public void setStartTime(long startTime) {
@@ -215,6 +241,25 @@ public class CraftingDebugHelper implements ICraftingCallback {
             return String.format("%s ms", this.endTime - this.startTime);
         }
 
+        public void setErrorMessage(String message) {
+            this.errorMessage = message;
+        }
+
+        public void setState(Constants.State state) {
+            this.state = state;
+        }
+
+        public Constants.State getState() {
+            return this.state;
+        }
+
+        public void setSimulation(boolean simulation) {
+            this.simulation = simulation;
+        }
+
+        public boolean isSimulation() {
+            return this.simulation;
+        }
     }
 
     public CraftingDebugHelper(final World world, final IGrid meGrid, final BaseActionSource actionSource,
@@ -248,6 +293,17 @@ public class CraftingDebugHelper implements ICraftingCallback {
     @Override
     public void calculationComplete(ICraftingJob job) {
         this.info.setEndTime(System.currentTimeMillis());
+        info.setSimulation(job.isSimulation());
+        if (job instanceof CraftingJobV2 v2) {
+            this.info.setErrorMessage(v2.getErrorMessage());
+            if (v2.isCancelled()) {
+                this.info.setState(Constants.State.CANCELLED);
+            } else if (v2.isDone()) {
+                this.info.setState(Constants.State.FINISHED);
+            } else {
+                this.info.setState(Constants.State.RUNNING);
+            }
+        }
         if (this.callback != null) {
             this.callback.calculationComplete(job);
         }
@@ -264,9 +320,18 @@ public class CraftingDebugHelper implements ICraftingCallback {
     public static Gson getGson() {
         return new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
             .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+            .setPrettyPrinting()
             .registerTypeAdapter(ForgeDirection.class, new ForgeDirectionSerializer())
             .registerTypeAdapter(DimensionalCoord.class, new DimensionalCoordSerializer())
+            .registerTypeAdapter(Constants.State.class, new StateSerializer())
             .create();
+    }
+
+    private static class StateSerializer implements JsonSerializer<Constants.State> {
+
+        public JsonElement serialize(Constants.State src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.name());
+        }
     }
 
     private static class ForgeDirectionSerializer implements JsonSerializer<ForgeDirection> {

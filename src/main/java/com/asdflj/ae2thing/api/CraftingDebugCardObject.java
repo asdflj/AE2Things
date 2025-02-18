@@ -130,6 +130,25 @@ public class CraftingDebugCardObject {
             if (info.isFinish()) {
                 msg.add(I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_USAGE_TIME) + info.getUsageTime());
             }
+            switch (info.getState()) {
+                case FINISHED -> msg.add(
+                    I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_STATE)
+                        + I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_FINISH));
+                case CANCELLED -> msg.add(
+                    I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_STATE)
+                        + I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_CANCEL));
+                case RUNNING -> msg.add(
+                    I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_STATE)
+                        + I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_RUNNING));
+            }
+            if (!info.getErrorMessage()
+                .isEmpty()) {
+                msg.add(I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_ERROR_MESSAGE, info.getErrorMessage()));
+            }
+            if (info.isSimulation()) {
+                msg.add(I18n.format(NameConst.MESSAGE_CRAFTING_DEBUG_CARD_SIMULATION));
+            }
+
             msg.add(
                 I18n.format(
                     NameConst.MESSAGE_CRAFTING_DEBUG_CARD_STACK,
