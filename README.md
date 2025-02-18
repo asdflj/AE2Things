@@ -42,5 +42,5 @@ FishBig and MDDyue
 ![doll_2.png](blob/doll_2.png)
 
 **Request missing items**</br>
-rework crafting terminal request missing items,support ae2fc universal terminal
+Rework crafting terminal request missing items,support ae2fc universal terminal
 ![request_missing_items.gif](blob/request_missing_items.gif)
