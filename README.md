@@ -7,7 +7,12 @@ This mod adds a new type of cell the DISK: Deep Item Storage disk. This cell has
 Can set link mode to link other infinity cell. It will share stored items
 ![infinity_cell_link.png](blob/infinity_cell_link.png)
 
-
+**Pinned Items**</br>
+Backport pinned items
+![pinned.gif](blob/pinned.gif)
+**NEI encode pattern**</br>
+nei support display encode pattern
+![nei_encode_pattern.gif](blob/nei_encode_pattern.gif)
 **Backpack Terminal**</br>
 Can easily manage the items in the backpack, support magnet mode and fluid
 ![backpack_terminal.png](blob/backpack_terminal.png)
@@ -35,3 +40,7 @@ Can easily manage ae2 stuff wireless connector
 ![crafting_debug_card.gif](blob/crafting_debug_card.gif)</br>
 FishBig and MDDyue
 ![doll_2.png](blob/doll_2.png)
+
+**Request missing items**</br>
+rework crafting terminal request missing items,support ae2fc universal terminal
+![request_missing_items.gif](blob/request_missing_items.gif)
