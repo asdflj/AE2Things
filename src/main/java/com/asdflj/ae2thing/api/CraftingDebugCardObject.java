@@ -153,7 +153,7 @@ public class CraftingDebugCardObject {
                 I18n.format(
                     NameConst.MESSAGE_CRAFTING_DEBUG_CARD_STACK,
                     info.itemName,
-                    ReadableNumberConverter.INSTANCE.toSlimReadableForm(info.requestSize)));
+                    ReadableNumberConverter.INSTANCE.toWideReadableForm(info.requestSize)));
             msg.add("------------------------------------------------");
         }
         if (!msg.isEmpty()) {
