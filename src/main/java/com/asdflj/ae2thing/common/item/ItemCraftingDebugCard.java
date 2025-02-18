@@ -43,15 +43,7 @@ public class ItemCraftingDebugCard extends BaseItem {
     @Override
     public boolean onItemUseFirst(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side,
         float hitX, float hitY, float hitZ) {
-        if (player.isSneaking()) {
-            CraftingDebugCardObject obj = CraftingDebugHelper.getObject(itemstack);
-            obj.setMode(obj.getNextMode());
-            if (Platform.isClient()) {
-                player.addChatComponentMessage(
-                    new ChatComponentText(
-                        I18n.format(NameConst.CRAFTING_DEBUG_CARD_CURRENT_MODE) + " " + getMode(obj)));
-            }
-        } else if (Platform.isServer()) {
+        if (Platform.isServer()) {
             TileEntity te = world.getTileEntity(x, y, z);
             if (te instanceof TileController tc) {
                 CraftingDebugCardObject obj = CraftingDebugHelper.getObject(itemstack);
@@ -59,6 +51,20 @@ public class ItemCraftingDebugCard extends BaseItem {
             }
         }
         return super.onItemUseFirst(itemstack, player, world, x, y, z, side, hitX, hitY, hitZ);
+    }
+
+    @Override
+    public ItemStack onItemRightClick(ItemStack item, World w, EntityPlayer player) {
+        if (player.isSneaking()) {
+            CraftingDebugCardObject obj = CraftingDebugHelper.getObject(item);
+            obj.setMode(obj.getNextMode());
+            if (Platform.isClient()) {
+                player.addChatComponentMessage(
+                    new ChatComponentText(
+                        I18n.format(NameConst.CRAFTING_DEBUG_CARD_CURRENT_MODE) + " " + getMode(obj)));
+            }
+        }
+        return item;
     }
 
     private String getMode(CraftingDebugCardObject object) {

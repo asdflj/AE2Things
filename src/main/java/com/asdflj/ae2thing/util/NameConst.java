@@ -93,6 +93,13 @@ public class NameConst {
     public static final String MESSAGE_CRAFTING_DEBUG_CARD_REQUEST_TYPE_EVERYTHING = MESSAGE_CRAFTING_DEBUG_CARD_REQUEST_TYPE
         + ".everything";
     public static final String MESSAGE_CRAFTING_DEBUG_CARD_NAME = MESSAGE_CRAFTING_DEBUG_CARD + "name";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_STATE = MESSAGE_CRAFTING_DEBUG_CARD + "state";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_FINISH = MESSAGE_CRAFTING_DEBUG_CARD + "finish";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_CANCEL = MESSAGE_CRAFTING_DEBUG_CARD + "cancel";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_RUNNING = MESSAGE_CRAFTING_DEBUG_CARD + "running";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_ERROR_MESSAGE = MESSAGE_CRAFTING_DEBUG_CARD
+        + "error_message";
+    public static final String MESSAGE_CRAFTING_DEBUG_CARD_SIMULATION = MESSAGE_CRAFTING_DEBUG_CARD + "simulation";
     public static final String MESSAGE_CRAFTING_DEBUG_CARD_START_TIME = MESSAGE_CRAFTING_DEBUG_CARD + "start_time";
     public static final String MESSAGE_CRAFTING_DEBUG_CARD_USAGE_TIME = MESSAGE_CRAFTING_DEBUG_CARD + "usage_time";
     public static final String MESSAGE_CRAFTING_DEBUG_CARD_NETWORK_ID = MESSAGE_CRAFTING_DEBUG_CARD + "network_id";
