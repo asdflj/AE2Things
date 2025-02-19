@@ -24,6 +24,7 @@ import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.crafting.ICraftingJob;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.PlayerSource;
+import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
@@ -196,6 +197,10 @@ public class CPacketCraftRequest implements IMessage {
                     }
                     Future<ICraftingJob> futureJob = null;
                     try {
+                        IStorageGrid storageGrid = g.getCache(IStorageGrid.class);
+                        if(storageGrid == null) return null;
+                        IAEItemStack storedItem = storageGrid.getItemInventory().getStorageList().findPrecise(message.item);
+                        if(storedItem == null || !storedItem.isCraftable()) return null;
                         final ICraftingGrid cg = g.getCache(ICraftingGrid.class);
                         if (cg instanceof CraftingGridCache cgc) {
 
