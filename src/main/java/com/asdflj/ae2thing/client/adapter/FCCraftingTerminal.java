@@ -71,7 +71,7 @@ public class FCCraftingTerminal implements ICraftingTerminalAdapter {
         try {
             Class.forName("com.glodblock.github.nei.FluidCraftingTransferHandler");
             isRegisteredHandler = true;
-        } catch (Exception ignored) {
+        } catch (NoClassDefFoundError | ClassNotFoundException ignored) {
 
         }
 
