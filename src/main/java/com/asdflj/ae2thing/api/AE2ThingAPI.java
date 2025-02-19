@@ -169,7 +169,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public List<IAEItemStack> getPinnedItems() {
+    public Set<IAEItemStack> getPinnedItems() {
         return this.getPinned()
             .getPinnedItems();
     }

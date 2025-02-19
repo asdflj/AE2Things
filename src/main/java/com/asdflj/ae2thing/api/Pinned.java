@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -32,12 +33,12 @@ public class Pinned {
     private static final Comparator<Map.Entry<IAEItemStack, PinInfo>> TIME_COMPARATOR = Comparator
         .comparing(e -> e.getValue().since);
 
-    public List<IAEItemStack> getPinnedItems() {
-        List<Map.Entry<IAEItemStack, PinInfo>> toRemove = new ArrayList<>(pinInfo.entrySet());
-        toRemove.sort(TIME_COMPARATOR);
-        return toRemove.stream()
-            .map(Map.Entry::getKey)
-            .collect(Collectors.toList());
+    public Set<IAEItemStack> getPinnedItems() {
+        return pinInfo.keySet();
+    }
+
+    public boolean isEmpty() {
+        return pinInfo.isEmpty();
     }
 
     public void add(IAEItemStack item) {
@@ -67,6 +68,14 @@ public class Pinned {
     public boolean isPinnedItem(IAEItemStack item) {
         if (item == null) return false;
         return pinInfo.containsKey(item);
+    }
+
+    public List<IAEItemStack> getSortedPinnedItems() {
+        List<Map.Entry<IAEItemStack, PinInfo>> list = new ArrayList<>(pinInfo.entrySet());
+        list.sort(TIME_COMPARATOR);
+        return list.stream()
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toList());
     }
 
     @Nullable

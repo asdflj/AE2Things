@@ -57,7 +57,7 @@ public abstract class MixinAEBaseGui extends GuiScreen {
         if (this.getMeSlots()
             .isEmpty()
             || AE2ThingAPI.instance()
-                .getPinnedItems()
+                .getPinned()
                 .isEmpty())
             return;
         Optional<Slot> slot = this.getInventorySlots()
