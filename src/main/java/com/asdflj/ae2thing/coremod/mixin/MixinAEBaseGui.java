@@ -57,7 +57,7 @@ public abstract class MixinAEBaseGui extends GuiScreen {
         if (this.getMeSlots()
             .isEmpty()
             || AE2ThingAPI.instance()
-                .getPinnedItems()
+                .getPinned()
                 .isEmpty())
             return;
         Optional<Slot> slot = this.getInventorySlots()
@@ -126,12 +126,13 @@ public abstract class MixinAEBaseGui extends GuiScreen {
             int x = slotIn.xDisplayPosition;
             int y = slotIn.yDisplayPosition;
             IAEItemStack item = ((SlotME) slotIn).getAEStack();
+            if (!AE2ThingAPI.instance()
+                .getPinned()
+                .isPinnedItem(item)) return;
             Pinned.PinInfo info = AE2ThingAPI.instance()
                 .getPinned()
                 .getPinInfo(item);
-            if (AE2ThingAPI.instance()
-                .isPinnedItem(item) && info != null
-                && !info.canPrune) {
+            if (info != null && !info.canPrune) {
                 drawSlotBG(x, y);
             }
         }

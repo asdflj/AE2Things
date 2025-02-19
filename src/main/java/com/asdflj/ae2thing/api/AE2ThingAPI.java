@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import net.minecraft.client.Minecraft;
@@ -169,40 +168,8 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public List<IAEItemStack> getPinnedItems() {
-        return this.getPinned()
-            .getPinnedItems();
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addPinnedItem(IAEItemStack item) {
-        this.getPinned()
-            .add(item);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean isPinnedItem(IAEItemStack item) {
-        return this.getPinned()
-            .isPinnedItem(item);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
     public Pinned getPinned() {
         return Pinned.INSTANCE;
-    }
-
-    @Override
-    public void updatePinnedItems(List<IAEItemStack> items) {
-        getPinned().updatePinnedItems(items);
-    }
-
-    @Override
-    public void togglePinnedItems(IAEItemStack stack) {
-        this.getPinned()
-            .togglePinnedItems(stack);
     }
 
     @SideOnly(Side.CLIENT)

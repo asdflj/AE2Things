@@ -2,7 +2,6 @@ package com.asdflj.ae2thing.api;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.inventory.Container;
@@ -49,17 +48,7 @@ public interface IAE2ThingAPI {
 
     void setStorageManager(StorageManager manager);
 
-    List<IAEItemStack> getPinnedItems();
-
-    void addPinnedItem(IAEItemStack item);
-
-    boolean isPinnedItem(IAEItemStack item);
-
     Pinned getPinned();
-
-    void updatePinnedItems(List<IAEItemStack> items);
-
-    void togglePinnedItems(IAEItemStack stack);
 
     void openBackpackTerminal();
 

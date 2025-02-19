@@ -62,6 +62,7 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
                 }
             } else if (message.ref == -2) {
                 AE2ThingAPI.instance()
+                    .getPinned()
                     .updatePinnedItems((List) message.list);
             } else if (message.ref == -3) {
                 if (!message.isEmpty()) {
