@@ -29,7 +29,8 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
     private void actionPerformed(GuiButton btn, CallbackInfo ci) {
         if (btn == start && this.inventorySlots instanceof ContainerCraftConfirm ccc) {
             AE2ThingAPI.instance()
-                .addPinnedItem((ccc.getItemToCraft()));
+                .getPinned()
+                .add((ccc.getItemToCraft()));
         }
     }
 }

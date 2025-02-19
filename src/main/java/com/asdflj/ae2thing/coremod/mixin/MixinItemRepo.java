@@ -64,6 +64,7 @@ public abstract class MixinItemRepo implements IDisplayRepo, IDisplayRepoExtend 
             .isTerminal(gui)) {
             return view.add(o);
         } else if ((o instanceof IAEItemStack is && AE2ThingAPI.instance()
+            .getPinned()
             .isPinnedItem(is))) {
                 return false;
             } else {

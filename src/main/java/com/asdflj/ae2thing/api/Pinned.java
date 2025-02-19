@@ -80,6 +80,7 @@ public class Pinned {
 
     @Nullable
     public PinInfo getPinInfo(IAEItemStack item) {
+        if (item == null) return null;
         return this.pinInfo.get(item);
     }
 
@@ -93,6 +94,9 @@ public class Pinned {
     }
 
     public void updatePinnedItems(List<IAEItemStack> items) {
+        GuiScreen gui = Minecraft.getMinecraft().currentScreen;
+        if (!AE2ThingAPI.instance()
+            .isTerminal(gui)) return;
         if (items == null || items.isEmpty()) {
             pinInfo.values()
                 .forEach(i -> i.canPrune = true);

@@ -61,6 +61,9 @@ public abstract class MixinGuiOverlayButton {
             if (gur.getFirstScreen() != null && AE2ThingAPI.instance()
                 .isCraftingTerminal(gur.getFirstScreen())) {
                 hotkeys.put(translate("gui.request_missing_item.key"), translate("gui.request_missing_item"));
+                hotkeys.put(
+                    translate("gui.auto_start_request_missing_item.key"),
+                    translate("gui.auto_start_request_missing_item"));
             }
         }
     }

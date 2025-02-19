@@ -130,6 +130,7 @@ public abstract class MixinAEBaseGui extends GuiScreen {
                 .getPinned()
                 .getPinInfo(item);
             if (AE2ThingAPI.instance()
+                .getPinned()
                 .isPinnedItem(item) && info != null
                 && !info.canPrune) {
                 drawSlotBG(x, y);

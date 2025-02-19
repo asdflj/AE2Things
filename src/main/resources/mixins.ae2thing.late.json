@@ -13,9 +13,8 @@
     "MixinIOverlayHandler",
     "MixinNEEContainerDrawHandler",
     "MixinGuiOverlayButton",
-    "MixinGuiUtils"
-  ],
-  "server": [
+    "MixinGuiUtils",
     "MixinContainerCraftConfirm"
-  ]
+  ],
+  "server": ["MixinContainerCraftConfirm"]
 }
