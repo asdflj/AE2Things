@@ -36,9 +36,11 @@ import appeng.api.config.Settings;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
+import appeng.client.ActionKey;
 import appeng.client.gui.AEBaseMEGui;
 import appeng.client.me.SlotME;
 import appeng.core.AEConfig;
+import appeng.core.CommonHelper;
 import codechicken.nei.LayoutManager;
 import codechicken.nei.util.TextHistory;
 import cpw.mods.fml.relauncher.Side;
@@ -327,5 +329,18 @@ public abstract class BaseMEGui extends AEBaseMEGui implements IGuiSelection {
 
     public void initDone() {
 
+    }
+
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) {
+        if (this instanceof IGuiMonitorTerminal gmt
+            && CommonHelper.proxy.isActionKey(ActionKey.TOGGLE_FOCUS, keyCode)) {
+            gmt.getSearchField()
+                .setFocused(
+                    !gmt.getSearchField()
+                        .isFocused());
+        } else {
+            super.keyTyped(typedChar, keyCode);
+        }
     }
 }
