@@ -1,29 +1,22 @@
 package com.asdflj.ae2thing.network;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
 import com.asdflj.ae2thing.AE2Thing;
-import com.asdflj.ae2thing.util.CellPos;
-import com.glodblock.github.common.parts.PartFluidStorageBus;
+import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.api.adapter.findit.IFindItAdapter;
+import com.asdflj.ae2thing.util.StorageProvider;
 import com.glodblock.github.util.Util;
 
-import appeng.api.AEApi;
-import appeng.api.networking.IGridNode;
+import appeng.api.networking.IGrid;
 import appeng.api.networking.security.PlayerSource;
-import appeng.api.storage.IMEInventory;
-import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEItemStack;
-import appeng.api.util.DimensionalCoord;
 import appeng.container.AEBaseContainer;
-import appeng.parts.misc.PartStorageBus;
-import appeng.tile.storage.TileChest;
-import appeng.tile.storage.TileDrive;
-import appeng.util.item.AEFluidStack;
 import appeng.util.item.AEItemStack;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -70,83 +63,22 @@ public class CPacketFindCellItem implements IMessage {
             EntityPlayerMP player = ctx.getServerHandler().playerEntity;
             if (player.openContainer instanceof AEBaseContainer container
                 && container.getActionSource() instanceof PlayerSource ps) {
-                List<CellPos> posList = new ArrayList<>();
-                for (IGridNode node : ps.via.getActionableNode()
-                    .getGrid()
-                    .getMachines(TileDrive.class)) {
-                    if (node.getMachine() instanceof TileDrive drive) {
-                        for (int i = 0; i < drive.getCellCount(); i++) {
-                            ItemStack is = drive.getStackInSlot(i);
-                            if (findStack(is, message.isFluid, message.item)) {
-                                posList.add(new CellPos(new DimensionalCoord(drive), i));
-                            }
-                        }
-                    }
+                List<StorageProvider> posList = new ArrayList<>();
+                IGrid iGrid = null;
+                try {
+                    iGrid = ps.via.getActionableNode()
+                        .getGrid();
+                } catch (Exception ignored) {}
+                if (iGrid == null) return null;
+                Collection<IFindItAdapter> adapters = AE2ThingAPI.instance()
+                    .getStorageProviders();
+                for (IFindItAdapter adapter : adapters) {
+                    posList.addAll(adapter.getStorageProviders(iGrid, message.item));
                 }
-                for (IGridNode node : ps.via.getActionableNode()
-                    .getGrid()
-                    .getMachines(TileChest.class)) {
-                    if (node.getMachine() instanceof TileChest chest) {
-                        ItemStack cell = chest.getInternalInventory()
-                            .getStackInSlot(1);
-                        if (findStack(cell, message.isFluid, message.item)) {
-                            posList.add(new CellPos(new DimensionalCoord(chest), 1));
-                        }
-                    }
-                }
-                for (IGridNode node : ps.via.getActionableNode()
-                    .getGrid()
-                    .getMachines(PartStorageBus.class)) {
-                    if (node.getMachine() instanceof PartStorageBus bus) {
-                        if (findStack(bus.getInternalHandler(), false, message.item)) {
-                            posList.add(new CellPos(new DimensionalCoord(bus.getTile()), bus.getSide()));
-                        }
-                    }
-                }
-                for (IGridNode node : ps.via.getActionableNode()
-                    .getGrid()
-                    .getMachines(PartFluidStorageBus.class)) {
-                    if (node.getMachine() instanceof PartFluidStorageBus bus) {
-                        if (findStack(bus.getInternalHandler(), true, message.item)) {
-                            posList.add(new CellPos(new DimensionalCoord(bus.getTile()), bus.getSide()));
-                        }
-                    }
-                }
+
                 if (!posList.isEmpty()) AE2Thing.proxy.netHandler.sendTo(new SPacketFindCellItem(posList), player);
             }
 
-            return null;
-        }
-
-        private boolean findStack(IMEInventory inv, boolean isFluid, IAEItemStack request) {
-            if (inv == null) return false;
-            boolean result;
-            if (isFluid) {
-                FluidStack fs = Util.getFluidFromItem(request.getItemStack());
-                result = inv.getAvailableItem(AEFluidStack.create(fs)) != null;
-            } else {
-                result = inv.getAvailableItem(request) != null;
-            }
-            return result;
-        }
-
-        private boolean findStack(ItemStack cell, boolean isFluid, IAEItemStack request) {
-            IMEInventory inv = getInv(cell, isFluid ? StorageChannel.FLUIDS : StorageChannel.ITEMS);
-            return findStack(inv, isFluid, request);
-        }
-
-        private IMEInventory getInv(final ItemStack is, StorageChannel channel) {
-            if (channel == StorageChannel.ITEMS) {
-                return AEApi.instance()
-                    .registries()
-                    .cell()
-                    .getCellInventory(is, null, StorageChannel.ITEMS);
-            } else if (channel == StorageChannel.FLUIDS) {
-                return AEApi.instance()
-                    .registries()
-                    .cell()
-                    .getCellInventory(is, null, StorageChannel.FLUIDS);
-            }
             return null;
         }
     }

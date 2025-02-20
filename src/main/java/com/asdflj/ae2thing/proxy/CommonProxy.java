@@ -9,9 +9,13 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
-import com.asdflj.ae2thing.client.adapter.AECraftingTerminal;
-import com.asdflj.ae2thing.client.adapter.FCCraftingTerminal;
-import com.asdflj.ae2thing.client.adapter.WCTCraftingTerminal;
+import com.asdflj.ae2thing.api.adapter.findit.FluidStorageBusAdapter;
+import com.asdflj.ae2thing.api.adapter.findit.MEChestAdapter;
+import com.asdflj.ae2thing.api.adapter.findit.MEDriverAdapter;
+import com.asdflj.ae2thing.api.adapter.findit.StorageBusAdapter;
+import com.asdflj.ae2thing.api.adapter.terminal.AECraftingTerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.FCCraftingTerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.WCTCraftingTerminal;
 import com.asdflj.ae2thing.common.parts.PartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.common.tile.TileInfusionInterface;
@@ -116,6 +120,14 @@ public class CommonProxy {
             Upgrades.SUPERSPEED.registerItem(ItemAndBlockHolder.MANA_IMPORT_BUS.stack(), 4);
             Upgrades.REDSTONE.registerItem(ItemAndBlockHolder.MANA_IMPORT_BUS.stack(), 1);
         }
+        AE2ThingAPI.instance()
+            .registerFindItStorageProvider(new MEChestAdapter());
+        AE2ThingAPI.instance()
+            .registerFindItStorageProvider(new MEDriverAdapter());
+        AE2ThingAPI.instance()
+            .registerFindItStorageProvider(new StorageBusAdapter());
+        AE2ThingAPI.instance()
+            .registerFindItStorageProvider(new FluidStorageBusAdapter());
 
     }
 

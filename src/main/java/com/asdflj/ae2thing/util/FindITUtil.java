@@ -37,7 +37,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class FindITUtil implements Runnable {
 
     private static SlotHighlighter slotHighlighter;
-    private final List<CellPos> cellPosList = new ArrayList<>();
+    private final List<StorageProvider> storageProviderList = new ArrayList<>();
     public static FindITUtil instance = new FindITUtil();
     private long expirationTime = 0;
 
@@ -60,12 +60,12 @@ public class FindITUtil implements Runnable {
         }
     }
 
-    public void setSlotHighlighter(List<CellPos> cellPosList, boolean closeGui) {
-        this.cellPosList.clear();
-        this.cellPosList.addAll(cellPosList);
+    public void setSlotHighlighter(List<StorageProvider> storageProviderList, boolean closeGui) {
+        this.storageProviderList.clear();
+        this.storageProviderList.addAll(storageProviderList);
         this.expirationTime = System.currentTimeMillis() + FindItConfig.ITEM_HIGHLIGHTING_DURATION * 1000L;
-        List<DimensionalCoord> list = cellPosList.stream()
-            .map(CellPos::getCoord)
+        List<DimensionalCoord> list = storageProviderList.stream()
+            .map(StorageProvider::getCoord)
             .collect(Collectors.toList());
         BlockPosHighlighter.highlightBlocks(
             Minecraft.getMinecraft().thePlayer,
@@ -86,9 +86,9 @@ public class FindITUtil implements Runnable {
         }
         if (!(container instanceof AEBaseContainer c)) return;
         if (System.currentTimeMillis() > expirationTime) {
-            this.cellPosList.clear();
+            this.storageProviderList.clear();
         }
-        if (this.cellPosList.isEmpty()) {
+        if (this.storageProviderList.isEmpty()) {
             return;
         }
         if (c.getTarget() instanceof TileEntity t) {
@@ -100,13 +100,13 @@ public class FindITUtil implements Runnable {
 
     private @NotNull HashSet<Slot> getSlots(AEBaseContainer c, TileEntity t) {
         HashSet<Slot> slots = new HashSet<>();
-        for (CellPos cellPos : cellPosList) {
-            if (cellPos.getCoord()
+        for (StorageProvider storageProvider : storageProviderList) {
+            if (storageProvider.getCoord()
                 .equals(new DimensionalCoord(t))) {
-                if (cellPos.getSlot() == -1) continue;
+                if (storageProvider.getSlot() == -1) continue;
                 for (int i = 0; i < c.inventorySlots.size(); i++) {
                     Slot s = c.inventorySlots.get(i);
-                    if (s instanceof SlotRestrictedInput si && si.getSlotIndex() == cellPos.getSlot()) {
+                    if (s instanceof SlotRestrictedInput si && si.getSlotIndex() == storageProvider.getSlot()) {
                         slots.add(s);
                     }
                 }

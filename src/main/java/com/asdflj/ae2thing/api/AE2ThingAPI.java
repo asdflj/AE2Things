@@ -4,6 +4,7 @@ import static net.minecraft.init.Items.glass_bottle;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,6 +27,8 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.Tags;
+import com.asdflj.ae2thing.api.adapter.findit.IFindItAdapter;
+import com.asdflj.ae2thing.api.adapter.terminal.ICraftingTerminalAdapter;
 import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.fluids.Mana;
@@ -40,6 +43,7 @@ import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 import com.glodblock.github.util.Util;
 
 import appeng.api.AEApi;
+import appeng.api.networking.IGridHost;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
@@ -71,6 +75,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     private static final IItemList<IAEItemStack> tracking = AEApi.instance()
         .storage()
         .createPrimitiveItemList();
+    private static final HashMap<Class<? extends IGridHost>, IFindItAdapter> storageProviders = new HashMap<>();
 
     public static AE2ThingAPI instance() {
         return API;
@@ -283,6 +288,16 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     @Override
     public boolean isCraftingTerminal(Class<? extends Container> terminal) {
         return craftingTerminal.containsKey(terminal);
+    }
+
+    @Override
+    public void registerFindItStorageProvider(IFindItAdapter adapter) {
+        storageProviders.putIfAbsent(adapter.getCls(), adapter);
+    }
+
+    @Override
+    public Collection<IFindItAdapter> getStorageProviders() {
+        return storageProviders.values();
     }
 
     @Override

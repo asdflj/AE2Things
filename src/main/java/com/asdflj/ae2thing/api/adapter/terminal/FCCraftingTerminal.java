@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.client.adapter;
+package com.asdflj.ae2thing.api.adapter.terminal;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -15,7 +15,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.asdflj.ae2thing.api.ICraftingTerminalAdapter;
 import com.glodblock.github.client.gui.GuiFluidCraftingWireless;
 import com.glodblock.github.client.gui.container.ContainerCraftingWireless;
 import com.glodblock.github.inventory.item.IWirelessTerminal;
