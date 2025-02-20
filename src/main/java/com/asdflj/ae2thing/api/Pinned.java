@@ -17,7 +17,11 @@ import net.minecraft.client.gui.GuiScreen;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.network.CPacketNetworkCraftingItems;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.TheUtil;
 
+import appeng.api.AEApi;
+import appeng.api.storage.IItemDisplayRegistry;
 import appeng.api.storage.data.IAEItemStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -32,6 +36,9 @@ public class Pinned {
     private static final int interval = 1000;
     private static final Comparator<Map.Entry<IAEItemStack, PinInfo>> TIME_COMPARATOR = Comparator
         .comparing(e -> e.getValue().since);
+    private static final IItemDisplayRegistry registry = AEApi.instance()
+        .registries()
+        .itemDisplay();
 
     public Set<IAEItemStack> getPinnedItems() {
         return pinInfo.keySet();
@@ -43,6 +50,11 @@ public class Pinned {
 
     public void add(IAEItemStack item) {
         if (item == null) return;
+        if (registry.isBlacklisted(item.getItem()) || registry.isBlacklisted(
+            item.getItem()
+                .getClass())) {
+            return;
+        }
         PinInfo info = pinInfo.get(item);
         if (info != null) {
             info.since = Instant.now();
@@ -102,12 +114,28 @@ public class Pinned {
                 .forEach(i -> i.canPrune = true);
             return;
         }
-        HashSet<IAEItemStack> set = new HashSet<>(items);
+        HashSet<IAEItemStack> set = ItemCraftingAspect2FluidDrop(items);
         for (IAEItemStack item : this.pinInfo.keySet()) {
+            if (ModAndClassUtil.THE && TheUtil.isItemCraftingAspect(item)) {
+                item = TheUtil.itemCraftingAspect2FluidDrop(item);
+            }
             if (!set.contains(item)) {
                 this.pinInfo.get(item).canPrune = true;
             }
         }
+    }
+
+    private HashSet<IAEItemStack> ItemCraftingAspect2FluidDrop(List<IAEItemStack> items) {
+        if (!ModAndClassUtil.THE) {
+            return new HashSet<>(items);
+        }
+        HashSet<IAEItemStack> set = new HashSet<>();
+        for (IAEItemStack item : items) {
+            if (TheUtil.isItemCraftingAspect(item)) {
+                set.add(TheUtil.itemCraftingAspect2FluidDrop(item));
+            }
+        }
+        return set;
     }
 
     public void prune() {

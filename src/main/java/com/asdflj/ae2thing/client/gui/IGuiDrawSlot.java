@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
+import com.asdflj.ae2thing.client.render.RenderHelper;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -62,6 +63,7 @@ public interface IGuiDrawSlot {
             fake.setStackSize(fluidStack.amount);
             aeRenderItem.setAeStack(fake);
             renderStackSize(display, stack, slot);
+            renderPinnedItem(slot);
             return false;
         } else if (stack.getItem() instanceof ItemFluidDrop) {
             fluidStack = ItemFluidDrop.getFluidStack(slot.getStack());
@@ -85,9 +87,14 @@ public interface IGuiDrawSlot {
                 aeRenderItem.setAeStack(stack);
                 renderStackSize(display, stack, slot);
             }
+            renderPinnedItem(slot);
             return false;
         }
         return true;
+    }
+
+    default void renderPinnedItem(Slot slotIn) {
+        RenderHelper.drawPinnedSlot(slotIn, this.getAEBaseGui());
     }
 
     default void renderStackSize(boolean display, IAEItemStack stack, Slot slot) {

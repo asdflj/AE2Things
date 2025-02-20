@@ -50,15 +50,21 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
         @SuppressWarnings({ "unchecked", "rawtypes" })
         public IMessage onMessage(SPacketMEItemInvUpdate message, MessageContext ctx) {
             final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
-            if (gs instanceof IGuiMonitorTerminal gmt) {
-                if (message.ref == 0) {
-                    gmt.postUpdate((List) message.list);
-                } else if (message.ref == 1) {
-                    ItemStack is = null;
-                    if (!message.isEmpty()) {
-                        is = ((IAEItemStack) message.list.get(0)).getItemStack();
-                    }
-                    gmt.setPlayerInv(is);
+            if (message.ref == 0 && gs instanceof IGuiMonitorTerminal gmt) {
+                gmt.postUpdate((List) message.list);
+            } else if (message.ref == 1 && gs instanceof IGuiMonitorTerminal gmt) {
+                ItemStack is = null;
+                if (!message.isEmpty()) {
+                    is = ((IAEItemStack) message.list.get(0)).getItemStack();
+                }
+                gmt.setPlayerInv(is);
+            } else if (message.ref == -1) {
+                if (gs == null) {
+                    Minecraft mc = Minecraft.getMinecraft();
+                    EntityClientPlayerMP player = mc.thePlayer;
+                    IAEItemStack is = (IAEItemStack) message.list.get(0);
+                    if (is == null) return null;
+                    player.inventory.setInventorySlotContents(player.inventory.currentItem, is.getItemStack());
                 }
             } else if (message.ref == -2) {
                 AE2ThingAPI.instance()
@@ -69,14 +75,6 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
                     AE2ThingAPI.instance()
                         .getPinned()
                         .add(((IAEItemStack) message.list.get(0)));
-                }
-            } else if (gs == null) {
-                Minecraft mc = Minecraft.getMinecraft();
-                EntityClientPlayerMP player = mc.thePlayer;
-                IAEItemStack is = (IAEItemStack) message.list.get(0);
-                if (is == null) return null;
-                if (message.ref == -1) {
-                    player.inventory.setInventorySlotContents(player.inventory.currentItem, is.getItemStack());
                 }
             }
             return null;
