@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.api.adapter.findit.EssentiaStorageBusAdapter;
 import com.asdflj.ae2thing.api.adapter.findit.FluidStorageBusAdapter;
 import com.asdflj.ae2thing.api.adapter.findit.MEChestAdapter;
 import com.asdflj.ae2thing.api.adapter.findit.MEDriverAdapter;
@@ -128,7 +129,10 @@ public class CommonProxy {
             .registerFindItStorageProvider(new StorageBusAdapter());
         AE2ThingAPI.instance()
             .registerFindItStorageProvider(new FluidStorageBusAdapter());
-
+        if (ModAndClassUtil.THE) {
+            AE2ThingAPI.instance()
+                .registerFindItStorageProvider(new EssentiaStorageBusAdapter());
+        }
     }
 
     public void onLoadComplete(FMLLoadCompleteEvent event) {
