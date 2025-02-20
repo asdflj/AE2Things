@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.client.adapter;
+package com.asdflj.ae2thing.api.adapter.terminal;
 
 import static appeng.integration.modules.NEIHelpers.NEICraftingHandler.packIngredients;
 
@@ -9,8 +9,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import com.asdflj.ae2thing.api.ICraftingTerminalAdapter;
 
 import appeng.client.gui.implementations.GuiCraftingTerm;
 import appeng.container.implementations.ContainerCraftingTerm;

@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
-import com.asdflj.ae2thing.api.ICraftingTerminalAdapter;
+import com.asdflj.ae2thing.api.adapter.terminal.ICraftingTerminalAdapter;
 import com.asdflj.ae2thing.client.event.CraftTracking;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 

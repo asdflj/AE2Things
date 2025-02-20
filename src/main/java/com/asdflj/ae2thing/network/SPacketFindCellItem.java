@@ -9,8 +9,8 @@ import java.util.List;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.asdflj.ae2thing.util.CellPos;
 import com.asdflj.ae2thing.util.FindITUtil;
+import com.asdflj.ae2thing.util.StorageProvider;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -20,12 +20,12 @@ import io.netty.buffer.Unpooled;
 
 public class SPacketFindCellItem implements IMessage {
 
-    private List<CellPos> cellPosList;
+    private List<StorageProvider> storageProviderList;
 
     public SPacketFindCellItem() {}
 
-    public SPacketFindCellItem(List<CellPos> list) {
-        this.cellPosList = list;
+    public SPacketFindCellItem(List<StorageProvider> list) {
+        this.storageProviderList = list;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class SPacketFindCellItem implements IMessage {
                 buf.readBytes(buf.readableBytes())
                     .array());
             NBTTagCompound tag = CompressedStreamTools.readCompressed(bytes);
-            this.cellPosList = CellPos.readAsListFromNBT(tag);
+            this.storageProviderList = StorageProvider.readAsListFromNBT(tag);
         } catch (IOException ignored) {
 
         }
@@ -44,7 +44,7 @@ public class SPacketFindCellItem implements IMessage {
     @Override
     public void toBytes(ByteBuf buf) {
         NBTTagCompound tag = new NBTTagCompound();
-        CellPos.writeListToNBT(tag, cellPosList);
+        StorageProvider.writeListToNBT(tag, storageProviderList);
         try {
             final ByteBuf data = Unpooled.buffer();
             final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -64,7 +64,7 @@ public class SPacketFindCellItem implements IMessage {
 
         @Override
         public IMessage onMessage(SPacketFindCellItem message, MessageContext ctx) {
-            FindITUtil.instance.setSlotHighlighter(message.cellPosList, true);
+            FindITUtil.instance.setSlotHighlighter(message.storageProviderList, true);
             return null;
         }
     }

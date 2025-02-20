@@ -19,6 +19,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.BaseMEGui;
+import com.asdflj.ae2thing.client.gui.IGuiMonitorTerminal;
 import com.asdflj.ae2thing.client.gui.IWidgetGui;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.me.AdvItemRepo;
@@ -56,7 +57,7 @@ import appeng.util.item.AEItemStack;
 import codechicken.nei.LayoutManager;
 import codechicken.nei.util.TextHistory;
 
-public class ItemPanel implements IAEBasePanel, IGuiMonitor, IConfigManagerHost, IDropToFillTextField {
+public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigManagerHost, IDropToFillTextField {
 
     private final BaseMEGui parent;
     private final IWidgetGui gui;
@@ -652,5 +653,16 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitor, IConfigManagerHost,
     public void handleKeyboardInput() {
         this.getRepo()
             .setPausedMethod();
+    }
+
+    @Override
+    public void setPlayerInv(ItemStack is) {
+        this.container.getPlayerInv()
+            .setItemStack(is);
+    }
+
+    @Override
+    public THGuiTextField getSearchField() {
+        return this.searchField;
     }
 }

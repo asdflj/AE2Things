@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.api;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -11,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
+import com.asdflj.ae2thing.api.adapter.findit.IFindItAdapter;
+import com.asdflj.ae2thing.api.adapter.terminal.ICraftingTerminalAdapter;
 import com.asdflj.ae2thing.common.storage.StorageManager;
 
 import appeng.api.storage.data.IAEFluidStack;
@@ -81,6 +84,10 @@ public interface IAE2ThingAPI {
     HashMap<Class<? extends Container>, ICraftingTerminalAdapter> getCraftingTerminal();
 
     boolean isCraftingTerminal(Class<? extends Container> terminal);
+
+    void registerFindItStorageProvider(IFindItAdapter adapter);
+
+    Collection<IFindItAdapter> getStorageProviders();
 
     boolean isCraftingTerminal(GuiScreen terminal);
 

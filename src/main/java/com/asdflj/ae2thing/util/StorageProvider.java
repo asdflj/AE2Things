@@ -8,12 +8,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import appeng.api.util.DimensionalCoord;
 
-public class CellPos {
+public class StorageProvider {
 
     private DimensionalCoord coord;
     private int slot;
 
-    private CellPos(DimensionalCoord dimensionalCoord, int slot, ForgeDirection face) {
+    private StorageProvider(DimensionalCoord dimensionalCoord, int slot, ForgeDirection face) {
         if (face != ForgeDirection.UNKNOWN) {
             this.coord = offset(dimensionalCoord, face);
         } else {
@@ -27,15 +27,15 @@ public class CellPos {
         return new DimensionalCoord(d.getWorld(), d.x + face.offsetX, d.y + face.offsetY, d.z + face.offsetZ);
     }
 
-    public CellPos(DimensionalCoord dimensionalCoord, ForgeDirection face) {
+    public StorageProvider(DimensionalCoord dimensionalCoord, ForgeDirection face) {
         this(dimensionalCoord, -1, face);
     }
 
-    public CellPos(DimensionalCoord dimensionalCoord, int slot) {
+    public StorageProvider(DimensionalCoord dimensionalCoord, int slot) {
         this(dimensionalCoord, slot, ForgeDirection.UNKNOWN);
     }
 
-    public CellPos(int x, int y, int z, int dim, int slot) {
+    public StorageProvider(int x, int y, int z, int dim, int slot) {
         this(new DimensionalCoord(x, y, z, dim), slot);
     }
 
@@ -59,9 +59,9 @@ public class CellPos {
         data.setInteger("slot", slot);
     }
 
-    public static void writeListToNBT(final NBTTagCompound tag, List<CellPos> list) {
+    public static void writeListToNBT(final NBTTagCompound tag, List<StorageProvider> list) {
         int i = 0;
-        for (CellPos d : list) {
+        for (StorageProvider d : list) {
             NBTTagCompound data = new NBTTagCompound();
             writeToNBT(data, d.coord.x, d.coord.y, d.coord.z, d.coord.getDimension(), d.slot);
             tag.setTag("pos#" + i, data);
@@ -69,8 +69,8 @@ public class CellPos {
         }
     }
 
-    public static CellPos readFromNBT(final NBTTagCompound data) {
-        return new CellPos(
+    public static StorageProvider readFromNBT(final NBTTagCompound data) {
+        return new StorageProvider(
             new DimensionalCoord(
                 data.getInteger("x"),
                 data.getInteger("y"),
@@ -79,8 +79,8 @@ public class CellPos {
             data.getInteger("slot"));
     }
 
-    public static List<CellPos> readAsListFromNBT(final NBTTagCompound tag) {
-        List<CellPos> list = new ArrayList<>();
+    public static List<StorageProvider> readAsListFromNBT(final NBTTagCompound tag) {
+        List<StorageProvider> list = new ArrayList<>();
         int i = 0;
         while (tag.hasKey("pos#" + i)) {
             NBTTagCompound data = tag.getCompoundTag("pos#" + i);

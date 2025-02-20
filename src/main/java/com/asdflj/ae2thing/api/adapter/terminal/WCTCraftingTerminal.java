@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.client.adapter;
+package com.asdflj.ae2thing.api.adapter.terminal;
 
 import static appeng.integration.modules.NEIHelpers.NEICraftingHandler.packIngredients;
 
@@ -13,8 +13,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
-
-import com.asdflj.ae2thing.api.ICraftingTerminalAdapter;
 
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.IRecipeHandler;

@@ -25,6 +25,7 @@ import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
 import com.asdflj.ae2thing.client.gui.widget.IGuiSelection;
 import com.asdflj.ae2thing.client.gui.widget.ItemPanel;
 import com.asdflj.ae2thing.client.gui.widget.PatternPanel;
+import com.asdflj.ae2thing.client.gui.widget.THGuiTextField;
 import com.asdflj.ae2thing.client.me.AdvItemRepo;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.network.CPacketSwitchGuis;
@@ -342,8 +343,13 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless i
 
     @Override
     public void setPlayerInv(ItemStack is) {
-        this.container.getPlayerInv()
-            .setItemStack(is);
+        this.itemPanel.setPlayerInv(is);
+
+    }
+
+    @Override
+    public THGuiTextField getSearchField() {
+        return this.itemPanel.getSearchField();
     }
 
     @Override

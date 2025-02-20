@@ -767,4 +767,9 @@ public abstract class GuiMonitor extends BaseMEGui
             .setPausedMethod();
         super.handleKeyboardInput();
     }
+
+    @Override
+    public THGuiTextField getSearchField() {
+        return searchField;
+    }
 }
