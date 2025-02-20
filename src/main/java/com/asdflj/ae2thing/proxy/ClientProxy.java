@@ -20,6 +20,7 @@ import com.asdflj.ae2thing.client.gui.BaseMEGui;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiMonitor;
+import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.item.ItemPhial;
@@ -120,8 +121,6 @@ public class ClientProxy extends CommonProxy {
             .registerTerminal(GuiFluidCraftingWireless.class);
         AE2ThingAPI.instance()
             .registerTerminal(GuiWirelessTerm.class);
-        AE2ThingAPI.instance()
-            .registerTerminalBlackList(GuiCraftingTerminal.class);
         if (ModAndClassUtil.WCT) {
             AE2ThingAPI.instance()
                 .registerTerminal(GuiWirelessCraftingTerminal.class);
@@ -130,6 +129,11 @@ public class ClientProxy extends CommonProxy {
             AE2ThingAPI.instance()
                 .registerTerminal(GuiInfusionPatternTerminal.class);
         }
+
+        AE2ThingAPI.instance()
+            .registerTerminalBlackList(GuiCraftingTerminal.class);
+        AE2ThingAPI.instance()
+            .registerTerminalBlackList(GuiWirelessDualInterfaceTerminal.class);
     }
 
     private ItemStack getStackMouseOver(GuiContainer window) {
