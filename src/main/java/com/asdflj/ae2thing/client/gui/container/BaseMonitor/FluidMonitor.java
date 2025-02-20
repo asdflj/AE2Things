@@ -1,6 +1,6 @@
 package com.asdflj.ae2thing.client.gui.container.BaseMonitor;
 
-import static com.asdflj.ae2thing.util.TheUtil.ItemCraftingAspect2IAEFluidStack;
+import static com.asdflj.ae2thing.util.TheUtil.itemCraftingAspect2IAEFluidStack;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,6 +14,7 @@ import net.minecraft.inventory.ICrafting;
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.network.SPacketMEFluidInvUpdate;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.TheUtil;
 import com.glodblock.github.common.item.ItemFluidDrop;
 
 import appeng.api.AEApi;
@@ -103,10 +104,15 @@ public class FluidMonitor implements IMEMonitorHandlerReceiver<IAEFluidStack>, I
             for (final IAEFluidStack is : this.fluids) {
                 IAEFluidStack send = monitorCache.findPrecise(is);
                 if (send != null) {
-                    IAEItemStack fluidDrop = itemMonitorCache.findPrecise(ItemFluidDrop.newAeStack(send));
-                    if (fluidDrop != null) {
+                    IAEItemStack item;
+                    if (ModAndClassUtil.THE && TheUtil.isGaseousEssentia(is)) {
+                        item = itemMonitorCache.findPrecise(TheUtil.essentia2CraftingAspect(is));
+                    } else {
+                        item = itemMonitorCache.findPrecise(ItemFluidDrop.newAeStack(send));
+                    }
+                    if (item != null) {
                         send = send.copy();
-                        send.setCraftable(fluidDrop.isCraftable());
+                        send.setCraftable(item.isCraftable());
                     }
                     toSend.add(send);
                 } else {
@@ -120,7 +126,7 @@ public class FluidMonitor implements IMEMonitorHandlerReceiver<IAEFluidStack>, I
         if (!this.craftingAspects.isEmpty() && ModAndClassUtil.THE) {
             final IItemList<IAEFluidStack> monitorCache = this.fluidMonitor.getStorageList();
             for (IAEItemStack is : this.craftingAspects) {
-                IAEFluidStack fs = ItemCraftingAspect2IAEFluidStack(is);
+                IAEFluidStack fs = itemCraftingAspect2IAEFluidStack(is);
                 IAEFluidStack send = monitorCache.findPrecise(fs);
                 if (send != null) {
                     send.setCraftable(is.isCraftable());
