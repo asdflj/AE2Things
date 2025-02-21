@@ -51,9 +51,9 @@ dependencies {
     //nee
     compileOnly('com.github.GTNewHorizons:NotEnoughEnergistics:1.7.0:dev')
     //backpack
-    compile('com.github.GTNewHorizons:AdventureBackpack2:1.1.3-GTNH:dev')
-    compile('com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.3.0-GTNH:dev')
-    compileOnly('com.github.GTNewHorizons:ForestryMC:4.8.1:dev')
+    compile('com.github.GTNewHorizons:AdventureBackpack2:1.2.4-GTNH:dev')
+    compile('com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.4.3-GTNH:dev')
+    compileOnly('com.github.GTNewHorizons:ForestryMC:4.9.19:dev')
     // tic
     compileOnly('com.github.GTNewHorizons:TinkersConstruct:1.11.5-GTNH:dev')
     // tc
