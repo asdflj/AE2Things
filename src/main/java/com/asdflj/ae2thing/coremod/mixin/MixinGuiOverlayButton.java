@@ -62,8 +62,8 @@ public abstract class MixinGuiOverlayButton {
                 .isCraftingTerminal(gur.getFirstScreen())) {
                 hotkeys.put(translate("gui.request_missing_item.key"), translate("gui.request_missing_item"));
                 hotkeys.put(
-                    translate("gui.auto_start_request_missing_item.key"),
-                    translate("gui.auto_start_request_missing_item"));
+                    translate("gui.request_missing_item_no_preview.key"),
+                    translate("gui.request_missing_item_no_preview"));
             }
         }
     }

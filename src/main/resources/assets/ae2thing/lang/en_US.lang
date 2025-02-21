@@ -81,5 +81,5 @@ itemGroup.ae2thing=AE2 Thing
 
 nei.gui.request_missing_item=Request missing items
 nei.gui.request_missing_item.key=CTRL + Click
-nei.gui.auto_start_request_missing_item=Auto start request missing items
-nei.gui.auto_start_request_missing_item.key=CTRL + SHIFT + Click
+nei.gui.request_missing_item_no_preview=Request missing items(No Preview)
+nei.gui.request_missing_item_no_preview.key=CTRL + SHIFT + Click
