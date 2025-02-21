@@ -116,9 +116,6 @@ public class Pinned {
         }
         HashSet<IAEItemStack> set = ItemCraftingAspect2FluidDrop(items);
         for (IAEItemStack item : this.pinInfo.keySet()) {
-            if (ModAndClassUtil.THE && TheUtil.isItemCraftingAspect(item)) {
-                item = TheUtil.itemCraftingAspect2FluidDrop(item);
-            }
             if (!set.contains(item)) {
                 this.pinInfo.get(item).canPrune = true;
             }
