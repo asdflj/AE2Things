@@ -15,6 +15,7 @@ import com.asdflj.ae2thing.client.gui.GuiFluidPacketEncoder;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiManaIO;
 import com.asdflj.ae2thing.client.gui.GuiPatternValueAmount;
+import com.asdflj.ae2thing.client.gui.GuiPatternValueName;
 import com.asdflj.ae2thing.client.gui.GuiRenamer;
 import com.asdflj.ae2thing.client.gui.GuiWirelessConnectorTerminal;
 import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
@@ -25,6 +26,7 @@ import com.asdflj.ae2thing.client.gui.container.ContainerFluidPacketEncoder;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerManaIO;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
+import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueName;
 import com.asdflj.ae2thing.client.gui.container.ContainerRenamer;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
@@ -182,6 +184,30 @@ public enum GuiType {
         @Override
         protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
             return new GuiPatternValueAmount(player.inventory, inv);
+        }
+    }),
+    PATTERN_NAME_SET(new PartGuiFactory<>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerPatternValueName(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiPatternValueName(player.inventory, inv);
+        }
+    }),
+    PATTERN_NAME_SET_ITEM(new ItemGuiFactory<>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerPatternValueName(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiPatternValueName(player.inventory, inv);
         }
     }),
 

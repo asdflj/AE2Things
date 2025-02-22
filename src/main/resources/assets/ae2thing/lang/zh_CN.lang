@@ -72,6 +72,7 @@ ae2thing.gui.part_mana_import=ME魔力输入总线
 ae2thing.gui.infusion_terminal.crafting_pattern=注魔和坩埚样板
 ae2thing.gui.infusion_terminal.processing_pattern=蒸馏样板
 ae2thing.gui.fluid_packet_encoder=ME流体封包编码器
+ae2thing.gui.pattern_rename=自定义名称
 ae2thing.nei.find_cell_item.highlight=存储方块已高亮，坐标：%d, %d, %d
 ae2thing.nei.find_cell_item.in_other_dim=存储方块位于 %d 世界，无法高亮显示
 ae2thing.key.open_terminal=打开终端

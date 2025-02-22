@@ -20,8 +20,10 @@ import com.asdflj.ae2thing.client.gui.IWidgetGui;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
+import com.asdflj.ae2thing.network.CPacketInventoryActionExtend;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
+import com.asdflj.ae2thing.util.InventoryActionExtend;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.client.gui.GuiFCImgButton;
 
@@ -376,12 +378,18 @@ public class PatternPanel implements IAEBasePanel {
         }
         if (mouseButton == 3 && !this.container.isCraftingMode()) {
             if (slot.getHasStack()) {
-                InventoryAction action = InventoryAction.SET_PATTERN_VALUE;
                 IAEItemStack stack = AEItemStack.create(slot.getStack());
                 this.inventorySlots.setTargetStack(stack);
                 for (int i = 0; i < this.inventorySlots.inventorySlots.size(); i++) {
                     if (slot.equals(this.inventorySlots.inventorySlots.get(i))) {
-                        AE2Thing.proxy.netHandler.sendToServer(new CPacketInventoryAction(action, i, 0, stack));
+                        if (isShiftKeyDown()) {
+                            InventoryActionExtend action = InventoryActionExtend.SET_PATTERN_NAME;
+                            AE2Thing.proxy.netHandler
+                                .sendToServer(new CPacketInventoryActionExtend(action, i, 0, stack));
+                        } else {
+                            InventoryAction action = InventoryAction.SET_PATTERN_VALUE;
+                            AE2Thing.proxy.netHandler.sendToServer(new CPacketInventoryAction(action, i, 0, stack));
+                        }
                     }
                 }
                 return true;
