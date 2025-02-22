@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.Util;
 
@@ -44,44 +45,38 @@ public abstract class MixinPanelWidget extends Widget implements IContainerToolt
         remap = false,
         cancellable = true)
     public void handleClick(int mousex, int mousey, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode) {
+        try {
             ItemStack is = this.getStackMouseOver(mousex, mousey);
             if (is != null) {
-                try {
-                    GuiScreen gui = Minecraft.getMinecraft().currentScreen;
-                    if (gui instanceof AEBaseGui g) {
-                        if (NEIClientUtils.altKey()) {
-                            IDisplayRepo repo = Util.getDisplayRepo(g);
-                            repo.setSearchString(is.getDisplayName());
-                            Util.setSearchFieldText(g, Platform.getItemDisplayName(is));
-                            repo.updateView();
-                            draggedStack = null;
-                            cir.setReturnValue(true);
-                        } else if (g.inventorySlots instanceof AEBaseContainer c) {
-                            c.setTargetStack(AEItemStack.create(is));
-                            InventoryAction action;
-                            if (GuiScreen.isCtrlKeyDown()) {
-                                action = InventoryAction.PICKUP_SINGLE;
-                            } else {
-                                action = InventoryAction.PICKUP_OR_SET_DOWN;
-                            }
-
-                            final PacketInventoryAction p = new PacketInventoryAction(
-                                action,
-                                Ae2ReflectClient.getInventorySlots(g)
-                                    .size(),
-                                0);
-                            NetworkHandler.instance.sendToServer(p);
-                            draggedStack = null;
-                            cir.setReturnValue(true);
+                GuiScreen gui = Minecraft.getMinecraft().currentScreen;
+                if (gui instanceof AEBaseGui g) {
+                    if (NEIClientUtils.altKey()) {
+                        IDisplayRepo repo = Util.getDisplayRepo(g);
+                        repo.setSearchString(is.getDisplayName());
+                        Util.setSearchFieldText(g, Platform.getItemDisplayName(is));
+                        repo.updateView();
+                        draggedStack = null;
+                        cir.setReturnValue(true);
+                    } else if (g.inventorySlots instanceof AEBaseContainer c) {
+                        c.setTargetStack(AEItemStack.create(is));
+                        InventoryAction action;
+                        if (GuiScreen.isCtrlKeyDown()) {
+                            action = InventoryAction.PICKUP_SINGLE;
+                        } else {
+                            action = InventoryAction.PICKUP_OR_SET_DOWN;
                         }
+                        final PacketInventoryAction p = new PacketInventoryAction(
+                            action,
+                            Ae2ReflectClient.getInventorySlots(g)
+                                .size(),
+                            gui instanceof GuiWirelessDualInterfaceTerminal ? -2 : 0);
+                        NetworkHandler.instance.sendToServer(p);
+                        draggedStack = null;
+                        cir.setReturnValue(true);
                     }
-                } catch (Exception ignored) {
-
                 }
-
             }
-        }
+        } catch (Exception ignored) {}
     }
 
 }
