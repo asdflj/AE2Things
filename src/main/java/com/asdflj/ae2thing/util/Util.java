@@ -23,7 +23,9 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
+import com.asdflj.ae2thing.client.gui.IGuiMonitorTerminal;
 import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
+import com.glodblock.github.client.gui.FCGuiTextField;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
@@ -37,6 +39,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IDisplayRepo;
 import appeng.api.util.DimensionalCoord;
 import appeng.client.gui.AEBaseGui;
+import appeng.client.gui.widgets.MEGuiTextField;
 import appeng.client.me.ItemRepo;
 import appeng.core.worlddata.WorldData;
 import appeng.items.tools.powered.ToolWirelessTerminal;
@@ -222,7 +225,40 @@ public class Util {
     }
 
     public static IDisplayRepo getDisplayRepo(AEBaseGui gui) {
+        if (gui instanceof IGuiMonitorTerminal gmt) {
+            return gmt.getRepo();
+        }
         return getDisplayRepo(gui, gui.getClass());
+    }
+
+    public static void setSearchFieldText(AEBaseGui gui, String text) {
+        if (gui instanceof IGuiMonitorTerminal gmt) {
+            gmt.getSearchField()
+                .setText(text);
+        } else {
+            setSearchFieldText(gui, gui.getClass(), text);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void setSearchFieldText(AEBaseGui gui, Class<? extends AEBaseGui> clazz, String text) {
+        try {
+            if (clazz == AEBaseGui.class) {
+                return;
+            }
+            for (Field f : clazz.getDeclaredFields()) {
+                if (f.getType() == MEGuiTextField.class) {
+                    f.setAccessible(true);
+                    ((MEGuiTextField) f.get(gui)).setText(text);
+                    return;
+                } else if (f.getType() == FCGuiTextField.class) {
+                    f.setAccessible(true);
+                    ((FCGuiTextField) f.get(gui)).setText(text);
+                    return;
+                }
+            }
+            setSearchFieldText(gui, (Class<? extends AEBaseGui>) clazz.getSuperclass(), text);
+        } catch (Exception ignored) {}
     }
 
     @SuppressWarnings("unchecked")
