@@ -149,4 +149,21 @@ public class ItemPhial extends ItemEssence implements IRegister<ItemPhial> {
         list.add(aspect, amount);
         list.writeToNBT(item.getTagCompound());
     }
+
+    @Override
+    public String getItemStackDisplayName(ItemStack itemStack) {
+        Aspect aspect = getAspect(itemStack);
+        if (aspect == null) {
+            return super.getItemStackDisplayName(itemStack);
+        }
+        return String.format("%s-%s", super.getItemStackDisplayName(itemStack), aspect.getName());
+    }
+
+    public static boolean isItemPhial(IAEItemStack item) {
+        return item.getItem() instanceof ItemPhial;
+    }
+
+    public static boolean isItemPhial(ItemStack item) {
+        return item.getItem() instanceof ItemPhial;
+    }
 }

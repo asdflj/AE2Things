@@ -8,17 +8,14 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
+import com.asdflj.ae2thing.client.render.ISlotRender;
 import com.asdflj.ae2thing.client.render.RenderHelper;
+import com.asdflj.ae2thing.client.render.SlotRender;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
-import com.glodblock.github.common.item.ItemFluidDrop;
-import com.glodblock.github.common.item.ItemFluidPacket;
-import com.glodblock.github.crossmod.thaumcraft.AspectRender;
-import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
 
 import appeng.api.storage.data.IAEItemStack;
@@ -30,7 +27,6 @@ import appeng.util.item.AEItemStack;
 public interface IGuiDrawSlot {
 
     default boolean drawSlot(Slot slot) {
-        Minecraft mc = Minecraft.getMinecraft();
         ItemStack drawStack = slot.getStack();
         IAEItemStack stack;
         boolean display = false;
@@ -46,49 +42,18 @@ public interface IGuiDrawSlot {
         } else {
             return true;
         }
-
-        if (stack == null || stack.getItem() == null
-            || !((stack.getItem() instanceof ItemFluidDrop) || (stack.getItem() instanceof ItemFluidPacket)))
+        if (stack == null || stack.getItem() == null) {
             return true;
-
-        FluidStack fluidStack;
-        if (stack.getItem() instanceof ItemFluidPacket && !(slot instanceof SlotME)) {
-            fluidStack = ItemFluidPacket.getFluidStack(stack);
-            if (fluidStack == null || fluidStack.amount <= 0) {
-                return true;
+        }
+        for (ISlotRender slotRender : SlotRender.instance()
+            .getRenders()) {
+            if (slotRender.get()
+                .test(slot)) {
+                if (!slotRender.drawSlot(slot, stack, this, display)) {
+                    this.renderPinnedItem(slot);
+                    return false;
+                }
             }
-            this.getAEBaseGui()
-                .drawMCSlot(slot);
-            IAEItemStack fake = stack.copy();
-            fake.setStackSize(fluidStack.amount);
-            aeRenderItem.setAeStack(fake);
-            renderStackSize(display, stack, slot);
-            renderPinnedItem(slot);
-            return false;
-        } else if (stack.getItem() instanceof ItemFluidDrop) {
-            fluidStack = ItemFluidDrop.getFluidStack(slot.getStack());
-            if (fluidStack == null || fluidStack.getFluid() == null) return true;
-            if (ModAndClassUtil.THE && AspectUtil.isEssentiaGas(fluidStack)) {
-                GL11.glTranslatef(0.0f, 0.0f, 150.0f);
-                AspectRender.drawAspect(
-                    mc.thePlayer,
-                    slot.xDisplayPosition,
-                    slot.yDisplayPosition,
-                    this.getzLevel(),
-                    AspectUtil.getAspectFromGas(fluidStack),
-                    fluidStack.amount <= 0 ? 1 : fluidStack.amount);
-                GL11.glTranslatef(0.0f, 0.0f, -150.0f);
-                IAEItemStack gas = stack.copy()
-                    .setStackSize(stack.getStackSize() / AspectUtil.R);
-                aeRenderItem.setAeStack(gas);
-                renderStackSize(display, stack, slot);
-            } else {
-                this.drawWidget(slot.xDisplayPosition, slot.yDisplayPosition, fluidStack.getFluid());
-                aeRenderItem.setAeStack(stack);
-                renderStackSize(display, stack, slot);
-            }
-            renderPinnedItem(slot);
-            return false;
         }
         return true;
     }
@@ -139,4 +104,5 @@ public interface IGuiDrawSlot {
     AEBaseGui getAEBaseGui();
 
     float getzLevel();
+
 }

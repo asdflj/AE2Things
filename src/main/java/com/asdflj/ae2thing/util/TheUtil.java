@@ -5,6 +5,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
+import com.asdflj.ae2thing.common.item.ItemPhial;
 import com.asdflj.ae2thing.common.parts.PartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.tile.TileInfusionInterface;
 import com.glodblock.github.client.gui.GuiDualInterface;
@@ -60,6 +61,19 @@ public class TheUtil {
         }
     }
 
+    public static IAEItemStack itemCraftingAspect2ItemPhial(IAEItemStack item) {
+        Aspect aspect = ItemCraftingAspect.getAspect(item.getItemStack());
+        IAEFluidStack fs = ItemPhial.newEssentiaStack(aspect, item.getStackSize());
+        return ItemPhial.newAeStack(fs);
+    }
+
+    public static IAEItemStack itemPhial2ItemCraftingAspect(IAEItemStack item) {
+        Aspect aspect = ItemPhial.getAspect(item.getItemStack());
+        IAEItemStack is = AEItemStack.create(ItemCraftingAspect.createStackForAspect(aspect, 1));
+        is.setStackSize(item.getStackSize());
+        return is;
+    }
+
     @SideOnly(Side.CLIENT)
     public static boolean isTerminal() {
         return Minecraft.getMinecraft().currentScreen instanceof IWidgetHost;
@@ -69,5 +83,16 @@ public class TheUtil {
         if (!isGaseousEssentia(is)) return null;
         GaseousEssentia gas = (GaseousEssentia) is.getFluid();
         return AEItemStack.create(ItemCraftingAspect.createStackForAspect(gas.getAspect(), 1));
+    }
+
+    public static boolean isSameAspect(IAEItemStack phial, IAEItemStack craftingAspect) {
+        if (ItemPhial.isItemPhial(phial) && TheUtil.isItemCraftingAspect(craftingAspect)) {
+            Aspect pa = ItemPhial.getAspect(phial.getItemStack());
+            Aspect ca = ItemCraftingAspect.getAspect(craftingAspect.getItemStack());
+            if (pa == null) return false;
+            return pa.getTag()
+                .equals(ca.getTag());
+        }
+        return false;
     }
 }
