@@ -17,8 +17,9 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
+import com.asdflj.ae2thing.client.gui.container.slot.InfusionTerminalSlotPatternFake;
 import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
+import com.asdflj.ae2thing.common.item.ItemPhial;
 import com.asdflj.ae2thing.common.parts.PartInfusionPatternTerminal;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
@@ -61,7 +62,8 @@ public class ContainerInfusionPatternTerminal extends BasePatternContainerMonito
     protected IGridNode networkNode;
     protected final SlotRestrictedInput[] cellView = new SlotRestrictedInput[5];
     protected SlotFakeCraftingMatrix[] craftingSlots = new SlotFakeCraftingMatrix[1];
-    protected SlotPatternFake[] outputSlots = new SlotPatternFake[CRAFTING_GRID_SLOTS * CRAFTING_GRID_PAGES];
+    protected InfusionTerminalSlotPatternFake[] outputSlots = new InfusionTerminalSlotPatternFake[CRAFTING_GRID_SLOTS
+        * CRAFTING_GRID_PAGES];
 
     private final PartInfusionPatternTerminal it;
     private ItemStack lastScanItem = null;
@@ -109,7 +111,7 @@ public class ContainerInfusionPatternTerminal extends BasePatternContainerMonito
                 for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
                     this.addSlotToContainer(
                         this.outputSlots[x + y * CRAFTING_GRID_WIDTH
-                            + page * CRAFTING_GRID_SLOTS] = new SlotPatternFake(
+                            + page * CRAFTING_GRID_SLOTS] = new InfusionTerminalSlotPatternFake(
                                 output,
                                 this,
                                 x + y * CRAFTING_GRID_WIDTH + page * CRAFTING_GRID_SLOTS,
@@ -283,8 +285,27 @@ public class ContainerInfusionPatternTerminal extends BasePatternContainerMonito
             // Set number to display
             numOfAspects = Math.min(numOfAspects, sortedAspects.length);
         }
+        // newCraftingAspect(sortedAspects,numOfAspects, itemAspects); // item crafting aspect
+        newItemPhial(sortedAspects, numOfAspects, itemAspects); // item phial
 
-        // Add each aspect
+        if (canDouble(this.outputSlots, is.stackSize)) {
+            doubleStacksInternal(this.outputSlots, is.stackSize);
+        }
+    }
+
+    private void newItemPhial(Aspect[] sortedAspects, int numOfAspects, AspectList itemAspects) {
+        Aspect aspect;
+        for (int i = 0; i < numOfAspects; ++i) {
+            if (sortedAspects != null) {
+                aspect = sortedAspects[i];
+                if (aspect != null) {
+                    this.outputSlots[i].putStack(ItemPhial.newStack(aspect, itemAspects.getAmount(aspect)));
+                }
+            }
+        }
+    }
+
+    private void newCraftingAspect(Aspect[] sortedAspects, int numOfAspects, AspectList itemAspects) {
         Aspect aspect;
         for (int i = 0; i < numOfAspects; ++i) {
             // Create an itemstack
@@ -302,9 +323,6 @@ public class ContainerInfusionPatternTerminal extends BasePatternContainerMonito
             }
             // Put into slot
             this.outputSlots[i].putStack(aspectItem);
-        }
-        if (canDouble(this.outputSlots, is.stackSize)) {
-            doubleStacksInternal(this.outputSlots, is.stackSize);
         }
     }
 

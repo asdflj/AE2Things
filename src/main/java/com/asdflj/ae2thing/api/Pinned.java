@@ -17,8 +17,6 @@ import net.minecraft.client.gui.GuiScreen;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.network.CPacketNetworkCraftingItems;
-import com.asdflj.ae2thing.util.ModAndClassUtil;
-import com.asdflj.ae2thing.util.TheUtil;
 
 import appeng.api.AEApi;
 import appeng.api.storage.IItemDisplayRegistry;
@@ -114,25 +112,12 @@ public class Pinned {
                 .forEach(i -> i.canPrune = true);
             return;
         }
-        HashSet<IAEItemStack> set = ItemCraftingAspect2FluidDrop(items);
+        HashSet<IAEItemStack> set = new HashSet<>(items);
         for (IAEItemStack item : this.pinInfo.keySet()) {
             if (!set.contains(item)) {
                 this.pinInfo.get(item).canPrune = true;
             }
         }
-    }
-
-    private HashSet<IAEItemStack> ItemCraftingAspect2FluidDrop(List<IAEItemStack> items) {
-        if (!ModAndClassUtil.THE) {
-            return new HashSet<>(items);
-        }
-        HashSet<IAEItemStack> set = new HashSet<>();
-        for (IAEItemStack item : items) {
-            if (TheUtil.isItemCraftingAspect(item)) {
-                set.add(TheUtil.itemCraftingAspect2FluidDrop(item));
-            }
-        }
-        return set;
     }
 
     public void prune() {

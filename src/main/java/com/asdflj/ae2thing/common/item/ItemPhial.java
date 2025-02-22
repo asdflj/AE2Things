@@ -158,4 +158,12 @@ public class ItemPhial extends ItemEssence implements IRegister<ItemPhial> {
         }
         return String.format("%s-%s", super.getItemStackDisplayName(itemStack), aspect.getName());
     }
+
+    public static boolean isItemPhial(IAEItemStack item) {
+        return item.getItem() instanceof ItemPhial;
+    }
+
+    public static boolean isItemPhial(ItemStack item) {
+        return item.getItem() instanceof ItemPhial;
+    }
 }
