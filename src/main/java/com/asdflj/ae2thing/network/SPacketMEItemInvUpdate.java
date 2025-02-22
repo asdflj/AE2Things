@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.network;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -10,6 +11,8 @@ import net.minecraft.item.ItemStack;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.client.gui.IGuiMonitorTerminal;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.TheUtil;
 
 import appeng.api.storage.data.IAEItemStack;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -69,7 +72,7 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
             } else if (message.ref == -2) {
                 AE2ThingAPI.instance()
                     .getPinned()
-                    .updatePinnedItems((List) message.list);
+                    .updatePinnedItems(ItemCraftingAspect2FluidDrop((List) message.list));
             } else if (message.ref == -3) {
                 if (!message.isEmpty()) {
                     AE2ThingAPI.instance()
@@ -78,6 +81,21 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
                 }
             }
             return null;
+        }
+
+        private static List<IAEItemStack> ItemCraftingAspect2FluidDrop(List<IAEItemStack> items) {
+            if (!ModAndClassUtil.THE) {
+                return new ArrayList<>(items);
+            }
+            List<IAEItemStack> list = new ArrayList<>();
+            for (IAEItemStack item : items) {
+                if (TheUtil.isItemCraftingAspect(item)) {
+                    list.add(TheUtil.itemCraftingAspect2FluidDrop(item));
+                } else {
+                    list.add(item);
+                }
+            }
+            return list;
         }
     }
 }
