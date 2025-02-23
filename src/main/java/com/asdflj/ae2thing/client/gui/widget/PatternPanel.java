@@ -25,6 +25,7 @@ import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.InventoryActionExtend;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.client.gui.GuiFCImgButton;
 
 import appeng.api.config.ActionItems;
@@ -382,7 +383,7 @@ public class PatternPanel implements IAEBasePanel {
                 this.inventorySlots.setTargetStack(stack);
                 for (int i = 0; i < this.inventorySlots.inventorySlots.size(); i++) {
                     if (slot.equals(this.inventorySlots.inventorySlots.get(i))) {
-                        if (isShiftKeyDown()) {
+                        if (isCtrlKeyDown() && !Util.isFluidPacket(stack.getItemStack())) {
                             InventoryActionExtend action = InventoryActionExtend.SET_PATTERN_NAME;
                             AE2Thing.proxy.netHandler
                                 .sendToServer(new CPacketInventoryActionExtend(action, i, 0, stack));

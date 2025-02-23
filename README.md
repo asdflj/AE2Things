@@ -22,7 +22,7 @@ Support encode pattern
 ![dual_interface_terminal.png](blob/dual_interface_terminal.png)
 ![dual_interface_terminal_2.png](blob/dual_interface_terminal_2.png)
 **Rename In Pattern**</br>
-`Shift + middle click` to edit item name
+`Ctrl + middle click` to edit item name
 ![pattern_rename.gif](blob/pattern_rename.gif)
 **Infusion Pattern Terminal**</br>
 Support infusion recipe and distillation recipe,Can order fluid and essentia
