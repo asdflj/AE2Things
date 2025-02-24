@@ -20,6 +20,7 @@ tile.fluid_packet_encoder.name=ME Fluid Packet Encoder
 fluid.botania.mana=Mana
 
 ae2thing.tooltip.shift_for_more=§r> Hold §3Shift§r for more information
+ae2thing.tooltip.ctrl_for_more=§r> Hold §3Ctrl§r for more information
 ae2thing.tooltip.linked=Linked
 ae2thing.tooltip.backpack_terminal.desc=uh a new terminal?
 ae2thing.tooltip.wireless_dual_interface_terminal.desc=Dual interface terminal, support encode pattern
@@ -27,6 +28,7 @@ ae2thing.tooltip.cell_link.desc=You can right click to open link gui to link oth
 ae2thing.tooltip.cell_link.disable=Link cell is disable
 ae2thing.tooltip.fluid_packet_encoder.desc=The Fluid Encoder can encode fluid packets. Use pipe to extract fluid packet. It has to be connected to a ME System and a place to store the liquid in otherwise it won't work.
 ae2thing.tooltip.crafting_debug_card.desc=Click ME Controller to display crafting history,\nShift click to switch request type
+ae2thing.tooltip.wireless.installed=Installed Card:
 ae2thing.message.crafting_debug_card.request_type=Request type: 
 ae2thing.message.crafting_debug_card.request_type.machine=Machine
 ae2thing.message.crafting_debug_card.request_type.player=Player

@@ -20,6 +20,7 @@ tile.fluid_packet_encoder.name=ME流体封包编码器
 fluid.botania.mana=魔力
 
 ae2thing.tooltip.shift_for_more=§r> 按 §3Shift§r 显示更多信息
+ae2thing.tooltip.ctrl_for_more=§r> 按 §3Ctrl§r 显示更多信息
 ae2thing.tooltip.linked=已链接
 ae2thing.tooltip.backpack_terminal.desc=一个新终端?
 ae2thing.tooltip.wireless_dual_interface_terminal.desc=二合一接口终端,支持编写样板
@@ -27,6 +28,7 @@ ae2thing.tooltip.cell_link.desc=你可以右键打开GUI去链接其他硬盘,\n
 ae2thing.tooltip.cell_link.disable=链接功能已禁用
 ae2thing.tooltip.fluid_packet_encoder.desc=流体封包编码器可以编码液体数据包.使用管道来导出液体数据包.它必须与ME系统连接，并且网络内可以储存流体，否则它就无法工作.
 ae2thing.tooltip.crafting_debug_card.desc=右击ME控制器来显示合成历史记录,\nShift右击切换请求类型.
+ae2thing.tooltip.wireless.installed=已安装的卡:
 ae2thing.message.crafting_debug_card.request_type=请求类型: 
 ae2thing.message.crafting_debug_card.request_type.machine=机器
 ae2thing.message.crafting_debug_card.request_type.player=玩家

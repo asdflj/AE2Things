@@ -34,6 +34,8 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.common.Config;
+import com.asdflj.ae2thing.loader.recipe.WirelessTerminalEnergyRecipe;
+import com.asdflj.ae2thing.loader.recipe.WirelessTerminalQuantumBridgeRecipe;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.asdflj.ae2thing.util.TicUtil;
 import com.glodblock.github.common.storage.CellType;
@@ -191,6 +193,8 @@ public class RecipeLoader implements Runnable {
                 com.glodblock.github.loader.ItemAndBlockHolder.FLUID_EXPORT_BUS.stack(),
                 MANA_EXPORT_BUS.stack());
         }
+        WirelessTerminalQuantumBridgeRecipe.register(ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL.stack());
+        WirelessTerminalEnergyRecipe.register(ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL.stack());
         GameRegistry.addRecipe(new ShapedOreRecipe(BLOCK_FISHBIG.stack(), "FFF", "F F", "FFF", 'F', FISH));
         GameRegistry.addRecipe(new ShapedOreRecipe(BLOCK_MDDyue.stack(), "EEE", "E E", "EEE", 'E', EGG));
         GameRegistry.addRecipe(

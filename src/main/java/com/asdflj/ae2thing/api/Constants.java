@@ -33,6 +33,8 @@ public interface Constants {
     String DEBUG_CARD_EXPORT_FILENAME = "history.json";
     int MODE_CRAFTING = 1;
     int MODE_PROCESSING = 0;
+    String INFINITY_BOOSTER_CARD = "infinityBoosterCard";
+    String INFINITY_ENERGY_CARD = "InfinityEnergyCard";
 
     enum MessageType {
 

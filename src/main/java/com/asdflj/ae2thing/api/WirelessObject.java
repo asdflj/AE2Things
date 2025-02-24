@@ -3,12 +3,15 @@ package com.asdflj.ae2thing.api;
 import java.lang.reflect.InvocationTargetException;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.item.ItemWirelessConnectorTerminal;
+import com.asdflj.ae2thing.common.item.ItemWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 
 import appeng.api.AEApi;
@@ -102,8 +105,14 @@ public class WirelessObject {
 
     public boolean rangeCheck() {
         if (this.getItemStack() != null && this.getItemStack()
-            .getItem() instanceof ItemWirelessConnectorTerminal) {
-            if (Config.wirelessConnectorTerminalInfinityConnectionRange) return true;
+            .getItem() != null) {
+            Item i = this.getItemStack()
+                .getItem();
+            if (i instanceof ItemWirelessConnectorTerminal) {
+                if (Config.wirelessConnectorTerminalInfinityConnectionRange) return true;
+            } else if (i instanceof ItemWirelessDualInterfaceTerminal && this.hasInfinityBoosterCard()) {
+                return true;
+            }
         }
         boolean canConnect = false;
         for (IGridNode node : this.gridNode.getGrid()
@@ -151,6 +160,7 @@ public class WirelessObject {
     }
 
     public int extractPower(double amt, Actionable mode, PowerMultiplier usePowerMultiplier, int ticks) {
+        if (this.hasEnergyCard()) return 0;
         if (mode == Actionable.SIMULATE) return ticks;
         if (ticks < 10) {
             ticks++;
@@ -162,5 +172,31 @@ public class WirelessObject {
         this.player.inventory.setInventorySlotContents(getSlot(), getItemStack());
         ticks = 0;
         return ticks;
+    }
+
+    public static boolean hasInfinityBoosterCard(ItemStack item) {
+        NBTTagCompound tag = Platform.openNbtData(item);
+        return hasInfinityBoosterCard(tag);
+    }
+
+    private static boolean hasInfinityBoosterCard(NBTTagCompound data) {
+        return data.hasKey(Constants.INFINITY_BOOSTER_CARD) && data.getBoolean(Constants.INFINITY_BOOSTER_CARD);
+    }
+
+    public boolean hasInfinityBoosterCard() {
+        return hasInfinityBoosterCard(item);
+    }
+
+    public static boolean hasEnergyCard(ItemStack is) {
+        NBTTagCompound data = Platform.openNbtData(is);
+        return hasEnergyCard(data);
+    }
+
+    private static boolean hasEnergyCard(NBTTagCompound data) {
+        return data.hasKey(Constants.INFINITY_ENERGY_CARD) && data.getBoolean(Constants.INFINITY_ENERGY_CARD);
+    }
+
+    public boolean hasEnergyCard() {
+        return hasEnergyCard(item);
     }
 }
