@@ -7,6 +7,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import org.lwjgl.input.Keyboard;
+
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueName;
 import com.asdflj.ae2thing.common.parts.PartInfusionPatternTerminal;
@@ -100,6 +102,10 @@ public class GuiPatternValueName extends AEBaseGui implements IDropToFillTextFie
 
     @Override
     protected void keyTyped(final char character, final int key) {
+        if (key == Keyboard.KEY_RETURN || key == Keyboard.KEY_NUMPADENTER) {
+            this.actionPerformed(this.submit);
+            return;
+        }
         if (!textField.textboxKeyTyped(character, key)) {
             super.keyTyped(character, key);
         }
