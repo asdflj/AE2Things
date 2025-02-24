@@ -5,7 +5,10 @@
   "refmap": "mixins.ae2thing.refmap.json",
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [],
+  "mixins": [
+    "AccessorPacketNEIPatternRecipe",
+    "MixinPacketNEIPatternRecipe$Handler"
+  ],
   "client": [
     "MixinAEBaseGui",
     "MixinGuiCraftConfirm",
