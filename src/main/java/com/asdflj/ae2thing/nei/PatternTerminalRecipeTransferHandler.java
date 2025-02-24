@@ -13,11 +13,15 @@ import com.asdflj.ae2thing.nei.object.OrderStack;
 import com.asdflj.ae2thing.nei.recipes.FluidRecipe;
 import com.asdflj.ae2thing.network.CPacketTransferRecipe;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.NEERecipePacker;
 import com.asdflj.ae2thing.util.PHUtil;
+import com.github.vfyjxf.nee.network.NEENetworkHandler;
+import com.github.vfyjxf.nee.network.packet.PacketNEIPatternRecipe;
 
 import codechicken.nei.api.IOverlayHandler;
 import codechicken.nei.recipe.IRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler;
+import cpw.mods.fml.common.Loader;
 
 public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
 
@@ -35,6 +39,14 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
 
     @Override
     public void overlayRecipe(GuiContainer firstGui, IRecipeHandler recipe, int recipeIndex, boolean shift) {
+        if (Loader.isModLoaded("neenergistics")) {
+            PacketNEIPatternRecipe message = NEERecipePacker.packRecipe(recipe, recipeIndex);
+            if (message != null) {
+                NEENetworkHandler.getInstance()
+                    .sendToServer(message);
+            }
+        }
+
         if (firstGui instanceof GuiInfusionPatternTerminal) {
             List<OrderStack<?>> in = FluidRecipe.getPackageInputs(recipe, recipeIndex, false);
             List<OrderStack<?>> out = FluidRecipe.getPackageOutputs(recipe, recipeIndex, false);

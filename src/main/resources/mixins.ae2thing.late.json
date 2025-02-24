@@ -7,6 +7,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [],
   "client": [
+    "MixinIngredientTracker",
     "MixinAEBaseGui",
     "MixinGuiCraftConfirm",
     "MixinItemRepo",
@@ -17,5 +18,7 @@
     "MixinContainerCraftConfirm",
     "MixinPanelWidget"
   ],
-  "server": ["MixinContainerCraftConfirm"]
+  "server": [
+    "MixinIngredientTracker",
+    "MixinContainerCraftConfirm"]
 }
