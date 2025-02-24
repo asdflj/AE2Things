@@ -1,5 +1,10 @@
 package com.asdflj.ae2thing.common.item;
 
+import static com.asdflj.ae2thing.api.WirelessObject.hasEnergyCard;
+import static com.asdflj.ae2thing.api.WirelessObject.hasInfinityBoosterCard;
+import static com.asdflj.ae2thing.loader.recipe.WirelessTerminalEnergyRecipe.getEnergyCard;
+import static com.asdflj.ae2thing.loader.recipe.WirelessTerminalQuantumBridgeRecipe.getInfinityBoosterCard;
+import static net.minecraft.client.gui.GuiScreen.isCtrlKeyDown;
 import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
 import java.util.EnumSet;
@@ -8,6 +13,7 @@ import java.util.List;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import com.asdflj.ae2thing.AE2Thing;
@@ -63,6 +69,17 @@ public class ItemWirelessDualInterfaceTerminal extends ItemBaseWirelessTerminal
             toolTip.add(I18n.format(NameConst.TT_INTERFACE_TERMINAL_DESC));
         } else {
             toolTip.add(I18n.format(NameConst.TT_SHIFT_FOR_MORE));
+        }
+        if (isCtrlKeyDown()) {
+            toolTip.add(I18n.format(NameConst.TT_WIRELESS_INSTALLED));
+            if (hasInfinityBoosterCard(stack) && getInfinityBoosterCard() != null) {
+                toolTip.add("  " + EnumChatFormatting.GOLD + getInfinityBoosterCard().getDisplayName());
+            }
+            if (hasEnergyCard(stack) && getEnergyCard() != null) {
+                toolTip.add("  " + EnumChatFormatting.GOLD + getEnergyCard().getDisplayName());
+            }
+        } else {
+            toolTip.add(I18n.format(NameConst.TT_CTRL_FOR_MORE));
         }
 
     }

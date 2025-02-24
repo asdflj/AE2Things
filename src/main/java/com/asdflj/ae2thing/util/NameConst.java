@@ -28,6 +28,8 @@ public class NameConst {
     public static final String MANA = "botania.mana";
     public static final String TT_KEY = AE2Thing.MODID + ".tooltip.";
     public static final String TT_SHIFT_FOR_MORE = TT_KEY + "shift_for_more";
+    public static final String TT_CTRL_FOR_MORE = TT_KEY + "ctrl_for_more";
+
     public static final String TT_LINKED = TT_KEY + "linked";
     public static final String TT_BACKPACK_TERMINAL = TT_KEY + "backpack_terminal.";
     public static final String TT_BACKPACK_TERMINAL_DESC = TT_BACKPACK_TERMINAL + "desc";
@@ -41,6 +43,8 @@ public class NameConst {
     public static final String TT_CRAFTING_DEBUG_CARD_DESC = TT_CRAFTING_DEBUG_CARD + "desc";
     public static final String TT_FLUID_PACKET_ENCODER = TT_KEY + "fluid_packet_encoder.";
     public static final String TT_FLUID_PACKET_ENCODER_DESC = TT_FLUID_PACKET_ENCODER + "desc";
+    public static final String TT_WIRELESS = TT_KEY + "wireless.";
+    public static final String TT_WIRELESS_INSTALLED = TT_WIRELESS + "installed";
 
     public static final String MAGNET = AE2Thing.MODID + ".magnet.";
     public static final String MAGNET_OFF = MAGNET + "off";
