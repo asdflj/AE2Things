@@ -15,7 +15,9 @@
     "MixinGuiOverlayButton",
     "MixinGuiUtils",
     "MixinContainerCraftConfirm",
-    "MixinPanelWidget"
+    "MixinPanelWidget",
+    "tc.nei.MixinLoadCraftingRecipes",
+    "tc.nei.MixinTemplateRecipeHandler"
   ],
   "server": ["MixinContainerCraftConfirm"]
 }
