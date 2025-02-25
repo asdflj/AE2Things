@@ -57,11 +57,11 @@ dependencies {
     // tic
     compileOnly('com.github.GTNewHorizons:TinkersConstruct:1.11.5-GTNH:dev')
     // tc
-    compile('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
-    compile('com.github.GTNewHorizons:ThaumicEnergistics:1.6.27-GTNH:dev') { transitive = false }
-    compile('com.github.GTNewHorizons:thaumicinsurgence:0.3.1:dev')
-    compile 'curse.maven:thaumcraft-nei-plugin-225095:2241913'
-    compile('com.github.GTNewHorizons:TCNEIAdditions:1.4.0:dev')
+    compileOnly('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
+    compileOnly('com.github.GTNewHorizons:ThaumicEnergistics:1.6.27-GTNH:dev') { transitive = false }
+    compileOnly('com.github.GTNewHorizons:thaumicinsurgence:0.3.1:dev')
+    compileOnly 'curse.maven:thaumcraft-nei-plugin-225095:2241913'
+    compileOnly('com.github.GTNewHorizons:TCNEIAdditions:1.4.0:dev')
     // gt
     compileOnly('com.github.GTNewHorizons:GT5-Unofficial:5.09.50.103:dev'){
         exclude group: 'com.github.GTNewHorizons', module: 'AE2FluidCraft-Rework'
