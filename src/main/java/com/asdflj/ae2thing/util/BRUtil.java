@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
@@ -17,12 +18,15 @@ public class BRUtil {
 
     public static ItemStack paper = new ItemStack(Items.paper);
 
+    private static String multiBlockName = "";
+
     public interface ITransferHandler {
 
         ImmutablePair<List<OrderStack<?>>, List<OrderStack<?>>> handler(List<ItemStack> ingredients);
     }
 
     public static ITransferHandler handler = ingredients -> {
+        String defaultName = StatCollector.translateToLocal("blockrenderer6343.multiblock.structure");
         List<OrderStack<?>> in = new ArrayList<>();
         List<OrderStack<?>> out = new ArrayList<>();
         ItemStack item;
@@ -32,11 +36,19 @@ public class BRUtil {
         }
         try {
             ItemStack object = paper.copy();
-            object.setStackDisplayName(
-                ((GuiRecipe<?>) Minecraft.getMinecraft().currentScreen).getHandler()
-                    .getRecipeName());
+            String name = ((GuiRecipe<?>) Minecraft.getMinecraft().currentScreen).getHandler()
+                .getRecipeName();
+            object.setStackDisplayName(name.equals(defaultName) ? multiBlockName : name);
             out.add(new OrderStack<>(object, 0));
         } catch (Exception ignored) {}
         return new ImmutablePair<>(in, out);
     };
+
+    public static void setMultiBlockName(String name) {
+        BRUtil.multiBlockName = name;
+    }
+
+    public static String getMultiBlockName() {
+        return BRUtil.multiBlockName;
+    }
 }

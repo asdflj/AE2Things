@@ -8,6 +8,7 @@ import com.asdflj.ae2thing.api.adapter.pattern.AEPatternTerminalExTransferHandle
 import com.asdflj.ae2thing.api.adapter.pattern.AEPatternTerminalTransferHandler;
 import com.asdflj.ae2thing.api.adapter.pattern.FCPatternTerminal;
 import com.asdflj.ae2thing.api.adapter.pattern.FCPatternTerminalTransferHandler;
+import com.asdflj.ae2thing.api.adapter.pattern.THPatternTerminal;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternExWireless;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminal;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminalEx;
@@ -46,6 +47,10 @@ public class BRLoader implements Runnable {
             .registerPatternTerminal(
                 new FCPatternTerminal(ContainerFluidPatternExWireless.class)
                     .registerIdentifier(Constants.NEI_BR, handler));
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerPatternTerminal(
+                new THPatternTerminal().registerIdentifier(Constants.NEI_BR, new THPatternTerminal.Handler()));
 
     }
 }

@@ -17,8 +17,7 @@
     "ae.MixinContainerCraftConfirm",
     "nei.MixinPanelWidget",
     "tc.nei.MixinLoadCraftingRecipes",
-    "tc.nei.MixinTemplateRecipeHandler",
-    "br.MixinBRUtil"
+    "tc.nei.MixinTemplateRecipeHandler"
   ],
   "server": [
     "ae.MixinContainerCraftConfirm"
