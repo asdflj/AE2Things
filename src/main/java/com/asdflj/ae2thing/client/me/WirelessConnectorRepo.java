@@ -47,6 +47,19 @@ public class WirelessConnectorRepo implements IDisplayRepo {
     @SuppressWarnings("unchecked")
     @Override
     public void updateView() {
+        if (Component.activeInfo != null) {
+            boolean found = false;
+            for (Info info : infos) {
+                if (Component.activeInfo.equals(info)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                Component.activeInfo = null;
+            }
+        }
+
         this.dsp.clear();
         final List<Info> tmp = new ArrayList<>();
         String innerSearch = this.searchString;
