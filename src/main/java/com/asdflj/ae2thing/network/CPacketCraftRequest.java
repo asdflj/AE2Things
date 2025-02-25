@@ -221,7 +221,7 @@ public class CPacketCraftRequest implements IMessage {
                         }
                         final ContainerOpenContext context = c.getOpenContext();
                         if (context != null) {
-                            for (ICraftingTerminalAdapter adapter:AE2ThingAPI.instance().getCraftingTerminal().values()){
+                            for (ICraftingTerminalAdapter adapter:AE2ThingAPI.instance().terminal().getCraftingTerminal().values()){
                                 if(player.openContainer.getClass() == adapter.getContainer()){
                                     final TileEntity te = context.getTile();
                                     adapter.openGui(player,te,context.getSide(),target);

@@ -4,18 +4,13 @@ import static net.minecraft.init.Items.glass_bottle;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,9 +22,6 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.Tags;
-import com.asdflj.ae2thing.api.adapter.findit.IFindItAdapter;
-import com.asdflj.ae2thing.api.adapter.terminal.ICraftingTerminalAdapter;
-import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
 import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.fluids.Mana;
 import com.asdflj.ae2thing.common.storage.StorageManager;
@@ -42,12 +34,7 @@ import com.asdflj.ae2thing.util.NameConst;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 import com.glodblock.github.util.Util;
 
-import appeng.api.AEApi;
-import appeng.api.networking.IGridHost;
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IAEItemStack;
-import appeng.api.storage.data.IItemList;
-import appeng.client.gui.AEBaseGui;
 import appeng.me.Grid;
 import appeng.util.ReadableNumberConverter;
 import cpw.mods.fml.relauncher.FMLInjectionData;
@@ -69,13 +56,6 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
 
     private static ItemStack fluidContainer = BUCKET;
     public static final ReadableNumberConverter readableNumber = ReadableNumberConverter.INSTANCE;
-    private static final HashSet<Class<? extends AEBaseGui>> terminal = new HashSet<>();
-    private static final HashSet<Class<? extends AEBaseGui>> terminalBlackList = new HashSet<>();
-    private static final HashMap<Class<? extends Container>, ICraftingTerminalAdapter> craftingTerminal = new HashMap<>();
-    private static final IItemList<IAEItemStack> tracking = AEApi.instance()
-        .storage()
-        .createPrimitiveItemList();
-    private static final HashMap<Class<? extends IGridHost>, IFindItAdapter> storageProviders = new HashMap<>();
 
     public static AE2ThingAPI instance() {
         return API;
@@ -88,6 +68,10 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
         return null;
     }
 
+    public Terminal terminal() {
+        return Terminal.API;
+    }
+
     @Override
     public boolean isBlacklistedInStorage(Item item) {
         if (item instanceof IBackpackItem) return true;
@@ -97,33 +81,6 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
             }
         }
         return false;
-    }
-
-    @Override
-    public void registerTerminal(Class<? extends AEBaseGui> clazz) {
-        terminal.add(clazz);
-    }
-
-    @Override
-    public HashSet<Class<? extends AEBaseGui>> getTerminal() {
-        return terminal;
-    }
-
-    @Override
-    public void registerTerminalBlackList(Class<? extends AEBaseGui> clazz) {
-        terminalBlackList.add(clazz);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean isTerminal(GuiScreen gui) {
-        if (gui == null || terminalBlackList.contains(gui.getClass())) {
-            return false;
-        }
-        if (gui instanceof IGuiMonitor) {
-            return true;
-        }
-        return terminal.contains(gui.getClass());
     }
 
     @Override
@@ -273,59 +230,6 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
                 new ChatComponentText(
                     I18n.format(NameConst.CRAFTING_DEBUG_CARD_EXPORT_FILE, Constants.DEBUG_CARD_EXPORT_FILENAME)));
         } catch (Exception ignored) {}
-    }
-
-    @Override
-    public void registerCraftingTerminal(ICraftingTerminalAdapter adapter) {
-        craftingTerminal.put(adapter.getContainer(), adapter);
-    }
-
-    @Override
-    public HashMap<Class<? extends Container>, ICraftingTerminalAdapter> getCraftingTerminal() {
-        return craftingTerminal;
-    }
-
-    @Override
-    public boolean isCraftingTerminal(Class<? extends Container> terminal) {
-        return craftingTerminal.containsKey(terminal);
-    }
-
-    @Override
-    public void registerFindItStorageProvider(IFindItAdapter adapter) {
-        storageProviders.putIfAbsent(adapter.getCls(), adapter);
-    }
-
-    @Override
-    public Collection<IFindItAdapter> getStorageProviders() {
-        return storageProviders.values();
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean isCraftingTerminal(GuiScreen terminal) {
-        if (terminal == null) return false;
-        if (terminal instanceof GuiContainer gc && gc.inventorySlots != null) {
-            return craftingTerminal.containsKey(gc.inventorySlots.getClass());
-        }
-        return false;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addTrackingMissingItem(IAEItemStack is) {
-        tracking.add(is);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IItemList<IAEItemStack> getTrakingMissingItems() {
-        return tracking;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void clearTrakingMissingItems() {
-        tracking.resetStatus();
     }
 
 }

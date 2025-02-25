@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.coremod.mixin;
+package com.asdflj.ae2thing.coremod.mixin.nee;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

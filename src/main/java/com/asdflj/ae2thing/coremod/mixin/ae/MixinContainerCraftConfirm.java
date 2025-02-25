@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.coremod.mixin;
+package com.asdflj.ae2thing.coremod.mixin.ae;
 
 import static com.asdflj.ae2thing.api.Constants.MessageType.ADD_PINNED_ITEM;
 

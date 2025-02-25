@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.coremod.mixin;
+package com.asdflj.ae2thing.coremod.mixin.ae;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +50,7 @@ public abstract class MixinAEBaseGui extends GuiScreen {
     @SuppressWarnings({ "unchecked" })
     private void drawPin(float f, int x, int y, CallbackInfo ci) {
         if (!AE2ThingAPI.instance()
+            .terminal()
             .isTerminal(this)) return;
         if (this.getMeSlots()
             .isEmpty()

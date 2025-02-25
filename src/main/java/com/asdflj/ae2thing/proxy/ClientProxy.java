@@ -85,6 +85,7 @@ public class ClientProxy extends CommonProxy {
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
         IItemList<IAEItemStack> list = c.getItems();
         if (!list.isEmpty() && AE2ThingAPI.instance()
+            .terminal()
             .isCraftingTerminal(screen)) {
             for (IAEItemStack is : list) {
                 AE2Thing.proxy.netHandler.sendToServer(new CPacketCraftRequest(is, isShiftKeyDown()));
@@ -102,37 +103,51 @@ public class ClientProxy extends CommonProxy {
         (new KeybindLoader()).run();
         MinecraftForge.EVENT_BUS.register(new BlockPosHighlighter());
         AE2ThingAPI.instance()
+            .terminal()
             .registerTerminal(GuiMEMonitorable.class);
         AE2ThingAPI.instance()
+            .terminal()
             .registerTerminal(GuiCraftingTerm.class);
         AE2ThingAPI.instance()
+            .terminal()
             .registerTerminal(GuiPatternTerm.class);
         AE2ThingAPI.instance()
+            .terminal()
             .registerTerminal(GuiPatternTermEx.class);
         AE2ThingAPI.instance()
+            .terminal()
             .registerTerminal(GuiFluidPatternTerminalEx.class);
         AE2ThingAPI.instance()
+            .terminal()
             .registerTerminal(GuiFluidPatternTerminal.class);
         AE2ThingAPI.instance()
+            .terminal()
             .registerTerminal(GuiFluidPatternExWireless.class);
         AE2ThingAPI.instance()
+            .terminal()
             .registerTerminal(GuiFluidPatternWireless.class);
         AE2ThingAPI.instance()
+            .terminal()
             .registerTerminal(GuiFluidCraftingWireless.class);
         AE2ThingAPI.instance()
+            .terminal()
             .registerTerminal(GuiWirelessTerm.class);
         if (ModAndClassUtil.WCT) {
             AE2ThingAPI.instance()
+                .terminal()
                 .registerTerminal(GuiWirelessCraftingTerminal.class);
         }
         if (ModAndClassUtil.THE) {
             AE2ThingAPI.instance()
+                .terminal()
                 .registerTerminal(GuiInfusionPatternTerminal.class);
         }
 
         AE2ThingAPI.instance()
+            .terminal()
             .registerTerminalBlackList(GuiCraftingTerminal.class);
         AE2ThingAPI.instance()
+            .terminal()
             .registerTerminalBlackList(GuiWirelessDualInterfaceTerminal.class);
     }
 
@@ -174,6 +189,7 @@ public class ClientProxy extends CommonProxy {
             bg.initDone();
         }
         if (AE2ThingAPI.instance()
+            .terminal()
             .isCraftingTerminal(event.gui)) {
             MinecraftForge.EVENT_BUS.post(new CraftTracking());
         }
@@ -182,6 +198,7 @@ public class ClientProxy extends CommonProxy {
     @SubscribeEvent
     public void initGuiEvent(GuiScreenEvent.InitGuiEvent.Pre event) {
         if (AE2ThingAPI.instance()
+            .terminal()
             .isTerminal(event.gui)) {
             AE2ThingAPI.instance()
                 .getPinned()

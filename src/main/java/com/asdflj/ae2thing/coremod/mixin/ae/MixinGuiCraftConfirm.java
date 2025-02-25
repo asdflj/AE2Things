@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.coremod.mixin;
+package com.asdflj.ae2thing.coremod.mixin.ae;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.inventory.Container;

@@ -18,6 +18,8 @@ public interface Constants {
     String MAGNET_MODE_KEY = "MagnetMode";
     String SIDE = "side";
     String CONFIG_INV = "ConfigInv";
+    String NEI_DEFAULT = "nei.default";
+    String NEI_BR = "nei.br";
     int OUTPUT_COLOR = 0x4566ccff;
     int ERROR_COLOR = 0x45DA4527;
     int INACTIVE_COLOR = 0x45FFEA05;

@@ -12,15 +12,18 @@ public class CraftTracking extends Event {
 
     public CraftTracking(IItemList<IAEItemStack> items) {
         AE2ThingAPI.instance()
-            .clearTrakingMissingItems();
+            .terminal()
+            .clearTrackingMissingItems();
         for (IAEItemStack stack : items) {
             AE2ThingAPI.instance()
+                .terminal()
                 .addTrackingMissingItem(stack);
         }
     }
 
     public IItemList<IAEItemStack> getItems() {
         return AE2ThingAPI.instance()
-            .getTrakingMissingItems();
+            .terminal()
+            .getTrackingMissingItems();
     }
 }
