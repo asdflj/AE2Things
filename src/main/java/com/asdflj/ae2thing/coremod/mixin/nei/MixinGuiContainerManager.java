@@ -62,7 +62,7 @@ public abstract class MixinGuiContainerManager {
                 ae2Thing$lastStack != null && Platform.isSameItem(ae2Thing$lastStack, stack)
                     && ae2thing$lastAEStack != null ? ae2thing$lastAEStack : AEItemStack.create(stack));
             if (item != null) {
-                ae2thing$render(item, mousex, mousey - 40);
+                ae2thing$render(item, mousex - 8, mousey - 40 < 0 ? mousey + 40 : mousey - 40);
                 ae2thing$lastAEStack = item;
                 ae2Thing$lastStack = stack;
             }
