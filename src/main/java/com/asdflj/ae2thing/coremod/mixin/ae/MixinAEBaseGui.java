@@ -26,8 +26,6 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.me.InternalSlotME;
 import appeng.client.me.SlotME;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
 
 @Mixin(value = AEBaseGui.class)
 public abstract class MixinAEBaseGui extends GuiScreen {
@@ -94,39 +92,10 @@ public abstract class MixinAEBaseGui extends GuiScreen {
         RenderHelper.drawPinnedSlot(slotIn, this);
     }
 
-    private static String getModVersion() {
-        Optional<ModContainer> mod = Loader.instance()
-            .getActiveModList()
-            .stream()
-            .filter(
-                x -> x.getModId()
-                    .equals("appliedenergistics2"))
-            .findFirst();
-        if (mod.isPresent()) {
-            return mod.get()
-                .getVersion();
-        }
-        return "";
-    }
-
-    private static void setCanDrawPlus() {
-        String version = getModVersion();
-        try {
-            int v = Integer.valueOf(version.split("-")[2]);
-            canDrawPlus = v < 536;
-        } catch (Exception ignored) {
-            canDrawPlus = false;
-        }
-    }
-
     private void bindTexture() {
         final ResourceLocation loc = AE2Thing.resource("textures/gui/pinned.png");
         Minecraft.getMinecraft()
             .getTextureManager()
             .bindTexture(loc);
-    }
-
-    static {
-        setCanDrawPlus();
     }
 }

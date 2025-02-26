@@ -3,6 +3,7 @@ package com.asdflj.ae2thing.client.render;
 import static net.minecraft.client.gui.Gui.drawRect;
 
 import java.awt.Color;
+import java.util.Optional;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.inventory.Slot;
@@ -14,6 +15,8 @@ import com.asdflj.ae2thing.api.Pinned;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.me.SlotME;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 
 public class RenderHelper {
 
@@ -95,5 +98,34 @@ public class RenderHelper {
         GL11.glTranslatef(0f, 0f, -250);
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
+    }
+
+    private static String getModVersion() {
+        Optional<ModContainer> mod = Loader.instance()
+            .getActiveModList()
+            .stream()
+            .filter(
+                x -> x.getModId()
+                    .equals("appliedenergistics2"))
+            .findFirst();
+        if (mod.isPresent()) {
+            return mod.get()
+                .getVersion();
+        }
+        return "";
+    }
+
+    private static void setCanDrawPlus() {
+        String version = getModVersion();
+        try {
+            int v = Integer.valueOf(version.split("-")[2]);
+            canDrawPlus = v < 536;
+        } catch (Exception ignored) {
+            canDrawPlus = false;
+        }
+    }
+
+    static {
+        setCanDrawPlus();
     }
 }
