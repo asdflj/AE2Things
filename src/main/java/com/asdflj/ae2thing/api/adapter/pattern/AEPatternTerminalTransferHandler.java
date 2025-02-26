@@ -19,8 +19,8 @@ public class AEPatternTerminalTransferHandler implements ITransferPackHandler {
         ContainerPatternTerm c = (ContainerPatternTerm) container;
         c.getPatternTerminal()
             .setCraftingRecipe(false);
-        IInventory inputSlot = c.getInventoryByName(Constants.CRAFTING);
-        IInventory outputSlot = c.getInventoryByName(Constants.OUTPUT);
+        IInventory inputSlot = adapter.getInventoryByName(c, Constants.CRAFTING);
+        IInventory outputSlot = adapter.getInventoryByName(c, Constants.OUTPUT);
         for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
             inputSlot.setInventorySlotContents(i, null);
         }

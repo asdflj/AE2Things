@@ -1,6 +1,7 @@
 package com.asdflj.ae2thing.proxy;
 
 import static codechicken.lib.gui.GuiDraw.getMousePosition;
+import static com.asdflj.ae2thing.loader.PatternTerminalMouseWheelLoader.handlers;
 import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
 import java.awt.Point;
@@ -15,6 +16,7 @@ import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTermi
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.api.MouseWheelHandler;
 import com.asdflj.ae2thing.client.event.CraftTracking;
 import com.asdflj.ae2thing.client.gui.BaseMEGui;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
@@ -37,6 +39,7 @@ import com.glodblock.github.client.gui.GuiFluidPatternTerminal;
 import com.glodblock.github.client.gui.GuiFluidPatternTerminalEx;
 import com.glodblock.github.client.gui.GuiFluidPatternWireless;
 
+import appeng.api.events.GuiScrollEvent;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.client.gui.implementations.GuiCraftingTerm;
@@ -46,6 +49,8 @@ import appeng.client.gui.implementations.GuiPatternTermEx;
 import appeng.client.gui.implementations.GuiWirelessTerm;
 import codechicken.nei.LayoutManager;
 import codechicken.nei.api.API;
+import codechicken.nei.recipe.GuiOverlayButton;
+import codechicken.nei.recipe.GuiRecipe;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -57,9 +62,8 @@ public class ClientProxy extends CommonProxy {
 
     private final ItemStack[] hoveredStack = new ItemStack[2];
     private static long refreshTick = System.currentTimeMillis();
+    private static GuiRecipe<?> recipe = null;
 
-    // Override CommonProxy methods here, if you want a different behaviour on the client (e.g. registering renders).
-    // Don't forget to call the super methods as well.
     @Override
     public void onLoadComplete(FMLLoadCompleteEvent event) {
         super.onLoadComplete(event);
@@ -93,6 +97,17 @@ public class ClientProxy extends CommonProxy {
                 break;
             }
         }
+    }
+
+    @SubscribeEvent
+    public boolean handleMouseWheelInput(GuiScrollEvent event) {
+        if (handlers.isEmpty()) return false;
+        for (MouseWheelHandler handler : handlers) {
+            if (handler.handleMouseWheel(event, recipe)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -180,6 +195,16 @@ public class ClientProxy extends CommonProxy {
                     gim.setSearchString(hoveredStack[0].getDisplayName(), true, 0);
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onActionPerformedEventPre(GuiScreenEvent.ActionPerformedEvent.Pre event) {
+        // nee handler overlayRecipe so i need other way
+        if (event.button instanceof GuiOverlayButton && event.gui instanceof GuiRecipe<?>g) {
+            recipe = g;
+        } else {
+            recipe = null;
         }
     }
 

@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.loader;
 
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
@@ -7,6 +8,7 @@ import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.api.adapter.pattern.AEPatternTerminalExTransferHandler;
 import com.asdflj.ae2thing.api.adapter.pattern.AEPatternTerminalTransferHandler;
 import com.asdflj.ae2thing.api.adapter.pattern.FCPatternTerminal;
+import com.asdflj.ae2thing.api.adapter.pattern.IPatternTerminalAdapter;
 import com.asdflj.ae2thing.api.adapter.pattern.ITransferPackHandler;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
@@ -38,8 +40,8 @@ public class BRLoader implements Runnable {
             if (container instanceof AEBaseContainer c) {
                 if (c.getTarget() instanceof IItemPatternTerminal terminal) {
                     terminal.setCraftingRecipe(false);
-                    IInventory inputSlot = terminal.getInventoryByName(Constants.CRAFTING);
-                    IInventory outputSlot = terminal.getInventoryByName(Constants.OUTPUT);
+                    IInventory inputSlot = adapter.getInventoryByName(c, adapter.getCraftingInvName());
+                    IInventory outputSlot = adapter.getInventoryByName(c, adapter.getOutputInvName());
                     for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
                         inputSlot.setInventorySlotContents(i, null);
                     }
@@ -79,13 +81,29 @@ public class BRLoader implements Runnable {
                     .registerIdentifier(Constants.NEI_BR, handler));
         AE2ThingAPI.instance()
             .terminal()
-            .registerPatternTerminal(() -> ContainerWirelessDualInterfaceTerminal.class)
+            .registerPatternTerminal(new IPatternTerminalAdapter() {
+
+                @Override
+                public Class<? extends Container> getContainer() {
+                    return ContainerWirelessDualInterfaceTerminal.class;
+                }
+
+                @Override
+                public String getOutputInvName() {
+                    return Constants.OUTPUT_EX;
+                }
+
+                @Override
+                public String getCraftingInvName() {
+                    return Constants.CRAFTING_EX;
+                }
+            })
             .registerIdentifier(Constants.NEI_BR, (container, inputs, outputs, identifier, adapter) -> {
                 if (container instanceof ContainerWirelessDualInterfaceTerminal ciw) {
                     IPatternTerminal pt = ciw.getContainer()
                         .getPatternTerminal();
-                    IInventory inputSlot = pt.getInventoryByName(Constants.CRAFTING_EX);
-                    IInventory outputSlot = pt.getInventoryByName(Constants.OUTPUT_EX);
+                    IInventory inputSlot = pt.getInventoryByName(adapter.getCraftingInvName());
+                    IInventory outputSlot = pt.getInventoryByName(adapter.getOutputInvName());
                     for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
                         inputSlot.setInventorySlotContents(i, null);
                     }

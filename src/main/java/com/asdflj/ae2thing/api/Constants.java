@@ -20,6 +20,7 @@ public interface Constants {
     String CONFIG_INV = "ConfigInv";
     String NEI_DEFAULT = "nei.default";
     String NEI_BR = "nei.br";
+    String NEI_MOUSE_WHEEL = "nei.mouse_wheel";
     int OUTPUT_COLOR = 0x4566ccff;
     int ERROR_COLOR = 0x45DA4527;
     int INACTIVE_COLOR = 0x45FFEA05;
@@ -61,5 +62,17 @@ public interface Constants {
         RUNNING,
         FINISHED,
         CANCELLED
+    }
+
+    enum MouseWheel {
+
+        PREVIEW(-1),
+        NEXT(1);
+
+        public final int direction;
+
+        MouseWheel(int direction) {
+            this.direction = direction;
+        }
     }
 }
