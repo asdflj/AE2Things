@@ -47,7 +47,11 @@ public class NEI_TH_Config implements IConfigureNEI {
                     identifier);
             }
         }
+        HistoryOption.getValue();
+        TerminalInventoryStateOption.getValue();
         API.addOption(new HistoryOption());
+        API.addOption(new TerminalInventoryStateOption());
+        // API.addOption(new TerminalInventoryStateOption());
     }
 
     @Override

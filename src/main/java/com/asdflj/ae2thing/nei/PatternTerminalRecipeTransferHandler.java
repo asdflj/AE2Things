@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.nei;
 
+import static com.asdflj.ae2thing.proxy.ClientProxy.handlers;
 import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
 import java.util.ArrayList;
@@ -15,7 +16,6 @@ import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.Constants;
-import com.asdflj.ae2thing.api.MouseWheelHandler;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.nei.object.OrderStack;
@@ -39,7 +39,7 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
 
     public static final HashSet<String> notOtherSet = new HashSet<>();
     public static final HashSet<String> craftSet = new HashSet<>();
-    public static List<MouseWheelHandler> handlers = new ArrayList<>();
+
     static {
         notOtherSet.add("smelting");
         notOtherSet.add("brewing");

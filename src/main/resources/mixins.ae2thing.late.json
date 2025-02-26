@@ -5,20 +5,23 @@
   "refmap": "mixins.ae2thing.refmap.json",
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [],
+  "mixins": [
+  ],
   "client": [
     "ae.MixinAEBaseGui",
     "ae.MixinContainerCraftConfirm",
     "ae.MixinGuiCraftConfirm",
     "ae.MixinItemRepo",
+    "nee.MixinGuiEventHandler",
     "nee.MixinGuiUtils",
     "nee.MixinNEEContainerDrawHandler",
     "nei.MixinGuiOverlayButton",
     "nei.MixinIOverlayHandler",
+    "nei.MixinItemHistoryPanel",
     "nei.MixinPanelWidget",
+    "nei.MixinGuiContainerManager",
     "tc.nei.MixinLoadCraftingRecipes",
-    "tc.nei.MixinTemplateRecipeHandler",
-    "nee.MixinGuiEventHandler"
+    "tc.nei.MixinTemplateRecipeHandler"
   ],
   "server": [
     "ae.MixinContainerCraftConfirm"
