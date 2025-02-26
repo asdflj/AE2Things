@@ -17,6 +17,7 @@ import appeng.client.me.SlotME;
 
 public class RenderHelper {
 
+    public static boolean canDrawPlus = false;
     private static Color color;
     private static long lastRunTime;
     public static long interval = 30;
@@ -65,6 +66,34 @@ public class RenderHelper {
         drawRect(x - 1, y, x, y + height, color.getRGB());
         drawRect(x + width, y, x + width + 1, y + height, color.getRGB());
         GL11.glTranslatef(0.0f, 0.0f, -250.0f);
+        GL11.glPopMatrix();
+    }
+
+    public static void drawPlus(int x, int y) {
+        float startX = x + 0.5f;
+        float startY = y + 0.25f;
+        float endX = startX + 3f;
+        float endY = startY + 3f;
+        GL11.glPushMatrix();
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glTranslatef(0f, 0f, 250);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glLineWidth(3.0F);
+        GL11.glBegin(GL11.GL_LINES);
+        GL11.glVertex2f(startX, startY + 1.5f);
+        GL11.glVertex2f(endX, startY + 1.5f);
+        GL11.glEnd();
+        GL11.glBegin(GL11.GL_LINES);
+        GL11.glVertex2f(startX + 1.5f, startY);
+        GL11.glVertex2f(startX + 1.5f, endY);
+        GL11.glEnd();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glTranslatef(0f, 0f, -250);
+        GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
     }
 }
