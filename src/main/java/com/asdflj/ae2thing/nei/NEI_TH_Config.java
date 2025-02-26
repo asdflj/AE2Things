@@ -47,6 +47,7 @@ public class NEI_TH_Config implements IConfigureNEI {
                     identifier);
             }
         }
+        API.addOption(new HistoryOption());
     }
 
     @Override
