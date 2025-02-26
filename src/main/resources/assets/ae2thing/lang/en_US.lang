@@ -91,3 +91,6 @@ nei.gui.terminal.take_stack_single=Take single item
 nei.gui.terminal.take_stack_single.key=CTRL + MMB
 nei.gui.terminal.fill_search_text.key=ALT + MMB
 nei.gui.terminal.fill_search_text=Fill item display name to search bar
+nei.options.inventory.history=Draw Terminal History(AE2Thing)
+nei.options.inventory.history.true=Enable
+nei.options.inventory.history.false=Disable

@@ -81,3 +81,6 @@ ae2thing.key.open_terminal=打开终端
 
 itemGroup.ae2thing=AE2 Thing
 
+nei.options.inventory.history=终端历史记录(AE2Thing)
+nei.options.inventory.history.true=显示
+nei.options.inventory.history.false=隐藏
