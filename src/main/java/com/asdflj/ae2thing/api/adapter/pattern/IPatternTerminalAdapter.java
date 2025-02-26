@@ -51,7 +51,7 @@ public interface IPatternTerminalAdapter {
     }
 
     default HashMap<String, ITransferPackHandler> getIdentifiers() {
-        HashMap<String, ITransferPackHandler> m = map.putIfAbsent(getContainer(), new HashMap<>());
+        HashMap<String, ITransferPackHandler> m = map.getOrDefault(getContainer(), new HashMap<>());
         map.put(getContainer(), m);
         return m;
     }
