@@ -2,7 +2,7 @@ package com.asdflj.ae2thing.api.adapter.pattern;
 
 import net.minecraft.inventory.Container;
 
-public class FCPatternTerminal extends PatternTerminalAdapter {
+public class FCPatternTerminal implements IPatternTerminalAdapter {
 
     private final Class<? extends Container> container;
 

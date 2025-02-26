@@ -11,7 +11,10 @@ import net.minecraftforge.fluids.FluidStack;
 import com.asdflj.ae2thing.nei.object.OrderStack;
 import com.glodblock.github.common.item.ItemFluidPacket;
 
+@FunctionalInterface
 public interface IPatternTerminalAdapter {
+
+    HashMap<Class<? extends Container>, HashMap<String, ITransferPackHandler>> map = new HashMap<>();
 
     default boolean supportFluid() {
         return false;
@@ -47,6 +50,10 @@ public interface IPatternTerminalAdapter {
         return this;
     }
 
-    HashMap<String, ITransferPackHandler> getIdentifiers();
+    default HashMap<String, ITransferPackHandler> getIdentifiers() {
+        HashMap<String, ITransferPackHandler> m = map.putIfAbsent(getContainer(), new HashMap<>());
+        map.put(getContainer(), m);
+        return m;
+    }
 
 }
