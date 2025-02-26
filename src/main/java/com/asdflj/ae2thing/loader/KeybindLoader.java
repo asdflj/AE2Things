@@ -20,6 +20,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class KeybindLoader implements Runnable {
 
     public static KeyBinding openTerminal;
+    public static KeyBinding openDualInterfaceTerminal;
 
     @Override
     public void run() {
@@ -28,6 +29,11 @@ public class KeybindLoader implements Runnable {
             Keyboard.CHAR_NONE,
             "itemGroup." + AE2Thing.MODID);
         ClientRegistry.registerKeyBinding(openTerminal);
+        openDualInterfaceTerminal = new KeyBinding(
+            AE2Thing.MODID + ".key.open_dual_interface_terminal",
+            Keyboard.CHAR_NONE,
+            "itemGroup." + AE2Thing.MODID);
+        ClientRegistry.registerKeyBinding(openDualInterfaceTerminal);
         FMLCommonHandler.instance()
             .bus()
             .register(this);
@@ -43,6 +49,10 @@ public class KeybindLoader implements Runnable {
         if (openTerminal.isPressed()) {
             AE2ThingAPI.instance()
                 .openBackpackTerminal();
+        }
+        if (openDualInterfaceTerminal.isPressed()) {
+            AE2ThingAPI.instance()
+                .openDualinterfaceTerminal();
         }
     }
 }
