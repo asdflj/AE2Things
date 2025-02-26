@@ -1,7 +1,7 @@
 package com.asdflj.ae2thing.proxy;
 
 import static codechicken.lib.gui.GuiDraw.getMousePosition;
-import static com.asdflj.ae2thing.loader.PatternTerminalMouseWheelLoader.handlers;
+import static com.asdflj.ae2thing.nei.PatternTerminalRecipeTransferHandler.handlers;
 import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
 import java.awt.Point;
