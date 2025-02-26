@@ -62,6 +62,12 @@ public class CPacketSwitchGuis implements IMessage {
                     InventoryHandler.openGui(player, w, new BlockPos(s, 0, 0), ForgeDirection.UNKNOWN, message.guiType);
                 }
                 return null;
+            } else if (message.guiType == GuiType.WIRELESS_DUAL_INTERFACE_TERMINAL) {
+                int s = Util.findDualInterfaceTerminal(player);
+                if (s != -1) {
+                    InventoryHandler.openGui(player, w, new BlockPos(s, 0, 0), ForgeDirection.UNKNOWN, message.guiType);
+                }
+                return null;
             }
             if (cont instanceof AEBaseContainer c) {
                 ContainerOpenContext context = ((AEBaseContainer) cont).getOpenContext();

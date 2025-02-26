@@ -77,7 +77,8 @@ ae2thing.gui.fluid_packet_encoder=ME流体封包编码器
 ae2thing.gui.pattern_rename=自定义名称
 ae2thing.nei.find_cell_item.highlight=存储方块已高亮，坐标：%d, %d, %d
 ae2thing.nei.find_cell_item.in_other_dim=存储方块位于 %d 世界，无法高亮显示
-ae2thing.key.open_terminal=打开终端
+ae2thing.key.open_terminal=打开背包终端
+ae2thing.key.open_dual_interface_terminal=打开二合一接口终端
 
 itemGroup.ae2thing=AE2 Thing
 

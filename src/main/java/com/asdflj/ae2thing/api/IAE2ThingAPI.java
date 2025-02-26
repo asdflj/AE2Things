@@ -10,6 +10,8 @@ import com.asdflj.ae2thing.common.storage.StorageManager;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.me.Grid;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SuppressWarnings("unused")
 public interface IAE2ThingAPI {
@@ -35,6 +37,9 @@ public interface IAE2ThingAPI {
     Pinned getPinned();
 
     void openBackpackTerminal();
+
+    @SideOnly(Side.CLIENT)
+    void openDualinterfaceTerminal();
 
     ItemStack getFluidContainer(IAEFluidStack fluid);
 
