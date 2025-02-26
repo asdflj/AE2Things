@@ -28,6 +28,7 @@ public interface IGuiDrawSlot {
 
     default boolean drawSlot(Slot slot) {
         ItemStack drawStack = slot.getStack();
+        if (drawStack == null || drawStack.getItem() == null) return true;
         IAEItemStack stack;
         boolean display = false;
         if (slot instanceof SlotME) {

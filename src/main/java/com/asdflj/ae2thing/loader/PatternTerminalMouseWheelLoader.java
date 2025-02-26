@@ -3,6 +3,7 @@ package com.asdflj.ae2thing.loader;
 import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,10 +36,23 @@ import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.util.Platform;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiOverlayButton;
+import codechicken.nei.recipe.IRecipeHandler;
+import codechicken.nei.recipe.TemplateRecipeHandler;
 
 public class PatternTerminalMouseWheelLoader implements Runnable {
 
     public static List<MouseWheelHandler> handlers = new ArrayList<>();
+    public static final HashSet<String> craftSet = new HashSet<>();
+
+    static {
+        craftSet.add("crafting");
+        craftSet.add("crafting2x2");
+    }
+
+    private boolean shouldCraft(IRecipeHandler recipeHandler) {
+        TemplateRecipeHandler tRecipe = (TemplateRecipeHandler) recipeHandler;
+        return craftSet.contains(tRecipe.getOverlayIdentifier());
+    }
 
     @Override
     public void run() {
@@ -64,7 +78,12 @@ public class PatternTerminalMouseWheelLoader implements Runnable {
                             in.add(new OrderStack<>(slotItem, 0));
                             out.add(new OrderStack<>(result, 0));
                             AE2Thing.proxy.netHandler.sendToServer(
-                                new CPacketTransferRecipe(in, out, isShiftKeyDown(), false, Constants.NEI_MOUSE_WHEEL));
+                                new CPacketTransferRecipe(
+                                    in,
+                                    out,
+                                    shouldCraft(btn.handler),
+                                    isShiftKeyDown(),
+                                    Constants.NEI_MOUSE_WHEEL));
                             return true;
                         }
                     }
@@ -114,8 +133,11 @@ public class PatternTerminalMouseWheelLoader implements Runnable {
                         .getStack();
                     ItemStack out = (ItemStack) outputs.get(0)
                         .getStack();
-                    IInventory inv = adapter
-                        .getInventoryByName(container, c.isCraftingMode() ? Constants.CRAFTING : Constants.CRAFTING_EX);
+                    IInventory inv = adapter.getInventoryByName(
+                        container,
+                        c.getContainer()
+                            .getPatternTerminal()
+                            .isCraftingRecipe() ? Constants.CRAFTING : Constants.CRAFTING_EX);
                     for (int i = 0; i < inv.getSizeInventory(); i++) {
                         if (Platform.isSameItemPrecise(inv.getStackInSlot(i), in)) {
                             inv.setInventorySlotContents(i, out);
