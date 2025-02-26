@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.coremod.mixin;
+package com.asdflj.ae2thing.coremod.mixin.nei;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +43,7 @@ public interface MixinIOverlayHandler extends IOverlayHandler {
         if (firstGui instanceof IGuiMonitor gm) {
             list = Ae2ReflectClient.getList(gm.getRepo());
         } else if (AE2ThingAPI.instance()
+            .terminal()
             .isTerminal(firstGui)) {
                 IDisplayRepo repo = Util.getDisplayRepo((AEBaseGui) firstGui);
                 if (repo instanceof ItemRepo) {

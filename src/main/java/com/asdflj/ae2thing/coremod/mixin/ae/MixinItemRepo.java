@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.coremod.mixin;
+package com.asdflj.ae2thing.coremod.mixin.ae;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -61,6 +61,7 @@ public abstract class MixinItemRepo implements IDisplayRepo, IDisplayRepoExtend 
         GuiScreen gui = mc.currentScreen;
         if (gui == null) return view.add(o);;
         if (!AE2ThingAPI.instance()
+            .terminal()
             .isTerminal(gui)) {
             return view.add(o);
         } else if ((o instanceof IAEItemStack is && AE2ThingAPI.instance()
@@ -95,6 +96,7 @@ public abstract class MixinItemRepo implements IDisplayRepo, IDisplayRepoExtend 
         GuiScreen gui = mc.currentScreen;
         if (gui == null) return;
         if (!AE2ThingAPI.instance()
+            .terminal()
             .isTerminal(gui)) {
             return;
         }

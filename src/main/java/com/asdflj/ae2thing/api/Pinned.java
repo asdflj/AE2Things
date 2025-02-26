@@ -106,6 +106,7 @@ public class Pinned {
     public void updatePinnedItems(List<IAEItemStack> items) {
         GuiScreen gui = Minecraft.getMinecraft().currentScreen;
         if (!AE2ThingAPI.instance()
+            .terminal()
             .isTerminal(gui)) return;
         if (items == null || items.isEmpty()) {
             pinInfo.values()
@@ -133,6 +134,7 @@ public class Pinned {
         GuiScreen gui = Minecraft.getMinecraft().currentScreen;
         if (gui == null) return;
         if (!AE2ThingAPI.instance()
+            .terminal()
             .isTerminal(gui)) return;
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastRunTime >= interval || force) {

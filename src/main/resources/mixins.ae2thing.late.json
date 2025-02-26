@@ -7,17 +7,19 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [],
   "client": [
-    "MixinAEBaseGui",
-    "MixinGuiCraftConfirm",
-    "MixinItemRepo",
-    "MixinIOverlayHandler",
-    "MixinNEEContainerDrawHandler",
-    "MixinGuiOverlayButton",
-    "MixinGuiUtils",
-    "MixinContainerCraftConfirm",
-    "MixinPanelWidget",
+    "ae.MixinAEBaseGui",
+    "ae.MixinGuiCraftConfirm",
+    "ae.MixinItemRepo",
+    "nei.MixinIOverlayHandler",
+    "nee.MixinNEEContainerDrawHandler",
+    "nei.MixinGuiOverlayButton",
+    "nee.MixinGuiUtils",
+    "ae.MixinContainerCraftConfirm",
+    "nei.MixinPanelWidget",
     "tc.nei.MixinLoadCraftingRecipes",
     "tc.nei.MixinTemplateRecipeHandler"
   ],
-  "server": ["MixinContainerCraftConfirm"]
+  "server": [
+    "ae.MixinContainerCraftConfirm"
+  ]
 }

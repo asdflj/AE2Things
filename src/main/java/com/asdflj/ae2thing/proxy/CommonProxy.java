@@ -20,6 +20,7 @@ import com.asdflj.ae2thing.api.adapter.terminal.WCTCraftingTerminal;
 import com.asdflj.ae2thing.common.parts.PartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.common.tile.TileInfusionInterface;
+import com.asdflj.ae2thing.loader.BRLoader;
 import com.asdflj.ae2thing.loader.ItemAndBlockHolder;
 import com.asdflj.ae2thing.network.wrapper.AE2ThingNetworkWrapper;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
@@ -68,13 +69,20 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         AE2ThingAPI.instance()
+            .terminal()
             .registerCraftingTerminal(new AECraftingTerminal());
         AE2ThingAPI.instance()
+            .terminal()
             .registerCraftingTerminal(new FCCraftingTerminal());
         if (ModAndClassUtil.WCT) {
             AE2ThingAPI.instance()
+                .terminal()
                 .registerCraftingTerminal(new WCTCraftingTerminal());
         }
+        if (ModAndClassUtil.BLOCK_RENDER) {
+            new BRLoader().run();
+        }
+
     }
 
     public void postInit(FMLPostInitializationEvent event) {
@@ -122,15 +130,20 @@ public class CommonProxy {
             Upgrades.REDSTONE.registerItem(ItemAndBlockHolder.MANA_IMPORT_BUS.stack(), 1);
         }
         AE2ThingAPI.instance()
+            .terminal()
             .registerFindItStorageProvider(new MEChestAdapter());
         AE2ThingAPI.instance()
+            .terminal()
             .registerFindItStorageProvider(new MEDriverAdapter());
         AE2ThingAPI.instance()
+            .terminal()
             .registerFindItStorageProvider(new StorageBusAdapter());
         AE2ThingAPI.instance()
+            .terminal()
             .registerFindItStorageProvider(new FluidStorageBusAdapter());
         if (ModAndClassUtil.THE) {
             AE2ThingAPI.instance()
+                .terminal()
                 .registerFindItStorageProvider(new EssentiaStorageBusAdapter());
         }
     }

@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.coremod.mixin;
+package com.asdflj.ae2thing.coremod.mixin.nei;
 
 import static codechicken.nei.NEIClientUtils.translate;
 
@@ -59,6 +59,7 @@ public abstract class MixinGuiOverlayButton {
         CallbackInfoReturnable<Map<String, String>> cir) {
         if (gui instanceof IGuiContainerOverlay gur) {
             if (gur.getFirstScreen() != null && AE2ThingAPI.instance()
+                .terminal()
                 .isCraftingTerminal(gur.getFirstScreen())) {
                 hotkeys.put(translate("gui.request_missing_item.key"), translate("gui.request_missing_item"));
                 hotkeys.put(
@@ -79,8 +80,10 @@ public abstract class MixinGuiOverlayButton {
         final List<PositionedStack> ingredients = this.handler.getIngredientStacks(recipeIndex);
         IItemList<IAEItemStack> list = null;
         if (AE2ThingAPI.instance()
+            .terminal()
             .isCraftingTerminal(gui)) {
             IDisplayRepo repo = AE2ThingAPI.instance()
+                .terminal()
                 .getCraftingTerminal()
                 .get(gui.inventorySlots.getClass())
                 .gerRepo(gui);
@@ -140,8 +143,10 @@ public abstract class MixinGuiOverlayButton {
 
     private void moveItems() {
         if (AE2ThingAPI.instance()
+            .terminal()
             .isCraftingTerminal(this.firstGui)) {
             ICraftingTerminalAdapter adapter = AE2ThingAPI.instance()
+                .terminal()
                 .getCraftingTerminal()
                 .get(this.firstGui.inventorySlots.getClass());
             adapter.moveItems(this.firstGui, this.handler, this.recipeIndex);

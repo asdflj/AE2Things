@@ -71,6 +71,7 @@ public class CPacketFindCellItem implements IMessage {
                 } catch (Exception ignored) {}
                 if (iGrid == null) return null;
                 Collection<IFindItAdapter> adapters = AE2ThingAPI.instance()
+                    .terminal()
                     .getStorageProviders();
                 for (IFindItAdapter adapter : adapters) {
                     posList.addAll(adapter.getStorageProviders(iGrid, message.item));

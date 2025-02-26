@@ -29,6 +29,7 @@ public final class ModAndClassUtil {
     public static boolean TIC = false;
     public static boolean PH = false;
     public static boolean FIND_IT = false;
+    public static boolean BLOCK_RENDER = false;
     public static boolean isTypeFilter;
     public static boolean isCraftStatus;
     public static boolean isDoubleButton;
@@ -88,5 +89,6 @@ public final class ModAndClassUtil {
         if (Loader.isModLoaded("programmablehatches")) PH = true;
         if (Loader.isModLoaded("findit")) FIND_IT = true;
         if (Loader.isModLoaded("ae2wct")) WCT = true;
+        if (Loader.isModLoaded("blockrenderer6343")) BLOCK_RENDER = true;
     }
 }

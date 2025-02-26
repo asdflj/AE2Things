@@ -11,7 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
+import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
+import com.asdflj.ae2thing.api.adapter.pattern.IPatternTerminalAdapter;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerMonitor;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
@@ -30,6 +32,7 @@ public class CPacketTransferRecipe implements IMessage {
 
     private List<OrderStack<?>> inputs;
     private List<OrderStack<?>> outputs;
+    private String identifier;
     private boolean isCraft;
     private static final int MAX_INDEX = 32;
     private boolean shift;
@@ -41,10 +44,16 @@ public class CPacketTransferRecipe implements IMessage {
     }
 
     public CPacketTransferRecipe(List<OrderStack<?>> IN, List<OrderStack<?>> OUT, boolean craft, boolean shift) {
+        this(IN, OUT, craft, shift, Constants.NEI_DEFAULT);
+    }
+
+    public CPacketTransferRecipe(List<OrderStack<?>> IN, List<OrderStack<?>> OUT, boolean craft, boolean shift,
+        String identifier) {
         this.inputs = IN;
         this.outputs = OUT;
         this.isCraft = craft;
         this.shift = shift;
+        this.identifier = identifier;
     }
 
     // TODO: this should use GZIP to compress the message
@@ -65,6 +74,7 @@ public class CPacketTransferRecipe implements IMessage {
         nbt_m.setTag("i", nbt_i);
         nbt_m.setTag("o", nbt_o);
         ByteBufUtils.writeTag(buf, nbt_m);
+        ByteBufUtils.writeUTF8String(buf, this.identifier);
     }
 
     @Override
@@ -84,6 +94,7 @@ public class CPacketTransferRecipe implements IMessage {
             OrderStack<?> tmp = OrderStack.readFromNBT(nbt_o, null, i);
             if (tmp != null) outputs.add(tmp);
         }
+        identifier = ByteBufUtils.readUTF8String(buf);
     }
 
     public static class Handler implements IMessageHandler<CPacketTransferRecipe, IMessage> {
@@ -93,6 +104,14 @@ public class CPacketTransferRecipe implements IMessage {
         @SuppressWarnings("unchecked")
         public IMessage onMessage(CPacketTransferRecipe message, MessageContext ctx) {
             Container c = ctx.getServerHandler().playerEntity.openContainer;
+            IPatternTerminalAdapter adapter = AE2ThingAPI.instance()
+                .terminal()
+                .getPatternTerminal(c);
+            if (adapter != null && adapter.getIdentifiers()
+                .containsKey(message.identifier)) {
+                adapter.transfer(c, message.inputs, message.outputs, message.identifier);
+                return null;
+            }
             if (c instanceof ContainerMonitor) {
                 if (c instanceof ContainerInfusionPatternTerminal ct) {
                     // pattern terminal only
