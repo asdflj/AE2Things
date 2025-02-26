@@ -1,10 +1,11 @@
 package com.asdflj.ae2thing.proxy;
 
 import static codechicken.lib.gui.GuiDraw.getMousePosition;
-import static com.asdflj.ae2thing.nei.PatternTerminalRecipeTransferHandler.handlers;
 import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -63,6 +64,7 @@ public class ClientProxy extends CommonProxy {
     private final ItemStack[] hoveredStack = new ItemStack[2];
     private static long refreshTick = System.currentTimeMillis();
     private static GuiRecipe<?> recipe = null;
+    public static List<MouseWheelHandler> handlers = new ArrayList<>();
 
     @Override
     public void onLoadComplete(FMLLoadCompleteEvent event) {
