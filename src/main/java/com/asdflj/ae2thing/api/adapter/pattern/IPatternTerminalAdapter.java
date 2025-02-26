@@ -8,10 +8,12 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
+import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.nei.object.OrderStack;
 import com.glodblock.github.common.item.ItemFluidPacket;
 
-@FunctionalInterface
+import appeng.helpers.IContainerCraftingPacket;
+
 public interface IPatternTerminalAdapter {
 
     HashMap<Class<? extends Container>, HashMap<String, ITransferPackHandler>> map = new HashMap<>();
@@ -35,6 +37,21 @@ public interface IPatternTerminalAdapter {
                 if (index < inv.getSizeInventory()) inv.setInventorySlotContents(index, stack1);
             }
         }
+    }
+
+    default IInventory getInventoryByName(Container container, String name) {
+        if (container instanceof IContainerCraftingPacket c) {
+            return c.getInventoryByName(name);
+        }
+        return null;
+    }
+
+    default String getCraftingInvName() {
+        return Constants.CRAFTING;
+    }
+
+    default String getOutputInvName() {
+        return Constants.OUTPUT;
     }
 
     default void transfer(Container container, List<OrderStack<?>> inputs, List<OrderStack<?>> outputs,

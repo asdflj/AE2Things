@@ -170,7 +170,6 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost, I
         if (this.hasRefillerUpgrade()) {
             refillBlankPatterns(patternSlotIN);
         }
-        updateOrderOfOutputSlots();
     }
 
     public void detectAndSendChanges() {
@@ -183,7 +182,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost, I
             if (container.inverted != it.isInverted() || container.activePage != it.getActivePage()) {
                 container.inverted = it.isInverted();
                 container.activePage = it.getActivePage();
-                offsetSlots();
+                updateOrderOfOutputSlots();
             }
             if (this.container.isCraftingMode() != this.it.isCraftingRecipe()) {
                 this.container.setCraftingMode(this.it.isCraftingRecipe());
@@ -198,17 +197,18 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost, I
             Arrays.stream(this.craftingSlots)
                 .forEach(s -> s.xDisplayPosition = s.getX());
             Arrays.stream(this.outputExSlots)
-                .forEach(s -> s.xDisplayPosition = -9000);
+                .forEach(s -> s.setHidden(true));
             Arrays.stream(this.craftingExSlots)
-                .forEach(s -> s.xDisplayPosition = -9000);
+                .forEach(s -> s.setHidden(true));
         } else {
             this.craftSlot.xDisplayPosition = -9000;
             Arrays.stream(this.craftingSlots)
                 .forEach(s -> s.xDisplayPosition = -9000);
             Arrays.stream(this.outputExSlots)
-                .forEach(s -> s.xDisplayPosition = s.getX());
+                .forEach(s -> s.setHidden(false));
             Arrays.stream(this.craftingExSlots)
-                .forEach(s -> s.xDisplayPosition = s.getX());
+                .forEach(s -> s.setHidden(false));
+            offsetSlots();
         }
     }
 
@@ -227,7 +227,7 @@ public class PatternContainer implements IPatternContainer, IOptionalSlotHost, I
 
     public void onUpdate(String field, Object oldValue, Object newValue) {
         if (field.equals("inverted") || field.equals("activePage")) {
-            offsetSlots();
+            updateOrderOfOutputSlots();
         }
         if (field.equals("craftingMode")) {
             this.getAndUpdateOutput();

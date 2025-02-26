@@ -8,16 +8,17 @@
   "mixins": [],
   "client": [
     "ae.MixinAEBaseGui",
+    "ae.MixinContainerCraftConfirm",
     "ae.MixinGuiCraftConfirm",
     "ae.MixinItemRepo",
-    "nei.MixinIOverlayHandler",
+    "nee.MixinGuiUtils",
     "nee.MixinNEEContainerDrawHandler",
     "nei.MixinGuiOverlayButton",
-    "nee.MixinGuiUtils",
-    "ae.MixinContainerCraftConfirm",
+    "nei.MixinIOverlayHandler",
     "nei.MixinPanelWidget",
     "tc.nei.MixinLoadCraftingRecipes",
-    "tc.nei.MixinTemplateRecipeHandler"
+    "tc.nei.MixinTemplateRecipeHandler",
+    "nee.MixinGuiEventHandler"
   ],
   "server": [
     "ae.MixinContainerCraftConfirm"

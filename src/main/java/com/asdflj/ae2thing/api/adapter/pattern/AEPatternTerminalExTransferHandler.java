@@ -17,8 +17,8 @@ public class AEPatternTerminalExTransferHandler implements ITransferPackHandler 
     public void transferPack(Container container, List<OrderStack<?>> inputs, List<OrderStack<?>> outputs,
         String identifier, IPatternTerminalAdapter adapter) {
         ContainerPatternTermEx c = (ContainerPatternTermEx) container;
-        IInventory inputSlot = c.getInventoryByName(Constants.CRAFTING);
-        IInventory outputSlot = c.getInventoryByName(Constants.OUTPUT);
+        IInventory inputSlot = adapter.getInventoryByName(c, Constants.CRAFTING);
+        IInventory outputSlot = adapter.getInventoryByName(c, Constants.OUTPUT);
         for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
             inputSlot.setInventorySlotContents(i, null);
         }
