@@ -245,8 +245,17 @@ public class Util {
         if (gui instanceof IGuiMonitorTerminal gmt) {
             gmt.getSearchField()
                 .setText(text);
+            gmt.getRepo()
+                .setSearchString(text);
+            gmt.getRepo()
+                .updateView();
         } else {
-            setSearchFieldText(gui, gui.getClass(), text);
+            IDisplayRepo repo = getDisplayRepo(gui);
+            if (repo != null) {
+                setSearchFieldText(gui, gui.getClass(), text);
+                repo.setSearchString(text);
+                repo.updateView();
+            }
         }
     }
 

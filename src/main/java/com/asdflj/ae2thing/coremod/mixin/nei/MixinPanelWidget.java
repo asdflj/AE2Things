@@ -54,7 +54,6 @@ public abstract class MixinPanelWidget extends Widget implements IContainerToolt
                         IDisplayRepo repo = Util.getDisplayRepo(g);
                         repo.setSearchString(is.getDisplayName());
                         Util.setSearchFieldText(g, Platform.getItemDisplayName(is));
-                        repo.updateView();
                         draggedStack = null;
                         cir.setReturnValue(true);
                     } else if (g.inventorySlots instanceof AEBaseContainer c) {

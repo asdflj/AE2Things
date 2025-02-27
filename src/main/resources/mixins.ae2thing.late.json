@@ -17,7 +17,7 @@
     "nee.MixinNEEContainerDrawHandler",
     "nei.MixinGuiOverlayButton",
     "nei.MixinIOverlayHandler",
-    "nei.MixinItemHistoryPanel",
+    "nei.MixinRecipeItemInputHandler",
     "nei.MixinPanelWidget",
     "nei.MixinGuiContainerManager",
     "tc.nei.MixinLoadCraftingRecipes",

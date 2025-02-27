@@ -19,7 +19,7 @@ import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.RecipeItemInputHandler;
 
 @Mixin(RecipeItemInputHandler.class)
-public abstract class MixinItemHistoryPanel {
+public abstract class MixinRecipeItemInputHandler {
 
     @Inject(method = "mouseClicked", at = @At(value = "HEAD"), remap = false, cancellable = true)
     private void ae2thing$mouseClicked(GuiContainer gui, int mousex, int mousey, int button,
