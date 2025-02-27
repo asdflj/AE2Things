@@ -10,11 +10,16 @@ import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.glodblock.github.nei.recipes.FluidRecipe;
 
+import codechicken.lib.config.ConfigTagParent;
+import codechicken.nei.NEIClientConfig;
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
+import codechicken.nei.config.OptionToggleButton;
 
 @SuppressWarnings("unused")
 public class NEI_TH_Config implements IConfigureNEI {
+
+    private static final ConfigTagParent tag = NEIClientConfig.global.config;
 
     @Override
     public void loadConfig() {
@@ -47,11 +52,14 @@ public class NEI_TH_Config implements IConfigureNEI {
                     identifier);
             }
         }
-        HistoryOption.getValue();
-        TerminalInventoryStateOption.getValue();
-        API.addOption(new HistoryOption());
-        API.addOption(new TerminalInventoryStateOption());
-        // API.addOption(new TerminalInventoryStateOption());
+        API.addOption(new OptionToggleButton(ButtonConstants.HISTORY, true));
+        API.addOption(new OptionToggleButton(ButtonConstants.INVENTORY_STATE, true));
+        API.addOption(new OptionToggleButton(ButtonConstants.PINNED_BAR, true));
+    }
+
+    public static boolean getConfigValue(String identifier) {
+        return tag.getTag(identifier)
+            .getBooleanValue(true);
     }
 
     @Override

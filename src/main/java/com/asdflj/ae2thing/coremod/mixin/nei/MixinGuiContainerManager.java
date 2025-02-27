@@ -21,7 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
-import com.asdflj.ae2thing.nei.TerminalInventoryStateOption;
+import com.asdflj.ae2thing.nei.ButtonConstants;
+import com.asdflj.ae2thing.nei.NEI_TH_Config;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidDrop;
@@ -56,7 +57,7 @@ public abstract class MixinGuiContainerManager {
             target = "Lcodechicken/nei/guihook/GuiContainerManager;applyItemCountDetails(Ljava/util/List;Lnet/minecraft/item/ItemStack;)V"),
         remap = false)
     private void ae2thing$renderToolTips(int mousex, int mousey, CallbackInfo ci) {
-        if (!TerminalInventoryStateOption.getValue()) return;
+        if (!NEI_TH_Config.getConfigValue(ButtonConstants.INVENTORY_STATE)) return;
         ItemStack stack;
         stack = getStackMouseOver(this.window);
         if (stack == null) return;

@@ -13,6 +13,8 @@ import com.asdflj.ae2thing.api.adapter.findit.IFindItAdapter;
 import com.asdflj.ae2thing.api.adapter.pattern.IPatternTerminalAdapter;
 import com.asdflj.ae2thing.api.adapter.terminal.ICraftingTerminalAdapter;
 import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
+import com.asdflj.ae2thing.nei.ButtonConstants;
+import com.asdflj.ae2thing.nei.NEI_TH_Config;
 
 import appeng.api.AEApi;
 import appeng.api.networking.IGridHost;
@@ -57,6 +59,7 @@ public class Terminal {
 
     @SideOnly(Side.CLIENT)
     public boolean isPinTerminal(GuiScreen gui) {
+        if (!NEI_TH_Config.getConfigValue(ButtonConstants.PINNED_BAR)) return false;
         if (gui == null || terminalBlackList.contains(gui.getClass())) {
             return false;
         }
