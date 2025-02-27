@@ -89,6 +89,11 @@ public class BRLoader implements Runnable {
                 }
 
                 @Override
+                public boolean supportFluid() {
+                    return true;
+                }
+
+                @Override
                 public String getOutputInvName() {
                     return Constants.OUTPUT_EX;
                 }
