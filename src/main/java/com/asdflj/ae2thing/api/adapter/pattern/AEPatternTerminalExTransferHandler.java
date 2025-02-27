@@ -8,6 +8,7 @@ import net.minecraft.inventory.IInventory;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.nei.NEIUtils;
 import com.asdflj.ae2thing.nei.object.OrderStack;
+import com.asdflj.ae2thing.network.CPacketTransferRecipe;
 
 import appeng.container.implementations.ContainerPatternTermEx;
 
@@ -15,7 +16,7 @@ public class AEPatternTerminalExTransferHandler implements IRecipeHandler {
 
     @Override
     public void transferPack(Container container, List<OrderStack<?>> inputs, List<OrderStack<?>> outputs,
-        String identifier, IPatternTerminalAdapter adapter) {
+        String identifier, IPatternTerminalAdapter adapter, CPacketTransferRecipe message) {
         ContainerPatternTermEx c = (ContainerPatternTermEx) container;
         IInventory inputSlot = adapter.getInventoryByName(c, Constants.CRAFTING);
         IInventory outputSlot = adapter.getInventoryByName(c, Constants.OUTPUT);

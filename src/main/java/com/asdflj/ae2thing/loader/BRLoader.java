@@ -36,7 +36,7 @@ public class BRLoader implements Runnable {
             .registerPatternTerminal(() -> ContainerPatternTermEx.class)
             .registerIdentifier(Constants.NEI_BR, new AEPatternTerminalExTransferHandler());
 
-        IRecipeHandler handler = (container, inputs, outputs, identifier, adapter) -> {
+        IRecipeHandler handler = (container, inputs, outputs, identifier, adapter, message) -> {
             if (container instanceof AEBaseContainer c) {
                 if (c.getTarget() instanceof IItemPatternTerminal terminal) {
                     terminal.setCraftingRecipe(false);
@@ -98,7 +98,7 @@ public class BRLoader implements Runnable {
                     return Constants.CRAFTING_EX;
                 }
             })
-            .registerIdentifier(Constants.NEI_BR, (container, inputs, outputs, identifier, adapter) -> {
+            .registerIdentifier(Constants.NEI_BR, (container, inputs, outputs, identifier, adapter, message) -> {
                 if (container instanceof ContainerWirelessDualInterfaceTerminal ciw) {
                     IPatternTerminal pt = ciw.getContainer()
                         .getPatternTerminal();

@@ -23,7 +23,7 @@ public class PatternTerminalMouseWheelLoader implements Runnable {
 
     @Override
     public void run() {
-        IRecipeHandler handler = (container, inputs, outputs, identifier, adapter) -> {
+        IRecipeHandler handler = (container, inputs, outputs, identifier, adapter, message) -> {
             if (container instanceof IAEAppEngInventory inventory) {
                 ItemStack in = (ItemStack) inputs.get(0)
                     .getStack();
@@ -59,26 +59,28 @@ public class PatternTerminalMouseWheelLoader implements Runnable {
                     return Constants.CRAFTING_EX;
                 }
             })
-            .registerIdentifier(Constants.NEI_MOUSE_WHEEL, (container, inputs, outputs, identifier, adapter) -> {
-                if (container instanceof ContainerWirelessDualInterfaceTerminal c) {
-                    ItemStack in = (ItemStack) inputs.get(0)
-                        .getStack();
-                    ItemStack out = (ItemStack) outputs.get(0)
-                        .getStack();
-                    IInventory inv = adapter.getInventoryByName(
-                        container,
-                        c.getContainer()
-                            .getPatternTerminal()
-                            .isCraftingRecipe() ? Constants.CRAFTING : Constants.CRAFTING_EX);
-                    for (int i = 0; i < inv.getSizeInventory(); i++) {
-                        if (Platform.isSameItemPrecise(inv.getStackInSlot(i), in)) {
-                            inv.setInventorySlotContents(i, out);
+            .registerIdentifier(
+                Constants.NEI_MOUSE_WHEEL,
+                (container, inputs, outputs, identifier, adapter, message) -> {
+                    if (container instanceof ContainerWirelessDualInterfaceTerminal c) {
+                        ItemStack in = (ItemStack) inputs.get(0)
+                            .getStack();
+                        ItemStack out = (ItemStack) outputs.get(0)
+                            .getStack();
+                        IInventory inv = adapter.getInventoryByName(
+                            container,
+                            c.getContainer()
+                                .getPatternTerminal()
+                                .isCraftingRecipe() ? Constants.CRAFTING : Constants.CRAFTING_EX);
+                        for (int i = 0; i < inv.getSizeInventory(); i++) {
+                            if (Platform.isSameItemPrecise(inv.getStackInSlot(i), in)) {
+                                inv.setInventorySlotContents(i, out);
+                            }
                         }
+                        container.onCraftMatrixChanged(inv);
+                        c.saveChanges();
                     }
-                    container.onCraftMatrixChanged(inv);
-                    c.saveChanges();
-                }
-            });
+                });
         AE2ThingAPI.instance()
             .terminal()
             .registerPatternTerminal(() -> ContainerPatternTerm.class)

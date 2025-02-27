@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.nei.object.OrderStack;
+import com.asdflj.ae2thing.network.CPacketTransferRecipe;
 import com.glodblock.github.common.item.ItemFluidPacket;
 
 import appeng.helpers.IContainerCraftingPacket;
@@ -55,10 +56,10 @@ public interface IPatternTerminalAdapter {
     }
 
     default void transfer(Container container, List<OrderStack<?>> inputs, List<OrderStack<?>> outputs,
-        String identifier) {
+        String identifier, CPacketTransferRecipe message) {
         IRecipeHandler handler = getIdentifiers().get(identifier);
         if (handler == null) return;
-        handler.transferPack(container, inputs, outputs, identifier, this);
+        handler.transferPack(container, inputs, outputs, identifier, this, message);
     }
 
     default IPatternTerminalAdapter registerIdentifier(String identifier, IRecipeHandler transferPack) {
