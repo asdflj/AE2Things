@@ -8,7 +8,9 @@ import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.api.adapter.pattern.IPatternTerminalAdapter;
 import com.asdflj.ae2thing.api.adapter.pattern.IRecipeHandler;
+import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternExWireless;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminal;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminalEx;
@@ -105,6 +107,33 @@ public class PatternTerminalMouseWheelLoader implements Runnable {
             .terminal()
             .registerPatternTerminal(() -> ContainerFluidPatternExWireless.class)
             .registerIdentifier(Constants.NEI_MOUSE_WHEEL, handler);
+
+        if (ModAndClassUtil.THE) {
+            AE2ThingAPI.instance()
+                .terminal()
+                .registerPatternTerminal(() -> ContainerInfusionPatternTerminal.class)
+                .registerIdentifier(
+                    Constants.NEI_MOUSE_WHEEL,
+                    (container, inputs, outputs, identifier, adapter, message) -> {
+                        if (container instanceof ContainerInfusionPatternTerminal ct) {
+                            ct.getPatternTerminal()
+                                .setCraftingRecipe(true);
+                            ct.setCrafting(true);
+                            IInventory outputSlot = ct.getInventoryByName(Constants.OUTPUT);
+                            ItemStack in = (ItemStack) inputs.get(0)
+                                .getStack();
+                            ItemStack out = (ItemStack) outputs.get(0)
+                                .getStack();
+                            for (int i = 0; i < outputSlot.getSizeInventory(); i++) {
+                                if (Platform.isSameItemPrecise(outputSlot.getStackInSlot(i), in)) {
+                                    outputSlot.setInventorySlotContents(i, out);
+                                }
+                            }
+                            ct.onCraftMatrixChanged(outputSlot);
+                            ct.saveChanges();
+                        }
+                    });
+        }
     }
 
 }
