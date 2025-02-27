@@ -58,6 +58,7 @@ import appeng.client.gui.widgets.IDropToFillTextField;
 import appeng.client.gui.widgets.MEGuiTextField;
 import appeng.container.slot.AppEngSlot;
 import appeng.core.AEConfig;
+import appeng.core.AELog;
 import appeng.core.AppEng;
 import appeng.core.CommonHelper;
 import appeng.core.localization.ButtonToolTips;
@@ -1366,13 +1367,17 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
         }
 
         private void setItemInSlot(ItemStack stack, int idx) {
-            final int oldHasItem = inv.getStackInSlot(idx) != null ? 1 : 0;
-            final int newHasItem = stack != null ? 1 : 0;
+            try {
+                final int oldHasItem = inv.getStackInSlot(idx) != null ? 1 : 0;
+                final int newHasItem = stack != null ? 1 : 0;
 
-            inv.setInventorySlotContents(idx, stack);
-            // Update item count
-            numItems += newHasItem - oldHasItem;
-            assert numItems >= 0;
+                inv.setInventorySlotContents(idx, stack);
+                // Update item count
+                numItems += newHasItem - oldHasItem;
+                assert numItems >= 0;
+            } catch (Exception e) {
+                AELog.error(e);
+            }
         }
 
         public boolean hasBrokenSlot() {

@@ -1,9 +1,11 @@
 package com.asdflj.ae2thing.loader;
 
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
+import com.asdflj.ae2thing.api.adapter.pattern.IPatternTerminalAdapter;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
@@ -16,7 +18,18 @@ public class PatternTerminalLoader implements Runnable {
     public void run() {
         AE2ThingAPI.instance()
             .terminal()
-            .registerPatternTerminal(() -> ContainerWirelessDualInterfaceTerminal.class)
+            .registerPatternTerminal(new IPatternTerminalAdapter() {
+
+                @Override
+                public Class<? extends Container> getContainer() {
+                    return ContainerWirelessDualInterfaceTerminal.class;
+                }
+
+                @Override
+                public boolean supportFluid() {
+                    return true;
+                }
+            })
             .registerIdentifier(Constants.NEI_DEFAULT, (container, inputs, outputs, identifier, adapter, message) -> {
                 if (container instanceof ContainerWirelessDualInterfaceTerminal ciw) {
                     boolean combine = ciw.combine;
