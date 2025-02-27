@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.api.adapter.pattern.IPatternTerminalAdapter;
-import com.asdflj.ae2thing.api.adapter.pattern.ITransferPackHandler;
+import com.asdflj.ae2thing.api.adapter.pattern.IRecipeHandler;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternExWireless;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminal;
@@ -23,7 +23,7 @@ public class PatternTerminalMouseWheelLoader implements Runnable {
 
     @Override
     public void run() {
-        ITransferPackHandler handler = (container, inputs, outputs, identifier, adapter) -> {
+        IRecipeHandler handler = (container, inputs, outputs, identifier, adapter) -> {
             if (container instanceof IAEAppEngInventory inventory) {
                 ItemStack in = (ItemStack) inputs.get(0)
                     .getStack();

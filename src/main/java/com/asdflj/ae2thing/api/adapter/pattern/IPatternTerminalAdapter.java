@@ -16,7 +16,7 @@ import appeng.helpers.IContainerCraftingPacket;
 
 public interface IPatternTerminalAdapter {
 
-    HashMap<Class<? extends Container>, HashMap<String, ITransferPackHandler>> map = new HashMap<>();
+    HashMap<Class<? extends Container>, HashMap<String, IRecipeHandler>> map = new HashMap<>();
 
     default boolean supportFluid() {
         return false;
@@ -56,19 +56,19 @@ public interface IPatternTerminalAdapter {
 
     default void transfer(Container container, List<OrderStack<?>> inputs, List<OrderStack<?>> outputs,
         String identifier) {
-        ITransferPackHandler handler = getIdentifiers().get(identifier);
+        IRecipeHandler handler = getIdentifiers().get(identifier);
         if (handler == null) return;
         handler.transferPack(container, inputs, outputs, identifier, this);
     }
 
-    default IPatternTerminalAdapter registerIdentifier(String identifier, ITransferPackHandler transferPack) {
+    default IPatternTerminalAdapter registerIdentifier(String identifier, IRecipeHandler transferPack) {
         this.getIdentifiers()
             .put(identifier, transferPack);
         return this;
     }
 
-    default HashMap<String, ITransferPackHandler> getIdentifiers() {
-        HashMap<String, ITransferPackHandler> m = map.getOrDefault(getContainer(), new HashMap<>());
+    default HashMap<String, IRecipeHandler> getIdentifiers() {
+        HashMap<String, IRecipeHandler> m = map.getOrDefault(getContainer(), new HashMap<>());
         map.put(getContainer(), m);
         return m;
     }

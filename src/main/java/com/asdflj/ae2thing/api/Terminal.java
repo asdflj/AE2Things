@@ -49,6 +49,14 @@ public class Terminal {
 
     @SideOnly(Side.CLIENT)
     public boolean isTerminal(GuiScreen gui) {
+        if (gui instanceof IGuiMonitor) {
+            return true;
+        }
+        return terminal.contains(gui.getClass());
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean isPinTerminal(GuiScreen gui) {
         if (gui == null || terminalBlackList.contains(gui.getClass())) {
             return false;
         }

@@ -28,7 +28,7 @@ public class RenderHelper {
     public static void drawPinnedSlot(Slot slotIn, GuiScreen gui) {
         if (!AE2ThingAPI.instance()
             .terminal()
-            .isTerminal(gui)) return;
+            .isPinTerminal(gui)) return;
         if (slotIn instanceof SlotME slotME && slotME.getHasStack()) {
             int x = slotIn.xDisplayPosition;
             int y = slotIn.yDisplayPosition;

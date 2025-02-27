@@ -11,7 +11,7 @@ import com.asdflj.ae2thing.nei.object.OrderStack;
 
 import appeng.container.implementations.ContainerPatternTermEx;
 
-public class AEPatternTerminalExTransferHandler implements ITransferPackHandler {
+public class AEPatternTerminalExTransferHandler implements IRecipeHandler {
 
     @Override
     public void transferPack(Container container, List<OrderStack<?>> inputs, List<OrderStack<?>> outputs,

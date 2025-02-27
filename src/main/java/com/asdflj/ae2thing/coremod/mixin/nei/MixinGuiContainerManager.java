@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,9 +19,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
 import com.asdflj.ae2thing.nei.TerminalInventoryStateOption;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.Util;
+import com.glodblock.github.common.item.ItemFluidDrop;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IDisplayRepo;
@@ -31,6 +35,7 @@ import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.recipe.GuiRecipe;
+import codechicken.nei.recipe.StackInfo;
 
 @Mixin(GuiContainerManager.class)
 public abstract class MixinGuiContainerManager {
@@ -52,12 +57,24 @@ public abstract class MixinGuiContainerManager {
         remap = false)
     private void ae2thing$renderToolTips(int mousex, int mousey, CallbackInfo ci) {
         if (!TerminalInventoryStateOption.getValue()) return;
-        ItemStack stack = getStackMouseOver(this.window);
+        ItemStack stack;
+        stack = getStackMouseOver(this.window);
         if (stack == null) return;
-        if (window instanceof GuiRecipe<?>gui && gui.getFirstScreenGeneral() instanceof AEBaseGui g) {
-            IDisplayRepo repo = Util.getDisplayRepo(g);
-            if (repo == null) return;
+        if (window instanceof GuiRecipe<?>gui) {
+            IDisplayRepo repo = null;
+            if (gui.getFirstScreenGeneral() instanceof IGuiMonitor g) {
+                repo = g.getRepo();
+            } else if (AE2ThingAPI.instance()
+                .terminal()
+                .isTerminal(gui.getFirstScreenGeneral())) {
+                    repo = Util.getDisplayRepo((AEBaseGui) gui.getFirstScreenGeneral());
+                }
+            if (!(repo instanceof ItemRepo)) return;
             IItemList<IAEItemStack> list = Ae2ReflectClient.getList((ItemRepo) repo);
+            FluidStack fs = StackInfo.getFluid(stack);
+            if (fs != null) {
+                stack = ItemFluidDrop.newStack(fs);
+            }
             IAEItemStack item = list.findPrecise(
                 ae2Thing$lastStack != null && Platform.isSameItem(ae2Thing$lastStack, stack)
                     && ae2thing$lastAEStack != null ? ae2thing$lastAEStack : AEItemStack.create(stack));

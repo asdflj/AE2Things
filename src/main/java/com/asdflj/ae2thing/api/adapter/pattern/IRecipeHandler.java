@@ -7,7 +7,7 @@ import net.minecraft.inventory.Container;
 import com.asdflj.ae2thing.nei.object.OrderStack;
 
 @FunctionalInterface
-public interface ITransferPackHandler {
+public interface IRecipeHandler {
 
     void transferPack(Container container, List<OrderStack<?>> inputs, List<OrderStack<?>> outputs, String identifier,
         IPatternTerminalAdapter adapter);

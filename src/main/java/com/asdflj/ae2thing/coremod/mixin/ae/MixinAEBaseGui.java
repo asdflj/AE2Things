@@ -50,7 +50,7 @@ public abstract class MixinAEBaseGui extends GuiScreen {
     private void drawPin(float f, int x, int y, CallbackInfo ci) {
         if (!AE2ThingAPI.instance()
             .terminal()
-            .isTerminal(this)) return;
+            .isPinTerminal(this)) return;
         if (this.getMeSlots()
             .isEmpty()
             || AE2ThingAPI.instance()
