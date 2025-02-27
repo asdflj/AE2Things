@@ -13,6 +13,7 @@ import com.asdflj.ae2thing.nei.object.OrderStack;
 import com.asdflj.ae2thing.network.CPacketTransferRecipe;
 import com.glodblock.github.common.item.ItemFluidPacket;
 
+import appeng.core.AELog;
 import appeng.helpers.IContainerCraftingPacket;
 
 public interface IPatternTerminalAdapter {
@@ -34,7 +35,10 @@ public interface IPatternTerminalAdapter {
                     stack1 = ((ItemStack) stack.getStack()).copy();
                 } else if (supportFluid() && stack.getStack() instanceof FluidStack) {
                     stack1 = ItemFluidPacket.newStack((FluidStack) stack.getStack());
-                } else throw new UnsupportedOperationException("Trying to get an unsupported item!");
+                } else {
+                    AELog.warn(new UnsupportedOperationException("Trying to get an unsupported item!"));
+                    continue;
+                }
                 if (index < inv.getSizeInventory()) inv.setInventorySlotContents(index, stack1);
             }
         }

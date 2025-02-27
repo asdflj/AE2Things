@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
+import com.asdflj.ae2thing.api.adapter.pattern.FCPatternTerminal;
 import com.asdflj.ae2thing.api.adapter.pattern.IPatternTerminalAdapter;
 import com.asdflj.ae2thing.api.adapter.pattern.IRecipeHandler;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
@@ -98,19 +99,19 @@ public class PatternTerminalMouseWheelLoader implements Runnable {
             .registerIdentifier(Constants.NEI_MOUSE_WHEEL, handler);
         AE2ThingAPI.instance()
             .terminal()
-            .registerPatternTerminal(() -> ContainerFluidPatternTerminal.class)
+            .registerPatternTerminal(new FCPatternTerminal(ContainerFluidPatternTerminal.class))
             .registerIdentifier(Constants.NEI_MOUSE_WHEEL, handler);
         AE2ThingAPI.instance()
             .terminal()
-            .registerPatternTerminal(() -> ContainerFluidPatternWireless.class)
+            .registerPatternTerminal(new FCPatternTerminal(ContainerFluidPatternWireless.class))
             .registerIdentifier(Constants.NEI_MOUSE_WHEEL, handler);
         AE2ThingAPI.instance()
             .terminal()
-            .registerPatternTerminal(() -> ContainerFluidPatternTerminalEx.class)
+            .registerPatternTerminal(new FCPatternTerminal(ContainerFluidPatternTerminalEx.class))
             .registerIdentifier(Constants.NEI_MOUSE_WHEEL, handler);
         AE2ThingAPI.instance()
             .terminal()
-            .registerPatternTerminal(() -> ContainerFluidPatternExWireless.class)
+            .registerPatternTerminal(new FCPatternTerminal(ContainerFluidPatternExWireless.class))
             .registerIdentifier(Constants.NEI_MOUSE_WHEEL, handler);
 
         if (ModAndClassUtil.THE) {
