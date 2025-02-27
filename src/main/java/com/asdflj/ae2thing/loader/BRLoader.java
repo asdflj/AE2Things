@@ -102,6 +102,7 @@ public class BRLoader implements Runnable {
                 if (container instanceof ContainerWirelessDualInterfaceTerminal ciw) {
                     IPatternTerminal pt = ciw.getContainer()
                         .getPatternTerminal();
+                    pt.setCraftingRecipe(false);
                     IInventory inputSlot = pt.getInventoryByName(adapter.getCraftingInvName());
                     IInventory outputSlot = pt.getInventoryByName(adapter.getOutputInvName());
                     for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
