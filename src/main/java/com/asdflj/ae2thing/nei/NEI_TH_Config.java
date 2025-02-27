@@ -15,7 +15,6 @@ import codechicken.lib.config.ConfigTagParent;
 import codechicken.nei.NEIClientConfig;
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
-import codechicken.nei.config.OptionToggleButton;
 
 @SuppressWarnings("unused")
 public class NEI_TH_Config implements IConfigureNEI {
@@ -53,11 +52,11 @@ public class NEI_TH_Config implements IConfigureNEI {
                     identifier);
             }
         }
-        API.addOption(new OptionToggleButton(ButtonConstants.HISTORY, true));
-        API.addOption(new OptionToggleButton(ButtonConstants.INVENTORY_STATE, true));
-        API.addOption(new OptionToggleButton(ButtonConstants.PINNED_BAR, true));
+        API.addOption(new BaseToggleButton(ButtonConstants.HISTORY));
+        API.addOption(new BaseToggleButton(ButtonConstants.INVENTORY_STATE));
+        API.addOption(new BaseToggleButton(ButtonConstants.PINNED_BAR));
         if (ModAndClassUtil.BLOCK_RENDER) {
-            API.addOption(new OptionToggleButton(ButtonConstants.BLOCK_RENDER, true));
+            API.addOption(new BaseToggleButton(ButtonConstants.BLOCK_RENDER));
         }
     }
 
