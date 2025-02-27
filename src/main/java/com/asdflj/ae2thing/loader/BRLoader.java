@@ -1,6 +1,5 @@
 package com.asdflj.ae2thing.loader;
 
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
@@ -8,8 +7,8 @@ import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.api.adapter.pattern.AEPatternTerminalExTransferHandler;
 import com.asdflj.ae2thing.api.adapter.pattern.AEPatternTerminalTransferHandler;
 import com.asdflj.ae2thing.api.adapter.pattern.FCPatternTerminal;
-import com.asdflj.ae2thing.api.adapter.pattern.IPatternTerminalAdapter;
 import com.asdflj.ae2thing.api.adapter.pattern.IRecipeHandler;
+import com.asdflj.ae2thing.api.adapter.pattern.THDualInterfacePatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
 import com.asdflj.ae2thing.nei.NEIUtils;
@@ -81,28 +80,7 @@ public class BRLoader implements Runnable {
                     .registerIdentifier(Constants.NEI_BR, handler));
         AE2ThingAPI.instance()
             .terminal()
-            .registerPatternTerminal(new IPatternTerminalAdapter() {
-
-                @Override
-                public Class<? extends Container> getContainer() {
-                    return ContainerWirelessDualInterfaceTerminal.class;
-                }
-
-                @Override
-                public boolean supportFluid() {
-                    return true;
-                }
-
-                @Override
-                public String getOutputInvName() {
-                    return Constants.OUTPUT_EX;
-                }
-
-                @Override
-                public String getCraftingInvName() {
-                    return Constants.CRAFTING_EX;
-                }
-            })
+            .registerPatternTerminal(new THDualInterfacePatternTerminal())
             .registerIdentifier(Constants.NEI_BR, (container, inputs, outputs, identifier, adapter, message) -> {
                 if (container instanceof ContainerWirelessDualInterfaceTerminal ciw) {
                     IPatternTerminal pt = ciw.getContainer()

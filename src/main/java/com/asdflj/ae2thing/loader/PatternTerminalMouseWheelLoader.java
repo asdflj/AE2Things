@@ -1,14 +1,13 @@
 package com.asdflj.ae2thing.loader;
 
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.api.adapter.pattern.FCPatternTerminal;
-import com.asdflj.ae2thing.api.adapter.pattern.IPatternTerminalAdapter;
 import com.asdflj.ae2thing.api.adapter.pattern.IRecipeHandler;
+import com.asdflj.ae2thing.api.adapter.pattern.THDualInterfacePatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
@@ -45,28 +44,7 @@ public class PatternTerminalMouseWheelLoader implements Runnable {
 
         AE2ThingAPI.instance()
             .terminal()
-            .registerPatternTerminal(new IPatternTerminalAdapter() {
-
-                @Override
-                public boolean supportFluid() {
-                    return true;
-                }
-
-                @Override
-                public Class<? extends Container> getContainer() {
-                    return ContainerWirelessDualInterfaceTerminal.class;
-                }
-
-                @Override
-                public String getOutputInvName() {
-                    return Constants.OUTPUT_EX;
-                }
-
-                @Override
-                public String getCraftingInvName() {
-                    return Constants.CRAFTING_EX;
-                }
-            })
+            .registerPatternTerminal(new THDualInterfacePatternTerminal())
             .registerIdentifier(
                 Constants.NEI_MOUSE_WHEEL,
                 (container, inputs, outputs, identifier, adapter, message) -> {
