@@ -8,6 +8,7 @@ import com.asdflj.ae2thing.Tags;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.nei.recipes.FluidRecipe;
 
 import codechicken.lib.config.ConfigTagParent;
@@ -55,6 +56,9 @@ public class NEI_TH_Config implements IConfigureNEI {
         API.addOption(new OptionToggleButton(ButtonConstants.HISTORY, true));
         API.addOption(new OptionToggleButton(ButtonConstants.INVENTORY_STATE, true));
         API.addOption(new OptionToggleButton(ButtonConstants.PINNED_BAR, true));
+        if (ModAndClassUtil.BLOCK_RENDER) {
+            API.addOption(new OptionToggleButton(ButtonConstants.BLOCK_RENDER, true));
+        }
     }
 
     public static boolean getConfigValue(String identifier) {

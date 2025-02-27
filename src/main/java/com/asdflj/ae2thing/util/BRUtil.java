@@ -10,6 +10,8 @@ import net.minecraft.util.StatCollector;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
+import com.asdflj.ae2thing.nei.ButtonConstants;
+import com.asdflj.ae2thing.nei.NEI_TH_Config;
 import com.asdflj.ae2thing.nei.object.OrderStack;
 
 import codechicken.nei.recipe.GuiRecipe;
@@ -32,7 +34,11 @@ public class BRUtil {
         ItemStack item;
         for (int i = 0; i < ingredients.size(); i++) {
             item = ingredients.get(i);
-            in.add(new OrderStack<>(item, i));
+            if (!((ModAndClassUtil.GT5 || ModAndClassUtil.GT5NH)
+                && NEI_TH_Config.getConfigValue(ButtonConstants.BLOCK_RENDER)
+                && GTUtil.isHatchItem(item))) {
+                in.add(new OrderStack<>(item, i));
+            }
         }
         try {
             ItemStack object = paper.copy();
