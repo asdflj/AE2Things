@@ -47,6 +47,11 @@ public class PatternTerminalMouseWheelLoader implements Runnable {
             .registerPatternTerminal(new IPatternTerminalAdapter() {
 
                 @Override
+                public boolean supportFluid() {
+                    return true;
+                }
+
+                @Override
                 public Class<? extends Container> getContainer() {
                     return ContainerWirelessDualInterfaceTerminal.class;
                 }
