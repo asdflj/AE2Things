@@ -100,3 +100,7 @@ nei.options.ae2thing.history.false=No
 nei.options.ae2thing.state=Display Terminal Inventory State
 nei.options.ae2thing.state.true=Yes
 nei.options.ae2thing.state.false=No
+
+nei.options.ae2thing.pinned_bar=Enable Terminal Crafting Pinned Bar
+nei.options.ae2thing.pinned_bar.true=Yes
+nei.options.ae2thing.pinned_bar.false=No

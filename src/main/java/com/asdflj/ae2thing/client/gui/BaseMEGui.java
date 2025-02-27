@@ -21,7 +21,8 @@ import org.lwjgl.opengl.GL12;
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.widget.IGuiSelection;
-import com.asdflj.ae2thing.nei.HistoryOption;
+import com.asdflj.ae2thing.nei.ButtonConstants;
+import com.asdflj.ae2thing.nei.NEI_TH_Config;
 import com.asdflj.ae2thing.network.CPacketFluidUpdate;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.HBMAeAddonUtil;
@@ -237,7 +238,7 @@ public abstract class BaseMEGui extends AEBaseMEGui implements IGuiSelection {
     @Override
     public void drawHistorySelection(final int x, final int y, String text, int width,
         final List<String> searchHistory) {
-        if (!HistoryOption.getValue()) return;
+        if (!NEI_TH_Config.getConfigValue(ButtonConstants.HISTORY)) return;
         final int maxRows = AE2ThingAPI.maxSelectionRows;
         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);

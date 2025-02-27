@@ -62,7 +62,7 @@ public abstract class MixinItemRepo implements IDisplayRepo, IDisplayRepoExtend 
         if (gui == null) return view.add(o);;
         if (!AE2ThingAPI.instance()
             .terminal()
-            .isTerminal(gui)) {
+            .isPinTerminal(gui)) {
             return view.add(o);
         } else if ((o instanceof IAEItemStack is && AE2ThingAPI.instance()
             .getPinned()
@@ -97,7 +97,7 @@ public abstract class MixinItemRepo implements IDisplayRepo, IDisplayRepoExtend 
         if (gui == null) return;
         if (!AE2ThingAPI.instance()
             .terminal()
-            .isTerminal(gui)) {
+            .isPinTerminal(gui)) {
             return;
         }
         final List<IAEItemStack> pinItems = AE2ThingAPI.instance()

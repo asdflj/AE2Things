@@ -90,3 +90,7 @@ nei.options.ae2thing.history.false=隐藏
 nei.options.ae2thing.state=终端库存状态
 nei.options.ae2thing.state.true=显示
 nei.options.ae2thing.state.false=隐藏
+
+nei.options.ae2thing.pinned_bar=终端合成固定栏
+nei.options.ae2thing.pinned_bar.true=显示
+nei.options.ae2thing.pinned_bar.false=隐藏

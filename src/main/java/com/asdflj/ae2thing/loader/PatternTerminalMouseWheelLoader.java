@@ -7,8 +7,10 @@ import net.minecraft.item.ItemStack;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.api.adapter.pattern.IPatternTerminalAdapter;
-import com.asdflj.ae2thing.api.adapter.pattern.ITransferPackHandler;
+import com.asdflj.ae2thing.api.adapter.pattern.IRecipeHandler;
+import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
+import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternExWireless;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminal;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminalEx;
@@ -23,7 +25,7 @@ public class PatternTerminalMouseWheelLoader implements Runnable {
 
     @Override
     public void run() {
-        ITransferPackHandler handler = (container, inputs, outputs, identifier, adapter) -> {
+        IRecipeHandler handler = (container, inputs, outputs, identifier, adapter, message) -> {
             if (container instanceof IAEAppEngInventory inventory) {
                 ItemStack in = (ItemStack) inputs.get(0)
                     .getStack();
@@ -59,26 +61,28 @@ public class PatternTerminalMouseWheelLoader implements Runnable {
                     return Constants.CRAFTING_EX;
                 }
             })
-            .registerIdentifier(Constants.NEI_MOUSE_WHEEL, (container, inputs, outputs, identifier, adapter) -> {
-                if (container instanceof ContainerWirelessDualInterfaceTerminal c) {
-                    ItemStack in = (ItemStack) inputs.get(0)
-                        .getStack();
-                    ItemStack out = (ItemStack) outputs.get(0)
-                        .getStack();
-                    IInventory inv = adapter.getInventoryByName(
-                        container,
-                        c.getContainer()
-                            .getPatternTerminal()
-                            .isCraftingRecipe() ? Constants.CRAFTING : Constants.CRAFTING_EX);
-                    for (int i = 0; i < inv.getSizeInventory(); i++) {
-                        if (Platform.isSameItemPrecise(inv.getStackInSlot(i), in)) {
-                            inv.setInventorySlotContents(i, out);
+            .registerIdentifier(
+                Constants.NEI_MOUSE_WHEEL,
+                (container, inputs, outputs, identifier, adapter, message) -> {
+                    if (container instanceof ContainerWirelessDualInterfaceTerminal c) {
+                        ItemStack in = (ItemStack) inputs.get(0)
+                            .getStack();
+                        ItemStack out = (ItemStack) outputs.get(0)
+                            .getStack();
+                        IInventory inv = adapter.getInventoryByName(
+                            container,
+                            c.getContainer()
+                                .getPatternTerminal()
+                                .isCraftingRecipe() ? Constants.CRAFTING : Constants.CRAFTING_EX);
+                        for (int i = 0; i < inv.getSizeInventory(); i++) {
+                            if (Platform.isSameItemPrecise(inv.getStackInSlot(i), in)) {
+                                inv.setInventorySlotContents(i, out);
+                            }
                         }
+                        container.onCraftMatrixChanged(inv);
+                        c.saveChanges();
                     }
-                    container.onCraftMatrixChanged(inv);
-                    c.saveChanges();
-                }
-            });
+                });
         AE2ThingAPI.instance()
             .terminal()
             .registerPatternTerminal(() -> ContainerPatternTerm.class)
@@ -103,6 +107,33 @@ public class PatternTerminalMouseWheelLoader implements Runnable {
             .terminal()
             .registerPatternTerminal(() -> ContainerFluidPatternExWireless.class)
             .registerIdentifier(Constants.NEI_MOUSE_WHEEL, handler);
+
+        if (ModAndClassUtil.THE) {
+            AE2ThingAPI.instance()
+                .terminal()
+                .registerPatternTerminal(() -> ContainerInfusionPatternTerminal.class)
+                .registerIdentifier(
+                    Constants.NEI_MOUSE_WHEEL,
+                    (container, inputs, outputs, identifier, adapter, message) -> {
+                        if (container instanceof ContainerInfusionPatternTerminal ct) {
+                            ct.getPatternTerminal()
+                                .setCraftingRecipe(true);
+                            ct.setCrafting(true);
+                            IInventory outputSlot = ct.getInventoryByName(Constants.OUTPUT);
+                            ItemStack in = (ItemStack) inputs.get(0)
+                                .getStack();
+                            ItemStack out = (ItemStack) outputs.get(0)
+                                .getStack();
+                            for (int i = 0; i < outputSlot.getSizeInventory(); i++) {
+                                if (Platform.isSameItemPrecise(outputSlot.getStackInSlot(i), in)) {
+                                    outputSlot.setInventorySlotContents(i, out);
+                                }
+                            }
+                            ct.onCraftMatrixChanged(outputSlot);
+                            ct.saveChanges();
+                        }
+                    });
+        }
     }
 
 }

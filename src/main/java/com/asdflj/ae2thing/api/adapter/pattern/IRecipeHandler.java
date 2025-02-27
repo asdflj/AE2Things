@@ -5,10 +5,11 @@ import java.util.List;
 import net.minecraft.inventory.Container;
 
 import com.asdflj.ae2thing.nei.object.OrderStack;
+import com.asdflj.ae2thing.network.CPacketTransferRecipe;
 
 @FunctionalInterface
-public interface ITransferPackHandler {
+public interface IRecipeHandler {
 
     void transferPack(Container container, List<OrderStack<?>> inputs, List<OrderStack<?>> outputs, String identifier,
-        IPatternTerminalAdapter adapter);
+        IPatternTerminalAdapter adapter, CPacketTransferRecipe message);
 }

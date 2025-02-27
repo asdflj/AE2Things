@@ -9,7 +9,7 @@ import com.asdflj.ae2thing.api.adapter.pattern.AEPatternTerminalExTransferHandle
 import com.asdflj.ae2thing.api.adapter.pattern.AEPatternTerminalTransferHandler;
 import com.asdflj.ae2thing.api.adapter.pattern.FCPatternTerminal;
 import com.asdflj.ae2thing.api.adapter.pattern.IPatternTerminalAdapter;
-import com.asdflj.ae2thing.api.adapter.pattern.ITransferPackHandler;
+import com.asdflj.ae2thing.api.adapter.pattern.IRecipeHandler;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
 import com.asdflj.ae2thing.nei.NEIUtils;
@@ -36,7 +36,7 @@ public class BRLoader implements Runnable {
             .registerPatternTerminal(() -> ContainerPatternTermEx.class)
             .registerIdentifier(Constants.NEI_BR, new AEPatternTerminalExTransferHandler());
 
-        ITransferPackHandler handler = (container, inputs, outputs, identifier, adapter) -> {
+        IRecipeHandler handler = (container, inputs, outputs, identifier, adapter, message) -> {
             if (container instanceof AEBaseContainer c) {
                 if (c.getTarget() instanceof IItemPatternTerminal terminal) {
                     terminal.setCraftingRecipe(false);
@@ -98,7 +98,7 @@ public class BRLoader implements Runnable {
                     return Constants.CRAFTING_EX;
                 }
             })
-            .registerIdentifier(Constants.NEI_BR, (container, inputs, outputs, identifier, adapter) -> {
+            .registerIdentifier(Constants.NEI_BR, (container, inputs, outputs, identifier, adapter, message) -> {
                 if (container instanceof ContainerWirelessDualInterfaceTerminal ciw) {
                     IPatternTerminal pt = ciw.getContainer()
                         .getPatternTerminal();

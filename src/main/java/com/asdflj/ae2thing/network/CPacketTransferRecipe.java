@@ -6,21 +6,12 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidStack;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.api.adapter.pattern.IPatternTerminalAdapter;
-import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
-import com.asdflj.ae2thing.client.gui.container.ContainerMonitor;
-import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
-import com.asdflj.ae2thing.inventory.IPatternTerminal;
-import com.asdflj.ae2thing.nei.NEIUtils;
 import com.asdflj.ae2thing.nei.object.OrderStack;
-import com.glodblock.github.common.item.ItemFluidPacket;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -33,9 +24,9 @@ public class CPacketTransferRecipe implements IMessage {
     private List<OrderStack<?>> inputs;
     private List<OrderStack<?>> outputs;
     private String identifier;
-    private boolean isCraft;
+    public boolean isCraft;
     private static final int MAX_INDEX = 32;
-    private boolean shift;
+    public boolean shift;
 
     public CPacketTransferRecipe() {}
 
@@ -101,7 +92,6 @@ public class CPacketTransferRecipe implements IMessage {
 
         @Nullable
         @Override
-        @SuppressWarnings("unchecked")
         public IMessage onMessage(CPacketTransferRecipe message, MessageContext ctx) {
             Container c = ctx.getServerHandler().playerEntity.openContainer;
             IPatternTerminalAdapter adapter = AE2ThingAPI.instance()
@@ -109,81 +99,10 @@ public class CPacketTransferRecipe implements IMessage {
                 .getPatternTerminal(c);
             if (adapter != null && adapter.getIdentifiers()
                 .containsKey(message.identifier)) {
-                adapter.transfer(c, message.inputs, message.outputs, message.identifier);
+                adapter.transfer(c, message.inputs, message.outputs, message.identifier, message);
                 return null;
             }
-            if (c instanceof ContainerMonitor) {
-                if (c instanceof ContainerInfusionPatternTerminal ct) {
-                    // pattern terminal only
-                    boolean combine = ct.combine;
-                    ct.getPatternTerminal()
-                        .setCraftingRecipe(true);
-                    ct.setCrafting(true);
-                    IInventory inputSlot = ct.getInventoryByName(Constants.CRAFTING);
-                    IInventory outputSlot = ct.getInventoryByName(Constants.OUTPUT);
-                    for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
-                        inputSlot.setInventorySlotContents(i, null);
-                    }
-                    for (int i = 0; i < outputSlot.getSizeInventory(); i++) {
-                        outputSlot.setInventorySlotContents(i, null);
-                    }
-                    if (combine) {
-                        message.inputs = NEIUtils.compress(message.inputs);
-                        message.outputs = NEIUtils.compress(message.outputs);
-                    }
-                    message.inputs = NEIUtils.clearNull(message.inputs);
-                    message.outputs = NEIUtils.clearNull(message.outputs);
-                    transferPack(message.inputs, inputSlot);
-                    transferPack(message.outputs, outputSlot);
-                    c.onCraftMatrixChanged(inputSlot);
-                    c.onCraftMatrixChanged(outputSlot);
-                } else if (c instanceof ContainerWirelessDualInterfaceTerminal ciw) {
-                    boolean combine = ciw.combine;
-                    ciw.setCraftingMode(message.isCraft);
-                    ciw.setCrafting(message.isCraft);
-                    IPatternTerminal pt = ciw.getContainer()
-                        .getPatternTerminal();
-                    IInventory inputSlot = pt
-                        .getInventoryByName(message.isCraft ? Constants.CRAFTING : Constants.CRAFTING_EX);
-                    IInventory outputSlot = pt.getInventoryByName(Constants.OUTPUT_EX);
-                    for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
-                        inputSlot.setInventorySlotContents(i, null);
-                    }
-                    for (int i = 0; i < outputSlot.getSizeInventory(); i++) {
-                        outputSlot.setInventorySlotContents(i, null);
-                    }
-                    if (!message.isCraft) {
-                        if (combine) {
-                            message.inputs = NEIUtils.compress(message.inputs);
-                            message.outputs = NEIUtils.compress(message.outputs);
-                        }
-                        message.inputs = NEIUtils.clearNull(message.inputs);
-                        message.outputs = NEIUtils.clearNull(message.outputs);
-                    }
-                    transferPack(message.inputs, inputSlot);
-                    transferPack(message.outputs, outputSlot);
-                    c.onCraftMatrixChanged(inputSlot);
-                    c.onCraftMatrixChanged(outputSlot);
-                    ciw.saveChanges();
-                }
-            }
-
             return null;
-        }
-
-        private void transferPack(List<OrderStack<?>> packs, IInventory inv) {
-            for (OrderStack<?> stack : packs) {
-                if (stack != null) {
-                    int index = stack.getIndex();
-                    ItemStack stack1;
-                    if (stack.getStack() instanceof ItemStack) {
-                        stack1 = ((ItemStack) stack.getStack()).copy();
-                    } else if (stack.getStack() instanceof FluidStack) {
-                        stack1 = ItemFluidPacket.newStack((FluidStack) stack.getStack());
-                    } else throw new UnsupportedOperationException("Trying to get an unsupported item!");
-                    if (index < inv.getSizeInventory()) inv.setInventorySlotContents(index, stack1);
-                }
-            }
         }
     }
 }

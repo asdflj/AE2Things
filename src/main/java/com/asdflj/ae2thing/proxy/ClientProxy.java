@@ -226,7 +226,7 @@ public class ClientProxy extends CommonProxy {
     public void initGuiEvent(GuiScreenEvent.InitGuiEvent.Pre event) {
         if (AE2ThingAPI.instance()
             .terminal()
-            .isTerminal(event.gui)) {
+            .isPinTerminal(event.gui)) {
             AE2ThingAPI.instance()
                 .getPinned()
                 .prune();
