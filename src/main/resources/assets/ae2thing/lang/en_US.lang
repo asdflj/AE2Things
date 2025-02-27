@@ -93,14 +93,18 @@ nei.gui.terminal.fill_search_text.key=ALT + MMB
 nei.gui.terminal.fill_search_text=Fill item display name to search bar
 
 nei.options.ae2thing=AE2 Thing
-nei.options.ae2thing.history=Draw Terminal History(AE2Thing)
+nei.options.ae2thing.history=Draw terminal history(AE2Thing)
 nei.options.ae2thing.history.true=Yes
 nei.options.ae2thing.history.false=No
 
-nei.options.ae2thing.state=Display Terminal Inventory State
+nei.options.ae2thing.state=Display terminal inventory state
 nei.options.ae2thing.state.true=Yes
 nei.options.ae2thing.state.false=No
 
-nei.options.ae2thing.pinned_bar=Enable Terminal Crafting Pinned Bar
+nei.options.ae2thing.pinned_bar=Enable terminal crafting pinned bar
 nei.options.ae2thing.pinned_bar.true=Yes
 nei.options.ae2thing.pinned_bar.false=No
+
+nei.options.ae2thing.block_render=Pattern ignore hatches when encoding
+nei.options.ae2thing.block_render.true=Yes
+nei.options.ae2thing.block_render.false=No

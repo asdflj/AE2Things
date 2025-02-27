@@ -94,3 +94,7 @@ nei.options.ae2thing.state.false=隐藏
 nei.options.ae2thing.pinned_bar=终端合成固定栏
 nei.options.ae2thing.pinned_bar.true=显示
 nei.options.ae2thing.pinned_bar.false=隐藏
+
+nei.options.ae2thing.block_render=样板终端编码时忽略功能仓室
+nei.options.ae2thing.block_render.true=是
+nei.options.ae2thing.block_render.false=否

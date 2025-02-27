@@ -24,6 +24,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.enums.ItemList;
 import gregtech.api.metatileentity.BaseMetaTileEntity;
+import gregtech.api.metatileentity.implementations.MTEHatch;
+import gregtech.common.blocks.ItemMachines;
 
 public class GTUtil {
 
@@ -77,6 +79,13 @@ public class GTUtil {
                 .getVersion();
         }
         return "";
+    }
+
+    public static boolean isHatchItem(ItemStack item) {
+        if (item != null && item.getItem() instanceof ItemMachines) {
+            return ItemMachines.getMetaTileEntity(item) instanceof MTEHatch;
+        }
+        return false;
     }
 
     /*
