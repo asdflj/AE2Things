@@ -8,8 +8,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
 
 import com.asdflj.ae2thing.api.adapter.findit.IFindItAdapter;
+import com.asdflj.ae2thing.api.adapter.item.terminal.ITerminalHandler;
 import com.asdflj.ae2thing.api.adapter.pattern.IPatternTerminalAdapter;
 import com.asdflj.ae2thing.api.adapter.terminal.ICraftingTerminalAdapter;
 import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
@@ -36,6 +38,7 @@ public class Terminal {
         .createPrimitiveItemList();
     private static final HashMap<Class<? extends IGridHost>, IFindItAdapter> storageProviders = new HashMap<>();
     private static final HashMap<Class<? extends Container>, IPatternTerminalAdapter> patternTerminal = new HashMap<>();
+    private static final HashMap<Class<? extends Item>, ITerminalHandler> terminalItem = new HashMap<>();
 
     public void registerTerminal(Class<? extends AEBaseGui> clazz) {
         terminal.add(clazz);
@@ -128,5 +131,13 @@ public class Terminal {
 
     public IPatternTerminalAdapter getPatternTerminal(Container c) {
         return patternTerminal.getOrDefault(c.getClass(), null);
+    }
+
+    public void registerTerminalItem(Class<? extends Item> item, ITerminalHandler terminal) {
+        terminalItem.put(item, terminal);
+    }
+
+    public ITerminalHandler getOpenTerminalHandler(Class<? extends Item> item) {
+        return terminalItem.get(item);
     }
 }

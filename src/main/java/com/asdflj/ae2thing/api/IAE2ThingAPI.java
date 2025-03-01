@@ -64,4 +64,6 @@ public interface IAE2ThingAPI {
     void pushHistory(long networkID, LimitedSizeLinkedList<CraftingDebugHelper.CraftingInfo> infos);
 
     void saveHistory();
+
+    void openTerminalMenu();
 }

@@ -1,6 +1,6 @@
 package com.asdflj.ae2thing.nei;
 
-import static com.asdflj.ae2thing.proxy.ClientProxy.handlers;
+import static com.asdflj.ae2thing.proxy.ClientProxy.mouseHandlers;
 import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
     }
 
     public PatternTerminalRecipeTransferHandler() {
-        handlers.add((event, recipe) -> {
+        mouseHandlers.add((event, recipe) -> {
             GuiScreen screen = Minecraft.getMinecraft().currentScreen;
             if (screen instanceof AEBaseGui g && recipe != null && GuiScreen.isShiftKeyDown()) {
                 Optional<GuiButton> guiButton = recipe.getOverlayButtons()

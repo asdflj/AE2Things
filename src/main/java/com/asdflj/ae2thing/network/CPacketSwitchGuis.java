@@ -68,6 +68,9 @@ public class CPacketSwitchGuis implements IMessage {
                     InventoryHandler.openGui(player, w, new BlockPos(s, 0, 0), ForgeDirection.UNKNOWN, message.guiType);
                 }
                 return null;
+            } else if (message.guiType == GuiType.TERMINAL_MENU) {
+                InventoryHandler.openGui(player, w, new BlockPos(0, 0, 0), ForgeDirection.UNKNOWN, message.guiType);
+                return null;
             }
             if (cont instanceof AEBaseContainer c) {
                 ContainerOpenContext context = ((AEBaseContainer) cont).getOpenContext();

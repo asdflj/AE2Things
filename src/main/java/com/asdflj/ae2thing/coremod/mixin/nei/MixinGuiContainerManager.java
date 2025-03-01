@@ -75,7 +75,7 @@ public abstract class MixinGuiContainerManager {
                 stack = ItemFluidDrop.newStack(fs);
             }
             IAEItemStack item = list.findPrecise(
-                ae2Thing$lastStack != null && Platform.isSameItem(ae2Thing$lastStack, stack)
+                ae2Thing$lastStack != null && Platform.isSameItemPrecise(ae2Thing$lastStack, stack)
                     && ae2thing$lastAEStack != null ? ae2thing$lastAEStack : AEItemStack.create(stack));
             if (item != null) {
                 ae2thing$render(item, mousex - 8, mousey - 40 < 0 ? mousey + 40 : mousey - 40);

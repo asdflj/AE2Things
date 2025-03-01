@@ -6,6 +6,7 @@ import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.p455w0rd.wirelesscraftingterminal.items.ItemWirelessCraftingTerminal;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
@@ -14,9 +15,16 @@ import com.asdflj.ae2thing.api.adapter.findit.FluidStorageBusAdapter;
 import com.asdflj.ae2thing.api.adapter.findit.MEChestAdapter;
 import com.asdflj.ae2thing.api.adapter.findit.MEDriverAdapter;
 import com.asdflj.ae2thing.api.adapter.findit.StorageBusAdapter;
+import com.asdflj.ae2thing.api.adapter.item.terminal.BackpackTerminalHandler;
+import com.asdflj.ae2thing.api.adapter.item.terminal.DualInterfaceTerminalHandler;
+import com.asdflj.ae2thing.api.adapter.item.terminal.FCBaseTerminalHandler;
+import com.asdflj.ae2thing.api.adapter.item.terminal.UltraTerminalHandler;
+import com.asdflj.ae2thing.api.adapter.item.terminal.WCTWirelessCraftingTerminalHandler;
 import com.asdflj.ae2thing.api.adapter.terminal.AECraftingTerminal;
 import com.asdflj.ae2thing.api.adapter.terminal.FCCraftingTerminal;
 import com.asdflj.ae2thing.api.adapter.terminal.WCTCraftingTerminal;
+import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
+import com.asdflj.ae2thing.common.item.ItemWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.common.parts.PartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.common.tile.TileInfusionInterface;
@@ -27,6 +35,11 @@ import com.asdflj.ae2thing.loader.PatternTerminalMouseWheelLoader;
 import com.asdflj.ae2thing.network.wrapper.AE2ThingNetworkWrapper;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.darkona.adventurebackpack.item.ItemAdventureBackpack;
+import com.glodblock.github.common.item.ItemWirelessFluidTerminal;
+import com.glodblock.github.common.item.ItemWirelessInterfaceTerminal;
+import com.glodblock.github.common.item.ItemWirelessLevelTerminal;
+import com.glodblock.github.common.item.ItemWirelessPatternTerminal;
+import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 
 import appeng.api.config.Upgrades;
 import appeng.core.features.registries.InterfaceTerminalRegistry;
@@ -150,6 +163,34 @@ public class CommonProxy {
                 .terminal()
                 .registerFindItStorageProvider(new EssentiaStorageBusAdapter());
         }
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerTerminalItem(ItemWirelessUltraTerminal.class, new UltraTerminalHandler());
+        FCBaseTerminalHandler h = new FCBaseTerminalHandler();
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerTerminalItem(ItemWirelessFluidTerminal.class, h);
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerTerminalItem(ItemWirelessLevelTerminal.class, h);
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerTerminalItem(ItemWirelessInterfaceTerminal.class, h);
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerTerminalItem(ItemWirelessPatternTerminal.class, h);
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerTerminalItem(ItemWirelessDualInterfaceTerminal.class, new DualInterfaceTerminalHandler());
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerTerminalItem(ItemBackpackTerminal.class, new BackpackTerminalHandler());
+        if (ModAndClassUtil.WCT) {
+            AE2ThingAPI.instance()
+                .terminal()
+                .registerTerminalItem(ItemWirelessCraftingTerminal.class, new WCTWirelessCraftingTerminalHandler());
+        }
+
     }
 
     public void onLoadComplete(FMLLoadCompleteEvent event) {

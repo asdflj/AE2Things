@@ -40,10 +40,13 @@ public class RenderHelper {
                 .getPinned()
                 .getPinInfo(item);
             if (info != null && !info.canPrune) {
-                color = getDynamicColor();
-                drawSlotBG(x, y);
+                updateColorAndDrawItemBorder(x, y);
             }
         }
+    }
+
+    public static void updateColor() {
+        color = getDynamicColor();
     }
 
     private static Color getDynamicColor() {
@@ -58,7 +61,7 @@ public class RenderHelper {
         }
     }
 
-    private static void drawSlotBG(int x, int y) {
+    public static void drawItemBorder(int x, int y) {
         if (color == null) return;
         int width = 16;
         int height = 16;
@@ -70,6 +73,11 @@ public class RenderHelper {
         drawRect(x + width, y, x + width + 1, y + height, color.getRGB());
         GL11.glTranslatef(0.0f, 0.0f, -250.0f);
         GL11.glPopMatrix();
+    }
+
+    public static void updateColorAndDrawItemBorder(int x, int y) {
+        updateColor();
+        drawItemBorder(x, y);
     }
 
     public static void drawPlus(int x, int y) {
