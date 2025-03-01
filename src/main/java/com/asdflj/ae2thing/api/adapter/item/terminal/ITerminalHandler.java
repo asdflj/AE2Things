@@ -1,6 +1,6 @@
 package com.asdflj.ae2thing.api.adapter.item.terminal;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
 import appeng.api.AEApi;
@@ -11,7 +11,7 @@ import appeng.core.localization.PlayerMessages;
 
 public interface ITerminalHandler {
 
-    default boolean canConnect(ItemStack item, ITerminalHandler terminal, TerminalItems items, EntityPlayer player) {
+    default boolean canConnect(ItemStack item, ITerminalHandler terminal, TerminalItems items, EntityPlayerMP player) {
         IWirelessTermRegistry term = AEApi.instance()
             .registries()
             .wireless();
@@ -42,5 +42,5 @@ public interface ITerminalHandler {
         return false;
     }
 
-    void openGui(ItemStack item, ITerminalHandler terminal, TerminalItems items, EntityPlayer player);
+    void openGui(ItemStack item, ITerminalHandler terminal, TerminalItems items, EntityPlayerMP player);
 }

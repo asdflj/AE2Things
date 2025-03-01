@@ -27,13 +27,28 @@ public class ItemUltraTerminal implements IItemTerminal {
 
     @Override
     public List<TerminalItems> getTerminalItems() {
-        IInventory inv = this.getInventory();
-        List<TerminalItems> terminal = new ArrayList<>();
-        terminal.addAll(getInvTerminals(inv));
+        List<TerminalItems> terminal = new ArrayList<>(getMainInvTerminals());
         if (ModAndClassUtil.BAUBLES) {
             IInventory handler = BaublesUtil.getBaublesInv(player());
             if (handler != null) {
                 terminal.addAll(getInvTerminals(handler));
+            }
+        }
+        return terminal;
+    }
+
+    @Override
+    public List<TerminalItems> getMainInvTerminals() {
+        List<TerminalItems> terminal = new ArrayList<>();
+        for (int i = 0; i < player().inventory.mainInventory.length; ++i) {
+            ItemStack item = player().inventory.getStackInSlot(i);
+            if (item != null && item.getItem() instanceof ItemWirelessUltraTerminal terminalItem) {
+                List<GuiType> guis = ItemWirelessUltraTerminal.getGuis();
+                for (GuiType guiType : guis) {
+                    ItemStack t = item.copy();
+                    terminalItem.setNext(guiType, t);
+                    terminal.add(new TerminalItems(item, t, this));
+                }
             }
         }
         return terminal;
@@ -49,7 +64,7 @@ public class ItemUltraTerminal implements IItemTerminal {
                 for (GuiType guiType : guis) {
                     ItemStack t = item.copy();
                     terminalItem.setNext(guiType, t);
-                    terminal.add(new TerminalItems(item, t));
+                    terminal.add(new TerminalItems(item, t, this));
                 }
             }
         }

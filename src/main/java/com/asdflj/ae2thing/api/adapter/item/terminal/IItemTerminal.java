@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,14 +22,26 @@ public interface IItemTerminal {
     List<Class<? extends Item>> getClasses();
 
     default List<TerminalItems> getTerminalItems() {
-        List<TerminalItems> terminal = new ArrayList<>();
-        IInventory inv;
-        inv = this.getInventory();
-        terminal.addAll(this.getInvTerminals(inv));
+        List<TerminalItems> terminal = new ArrayList<>(this.getMainInvTerminals());
         if (ModAndClassUtil.BAUBLES && this.supportBaubles()) {
             terminal.addAll(getInvTerminals(BaublesUtil.getBaublesInv(this.player())));
         }
         return terminal;
+    }
+
+    default List<TerminalItems> getMainInvTerminals() {
+        List<TerminalItems> arr = new ArrayList<>();
+        for (int i = 0; i < this.getInventory().mainInventory.length; i++) {
+            ItemStack item = this.getInventory()
+                .getStackInSlot(i);
+            if (item == null || item.getItem() == null) continue;
+            if (getClasses().contains(
+                item.getItem()
+                    .getClass())) {
+                arr.add(new TerminalItems(item, item));
+            }
+        }
+        return arr;
     }
 
     default List<TerminalItems> getInvTerminals(IInventory inv) {
@@ -46,12 +59,14 @@ public interface IItemTerminal {
         return arr;
     }
 
+    default void run(TerminalItems terminalItems) {}
+
     default EntityPlayer player() {
         Minecraft mc = Minecraft.getMinecraft();
         return mc.thePlayer;
     }
 
-    default IInventory getInventory() {
+    default InventoryPlayer getInventory() {
         return this.player().inventory;
     }
 

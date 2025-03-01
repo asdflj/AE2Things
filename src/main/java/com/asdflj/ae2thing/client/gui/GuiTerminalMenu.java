@@ -42,7 +42,7 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
     public static int page = 0;
     private int currentIndex = 0;
     private static final int SECTOR_COUNT = 6;
-    private static boolean hasLwjgl3 = Loader.isModLoaded("lwjgl3ify");
+    private static final boolean hasLwjgl3 = Loader.isModLoaded("lwjgl3ify");
 
     public GuiTerminalMenu() {
         super(new ContainerTerminalMenu());
@@ -89,8 +89,8 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
     @Override
     public void handleInput() {
         if (!Keyboard.getEventKeyState()) {
-            menu.OpenTerminal(currentIndex);
             Minecraft.getMinecraft().thePlayer.closeScreen();
+            menu.OpenTerminal(currentIndex);
         } else {
             super.handleInput();
         }

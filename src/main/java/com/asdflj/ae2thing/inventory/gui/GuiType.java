@@ -4,9 +4,17 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTermHandler;
+import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTerminal;
+import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
+import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import com.asdflj.ae2thing.client.gui.GuiCellLink;
 import com.asdflj.ae2thing.client.gui.GuiCraftAmount;
@@ -38,11 +46,17 @@ import com.asdflj.ae2thing.common.parts.SharedManaBus;
 import com.asdflj.ae2thing.common.parts.THPart;
 import com.asdflj.ae2thing.common.tile.TileFluidPacketEncoder;
 import com.asdflj.ae2thing.inventory.ItemCellLinkInventory;
+import com.asdflj.ae2thing.util.BaublesUtil;
+import com.glodblock.github.util.Util;
 import com.google.common.collect.ImmutableList;
 
+import appeng.api.AEApi;
 import appeng.api.storage.ITerminalHost;
+import appeng.container.AEBaseContainer;
+import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.container.implementations.ContainerCraftingStatus;
+import appeng.helpers.IContainerCraftingPacket;
 
 public enum GuiType {
 
@@ -285,6 +299,57 @@ public enum GuiType {
         @Override
         protected Object createClientGui(EntityPlayer player, TileFluidPacketEncoder inv) {
             return new GuiFluidPacketEncoder(player.inventory, inv);
+        }
+    }),
+    WCT_CRAFTING_TERMINAL_BRIDGE(new ItemGuiBridge<>(IContainerCraftingPacket.class) {
+
+        @Override
+        public Object createServerGui(EntityPlayer player, World world, int x, int y, int z, ForgeDirection face) {
+            ImmutablePair<Util.GuiHelper.InvType, Integer> result = Util.GuiHelper.decodeInvType(x);
+            ItemStack is;
+            if (result.left == Util.GuiHelper.InvType.PLAYER_INV) {
+                is = player.inventory.getStackInSlot(result.right);
+            } else {
+                is = BaublesUtil.getBaublesInv(player)
+                    .getStackInSlot(result.right);
+            }
+            if (is == null) return null;
+            final IWirelessCraftingTermHandler wh = (IWirelessCraftingTermHandler) AEApi.instance()
+                .registries()
+                .wireless()
+                .getWirelessTerminalHandler(is);
+            if (wh == null) {
+                return null;
+            }
+            final WirelessTerminalGuiObject term = new WirelessTerminalGuiObject(
+                wh,
+                is,
+                player,
+                world,
+                (int) player.posX,
+                (int) player.posY,
+                (int) player.posZ);
+            AEBaseContainer bc = new ContainerWirelessCraftingTerminal(player, player.inventory);
+            bc.setOpenContext(new ContainerOpenContext(term));
+            bc.getOpenContext()
+                .setWorld(player.worldObj);
+            bc.getOpenContext()
+                .setX(x);
+            bc.getOpenContext()
+                .setY(y);
+            bc.getOpenContext()
+                .setZ(z);
+            bc.getOpenContext()
+                .setSide(ForgeDirection.UNKNOWN);
+            return bc;
+        }
+
+        @Override
+        public Object createClientGui(EntityPlayer player, World world, int x, int y, int z, ForgeDirection face) {
+            if (Minecraft.getMinecraft().currentScreen != null) {
+                player.closeScreen();
+            }
+            return new GuiWirelessCraftingTerminal(new ContainerWirelessCraftingTerminal(player, player.inventory));
         }
     });
 

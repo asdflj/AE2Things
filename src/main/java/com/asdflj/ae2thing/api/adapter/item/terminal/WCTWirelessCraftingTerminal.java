@@ -17,4 +17,13 @@ public class WCTWirelessCraftingTerminal implements IItemTerminal {
     public List<Class<? extends Item>> getClasses() {
         return Arrays.asList(ItemWirelessCraftingTerminal.class);
     }
+
+    @Override
+    public List<TerminalItems> getTerminalItems() {
+        List<TerminalItems> items = IItemTerminal.super.getTerminalItems();
+        if (!items.isEmpty()) {
+            return Arrays.asList(items.get(0));
+        }
+        return items;
+    }
 }
