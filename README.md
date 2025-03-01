@@ -10,6 +10,8 @@ Can set link mode to link other infinity cell. It will share stored items
 **Pinned Items**</br>
 Backport pinned items
 ![pinned.gif](blob/pinned.gif)
+**Terminal menu**</br>
+![terminal_menu.gif](blob/terminal_menu.gif)
 **NEI encode pattern**</br>
 nei support display encode pattern
 ![nei_encode_pattern.gif](blob/nei_encode_pattern.gif)
