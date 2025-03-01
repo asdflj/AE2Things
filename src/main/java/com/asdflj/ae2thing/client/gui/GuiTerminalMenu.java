@@ -9,7 +9,6 @@ import java.nio.FloatBuffer;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
@@ -41,7 +40,7 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
     private static final Minecraft mc = Minecraft.getMinecraft();
     private ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
     private int page = 0;
-    private int index = 0;
+    private int currentIndex = 0;
     private static final int SECTOR_COUNT = 6;
     private static boolean hasLwjgl3 = Loader.isModLoaded("lwjgl3ify");
 
@@ -64,13 +63,13 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexBuffer, GL15.GL_STATIC_DRAW);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
-        FloatBuffer test = createFloatBuffer(16);
-        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, test);
-        FloatBuffer test2 = createFloatBuffer(16);
-        GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, test2);
+        FloatBuffer buf1 = createFloatBuffer(16);
+        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, buf1);
+        FloatBuffer buf2 = createFloatBuffer(16);
+        GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, buf2);
         Shader.use();
-        GL20.glUniformMatrix4(GL20.glGetUniformLocation(Shader.getProgram(), "modelview"), false, test);
-        GL20.glUniformMatrix4(GL20.glGetUniformLocation(Shader.getProgram(), "projection"), false, test2);
+        GL20.glUniformMatrix4(GL20.glGetUniformLocation(Shader.getProgram(), "modelview"), false, buf1);
+        GL20.glUniformMatrix4(GL20.glGetUniformLocation(Shader.getProgram(), "projection"), false, buf2);
         GL20.glUniform2f(GL20.glGetUniformLocation(Shader.getProgram(), "iResolution"), x, y);
         Shader.clear();
     }
@@ -85,12 +84,8 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
 
     @Override
     public void handleInput() {
-        if (GuiScreen.isCtrlKeyDown()) {
-            Minecraft.getMinecraft().thePlayer.closeScreen();
-            return;
-        }
         if (!Keyboard.getEventKeyState()) {
-            menu.OpenTerminal(index);
+            menu.OpenTerminal(currentIndex);
             Minecraft.getMinecraft().thePlayer.closeScreen();
         } else {
             super.handleInput();
@@ -131,10 +126,11 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
                 .size() % SECTOR_COUNT == 0 ? 1 : 0);
         if (wheel == Constants.MouseWheel.NEXT.direction) {
             this.page = Math.max(this.page - 1, 0);
+            this.currentIndex = -1;
         } else if (wheel == Constants.MouseWheel.PREVIEW.direction) {
             this.page = Math.min(this.page + 1, maxPage);
+            this.currentIndex = -1;
         }
-
     }
 
     private short selection(int mouseX, int mouseY) {
@@ -216,11 +212,15 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         int rx = selection(mouseX, mouseY);
-        this.index = getRealIndex(rx);
         drawItem();
-        if (this.index == -1) return;
+        if (rx == -1) {
+            this.currentIndex = -1;
+            return;
+        }
+        this.currentIndex = getRealIndex(rx);
+        if (this.currentIndex == -1) return;
         ItemStack item = menu.getTerminalItems()
-            .get(this.index)
+            .get(this.currentIndex)
             .getTargetItem();
         this.fontRendererObj.drawStringWithShadow(
             Platform.getItemDisplayName(item),
