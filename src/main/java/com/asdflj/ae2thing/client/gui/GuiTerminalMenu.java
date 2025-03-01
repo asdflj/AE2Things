@@ -39,7 +39,7 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
     private final TerminalMenu menu = new TerminalMenu();
     private static final Minecraft mc = Minecraft.getMinecraft();
     private ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-    private int page = 0;
+    public static int page = 0;
     private int currentIndex = 0;
     private static final int SECTOR_COUNT = 6;
     private static boolean hasLwjgl3 = Loader.isModLoaded("lwjgl3ify");
@@ -52,6 +52,10 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
     @Override
     public void initGui() {
         super.initGui();
+        if (menu.getItems()
+            .size() <= page * SECTOR_COUNT) {
+            page = 0;
+        }
         scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         float x = mc.displayWidth, y = mc.displayHeight;
         float[] vertices = { 0, 0, 0, y, x, y, x, 0 };
@@ -118,17 +122,17 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
     public void mouseWheelEvent(int x, int y, int wheel) {
         if (this.menu.getItems()
             .size() <= SECTOR_COUNT) {
-            this.page = 0;
+            page = 0;
         }
         int maxPage = this.menu.getItems()
             .size() / SECTOR_COUNT
             - (this.menu.getItems()
                 .size() % SECTOR_COUNT == 0 ? 1 : 0);
         if (wheel == Constants.MouseWheel.NEXT.direction) {
-            this.page = Math.max(this.page - 1, 0);
+            page = Math.max(page - 1, 0);
             this.currentIndex = -1;
         } else if (wheel == Constants.MouseWheel.PREVIEW.direction) {
-            this.page = Math.min(this.page + 1, maxPage);
+            page = Math.min(page + 1, maxPage);
             this.currentIndex = -1;
         }
     }
@@ -230,7 +234,7 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
     }
 
     private int getRealIndex(int rx) {
-        int ax = rx + (this.page * SECTOR_COUNT);
+        int ax = rx + (page * SECTOR_COUNT);
         if (ax >= menu.getTerminalItems()
             .size()) {
             return -1;
