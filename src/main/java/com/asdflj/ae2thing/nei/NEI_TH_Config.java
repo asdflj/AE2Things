@@ -55,6 +55,7 @@ public class NEI_TH_Config implements IConfigureNEI {
         API.addOption(new BaseToggleButton(ButtonConstants.HISTORY));
         API.addOption(new BaseToggleButton(ButtonConstants.INVENTORY_STATE));
         API.addOption(new BaseToggleButton(ButtonConstants.PINNED_BAR));
+        API.addOption(new BaseToggleButton(ButtonConstants.PINNED_BAR_REMOVE));
         if (ModAndClassUtil.BLOCK_RENDER) {
             API.addOption(new BaseToggleButton(ButtonConstants.BLOCK_RENDER));
         }

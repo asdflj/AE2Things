@@ -1,5 +1,7 @@
 package com.asdflj.ae2thing.api;
 
+import static com.asdflj.ae2thing.nei.NEI_TH_Config.getConfigValue;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.nei.ButtonConstants;
 import com.asdflj.ae2thing.network.CPacketNetworkCraftingItems;
 
 import appeng.api.AEApi;
@@ -122,8 +125,10 @@ public class Pinned {
     }
 
     public void prune() {
-        pinInfo.values()
-            .removeIf(v -> v.canPrune);
+        if (getConfigValue(ButtonConstants.PINNED_BAR_REMOVE)) {
+            pinInfo.values()
+                .removeIf(v -> v.canPrune);
+        }
     }
 
     public void clear() {
