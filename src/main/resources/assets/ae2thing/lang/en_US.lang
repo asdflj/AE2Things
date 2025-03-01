@@ -106,6 +106,10 @@ nei.options.ae2thing.pinned_bar=Enable terminal crafting pinned bar
 nei.options.ae2thing.pinned_bar.true=Yes
 nei.options.ae2thing.pinned_bar.false=No
 
+nei.options.ae2thing.pinned_bar_remove=Pinned bar remove crafting finished item
+nei.options.ae2thing.pinned_bar_remove.true=Default
+nei.options.ae2thing.pinned_bar_remove.false=Never
+
 nei.options.ae2thing.block_render=Pattern ignore hatches when encoding
 nei.options.ae2thing.block_render.true=Yes
 nei.options.ae2thing.block_render.false=No
