@@ -146,6 +146,12 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
         AE2Thing.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.WIRELESS_DUAL_INTERFACE_TERMINAL));
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void openTerminalMenu() {
+        AE2Thing.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.TERMINAL_MENU));
+    }
+
     @Override
     public ItemStack getFluidContainer(IAEFluidStack fluid) {
         return getFluidContainer(fluid.getFluidStack());

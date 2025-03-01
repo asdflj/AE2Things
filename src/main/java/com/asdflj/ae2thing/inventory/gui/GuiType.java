@@ -5,6 +5,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.asdflj.ae2thing.client.gui.GuiCellLink;
 import com.asdflj.ae2thing.client.gui.GuiCraftAmount;
@@ -17,6 +19,7 @@ import com.asdflj.ae2thing.client.gui.GuiManaIO;
 import com.asdflj.ae2thing.client.gui.GuiPatternValueAmount;
 import com.asdflj.ae2thing.client.gui.GuiPatternValueName;
 import com.asdflj.ae2thing.client.gui.GuiRenamer;
+import com.asdflj.ae2thing.client.gui.GuiTerminalMenu;
 import com.asdflj.ae2thing.client.gui.GuiWirelessConnectorTerminal;
 import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerCellLink;
@@ -28,6 +31,7 @@ import com.asdflj.ae2thing.client.gui.container.ContainerManaIO;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueName;
 import com.asdflj.ae2thing.client.gui.container.ContainerRenamer;
+import com.asdflj.ae2thing.client.gui.container.ContainerTerminalMenu;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.common.parts.SharedManaBus;
@@ -52,6 +56,18 @@ public enum GuiType {
         @Override
         protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
             return new GuiCraftingTerminal(player.inventory, inv);
+        }
+    }),
+    TERMINAL_MENU(new NullGuiFactory() {
+
+        @Override
+        public Object createServerGui(EntityPlayer player, World world, int x, int y, int z, ForgeDirection face) {
+            return new ContainerTerminalMenu();
+        }
+
+        @Override
+        public Object createClientGui(EntityPlayer player, World world, int x, int y, int z, ForgeDirection face) {
+            return new GuiTerminalMenu();
         }
     }),
     WIRELESS_CONNECTOR_TERMINAL(new PartGuiFactory<>(ITerminalHost.class) {

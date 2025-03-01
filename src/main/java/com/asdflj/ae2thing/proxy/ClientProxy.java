@@ -64,7 +64,7 @@ public class ClientProxy extends CommonProxy {
     private final ItemStack[] hoveredStack = new ItemStack[2];
     private static long refreshTick = System.currentTimeMillis();
     private static GuiRecipe<?> recipe = null;
-    public static List<MouseWheelHandler> handlers = new ArrayList<>();
+    public static List<MouseWheelHandler> mouseHandlers = new ArrayList<>();
 
     @Override
     public void onLoadComplete(FMLLoadCompleteEvent event) {
@@ -103,8 +103,8 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     public boolean handleMouseWheelInput(GuiScrollEvent event) {
-        if (handlers.isEmpty()) return false;
-        for (MouseWheelHandler handler : handlers) {
+        if (mouseHandlers.isEmpty()) return false;
+        for (MouseWheelHandler handler : mouseHandlers) {
             if (handler.handleMouseWheel(event, recipe)) {
                 return true;
             }

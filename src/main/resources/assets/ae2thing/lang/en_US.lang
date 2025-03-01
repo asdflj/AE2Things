@@ -77,8 +77,9 @@ ae2thing.gui.infusion_terminal.processing_pattern=Distillation Pattern
 ae2thing.gui.pattern_rename=Custom Name
 ae2thing.nei.find_cell_item.highlight=The storage block is now highlighted at %d,%d,%d
 ae2thing.nei.find_cell_item.in_other_dim=Storage block at dimension: %d and cant be highlighted
-ae2thing.key.open_terminal=Open Backpack Terminal
+ae2thing.key.open_backpack_terminal=Open Backpack Terminal
 ae2thing.key.open_dual_interface_terminal=Open Dual Interface Terminal
+ae2thing.key.open_terminal=Open Terminal Menu
 itemGroup.ae2thing=AE2 Thing
 
 
