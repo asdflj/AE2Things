@@ -15,15 +15,17 @@
     "nee.MixinGuiEventHandler",
     "nee.MixinGuiUtils",
     "nee.MixinNEEContainerDrawHandler",
+    "nei.MixinGuiContainerManager",
     "nei.MixinGuiOverlayButton",
     "nei.MixinIOverlayHandler",
-    "nei.MixinRecipeItemInputHandler",
     "nei.MixinPanelWidget",
-    "nei.MixinGuiContainerManager",
+    "nei.MixinRecipeItemInputHandler",
     "tc.nei.MixinLoadCraftingRecipes",
-    "tc.nei.MixinTemplateRecipeHandler"
+    "tc.nei.MixinTemplateRecipeHandler",
+    "wct.MixinRandomUtils"
   ],
   "server": [
-    "ae.MixinContainerCraftConfirm"
+    "ae.MixinContainerCraftConfirm",
+    "wct.MixinRandomUtils"
   ]
 }
