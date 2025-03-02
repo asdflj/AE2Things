@@ -1,6 +1,6 @@
 package com.asdflj.ae2thing.api.adapter.item.terminal;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -13,10 +13,10 @@ import appeng.util.Platform;
 public class FCBaseTerminalHandler implements ITerminalHandler {
 
     @Override
-    public void openGui(ItemStack item, ITerminalHandler terminal, TerminalItems items, EntityPlayer player) {
+    public void openGui(ItemStack item, ITerminalHandler terminal, TerminalItems items, EntityPlayerMP player) {
         if (item == null) return;
         if (item.getItem() instanceof ItemBaseWirelessTerminal t) {
-            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+            for (int i = 0; i < player.inventory.mainInventory.length; i++) {
                 ItemStack stack = player.inventory.getStackInSlot(i);
                 if (Platform.isSameItemPrecise(stack, item)) {
                     InventoryHandler.openGui(

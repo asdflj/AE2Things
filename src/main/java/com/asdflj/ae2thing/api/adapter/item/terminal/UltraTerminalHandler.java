@@ -2,7 +2,7 @@ package com.asdflj.ae2thing.api.adapter.item.terminal;
 
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -22,15 +22,15 @@ public class UltraTerminalHandler implements ITerminalHandler {
     private static final List<GuiType> guis = ItemWirelessUltraTerminal.getGuis();
 
     @Override
-    public void openGui(ItemStack item, ITerminalHandler terminal, TerminalItems terminalItems, EntityPlayer player) {
+    public void openGui(ItemStack item, ITerminalHandler terminal, TerminalItems terminalItems, EntityPlayerMP player) {
         if (item == null) return;
         if (item.getItem() instanceof ItemWirelessUltraTerminal itemWirelessTerminal) {
-            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+            for (int i = 0; i < player.inventory.mainInventory.length; i++) {
                 ItemStack stack = player.inventory.getStackInSlot(i);
                 if (Platform.isSameItemPrecise(stack, item)) {
                     itemWirelessTerminal
                         .setMode(ItemWirelessUltraTerminal.readMode(terminalItems.getTargetItem()), stack);
-                    openGui(player, i, stack);
+                    openGui(player, Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_INV), stack);
                     return;
                 }
             }
@@ -41,27 +41,20 @@ public class UltraTerminalHandler implements ITerminalHandler {
                 ItemStack is = handler.getStackInSlot(i);
                 if (Platform.isSameItemPrecise(is, item)) {
                     itemWirelessTerminal.setMode(ItemWirelessUltraTerminal.readMode(terminalItems.getTargetItem()), is);
-                    openGui(player, i, is);
+                    openGui(player, Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_BAUBLES), is);
                     return;
                 }
             }
         }
     }
 
-    private void openGui(EntityPlayer player, int index, ItemStack source) {
+    private void openGui(EntityPlayerMP player, int x, ItemStack is) {
+        GuiType type = ItemWirelessUltraTerminal.readMode(is);
         InventoryHandler.openGui(
             player,
             player.worldObj,
-            new BlockPos(
-                index,
-                Util.GuiHelper.encodeType(
-                    guis.indexOf(
-                        GuiType.valueOf(
-                            ItemWirelessUltraTerminal.readMode(source)
-                                .toString())),
-                    Util.GuiHelper.GuiType.ITEM),
-                1),
+            new BlockPos(x, Util.GuiHelper.encodeType(guis.indexOf(type), Util.GuiHelper.GuiType.ITEM), 1),
             ForgeDirection.UNKNOWN,
-            ItemWirelessUltraTerminal.readMode(source));
+            type);
     }
 }
