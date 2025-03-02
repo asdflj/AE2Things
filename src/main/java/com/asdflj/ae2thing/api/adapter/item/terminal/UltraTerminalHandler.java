@@ -41,7 +41,7 @@ public class UltraTerminalHandler implements ITerminalHandler {
             if (handler == null) return;
             for (int i = 0; i < handler.getSizeInventory(); ++i) {
                 ItemStack is = handler.getStackInSlot(i);
-                if (Platform.isSameItem(is, item)) {
+                if (Platform.isSameItemPrecise(is, item)) {
                     handler.setInventorySlotContents(i, terminalItems.getTargetItem());
                     openGui(
                         player,
