@@ -88,11 +88,10 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
 
     @Override
     public void handleInput() {
+        super.handleInput();
         if (!Keyboard.getEventKeyState()) {
             Minecraft.getMinecraft().thePlayer.closeScreen();
             menu.OpenTerminal(currentIndex);
-        } else {
-            super.handleInput();
         }
     }
 

@@ -24,12 +24,11 @@ public class UltraTerminalHandler implements ITerminalHandler {
     @Override
     public void openGui(ItemStack item, ITerminalHandler terminal, TerminalItems terminalItems, EntityPlayerMP player) {
         if (item == null) return;
-        if (item.getItem() instanceof ItemWirelessUltraTerminal itemWirelessTerminal) {
+        if (item.getItem() instanceof ItemWirelessUltraTerminal) {
             for (int i = 0; i < player.inventory.mainInventory.length; i++) {
                 ItemStack stack = player.inventory.getStackInSlot(i);
                 if (Platform.isSameItemPrecise(stack, item)) {
-                    itemWirelessTerminal
-                        .setMode(ItemWirelessUltraTerminal.readMode(terminalItems.getTargetItem()), stack);
+                    player.inventory.setInventorySlotContents(i, terminalItems.getTargetItem());
                     openGui(player, Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_INV), stack);
                     return;
                 }
@@ -39,8 +38,8 @@ public class UltraTerminalHandler implements ITerminalHandler {
             if (handler == null) return;
             for (int i = 0; i < handler.getSizeInventory(); ++i) {
                 ItemStack is = handler.getStackInSlot(i);
-                if (Platform.isSameItemPrecise(is, item)) {
-                    itemWirelessTerminal.setMode(ItemWirelessUltraTerminal.readMode(terminalItems.getTargetItem()), is);
+                if (Platform.isSameItem(is, item)) {
+                    handler.setInventorySlotContents(i, terminalItems.getTargetItem());
                     openGui(player, Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_BAUBLES), is);
                     return;
                 }

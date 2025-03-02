@@ -13,7 +13,7 @@ import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 import com.glodblock.github.inventory.gui.GuiType;
 
-public class ItemUltraTerminal implements IItemTerminal {
+public class FCUltraTerminal implements IItemTerminal {
 
     @Override
     public List<Class<? extends Item>> getClasses() {
