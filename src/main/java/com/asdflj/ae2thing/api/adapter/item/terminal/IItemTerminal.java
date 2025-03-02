@@ -59,8 +59,6 @@ public interface IItemTerminal {
         return arr;
     }
 
-    default void run(TerminalItems terminalItems) {}
-
     default EntityPlayer player() {
         Minecraft mc = Minecraft.getMinecraft();
         return mc.thePlayer;

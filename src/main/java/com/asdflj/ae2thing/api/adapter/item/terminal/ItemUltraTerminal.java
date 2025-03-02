@@ -47,7 +47,7 @@ public class ItemUltraTerminal implements IItemTerminal {
                 for (GuiType guiType : guis) {
                     ItemStack t = item.copy();
                     terminalItem.setNext(guiType, t);
-                    terminal.add(new TerminalItems(item, t, this));
+                    terminal.add(new TerminalItems(item, t));
                 }
             }
         }
@@ -64,7 +64,7 @@ public class ItemUltraTerminal implements IItemTerminal {
                 for (GuiType guiType : guis) {
                     ItemStack t = item.copy();
                     terminalItem.setNext(guiType, t);
-                    terminal.add(new TerminalItems(item, t, this));
+                    terminal.add(new TerminalItems(item, t));
                 }
             }
         }
