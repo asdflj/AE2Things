@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.client.gui;
 
+import static com.asdflj.ae2thing.loader.KeybindLoader.openTerminalMenu;
 import static org.lwjgl.BufferUtils.createFloatBuffer;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.glDisable;
@@ -89,7 +90,7 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
     @Override
     public void handleInput() {
         super.handleInput();
-        if (!Keyboard.getEventKeyState()) {
+        if (!openTerminalMenu.isPressed() && !Keyboard.getEventKeyState()) {
             Minecraft.getMinecraft().thePlayer.closeScreen();
             menu.OpenTerminal(currentIndex);
         }
@@ -113,8 +114,8 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
                 wheel = -(int) Platform.ceilDiv(-wheel, 120);
             }
         }
-        final int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
-        final int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+        final int x = Mouse.getEventX() * this.width / mc.displayWidth;
+        final int y = this.height - Mouse.getEventY() * this.height / mc.displayHeight - 1;
         this.mouseWheelEvent(x, y, wheel);
     }
 
@@ -143,7 +144,7 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
             double deltaX = x - mouseX;
             double deltaY = mouseY - y;
             double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-            if (length < this.scaledresolution.getScaleFactor() * 5) {
+            if (length < 20) {
                 return -1;
             }
             double radians = Math.atan2(deltaY, deltaX);

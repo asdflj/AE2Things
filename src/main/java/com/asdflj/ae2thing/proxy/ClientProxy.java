@@ -19,6 +19,7 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.MouseWheelHandler;
 import com.asdflj.ae2thing.client.event.CraftTracking;
+import com.asdflj.ae2thing.client.event.OpenTerminalEvent;
 import com.asdflj.ae2thing.client.gui.BaseMEGui;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
@@ -231,6 +232,11 @@ public class ClientProxy extends CommonProxy {
                 .getPinned()
                 .prune();
         }
+    }
+
+    @SubscribeEvent
+    public void openTerminalEvent(OpenTerminalEvent event) {
+        event.openTerminal();
     }
 
     @SubscribeEvent
