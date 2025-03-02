@@ -24,7 +24,10 @@ public class WCTWirelessCraftingTerminalHandler implements ITerminalHandler {
                 ItemStack stack = player.inventory.getStackInSlot(i);
                 if (Platform.isSameItemPrecise(stack, item)) {
                     player.inventory.setInventorySlotContents(i, items.getTargetItem());
-                    openGui(player, Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_INV), stack);
+                    openGui(
+                        player,
+                        Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_INV),
+                        items.getTargetItem());
                     return;
                 }
             }
@@ -35,7 +38,10 @@ public class WCTWirelessCraftingTerminalHandler implements ITerminalHandler {
                 ItemStack is = handler.getStackInSlot(i);
                 if (Platform.isSameItemPrecise(is, item)) {
                     handler.setInventorySlotContents(i, items.getTargetItem());
-                    openGui(player, Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_BAUBLES), is);
+                    openGui(
+                        player,
+                        Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_BAUBLES),
+                        items.getTargetItem());
                     return;
                 }
             }

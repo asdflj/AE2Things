@@ -222,12 +222,12 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
         }
         this.currentIndex = getRealIndex(rx);
         if (this.currentIndex == -1) return;
-        ItemStack item = menu.getTerminalItems()
+        String name = menu.getTerminalItems()
             .get(this.currentIndex)
-            .getTargetItem();
+            .getDisplayName();
         this.fontRendererObj.drawStringWithShadow(
-            Platform.getItemDisplayName(item),
-            (this.xSize / 2) - (this.fontRendererObj.getStringWidth(Platform.getItemDisplayName(item)) / 2),
+            name,
+            (this.xSize / 2) - (this.fontRendererObj.getStringWidth(name) / 2),
             18,
             0xffffff);
     }

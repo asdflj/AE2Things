@@ -3,14 +3,22 @@ package com.asdflj.ae2thing.api.adapter.item.terminal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import appeng.util.Platform;
+
 public class TerminalItems {
 
     private ItemStack raw;
     private ItemStack target;
+    private String displayName;
 
     public TerminalItems(ItemStack raw, ItemStack target) {
+        this(raw, target, Platform.getItemDisplayName(target));
+    }
+
+    public TerminalItems(ItemStack raw, ItemStack target, String displayName) {
         this.raw = raw;
         this.target = target;
+        this.displayName = displayName;
     }
 
     public ItemStack getRawItem() {
@@ -27,6 +35,14 @@ public class TerminalItems {
 
     public void setTargetItem(ItemStack target) {
         this.target = target;
+    }
+
+    public String getDisplayName() {
+        return this.displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public void writeNBT(NBTTagCompound tag) {

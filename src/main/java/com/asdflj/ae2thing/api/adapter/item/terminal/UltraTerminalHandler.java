@@ -29,7 +29,10 @@ public class UltraTerminalHandler implements ITerminalHandler {
                 ItemStack stack = player.inventory.getStackInSlot(i);
                 if (Platform.isSameItemPrecise(stack, item)) {
                     player.inventory.setInventorySlotContents(i, terminalItems.getTargetItem());
-                    openGui(player, Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_INV), stack);
+                    openGui(
+                        player,
+                        Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_INV),
+                        terminalItems.getTargetItem());
                     return;
                 }
             }
@@ -40,7 +43,10 @@ public class UltraTerminalHandler implements ITerminalHandler {
                 ItemStack is = handler.getStackInSlot(i);
                 if (Platform.isSameItem(is, item)) {
                     handler.setInventorySlotContents(i, terminalItems.getTargetItem());
-                    openGui(player, Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_BAUBLES), is);
+                    openGui(
+                        player,
+                        Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_BAUBLES),
+                        terminalItems.getTargetItem());
                     return;
                 }
             }
