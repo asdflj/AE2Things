@@ -55,6 +55,9 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
         if (btn == start) {
             clickStart = true;
         } else if (btn == replan) {
+            clickStart = false;
+            start.enabled = false;
+            replan.visible = false;
             ((ItemList) this.storage).clear();
             ((ItemList) this.pending).clear();
             ((ItemList) this.missing).clear();

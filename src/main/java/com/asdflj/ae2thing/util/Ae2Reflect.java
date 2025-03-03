@@ -13,7 +13,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import appeng.api.networking.crafting.ICraftingCallback;
+import appeng.api.networking.crafting.ICraftingJob;
 import appeng.api.storage.IMEInventory;
+import appeng.container.implementations.ContainerCraftConfirm;
 import appeng.container.implementations.ContainerInterfaceTerminal;
 import appeng.container.slot.SlotCraftingTerm;
 import appeng.crafting.v2.CraftingJobV2;
@@ -30,6 +32,7 @@ public class Ae2Reflect {
     private static final Field fContainerInterfaceTerminal_tracked;
     private static final Field fCraftingJobV2_callback;
     private static final Field fGrid_myStorage;
+    private static final Field fContainerCraftConfirm_result;
     private static final Method mSlotCraftingTerm_makeItem;
 
     static {
@@ -44,6 +47,7 @@ public class Ae2Reflect {
                 "makeItem",
                 EntityPlayer.class,
                 ItemStack.class);
+            fContainerCraftConfirm_result = reflectField(ContainerCraftConfirm.class, "result");
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -71,6 +75,10 @@ public class Ae2Reflect {
 
     public static void setCallback(CraftingJobV2 jobV2, ICraftingCallback callback) {
         writeField(jobV2, fCraftingJobV2_callback, callback);
+    }
+
+    public static ICraftingJob getJob(ContainerCraftConfirm obj) {
+        return readField(obj, fContainerCraftConfirm_result);
     }
 
     public static GridStorage getMyStorage(Grid grid) {

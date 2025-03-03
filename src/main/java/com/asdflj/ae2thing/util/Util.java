@@ -48,6 +48,7 @@ import appeng.client.me.ItemRepo;
 import appeng.container.implementations.ContainerCraftConfirm;
 import appeng.core.AELog;
 import appeng.core.worlddata.WorldData;
+import appeng.crafting.v2.CraftingJobV2;
 import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.me.cache.CraftingGridCache;
 import appeng.util.Platform;
@@ -60,6 +61,13 @@ import thaumicenergistics.common.integration.tc.AspectHooks;
 public class Util {
 
     public static boolean replan(EntityPlayer player, appeng.container.implementations.ContainerCraftConfirm c){
+        ICraftingJob job = Ae2Reflect.getJob(c);
+        if(job instanceof CraftingJobV2 jobV2 && jobV2.isDone()){
+            c.simulation = true;
+            c.bytesUsed = 0;
+        }else{
+            return false;
+        }
         Object target;
         target = c.getTarget();
         if (target instanceof final IGridHost gh) {
