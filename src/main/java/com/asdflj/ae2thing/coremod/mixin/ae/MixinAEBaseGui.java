@@ -43,9 +43,8 @@ public abstract class MixinAEBaseGui extends GuiScreen {
     protected abstract List<Slot> getInventorySlots();
 
     @Inject(
-        method = { "drawGuiContainerBackgroundLayer", "func_146976_a" },
-        at = @At(value = "INVOKE", target = "Lappeng/client/gui/AEBaseGui;drawBG(IIII)V", shift = At.Shift.AFTER),
-        remap = false)
+        method = "drawGuiContainerBackgroundLayer",
+        at = @At(value = "INVOKE", target = "Lappeng/client/gui/AEBaseGui;drawBG(IIII)V", shift = At.Shift.AFTER))
     @SuppressWarnings({ "unchecked" })
     private void drawPin(float f, int x, int y, CallbackInfo ci) {
         if (!AE2ThingAPI.instance()
