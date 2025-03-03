@@ -52,9 +52,9 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
 
     @Inject(method = { "actionPerformed", "func_146284_a" }, at = @At(value = "HEAD"), remap = false)
     private void actionPerformed(GuiButton btn, CallbackInfo ci) {
-        if (btn == start && this.inventorySlots instanceof ContainerCraftConfirm ccc) {
+        if (btn == start) {
             clickStart = true;
-        } else if (btn == replan && this.inventorySlots instanceof ContainerCraftConfirm) {
+        } else if (btn == replan) {
             ((ItemList) this.storage).clear();
             ((ItemList) this.pending).clear();
             ((ItemList) this.missing).clear();
