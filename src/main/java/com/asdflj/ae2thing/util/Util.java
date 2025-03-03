@@ -98,6 +98,7 @@ public class Util {
                     ccc.setJob(futureJob);
                     ccc.detectAndSendChanges();
                 }
+                return true;
             } catch (final Throwable e) {
                 if (futureJob != null) {
                     futureJob.cancel(true);
