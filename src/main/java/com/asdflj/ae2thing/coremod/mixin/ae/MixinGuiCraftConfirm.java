@@ -43,14 +43,14 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
     @Shadow(remap = false)
     @Final
     private List<IAEItemStack> visual;
-    private GuiAeButton replan;
+    private GuiAeButton replan = null;
     private boolean clickStart = false;
 
     public MixinGuiCraftConfirm(Container container) {
         super(container);
     }
 
-    @Inject(method = { "actionPerformed", "func_146284_a" }, at = @At(value = "HEAD"), remap = false)
+    @Inject(method = "actionPerformed", at = @At(value = "HEAD"))
     private void actionPerformed(GuiButton btn, CallbackInfo ci) {
         if (btn == start) {
             clickStart = true;
@@ -63,7 +63,7 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
         }
     }
 
-    @Inject(method = "initGui", at = @At("TAIL"), remap = false)
+    @Inject(method = "initGui", at = @At("TAIL"))
     public void initGui(CallbackInfo ci) {
         this.buttonList.add(
             replan = new GuiAeButton(
