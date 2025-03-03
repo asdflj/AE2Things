@@ -75,6 +75,7 @@ ae2thing.gui.part_mana_import=ME Mana Import Bus
 ae2thing.gui.infusion_terminal.crafting_pattern=Infusion & Crucible Pattern
 ae2thing.gui.infusion_terminal.processing_pattern=Distillation Pattern
 ae2thing.gui.pattern_rename=Custom Name
+ae2thing.gui.button.replan=Replan
 ae2thing.nei.find_cell_item.highlight=The storage block is now highlighted at %d,%d,%d
 ae2thing.nei.find_cell_item.in_other_dim=Storage block at dimension: %d and cant be highlighted
 ae2thing.key.open_backpack_terminal=Open Backpack Terminal

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import javax.annotation.Nonnull;
 
@@ -36,14 +37,19 @@ import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.crafting.ICraftingGrid;
+import appeng.api.networking.crafting.ICraftingJob;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IDisplayRepo;
 import appeng.api.util.DimensionalCoord;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.MEGuiTextField;
 import appeng.client.me.ItemRepo;
+import appeng.container.implementations.ContainerCraftConfirm;
+import appeng.core.AELog;
 import appeng.core.worlddata.WorldData;
 import appeng.items.tools.powered.ToolWirelessTerminal;
+import appeng.me.cache.CraftingGridCache;
 import appeng.util.Platform;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -52,6 +58,47 @@ import cpw.mods.fml.relauncher.SideOnly;
 import thaumicenergistics.common.integration.tc.AspectHooks;
 
 public class Util {
+
+    public static boolean replan(EntityPlayer player, appeng.container.implementations.ContainerCraftConfirm c){
+        Object target;
+        target = c.getTarget();
+        if (target instanceof final IGridHost gh) {
+            final IGridNode gn = gh.getGridNode(ForgeDirection.UNKNOWN);
+
+            if (gn == null) {
+                return false;
+            }
+
+            final IGrid g = gn.getGrid();
+            if (g == null || c.getItemToCraft() == null) {
+                return false;
+            }
+
+            Future<ICraftingJob> futureJob = null;
+            try {
+                final ICraftingGrid cg = g.getCache(ICraftingGrid.class);
+                if (cg instanceof CraftingGridCache cgc) {
+                    futureJob = cgc.beginCraftingJob(
+                        c.getWorld(),
+                        g,
+                        c.getActionSource(),
+                        c.getItemToCraft(),
+                        null);
+                }
+
+                if (player.openContainer instanceof final ContainerCraftConfirm ccc) {
+                    ccc.setJob(futureJob);
+                    ccc.detectAndSendChanges();
+                }
+            } catch (final Throwable e) {
+                if (futureJob != null) {
+                    futureJob.cancel(true);
+                }
+                AELog.debug(e);
+            }
+        }
+        return false;
+    }
 
     public static boolean isSameDimensionalCoord(DimensionalCoord a, DimensionalCoord b) {
         return a != null && b != null && a.x == b.x && a.y == b.y && a.z == b.z && a.getDimension() == b.getDimension();

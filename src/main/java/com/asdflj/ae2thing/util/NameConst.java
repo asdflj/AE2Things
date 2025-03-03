@@ -114,5 +114,7 @@ public class NameConst {
     public static final String CRAFTING_DEBUG_CARD = AE2Thing.MODID + ".crafting_debug_card.";
     public static final String CRAFTING_DEBUG_CARD_CURRENT_MODE = CRAFTING_DEBUG_CARD + "current_mode";
     public static final String CRAFTING_DEBUG_CARD_EXPORT_FILE = CRAFTING_DEBUG_CARD + "export_file";
+    public static final String GUI_BUTTON = GUI_KEY + "button.";
+    public static final String GUI_BUTTON_REPLAN = GUI_BUTTON + "replan";
 
 }
