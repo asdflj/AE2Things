@@ -13,6 +13,7 @@ import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTermin
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.container.IPatternContainer;
 import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
+import com.asdflj.ae2thing.util.Util;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -157,6 +158,10 @@ public class CPacketTerminalBtns implements IMessage {
                     case "WirelessConnectorTerminal.Bind" -> cwt.bind(tag);
                     case "WirelessConnectorTerminal.Color" -> cwt.setColor(tag);
                 }
+            }
+            if (name.startsWith("GuiCraftConfirm.replan")
+                && c instanceof appeng.container.implementations.ContainerCraftConfirm ccc) {
+                Util.replan(ctx.getServerHandler().playerEntity, ccc);
             }
             return null;
         }

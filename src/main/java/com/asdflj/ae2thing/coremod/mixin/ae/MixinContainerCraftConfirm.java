@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -15,6 +16,8 @@ import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.asdflj.ae2thing.util.TheUtil;
 
+import appeng.api.networking.IGrid;
+import appeng.api.networking.crafting.ICraftingJob;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.container.AEBaseContainer;
@@ -22,6 +25,15 @@ import appeng.container.implementations.ContainerCraftConfirm;
 
 @Mixin(ContainerCraftConfirm.class)
 public abstract class MixinContainerCraftConfirm extends AEBaseContainer {
+
+    @Shadow(remap = false)
+    private ICraftingJob result;
+
+    @Shadow(remap = false)
+    public abstract boolean isSimulation();
+
+    @Shadow(remap = false)
+    protected abstract IGrid getGrid();
 
     private IAEItemStack is = null;
 
@@ -36,9 +48,9 @@ public abstract class MixinContainerCraftConfirm extends AEBaseContainer {
         }
     }
 
-    @Inject(method = "setAutoStart", at = @At("HEAD"), remap = false)
-    public void setAutoStart(boolean autoStart, CallbackInfo ci) {
-        if (autoStart && is != null) {
+    @Inject(method = "startJob()V", at = @At("HEAD"), remap = false)
+    public void startJob(CallbackInfo ci) {
+        if (this.result != null && !this.isSimulation() && getGrid() != null && is != null) {
             if (ModAndClassUtil.THE && TheUtil.isItemCraftingAspect(is)) {
                 is = TheUtil.itemCraftingAspect2FluidDrop(is);
             }

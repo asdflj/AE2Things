@@ -13,7 +13,7 @@ import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import appeng.api.storage.ITerminalHost;
 import appeng.client.gui.widgets.GuiTabButton;
 
-public class GuiCraftingStatus extends com.glodblock.github.client.gui.GuiCraftingStatus {
+public class GuiCraftingStatus extends appeng.client.gui.implementations.GuiCraftingStatus {
 
     private GuiTabButton originalGuiBtn;
     private final ITerminalHost host;
