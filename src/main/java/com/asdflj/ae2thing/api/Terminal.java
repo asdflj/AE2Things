@@ -54,6 +54,7 @@ public class Terminal {
 
     @SideOnly(Side.CLIENT)
     public boolean isTerminal(GuiScreen gui) {
+        if (gui == null) return false;
         if (gui instanceof IGuiMonitor) {
             return true;
         }
