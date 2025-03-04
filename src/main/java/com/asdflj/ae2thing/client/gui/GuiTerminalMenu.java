@@ -12,6 +12,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
 import org.lwjgl.BufferUtils;
@@ -26,6 +27,7 @@ import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.api.TerminalMenu;
 import com.asdflj.ae2thing.client.gui.container.ContainerTerminalMenu;
 import com.asdflj.ae2thing.client.render.Shader;
+import com.asdflj.ae2thing.util.NameConst;
 
 import appeng.util.Platform;
 import codechicken.nei.VisiblityData;
@@ -41,6 +43,7 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
     private static final Minecraft mc = Minecraft.getMinecraft();
     private ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
     public static int page = 0;
+    private int maxPage = page;
     private int currentIndex = 0;
     private static final int SECTOR_COUNT = 6;
     private static final boolean hasLwjgl3 = Loader.isModLoaded("lwjgl3ify");
@@ -56,6 +59,13 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
         if (menu.getItems()
             .size() <= page * SECTOR_COUNT) {
             page = 0;
+        }
+        if (!menu.getItems()
+            .isEmpty()) {
+            maxPage = menu.getItems()
+                .size() / SECTOR_COUNT;
+        } else {
+            maxPage = 0;
         }
         scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         float x = mc.displayWidth, y = mc.displayHeight;
@@ -216,7 +226,20 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         int rx = selection(mouseX, mouseY);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glColor4f(1f, 1f, 1f, 1f);
         drawItem();
+        this.fontRendererObj.drawStringWithShadow(
+            I18n.format(NameConst.GUI_TERMINAL_MENU_PAGE, page + 1),
+            0,
+            this.ySize - 20,
+            0xffffff);
+        this.fontRendererObj.drawStringWithShadow(
+            I18n.format(NameConst.GUI_TERMINAL_MENU_MAX_PAGE, maxPage + 1),
+            this.xSize - fontRendererObj.getStringWidth(I18n.format(NameConst.GUI_TERMINAL_MENU_MAX_PAGE, maxPage + 1)),
+            this.ySize - 20,
+            0xffffff);
         if (rx == -1) {
             this.currentIndex = -1;
             return;
@@ -231,6 +254,8 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
             (this.xSize / 2) - (this.fontRendererObj.getStringWidth(name) / 2),
             18,
             0xffffff);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_LIGHTING);
     }
 
     private int getRealIndex(int rx) {

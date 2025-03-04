@@ -76,6 +76,8 @@ ae2thing.gui.infusion_terminal.crafting_pattern=Infusion & Crucible Pattern
 ae2thing.gui.infusion_terminal.processing_pattern=Distillation Pattern
 ae2thing.gui.pattern_rename=Custom Name
 ae2thing.gui.button.replan=Replan
+ae2thing.gui.terminal_menu.page=Current page: %s
+ae2thing.gui.terminal_menu.max_page=Max page: %s
 ae2thing.nei.find_cell_item.highlight=The storage block is now highlighted at %d,%d,%d
 ae2thing.nei.find_cell_item.in_other_dim=Storage block at dimension: %d and cant be highlighted
 ae2thing.key.open_backpack_terminal=Open Backpack Terminal
@@ -114,3 +116,7 @@ nei.options.ae2thing.pinned_bar_remove.false=Never
 nei.options.ae2thing.block_render=Pattern ignore hatches when encoding
 nei.options.ae2thing.block_render.true=Yes
 nei.options.ae2thing.block_render.false=No
+
+nei.options.ae2thing.ultra_terminal_mode=Universal terminal support selection mode in the terminal menu
+nei.options.ae2thing.ultra_terminal_mode.true=Yes
+nei.options.ae2thing.ultra_terminal_mode.false=No

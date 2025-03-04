@@ -82,7 +82,10 @@ public class NameConst {
     public static final String GUI_FLUID_PACKET_ENCODER = GUI_KEY + "fluid_packet_encoder";
     public static final String GUI_MANA_IMPORT = GUI_KEY + ITEM_PART_MANA_IMPORT;
     public static final String GUI_MANA_EXPORT = GUI_KEY + ITEM_PART_MANA_EXPORT;
-    public static final String GUI_Pattern_Rename = GUI_KEY + "pattern_rename";
+    public static final String GUI_PATTERN_RENAME = GUI_KEY + "pattern_rename";
+    public static final String GUI_TERMINAL_MENU = GUI_KEY + "terminal_menu.";
+    public static final String GUI_TERMINAL_MENU_PAGE = GUI_TERMINAL_MENU + "page";
+    public static final String GUI_TERMINAL_MENU_MAX_PAGE = GUI_TERMINAL_MENU + "max_page";
     public static final String NEI_KEY = AE2Thing.MODID + ".nei.";
     public static final String NEI_FIND_CELL_ITEM = NEI_KEY + "find_cell_item.";
     public static final String NEI_FIND_CELL_ITEM_HIGHLIGHT = NEI_FIND_CELL_ITEM + "highlight";

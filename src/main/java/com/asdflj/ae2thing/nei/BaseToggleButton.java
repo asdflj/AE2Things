@@ -9,8 +9,12 @@ public class BaseToggleButton extends OptionToggleButton {
     private static final ConfigTagParent tag = NEIClientConfig.global.config;
 
     public BaseToggleButton(String name) {
+        this(name, true);
+    }
+
+    public BaseToggleButton(String name, boolean defaultValue) {
         super(name, true);
         tag.getTag(name)
-            .getBooleanValue(true);
+            .getBooleanValue(defaultValue);
     }
 }
