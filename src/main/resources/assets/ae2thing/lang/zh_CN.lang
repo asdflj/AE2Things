@@ -76,6 +76,8 @@ ae2thing.gui.infusion_terminal.processing_pattern=蒸馏样板
 ae2thing.gui.fluid_packet_encoder=ME流体封包编码器
 ae2thing.gui.pattern_rename=自定义名称
 ae2thing.gui.button.replan=重新规划合成任务
+ae2thing.gui.terminal_menu.page=当前页数: %s
+ae2thing.gui.terminal_menu.max_page=最大页数: %s
 ae2thing.nei.find_cell_item.highlight=存储方块已高亮，坐标：%d, %d, %d
 ae2thing.nei.find_cell_item.in_other_dim=存储方块位于 %d 世界，无法高亮显示
 ae2thing.key.open_backpack_terminal=打开背包终端
@@ -104,3 +106,7 @@ nei.options.ae2thing.pinned_bar_remove.false=溢出移除
 nei.options.ae2thing.block_render=样板终端编码时忽略功能仓室
 nei.options.ae2thing.block_render.true=是
 nei.options.ae2thing.block_render.false=否
+
+nei.options.ae2thing.ultra_terminal_mode=终端菜单中通用无限终端支持选择模式
+nei.options.ae2thing.ultra_terminal_mode.true=是
+nei.options.ae2thing.ultra_terminal_mode.false=否

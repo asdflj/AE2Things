@@ -82,7 +82,7 @@ public class GuiPatternValueName extends AEBaseGui implements IDropToFillTextFie
     @Override
     public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
         this.fontRendererObj
-            .drawString(I18n.format(NameConst.GUI_Pattern_Rename), 12, 8, GuiColors.RenamerTitle.getColor());
+            .drawString(I18n.format(NameConst.GUI_PATTERN_RENAME), 12, 8, GuiColors.RenamerTitle.getColor());
     }
 
     @Override
