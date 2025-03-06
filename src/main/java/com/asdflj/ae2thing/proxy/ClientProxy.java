@@ -23,10 +23,8 @@ import com.asdflj.ae2thing.client.event.OpenTerminalEvent;
 import com.asdflj.ae2thing.client.gui.BaseMEGui;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
-import com.asdflj.ae2thing.client.gui.GuiMonitor;
 import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
-import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.common.item.ItemPhial;
 import com.asdflj.ae2thing.loader.KeybindLoader;
 import com.asdflj.ae2thing.loader.ListenerLoader;
@@ -62,8 +60,6 @@ import cpw.mods.fml.common.network.FMLNetworkEvent;
 
 public class ClientProxy extends CommonProxy {
 
-    private final ItemStack[] hoveredStack = new ItemStack[2];
-    private static long refreshTick = System.currentTimeMillis();
     private static GuiRecipe<?> recipe = null;
     public static List<MouseWheelHandler> mouseHandlers = new ArrayList<>();
 
@@ -186,19 +182,6 @@ public class ClientProxy extends CommonProxy {
         AE2ThingAPI.instance()
             .getPinned()
             .updateCraftingItems();
-        if (Config.backPackTerminalFillItemName && refreshTick + 500 < System.currentTimeMillis()
-            && ModAndClassUtil.NEI) {
-            if (Minecraft.getMinecraft().currentScreen instanceof GuiMonitor gim) {
-                refreshTick = System.currentTimeMillis();
-                hoveredStack[1] = this.getStackMouseOver(gim);
-                if (hoveredStack[1] == null) return;
-                if (hoveredStack[0] != hoveredStack[1]) {
-                    hoveredStack[0] = hoveredStack[1];
-                } else {
-                    gim.setSearchString(hoveredStack[0].getDisplayName(), true, 0);
-                }
-            }
-        }
     }
 
     @SubscribeEvent
