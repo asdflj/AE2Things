@@ -23,11 +23,7 @@ public class WCTWirelessCraftingTerminalHandler implements ITerminalHandler {
             for (int i = 0; i < player.inventory.mainInventory.length; i++) {
                 ItemStack stack = player.inventory.getStackInSlot(i);
                 if (Platform.isSameItemPrecise(stack, item)) {
-                    player.inventory.setInventorySlotContents(i, items.getTargetItem());
-                    openGui(
-                        player,
-                        Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_INV),
-                        items.getTargetItem());
+                    openGui(player, Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_INV), stack);
                     return;
                 }
             }
@@ -37,11 +33,7 @@ public class WCTWirelessCraftingTerminalHandler implements ITerminalHandler {
             for (int i = 0; i < handler.getSizeInventory(); ++i) {
                 ItemStack is = handler.getStackInSlot(i);
                 if (BaublesUtil.isSameItemPrecise(is, item, i, items)) {
-                    handler.setInventorySlotContents(i, items.getTargetItem());
-                    openGui(
-                        player,
-                        Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_BAUBLES),
-                        items.getTargetItem());
+                    openGui(player, Util.GuiHelper.encodeType(i, Util.GuiHelper.InvType.PLAYER_BAUBLES), is);
                     return;
                 }
             }
