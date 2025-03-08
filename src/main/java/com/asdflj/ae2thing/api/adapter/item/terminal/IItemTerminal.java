@@ -9,7 +9,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
+import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.util.BaublesUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 
@@ -24,7 +26,7 @@ public interface IItemTerminal {
     default List<TerminalItems> getTerminalItems() {
         List<TerminalItems> terminal = new ArrayList<>(this.getMainInvTerminals());
         if (ModAndClassUtil.BAUBLES && this.supportBaubles()) {
-            terminal.addAll(getInvTerminals(BaublesUtil.getBaublesInv(this.player())));
+            terminal.addAll(getBaublesInvTerminals(BaublesUtil.getBaublesInv(this.player())));
         }
         return terminal;
     }
@@ -44,7 +46,7 @@ public interface IItemTerminal {
         return arr;
     }
 
-    default List<TerminalItems> getInvTerminals(IInventory inv) {
+    default List<TerminalItems> getBaublesInvTerminals(IInventory inv) {
         List<TerminalItems> arr = new ArrayList<>();
         if (inv == null) return arr;
         for (int i = 0; i < inv.getSizeInventory(); i++) {
@@ -53,7 +55,9 @@ public interface IItemTerminal {
             if (getClasses().contains(
                 item.getItem()
                     .getClass())) {
-                arr.add(new TerminalItems(item, item));
+                NBTTagCompound data = this.newNBT();
+                data.setInteger(Constants.SLOT, i);
+                arr.add(new TerminalItems(item, item, data));
             }
         }
         return arr;
@@ -68,4 +72,7 @@ public interface IItemTerminal {
         return this.player().inventory;
     }
 
+    default NBTTagCompound newNBT() {
+        return new NBTTagCompound();
+    }
 }

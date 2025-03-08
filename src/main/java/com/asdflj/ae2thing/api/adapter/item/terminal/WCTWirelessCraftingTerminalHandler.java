@@ -36,7 +36,7 @@ public class WCTWirelessCraftingTerminalHandler implements ITerminalHandler {
             if (handler == null) return;
             for (int i = 0; i < handler.getSizeInventory(); ++i) {
                 ItemStack is = handler.getStackInSlot(i);
-                if (Platform.isSameItemPrecise(is, item)) {
+                if (BaublesUtil.isSameItemPrecise(is, item, i, items)) {
                     handler.setInventorySlotContents(i, items.getTargetItem());
                     openGui(
                         player,

@@ -41,7 +41,7 @@ public class UltraTerminalHandler implements ITerminalHandler {
             if (handler == null) return;
             for (int i = 0; i < handler.getSizeInventory(); ++i) {
                 ItemStack is = handler.getStackInSlot(i);
-                if (Platform.isSameItemPrecise(is, item)) {
+                if (BaublesUtil.isSameItemPrecise(is, item, i, terminalItems)) {
                     handler.setInventorySlotContents(i, terminalItems.getTargetItem());
                     openGui(
                         player,
