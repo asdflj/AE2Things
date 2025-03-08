@@ -53,6 +53,18 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
         this.xSize = 256;
     }
 
+    private int calMaxPage() {
+        if (menu.getItems()
+            .isEmpty()) return 0;
+        int page = menu.getItems()
+            .size() / SECTOR_COUNT;
+        if (menu.getItems()
+            .size() % SECTOR_COUNT == 0 && page > 0) {
+            page--;
+        }
+        return page;
+    }
+
     @Override
     public void initGui() {
         super.initGui();
@@ -60,13 +72,7 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
             .size() <= page * SECTOR_COUNT) {
             page = 0;
         }
-        if (!menu.getItems()
-            .isEmpty()) {
-            maxPage = menu.getItems()
-                .size() / SECTOR_COUNT;
-        } else {
-            maxPage = 0;
-        }
+        maxPage = calMaxPage();
         scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         float x = mc.displayWidth, y = mc.displayHeight;
         float[] vertices = { 0, 0, 0, y, x, y, x, 0 };
@@ -134,10 +140,6 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
             .size() <= SECTOR_COUNT) {
             page = 0;
         }
-        int maxPage = this.menu.getItems()
-            .size() / SECTOR_COUNT
-            - (this.menu.getItems()
-                .size() % SECTOR_COUNT == 0 ? 1 : 0);
         if (wheel == Constants.MouseWheel.NEXT.direction) {
             page = Math.max(page - 1, 0);
             this.currentIndex = -1;
