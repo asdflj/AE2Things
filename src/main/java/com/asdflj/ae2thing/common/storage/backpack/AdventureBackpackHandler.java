@@ -30,6 +30,11 @@ public class AdventureBackpackHandler extends BaseBackpackHandler {
     }
 
     @Override
+    public int getSizeInventory() {
+        return 48;
+    }
+
+    @Override
     public void markFluidAsDirty() {
         this.inventory.dirtyTanks();
     }
