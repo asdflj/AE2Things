@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
+import com.asdflj.ae2thing.client.render.RenderHelper;
 import com.asdflj.ae2thing.nei.ButtonConstants;
 import com.asdflj.ae2thing.nei.NEI_TH_Config;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
@@ -43,7 +44,7 @@ public abstract class MixinGuiContainerManager {
     @Shadow(remap = false)
     public GuiContainer window;
 
-    private static RenderItem ae2thing$r = new RenderItem();
+    private static RenderItem ae2thing$r = RenderHelper.itemRender;
 
     private static ItemStack ae2Thing$lastStack = null;
     private static IAEItemStack ae2thing$lastAEStack = null;
