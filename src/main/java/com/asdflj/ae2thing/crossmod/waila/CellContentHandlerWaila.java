@@ -82,16 +82,12 @@ public class CellContentHandlerWaila extends TooltipHandlerWaila {
                         .storage()
                         .createPrimitiveItemList(),
                     0);
-                List<IAEItemStack> list = Arrays.stream(itemList.toArray(new IAEItemStack[0]))
+                List<IAEStack<?>> list = Arrays.stream(itemList.toArray(new IAEItemStack[0]))
                     .sorted(
                         Comparator.comparingLong(IAEItemStack::getStackSize)
                             .reversed())
                     .collect(Collectors.toList());
-                if (!list.isEmpty()) {
-                    cellContent.addAll(list);
-                    id = getTipLineId(tooltipLineHandler);
-                    currentToolTip.add(currentToolTip.size() - 1, TOOLTIP_HANDLER + id);
-                }
+                addTooltip(list, currentToolTip);
                 return currentToolTip;
             }
             handler = AEApi.instance()
@@ -104,21 +100,25 @@ public class CellContentHandlerWaila extends TooltipHandlerWaila {
                         .storage()
                         .createFluidList(),
                     0);
-                List<IAEFluidStack> list = Arrays.stream(itemList.toArray(new IAEFluidStack[0]))
+                List<IAEStack<?>> list = Arrays.stream(itemList.toArray(new IAEFluidStack[0]))
                     .sorted(
                         Comparator.comparingLong(IAEFluidStack::getStackSize)
                             .reversed())
                     .collect(Collectors.toList());
-                if (!list.isEmpty()) {
-                    cellContent.addAll(list);
-                    id = getTipLineId(tooltipLineHandler);
-                    currentToolTip.add(currentToolTip.size() - 1, TOOLTIP_HANDLER + id);
-                }
+                addTooltip(list, currentToolTip);
                 return currentToolTip;
             }
 
         }
         return currentToolTip;
+    }
+
+    private void addTooltip(List<IAEStack<?>> list, List<String> currentToolTip) {
+        if (!list.isEmpty()) {
+            cellContent.addAll(list);
+            id = getTipLineId(tooltipLineHandler);
+            currentToolTip.add(currentToolTip.size() - 1, TOOLTIP_HANDLER + id);
+        }
     }
 
     static {
