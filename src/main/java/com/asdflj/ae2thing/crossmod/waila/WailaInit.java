@@ -12,7 +12,10 @@ public class WailaInit {
     }
 
     public static void register(final IWailaRegistrar registrar) {
-        if (Platform.isClient()) GuiContainerManager.addTooltipHandler(new TooltipHandlerWaila());
+        if (Platform.isClient()) {
+            GuiContainerManager.addTooltipHandler(new TooltipHandlerWaila());
+            GuiContainerManager.addTooltipHandler(new CellContentHandlerWaila());
+        }
 
     }
 }
