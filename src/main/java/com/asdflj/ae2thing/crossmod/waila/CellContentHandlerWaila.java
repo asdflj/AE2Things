@@ -3,7 +3,7 @@ package com.asdflj.ae2thing.crossmod.waila;
 import static codechicken.lib.gui.GuiDraw.TOOLTIP_HANDLER;
 import static codechicken.lib.gui.GuiDraw.getTipLineId;
 
-import java.awt.*;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
