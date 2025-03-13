@@ -40,8 +40,10 @@ public interface MixinIOverlayHandler extends IOverlayHandler {
         final List<GuiOverlayButton.ItemOverlayState> itemPresenceSlots = new ArrayList<>();
         final List<PositionedStack> ingredients = recipe.getIngredientStacks(recipeIndex);
         IItemList<IAEItemStack> list = null;
+        boolean displayFluid = false;
         if (firstGui instanceof IGuiMonitor gm) {
             list = Ae2ReflectClient.getList(gm.getRepo());
+            displayFluid = true;
         } else if (AE2ThingAPI.instance()
             .terminal()
             .isTerminal(firstGui)) {
@@ -75,7 +77,8 @@ public interface MixinIOverlayHandler extends IOverlayHandler {
                 FluidStack fs = StackInfo.getFluid(stack.item);
                 IAEItemStack item;
                 if (fs != null) {
-                    item = ItemFluidDrop.newAeStack(fs);
+                    item = displayFluid ? AEItemStack.create(ItemFluidDrop.newDisplayStack(fs))
+                        : ItemFluidDrop.newAeStack(fs);
                 } else {
                     item = AEItemStack.create(stack.item);
                 }

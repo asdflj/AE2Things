@@ -60,10 +60,12 @@ public abstract class MixinGuiContainerManager {
         ItemStack stack;
         stack = getStackMouseOver(this.window);
         if (stack == null) return;
+        boolean displayFluid = false;
         if (window instanceof GuiRecipe<?>gui) {
             IDisplayRepo repo = null;
             if (gui.getFirstScreenGeneral() instanceof IGuiMonitor g) {
                 repo = g.getRepo();
+                displayFluid = true;
             } else if (AE2ThingAPI.instance()
                 .terminal()
                 .isTerminal(gui.getFirstScreenGeneral())) {
@@ -73,7 +75,7 @@ public abstract class MixinGuiContainerManager {
             IItemList<IAEItemStack> list = Ae2ReflectClient.getList((ItemRepo) repo);
             FluidStack fs = StackInfo.getFluid(stack);
             if (fs != null) {
-                stack = ItemFluidDrop.newStack(fs);
+                stack = displayFluid ? ItemFluidDrop.newDisplayStack(fs) : ItemFluidDrop.newStack(fs);
             }
             IAEItemStack item = list.findPrecise(
                 ae2Thing$lastStack != null && Platform.isSameItemPrecise(ae2Thing$lastStack, stack)
