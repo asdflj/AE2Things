@@ -70,45 +70,46 @@ public class CellContentHandlerWaila extends TooltipHandlerWaila {
             && (itemstack.getItem() != null && !blackList.contains(
                 itemstack.getItem()
                     .getClass()))) {
-            cellContent.clear();
-            IMEInventoryHandler handler;
-            handler = AEApi.instance()
-                .registries()
-                .cell()
-                .getCellInventory(itemstack, null, StorageChannel.ITEMS);
-            if (handler != null) {
-                IItemList<IAEItemStack> itemList = handler.getAvailableItems(
-                    AEApi.instance()
-                        .storage()
-                        .createPrimitiveItemList(),
-                    0);
-                List<IAEStack<?>> list = Arrays.stream(itemList.toArray(new IAEItemStack[0]))
-                    .sorted(
-                        Comparator.comparingLong(IAEItemStack::getStackSize)
-                            .reversed())
-                    .collect(Collectors.toList());
-                addTooltip(list, currentToolTip);
-                return currentToolTip;
-            }
-            handler = AEApi.instance()
-                .registries()
-                .cell()
-                .getCellInventory(itemstack, null, StorageChannel.FLUIDS);
-            if (handler != null) {
-                IItemList<IAEFluidStack> itemList = handler.getAvailableItems(
-                    AEApi.instance()
-                        .storage()
-                        .createFluidList(),
-                    0);
-                List<IAEStack<?>> list = Arrays.stream(itemList.toArray(new IAEFluidStack[0]))
-                    .sorted(
-                        Comparator.comparingLong(IAEFluidStack::getStackSize)
-                            .reversed())
-                    .collect(Collectors.toList());
-                addTooltip(list, currentToolTip);
-                return currentToolTip;
-            }
-
+            try {
+                cellContent.clear();
+                IMEInventoryHandler handler;
+                handler = AEApi.instance()
+                    .registries()
+                    .cell()
+                    .getCellInventory(itemstack, null, StorageChannel.ITEMS);
+                if (handler != null) {
+                    IItemList<IAEItemStack> itemList = handler.getAvailableItems(
+                        AEApi.instance()
+                            .storage()
+                            .createPrimitiveItemList(),
+                        0);
+                    List<IAEStack<?>> list = Arrays.stream(itemList.toArray(new IAEItemStack[0]))
+                        .sorted(
+                            Comparator.comparingLong(IAEItemStack::getStackSize)
+                                .reversed())
+                        .collect(Collectors.toList());
+                    addTooltip(list, currentToolTip);
+                    return currentToolTip;
+                }
+                handler = AEApi.instance()
+                    .registries()
+                    .cell()
+                    .getCellInventory(itemstack, null, StorageChannel.FLUIDS);
+                if (handler != null) {
+                    IItemList<IAEFluidStack> itemList = handler.getAvailableItems(
+                        AEApi.instance()
+                            .storage()
+                            .createFluidList(),
+                        0);
+                    List<IAEStack<?>> list = Arrays.stream(itemList.toArray(new IAEFluidStack[0]))
+                        .sorted(
+                            Comparator.comparingLong(IAEFluidStack::getStackSize)
+                                .reversed())
+                        .collect(Collectors.toList());
+                    addTooltip(list, currentToolTip);
+                    return currentToolTip;
+                }
+            } catch (Exception ignored) {}
         }
         return currentToolTip;
     }
