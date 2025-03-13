@@ -2,8 +2,9 @@ package com.asdflj.ae2thing.crossmod.waila;
 
 import static codechicken.lib.gui.GuiDraw.TOOLTIP_HANDLER;
 import static codechicken.lib.gui.GuiDraw.getTipLineId;
+import static com.asdflj.ae2thing.nei.NEI_TH_Config.getConfigValue;
 
-import java.awt.*;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.api.InventoryActionExtend;
 import com.asdflj.ae2thing.client.render.RenderHelper;
+import com.asdflj.ae2thing.nei.ButtonConstants;
 import com.asdflj.ae2thing.network.CPacketInventoryActionExtend;
 import com.asdflj.ae2thing.util.CPUCraftingPreview;
 
@@ -61,7 +63,7 @@ public class CraftingStatePreviewWaila extends mcp.mobius.waila.handlers.nei.Too
     @Override
     public List<String> handleItemTooltip(GuiContainer gui, ItemStack itemstack, int x, int y,
         List<String> currentToolTip) {
-        if (AE2ThingAPI.instance()
+        if (getConfigValue(ButtonConstants.PINNED_BAR_CRAFTING_STATE) && AE2ThingAPI.instance()
             .terminal()
             .isPinTerminal(gui)) {
             IAEItemStack item = AEItemStack.create(itemstack);

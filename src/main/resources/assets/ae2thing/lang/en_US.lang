@@ -120,3 +120,7 @@ nei.options.ae2thing.block_render.false=No
 nei.options.ae2thing.ultra_terminal_mode=Universal terminal support selection mode in the terminal menu
 nei.options.ae2thing.ultra_terminal_mode.true=Yes
 nei.options.ae2thing.ultra_terminal_mode.false=No
+
+nei.options.ae2thing.pinned_bar_crafting_state=Pinned bar preview current item crafting state
+nei.options.ae2thing.pinned_bar_crafting_state.true=Yes
+nei.options.ae2thing.pinned_bar_crafting_state.false=No
