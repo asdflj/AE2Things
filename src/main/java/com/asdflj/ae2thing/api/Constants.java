@@ -11,6 +11,9 @@ public interface Constants {
     String TC_CRAFTING = "tc_crafting";
     String IS_EMPTY = "is_empty";
     String COLOR = "color";
+    String REMAINING_ITEM_COUNT = "remaining_item_count";
+    String CPU_LIST = "cpu_list";
+    String CPU_ELAPSED_TIME = "elapsed_time";
     String NAME = "name";
     String IS_LINKED = "is_linked";
     String LINK = "link";
@@ -22,6 +25,7 @@ public interface Constants {
     String NEI_BR = "nei.br";
     String NEI_MOUSE_WHEEL = "nei.mouse_wheel";
     String SLOT = "slot";
+    String SIZE = "size";
     int OUTPUT_COLOR = 0x4566ccff;
     int ERROR_COLOR = 0x45DA4527;
     int INACTIVE_COLOR = 0x45FFEA05;

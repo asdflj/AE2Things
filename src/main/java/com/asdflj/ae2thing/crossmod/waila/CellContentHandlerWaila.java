@@ -29,12 +29,11 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import codechicken.lib.gui.GuiDraw;
-import mcp.mobius.waila.handlers.nei.TooltipHandlerWaila;
 
-public class CellContentHandlerWaila extends TooltipHandlerWaila {
+public class CellContentHandlerWaila extends mcp.mobius.waila.handlers.nei.TooltipHandlerWaila {
 
     public static HashSet<Class<? extends Item>> blackList = new HashSet<>();
-    public static int id = 0;
+    private static int id = 0;
     private static final List<IAEStack<?>> cellContent = new ArrayList<>();
     private static final int limit = 5;
     private static final GuiDraw.ITooltipLineHandler tooltipLineHandler = new GuiDraw.ITooltipLineHandler() {

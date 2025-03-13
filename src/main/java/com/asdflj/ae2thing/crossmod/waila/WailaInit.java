@@ -15,6 +15,7 @@ public class WailaInit {
         if (Platform.isClient()) {
             GuiContainerManager.addTooltipHandler(new TooltipHandlerWaila());
             GuiContainerManager.addTooltipHandler(new CellContentHandlerWaila());
+            GuiContainerManager.addTooltipHandler(new CraftingStatePreviewWaila());
         }
 
     }

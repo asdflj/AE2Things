@@ -1,26 +1,43 @@
 package com.asdflj.ae2thing.network;
 
+import static appeng.api.networking.crafting.CraftingItemList.ACTIVE;
+
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 
 import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.api.Constants;
+import com.asdflj.ae2thing.api.InventoryActionExtend;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueName;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 import com.asdflj.ae2thing.util.BlockPos;
-import com.asdflj.ae2thing.util.InventoryActionExtend;
+import com.asdflj.ae2thing.util.CPUCraftingPreview;
 
+import appeng.api.AEApi;
+import appeng.api.networking.crafting.ICraftingCPU;
+import appeng.api.networking.crafting.ICraftingGrid;
+import appeng.api.networking.security.IActionHost;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IItemList;
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
+import appeng.core.localization.GuiText;
+import appeng.me.cluster.implementations.CraftingCPUCluster;
 import appeng.util.item.AEItemStack;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -128,9 +145,43 @@ public class CPacketInventoryActionExtend implements IMessage {
                             cpv.detectAndSendChanges();
                         }
                     }
+                } else if (message.action == InventoryActionExtend.GET_CRAFTING_STATE) {
+                    if(target instanceof IActionHost gh){
+                        ICraftingGrid craftingGrid = gh.getActionableNode()
+                            .getGrid()
+                            .getCache(ICraftingGrid.class);
+                        NBTTagCompound cpuData = new NBTTagCompound();
+                        NBTTagList tagList = new NBTTagList();
+                        cpuData.setTag(Constants.CPU_LIST,tagList);
+                        int i = 0;
+                        for (ICraftingCPU cpu: craftingGrid.getCpus()) {
+                            i++;
+                            if(cpu instanceof CraftingCPUCluster ccc && ccc.getFinalOutput() != null){
+                                if(message.stack.hashCode() == ccc.getFinalOutput().hashCode()){
+                                    IItemList<IAEItemStack> list =  AEApi.instance().storage().createPrimitiveItemList();
+                                    ccc.getListOfItem(list,ACTIVE);
+                                    List<IAEItemStack> activeItems = Arrays.stream(list.toArray(list.toArray(new IAEItemStack[0]))).limit(CPUCraftingPreview.maxSize).sorted(Comparator.comparingLong(IAEItemStack::getStackSize).reversed()).collect(Collectors.toList());
+                                    if(activeItems.isEmpty()){
+                                        continue;
+                                    }
+                                    NBTTagCompound data = new NBTTagCompound();
+                                    final String name;
+                                    if(ccc.getName().isEmpty()){
+                                        name = GuiText.CPUs.getLocal() + ": #" + i;
+                                    }else{
+                                        name =GuiText.CPUs.getLocal() + ": "  + ccc.getName().substring(0, Math.min(20, ccc.getName().length()));
+                                    }
+                                    new CPUCraftingPreview(name, ccc.getRemainingItemCount(),ccc.getElapsedTime(),  activeItems).writeToNBT(data);
+                                    tagList.appendTag(data);
+                                }
+                            }
+                        }
+                        AE2Thing.proxy.netHandler.sendTo(new SPacketCraftingStateUpdate(cpuData),ctx.getServerHandler().playerEntity);
+                    }
                 }
             }
             return null;
         }
     }
+
 }
