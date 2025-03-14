@@ -2,6 +2,7 @@ package com.asdflj.ae2thing.util;
 
 import static com.asdflj.ae2thing.api.Constants.MessageType.UPDATE_PLAYER_ITEM;
 
+import java.util.List;
 import java.util.Optional;
 
 import net.minecraft.client.Minecraft;
@@ -15,9 +16,11 @@ import net.minecraft.world.World;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
+import com.glodblock.github.nei.object.OrderStack;
 
 import appeng.api.util.IInterfaceViewable;
 import appeng.util.item.AEItemStack;
+import codechicken.nei.recipe.IRecipeHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.relauncher.Side;
@@ -26,6 +29,7 @@ import gregtech.api.enums.ItemList;
 import gregtech.api.metatileentity.BaseMetaTileEntity;
 import gregtech.api.metatileentity.implementations.MTEHatch;
 import gregtech.common.blocks.ItemMachines;
+import gregtech.nei.GTNEIDefaultHandler;
 
 public class GTUtil {
 
@@ -43,6 +47,17 @@ public class GTUtil {
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         ItemStack dataStick = player.inventory.getItemStack();
         return ItemList.Tool_DataStick.isStackEqual(dataStick, false, true);
+    }
+
+    public static String getRecipeName(IRecipeHandler recipe, List<OrderStack<?>> in) {
+        if (recipe instanceof GTNEIDefaultHandler r) {
+            for (OrderStack<?> stack : in) {
+                if (stack.getStack() instanceof ItemStack is && is.stackSize == 0) {
+                    return String.format("%s %s", recipe.getRecipeName(), is.getItemDamage());
+                }
+            }
+        }
+        return recipe.getRecipeName();
     }
 
     public static void setDataStick(int x, int y, int z, EntityPlayer player, World w) {

@@ -35,6 +35,7 @@ import org.lwjgl.opengl.GL12;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
+import com.asdflj.ae2thing.client.gui.widget.THGuiTextField;
 import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
 import com.asdflj.ae2thing.network.CPacketRenamer;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
@@ -92,7 +93,7 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
     private final InterfaceWirelessList masterList = new InterfaceWirelessList();
     private final MEGuiTextField searchFieldOutputs;
     private final MEGuiTextField searchFieldInputs;
-    private final MEGuiTextField searchFieldNames;
+    private final THGuiTextField searchFieldNames;
     private final GuiImgButton guiButtonHideFull;
     private final GuiImgButton guiButtonAssemblersOnly;
     private final GuiImgButton guiButtonBrokenRecipes;
@@ -146,14 +147,14 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
             }
         };
 
-        searchFieldNames = new MEGuiTextField(71, 12, ButtonToolTips.SearchFieldNames.getLocal()) {
+        searchFieldNames = new THGuiTextField(71, 12, ButtonToolTips.SearchFieldNames.getLocal()) {
 
             @Override
             public void onTextChange(final String oldText) {
+                updateSuggestion();
                 masterList.markDirty();
             }
         };
-        // searchFieldNames.setFocused(false);
 
         searchStringSave = new GuiImgButton(
             0,
@@ -301,7 +302,7 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
 
         handleTooltip(mouseX, mouseY, searchFieldInputs);
         handleTooltip(mouseX, mouseY, searchFieldOutputs);
-        handleTooltip(mouseX, mouseY, searchFieldNames);
+        handleTooltip(mouseX, mouseY, searchFieldNames.getTooltipProvider());
     }
 
     @Override
@@ -314,6 +315,14 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
             return;
         }
         super.mouseClicked(xCoord, yCoord, btn);
+    }
+
+    public void setSearchFieldSuggestion(String text) {
+        searchFieldNames.setSuggestion(text);
+    }
+
+    public void setSearchFieldText(String text) {
+        searchFieldNames.setText(text);
     }
 
     @Override
@@ -785,7 +794,9 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
 
     @Override
     protected void keyTyped(final char character, final int key) {
-        if (!checkHotbarKeys(key)) {
+        if (key == Keyboard.KEY_TAB) {
+            this.searchFieldNames.setSuggestionToText();
+        } else if (!checkHotbarKeys(key)) {
             if (character == ' ') {
                 if ((searchFieldInputs.getText()
                     .isEmpty() && searchFieldInputs.isFocused())
@@ -1019,12 +1030,14 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
         private void update() {
             height = 0;
             visibleSections.clear();
+            String[] list = GuiBaseInterfaceWireless.this.searchFieldNames.getText()
+                .split(" ");
+            out: for (InterfaceWirelessSection section : sections.values()) {
 
-            for (InterfaceWirelessSection section : sections.values()) {
-                String query = GuiBaseInterfaceWireless.this.searchFieldNames.getText();
-                if (!query.isEmpty()
-                    && !NeCharUtil.INSTANCE.contains(query.toLowerCase(), section.name.toLowerCase())) {
-                    continue;
+                for (String query : list) {
+                    if (!NeCharUtil.INSTANCE.contains(query.toLowerCase(), section.name.toLowerCase())) {
+                        continue out;
+                    }
                 }
 
                 section.isDirty = true;

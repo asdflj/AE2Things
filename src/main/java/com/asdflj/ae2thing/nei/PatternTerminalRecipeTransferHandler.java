@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.nei;
 
+import static com.asdflj.ae2thing.nei.NEI_TH_Config.getConfigValue;
 import static com.asdflj.ae2thing.proxy.ClientProxy.mouseHandlers;
 import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
@@ -21,6 +22,7 @@ import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.nei.object.OrderStack;
 import com.asdflj.ae2thing.nei.recipes.FluidRecipe;
 import com.asdflj.ae2thing.network.CPacketTransferRecipe;
+import com.asdflj.ae2thing.util.GTUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.asdflj.ae2thing.util.PHUtil;
 
@@ -106,6 +108,7 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
             boolean craft = shouldCraft(recipe);
             List<com.glodblock.github.nei.object.OrderStack<?>> in;
             in = com.glodblock.github.nei.recipes.FluidRecipe.getPackageInputs(recipe, recipeIndex, !craft && priority);
+            setSuggestion(craft, recipe, (GuiWirelessDualInterfaceTerminal) firstGui, in);
             if (ModAndClassUtil.PH && !craft) {
                 in = PHUtil.transfer(in);
             }
@@ -113,6 +116,23 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
                 .getPackageOutputs(recipe, recipeIndex, !notUseOther(recipe));
             AE2Thing.proxy.netHandler
                 .sendToServer(new CPacketTransferRecipe(transfer(in), transfer(out), craft, shift));
+        }
+    }
+
+    private void setSuggestion(boolean craft, IRecipeHandler recipe, GuiWirelessDualInterfaceTerminal gui,
+        List<com.glodblock.github.nei.object.OrderStack<?>> in) {
+        String suggestion;
+        if (craft) {
+            suggestion = "";
+        } else if (ModAndClassUtil.GT5NH || ModAndClassUtil.GT5) {
+            suggestion = GTUtil.getRecipeName(recipe, in);
+        } else {
+            suggestion = recipe.getRecipeName();
+        }
+        if (getConfigValue(ButtonConstants.DUAL_INTERFACE_TERMINAL)) {
+            gui.setSearchFieldText(suggestion);
+        } else {
+            gui.setSearchFieldSuggestion(suggestion);
         }
     }
 
