@@ -1,25 +1,33 @@
 package com.asdflj.ae2thing.client.gui.widget;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 
+import org.lwjgl.input.Keyboard;
+
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.ITooltip;
+import appeng.core.localization.GuiColors;
 
 public class THGuiTextField extends GuiTextField {
 
     private static final int PADDING = 2;
     private final FontRenderer _fontRender;
+    private final int fontPad;
     private String tooltip;
 
-    private final int _xPos;
-    private final int _yPos;
+    public int x;
+    public int y;
     private final int _width;
     private final int _height;
     private int _border;
     private int _color;
     private String suggestion;
+    private boolean bg = false;
+    public boolean forceDrawSuggestion = false;
     private final TooltipProvider tooltipProvider = new TooltipProvider();
+    private String rawSuggestion;
 
     /**
      * Uses the values to instantiate a padded version of a text field. Pays attention to the '_' caret.
@@ -39,46 +47,147 @@ public class THGuiTextField extends GuiTextField {
             width - 2 * PADDING - fontRenderer.getCharWidth('_'),
             height - 2 * PADDING);
 
-        this._xPos = xPos;
-        this._yPos = yPos;
+        this.x = xPos;
+        this.y = yPos;
         this._width = width;
         this._height = height;
         this._fontRender = fontRenderer;
         this.tooltip = "";
         this.suggestion = "";
+        this.rawSuggestion = "";
+        this.fontPad = fontRenderer.getCharWidth('_');
+        this.setBackgroundDrawing();
+    }
+
+    public THGuiTextField(final int width, final int height, String tooltip) {
+        this(Minecraft.getMinecraft().fontRenderer, 0, 0, width, height);
+        this.setEnableBackgroundDrawing(false);
+        this.setTextColor(GuiColors.SearchboxText.getColor());
+        this.setCursorPositionZero();
+        this.setMaxStringLength(25);
+        this.setVisible(true);
+        this.setMessage(tooltip);
     }
 
     public void setSuggestion(final String suggestion) {
-        this.suggestion = suggestion;
+        String text = "";
+        if (suggestion.startsWith(this.getText())) {
+            int pos = suggestion.indexOf(this.getText());
+            text = suggestion.substring(
+                pos + this.getText()
+                    .length());
+        }
+        this.suggestion = text;
+        this.rawSuggestion = suggestion;
+    }
+
+    public void updateSuggestion() {
+        setSuggestion(this.rawSuggestion);
+    }
+
+    public String getSuggestion() {
+        return this.suggestion;
+    }
+
+    public String getRawSuggestion() {
+        return this.rawSuggestion;
+    }
+
+    public void setSuggestionToText() {
+        this.setText(this.rawSuggestion);
+        this.setSuggestion(this.rawSuggestion);
     }
 
     @Override
     public void drawTextBox() {
-        drawSuggestion();
-        super.drawTextBox();
+        setDimensionsAndColor();
         if (this.getVisible()) {
             if (this.getBorder() > 0) {
                 drawRect(
-                    this._xPos - getBorder(),
-                    this._yPos - getBorder(),
-                    this.xPosition + this.width + getBorder(),
-                    this.yPosition + this.height + getBorder(),
+                    this.x - getBorder(),
+                    this.y - getBorder(),
+                    this.xPosition + this._width + getBorder(),
+                    this.yPosition + this._height + getBorder(),
                     this.getColor());
             }
+            if (this.bg) {
+                GuiTextField.drawRect(
+                    this.x + 1,
+                    this.y + 1,
+                    this.x + this._width - 1,
+                    this.y + this._height - 1,
+                    isFocused() ? GuiColors.SearchboxFocused.getColor() : GuiColors.SearchboxUnfocused.getColor());
+            }
+        }
+        drawSuggestion();
+        super.drawTextBox();
+    }
+
+    public void setBackgroundDrawing() {
+        bg = true;
+
+    }
+
+    protected void setDimensionsAndColor() {
+        this.xPosition = this.x + PADDING;
+        this.yPosition = this.y + PADDING;
+        this.width = this._width - PADDING * 2 - this.fontPad;
+        this.height = this._height - PADDING * 2;
+    }
+
+    public void onTextChange(final String oldText) {}
+
+    private void drawSuggestion() {
+        if (this.getVisible() && !this.suggestion.isEmpty()) {
+            String drawString = this.suggestion;
+            if (this._fontRender.getStringWidth(rawSuggestion) > this._width) {
+                int w = this._fontRender.getStringWidth(this.getText());
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < this.suggestion.toCharArray().length; i++) {
+                    char s = this.suggestion.charAt(i);
+                    int charWidth = this._fontRender.getCharWidth(s);
+                    if (w + charWidth < this._width) {
+                        w += charWidth;
+                        builder.append(s);
+                    } else {
+                        break;
+                    }
+                }
+                drawString = builder.toString();
+            }
+            drawString(
+                this._fontRender,
+                drawString,
+                this.x + 2 + this._fontRender.getStringWidth(this.getText()),
+                this.y + 2,
+                0xC0C0C0);
         }
     }
 
-    private void drawSuggestion() {
-        if (this.getVisible() && !this.suggestion.isEmpty()
-            && !this.getText()
-                .isEmpty()) {
-            drawString(
-                this._fontRender,
-                this.suggestion,
-                this._xPos + 2 + this._fontRender.getStringWidth(this.getText()),
-                this._yPos + 2,
-                0xC0C0C0);
+    @Override
+    public void setText(String text) {
+        super.setText(text);
+        onTextChange(text);
+    }
+
+    @Override
+    public boolean textboxKeyTyped(final char keyChar, final int keyID) {
+        if (!isFocused()) {
+            return false;
         }
+        final String oldText = getText();
+        boolean handled = super.textboxKeyTyped(keyChar, keyID);
+
+        if (!handled
+            && (keyID == Keyboard.KEY_RETURN || keyID == Keyboard.KEY_NUMPADENTER || keyID == Keyboard.KEY_ESCAPE)) {
+            setFocused(false);
+        }
+
+        if (handled) {
+            onTextChange(oldText);
+        }
+
+        return handled;
     }
 
     public void handleTooltip(int mouseX, int mouseY, AEBaseGui gui) {
@@ -133,10 +242,17 @@ public class THGuiTextField extends GuiTextField {
     @Override
     public void mouseClicked(final int xPos, final int yPos, final int button) {
         super.mouseClicked(xPos, yPos, button);
-
         final boolean requiresFocus = this.isMouseIn(xPos, yPos);
-
         this.setFocused(requiresFocus);
+        if (button == 1 && requiresFocus) {
+            this.setText("");
+        }
+    }
+
+    @Override
+    public void setFocused(boolean focused) {
+        super.setFocused(focused);
+        bg = focused;
     }
 
     /**
@@ -147,8 +263,8 @@ public class THGuiTextField extends GuiTextField {
      * @return true if mouse position is within the text field area
      */
     public boolean isMouseIn(final int xCoord, final int yCoord) {
-        final boolean withinXRange = this._xPos <= xCoord && xCoord < this._xPos + this._width;
-        final boolean withinYRange = this._yPos <= yCoord && yCoord < this._yPos + this._height;
+        final boolean withinXRange = this.x <= xCoord && xCoord < this.x + this._width;
+        final boolean withinYRange = this.y <= yCoord && yCoord < this.y + this._height;
 
         return withinXRange && withinYRange;
     }
@@ -174,12 +290,12 @@ public class THGuiTextField extends GuiTextField {
 
         @Override
         public int xPos() {
-            return _xPos;
+            return x;
         }
 
         @Override
         public int yPos() {
-            return _yPos;
+            return y;
         }
 
         @Override

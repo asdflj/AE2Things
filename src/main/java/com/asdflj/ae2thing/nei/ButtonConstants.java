@@ -9,4 +9,5 @@ public interface ButtonConstants {
     String PINNED_BAR_CRAFTING_STATE = "ae2thing.pinned_bar_crafting_state";
     String BLOCK_RENDER = "ae2thing.block_render";
     String ULTRA_TERMINAL_MODE = "ae2thing.ultra_terminal_mode";
+    String DUAL_INTERFACE_TERMINAL = "ae2thing.dual_interface_terminal_fill_search_names";
 }

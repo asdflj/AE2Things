@@ -114,3 +114,7 @@ nei.options.ae2thing.ultra_terminal_mode.false=否
 nei.options.ae2thing.pinned_bar_crafting_state=固定栏中预览当前物品合成状态
 nei.options.ae2thing.pinned_bar_crafting_state.true=是
 nei.options.ae2thing.pinned_bar_crafting_state.false=否
+
+nei.options.ae2thing.dual_interface_terminal_fill_search_names=二合一接口终端自动填充合成菜单名字
+nei.options.ae2thing.dual_interface_terminal_fill_search_names.true=是
+nei.options.ae2thing.dual_interface_terminal_fill_search_names.false=否

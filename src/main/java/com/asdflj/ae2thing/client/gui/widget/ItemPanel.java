@@ -501,6 +501,11 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
 
     private void updateSuggestion() {
         if (ModAndClassUtil.NEI && this.isNEISearch()) {
+            if (this.searchField.getText()
+                .isEmpty()) {
+                this.setSuggestion("");
+                return;
+            }
             Optional<String> history = Ae2ReflectClient.getHistoryList(this.history)
                 .stream()
                 .filter(s -> s.startsWith(this.searchField.getText()))
@@ -514,20 +519,13 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
     }
 
     private void setSuggestion(String suggestion) {
-        String text = "";
-        if (suggestion.startsWith(this.searchField.getText())) {
-            int pos = suggestion.indexOf(this.searchField.getText());
-            text = suggestion.substring(
-                pos + this.searchField.getText()
-                    .length());
-        }
-        this.searchField.setSuggestion(text);
+        this.searchField.setSuggestion(suggestion);
     }
 
     @Override
     public boolean keyTyped(char character, int key) {
         if (ModAndClassUtil.NEI && this.isNEISearch()) {
-            if (key == Keyboard.KEY_TAB) {
+            if (key == Keyboard.KEY_TAB && this.searchField.isFocused()) {
                 Optional<String> history = Ae2ReflectClient.getHistoryList(this.history)
                     .stream()
                     .filter(s -> s.startsWith(this.searchField.getText()))

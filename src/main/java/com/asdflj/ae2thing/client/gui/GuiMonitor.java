@@ -420,10 +420,6 @@ public abstract class GuiMonitor extends BaseMEGui
             this.guiTop + 4,
             90,
             12);
-        this.searchField.setEnableBackgroundDrawing(false);
-        this.searchField.setMaxStringLength(25);
-        this.searchField.setTextColor(0xFFFFFF);
-        this.searchField.setVisible(true);
         this.searchField.setMessage(ButtonToolTips.SearchStringTooltip.getLocal());
         if (this.viewCell) {
             if (ModAndClassUtil.isCraftStatus && AEConfig.instance.getConfigManager()
@@ -523,6 +519,11 @@ public abstract class GuiMonitor extends BaseMEGui
 
     private void updateSuggestion() {
         if (ModAndClassUtil.NEI && this.isNEISearch()) {
+            if (this.searchField.getText()
+                .isEmpty()) {
+                this.setSuggestion("");
+                return;
+            }
             Optional<String> history = Ae2ReflectClient.getHistoryList(this.history)
                 .stream()
                 .filter(s -> s.startsWith(this.searchField.getText()))
@@ -536,14 +537,7 @@ public abstract class GuiMonitor extends BaseMEGui
     }
 
     private void setSuggestion(String suggestion) {
-        String text = "";
-        if (suggestion.startsWith(this.searchField.getText())) {
-            int pos = suggestion.indexOf(this.searchField.getText());
-            text = suggestion.substring(
-                pos + this.searchField.getText()
-                    .length());
-        }
-        this.searchField.setSuggestion(text);
+        this.searchField.setSuggestion(suggestion);
     }
 
     public void setSearchString(String memoryText, boolean updateView) {

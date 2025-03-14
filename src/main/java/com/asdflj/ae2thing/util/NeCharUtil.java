@@ -16,7 +16,11 @@ public class NeCharUtil {
             if (ModAndClassUtil.NECHAR) {
                 notEnoughCharacters(); // 官方版本
             } else if (ModAndClassUtil.NECH) {
-                neverEnoughCharacters(); // 私货版本
+                try {
+                    neverEnoughCharacters(); // 私货版本 1
+                } catch (Exception ignored) {
+                    neverEnoughCharactersRework(); // 私货版本 2
+                }
             }
         } catch (Exception ignored) {}
     }
@@ -24,6 +28,14 @@ public class NeCharUtil {
     private void notEnoughCharacters() throws Exception {
         Class<?> c = Class.forName("net.moecraft.nechar.NotEnoughCharacters");
         Field f = c.getField("CONTEXT");
+        this.o = f.get(null);
+        this.m = this.o.getClass()
+            .getMethod("contains", String.class, String.class);
+    }
+
+    private void neverEnoughCharactersRework() throws Exception {
+        Class<?> c = Class.forName("com.asdflj.nech.utils.Match");
+        Field f = c.getField("context");
         this.o = f.get(null);
         this.m = this.o.getClass()
             .getMethod("contains", String.class, String.class);

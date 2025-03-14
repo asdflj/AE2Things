@@ -124,3 +124,7 @@ nei.options.ae2thing.ultra_terminal_mode.false=No
 nei.options.ae2thing.pinned_bar_crafting_state=Pinned bar preview current item crafting state
 nei.options.ae2thing.pinned_bar_crafting_state.true=Yes
 nei.options.ae2thing.pinned_bar_crafting_state.false=No
+
+nei.options.ae2thing.dual_interface_terminal_fill_search_names=Dual interface terminal autofill recipe name to search field
+nei.options.ae2thing.dual_interface_terminal_fill_search_names.true=Yes
+nei.options.ae2thing.dual_interface_terminal_fill_search_names.false=No

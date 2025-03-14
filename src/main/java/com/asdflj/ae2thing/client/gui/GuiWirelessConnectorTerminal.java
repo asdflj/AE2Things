@@ -124,7 +124,7 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui {
         this.getClickables()
             .sort(((o1, o2) -> o2.getIndex() - o1.getIndex()));
 
-        this.searchField = new THGuiTextField(this.fontRendererObj, this.guiLeft + 69, this.guiTop + 3, 100, 12);
+        this.searchField = new THGuiTextField(this.fontRendererObj, this.guiLeft + 69, this.guiTop + 4, 102, 12);
         this.searchField.setEnableBackgroundDrawing(false);
         this.searchField.setMaxStringLength(25);
         this.searchField.setTextColor(0xFFFFFF);
