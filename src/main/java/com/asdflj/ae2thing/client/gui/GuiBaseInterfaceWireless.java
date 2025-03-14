@@ -1033,7 +1033,6 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
             String[] list = GuiBaseInterfaceWireless.this.searchFieldNames.getText()
                 .split(" ");
             out: for (InterfaceWirelessSection section : sections.values()) {
-
                 for (String query : list) {
                     if (!NeCharUtil.INSTANCE.contains(query.toLowerCase(), section.name.toLowerCase())) {
                         continue out;
