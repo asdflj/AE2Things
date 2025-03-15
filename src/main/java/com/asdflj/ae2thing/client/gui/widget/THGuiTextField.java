@@ -57,15 +57,15 @@ public class THGuiTextField extends GuiTextField {
         this.rawSuggestion = "";
         this.fontPad = fontRenderer.getCharWidth('_');
         this.setBackgroundDrawing();
+        this.setEnableBackgroundDrawing(false);
+        this.setVisible(true);
+        this.setMaxStringLength(25);
     }
 
     public THGuiTextField(final int width, final int height, String tooltip) {
         this(Minecraft.getMinecraft().fontRenderer, 0, 0, width, height);
-        this.setEnableBackgroundDrawing(false);
         this.setTextColor(GuiColors.SearchboxText.getColor());
         this.setCursorPositionZero();
-        this.setMaxStringLength(25);
-        this.setVisible(true);
         this.setMessage(tooltip);
     }
 
