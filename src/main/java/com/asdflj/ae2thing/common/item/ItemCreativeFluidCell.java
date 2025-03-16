@@ -9,6 +9,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.fluids.FluidStack;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.common.storage.FluidCellInventoryHandler;
@@ -30,6 +31,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.core.features.AEFeature;
 import appeng.items.contents.CellUpgrades;
 import appeng.tile.inventory.AppEngInternalInventory;
+import codechicken.nei.recipe.StackInfo;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ItemCreativeFluidCell extends BaseCellItem implements IStorageFluidCell {
@@ -60,9 +62,16 @@ public class ItemCreativeFluidCell extends BaseCellItem implements IStorageFluid
     public ItemCreativeFluidCell(String name, ItemStack is) {
         this.is = is;
         this.name = name;
+        FluidStack fs = StackInfo.getFluid(is);
         setUnlocalizedName(this.name);
         setTextureName(
-            AE2Thing.resource(com.asdflj.ae2thing.util.NameConst.ITEM_CREATIVE_FLUID_CELL)
+            AE2Thing
+                .resource(
+                    String.format(
+                        "%s_%s",
+                        com.asdflj.ae2thing.util.NameConst.ITEM_CREATIVE_FLUID_CELL,
+                        fs.getFluid()
+                            .getName()))
                 .toString());
         this.setMaxStackSize(1);
         this.setFeature(EnumSet.of(AEFeature.StorageCells));
