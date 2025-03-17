@@ -250,6 +250,12 @@ public class CellInventory implements ITCellInventory {
         return injectItem;
     }
 
+    private void tryToLoadCellItems() {
+        if (this.cellItems == null) {
+            this.loadCellItems();
+        }
+    }
+
     @Override
     public IAEItemStack injectItems(IAEItemStack input, Actionable mode, BaseActionSource src) {
         if (input == null) {
@@ -263,6 +269,7 @@ public class CellInventory implements ITCellInventory {
         }
 
         if (mode == Actionable.MODULATE) {
+            this.tryToLoadCellItems();
             ItemStack is;
             if (input.getItem() instanceof ItemFluidDrop) {
                 is = ItemFluidDrop.newStack(
