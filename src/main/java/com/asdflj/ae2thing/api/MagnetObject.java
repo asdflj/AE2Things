@@ -133,7 +133,7 @@ public class MagnetObject {
                 continue;
             }
             if (item.delayBeforeCanPickup > 0) {
-                item.delayBeforeCanPickup = 0;
+                item.delayBeforeCanPickup = this.isBackpack() ? 7 : 0;
             }
             item.motionX = 0;
             item.motionY = 0;
