@@ -82,7 +82,7 @@ public class EncodedPattern extends mcp.mobius.waila.handlers.nei.TooltipHandler
             final String canBeSubstitute = beSubstitute ? GuiText.Yes.getLocal() : GuiText.No.getLocal();
             final String label = (isCrafting ? GuiText.Crafts.getLocal() : GuiText.Creates.getLocal());
             final String with = GuiText.With.getLocal();
-            final String result = (EnumChatFormatting.DARK_AQUA + label) + ":" + EnumChatFormatting.RESET;
+            final String result = (EnumChatFormatting.DARK_AQUA + label) + ": " + EnumChatFormatting.RESET;
             final String ingredients = (EnumChatFormatting.DARK_GREEN + with) + ": " + EnumChatFormatting.RESET;
             final String holdShift = I18n.format(NameConst.TT_SHIFT_FOR_MORE) + EnumChatFormatting.RESET;
 
