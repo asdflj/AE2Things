@@ -26,6 +26,7 @@ import com.asdflj.ae2thing.util.GTUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.asdflj.ae2thing.util.PHUtil;
 
+import appeng.api.AEApi;
 import appeng.client.gui.AEBaseGui;
 import appeng.container.slot.SlotFake;
 import appeng.util.Platform;
@@ -123,7 +124,16 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
         List<com.glodblock.github.nei.object.OrderStack<?>> in) {
         String suggestion;
         if (craft) {
-            suggestion = "";
+            com.google.common.base.Optional<ItemStack> molecular = AEApi.instance()
+                .definitions()
+                .blocks()
+                .molecularAssembler()
+                .maybeStack(1);
+            if (molecular.isPresent()) {
+                suggestion = Platform.getItemDisplayName(molecular.get());
+            } else {
+                suggestion = "";
+            }
         } else if (ModAndClassUtil.GT5NH || ModAndClassUtil.GT5) {
             suggestion = GTUtil.getRecipeName(recipe, in);
         } else {

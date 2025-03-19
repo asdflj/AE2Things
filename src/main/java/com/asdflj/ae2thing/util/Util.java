@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Future;
 
 import javax.annotation.Nonnull;
@@ -52,6 +53,8 @@ import appeng.crafting.v2.CraftingJobV2;
 import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.me.cache.CraftingGridCache;
 import appeng.util.Platform;
+import codechicken.nei.recipe.StackInfo;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -59,6 +62,27 @@ import cpw.mods.fml.relauncher.SideOnly;
 import thaumicenergistics.common.integration.tc.AspectHooks;
 
 public class Util {
+
+    public static int getAEVersion() {
+        Optional<ModContainer> mod = Loader.instance()
+            .getActiveModList()
+            .stream()
+            .filter(
+                x -> x.getModId()
+                    .equals("appliedenergistics2"))
+            .findFirst();
+        if (mod.isPresent()) {
+            try {
+                return Integer.parseInt(
+                    mod.get()
+                        .getVersion()
+                        .split("-")[2]);
+            } catch (Exception ignored) {
+                return 0;
+            }
+        }
+        return 0;
+    }
 
     public static boolean replan(EntityPlayer player, appeng.container.implementations.ContainerCraftConfirm c){
         ICraftingJob job = Ae2Reflect.getJob(c);
@@ -180,9 +204,8 @@ public class Util {
 
     @Nonnull
     public static String getDisplayName(IAEItemStack item) {
-        if (item.getItem() instanceof ItemFluidDrop) {
-            FluidStack fs = ItemFluidDrop.getFluidStack(item.getItemStack());
-            if (fs == null) return Platform.getItemDisplayName(item);
+        FluidStack fs = StackInfo.getFluid(item.getItemStack());
+        if (fs != null) {
             if (ModAndClassUtil.THE && AspectUtil.isEssentiaGas(fs)) {
                 return AspectUtil.getAspectFromGas(fs)
                     .getName();

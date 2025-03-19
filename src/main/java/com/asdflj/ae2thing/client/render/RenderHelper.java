@@ -4,7 +4,6 @@ import static appeng.client.gui.AEBaseGui.aeRenderItem;
 import static net.minecraft.client.gui.Gui.drawRect;
 
 import java.awt.Color;
-import java.util.Optional;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -21,6 +20,7 @@ import org.lwjgl.opengl.GL12;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Pinned;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
+import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.crossmod.thaumcraft.AspectRender;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
@@ -30,8 +30,6 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.client.me.SlotME;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
 
 public class RenderHelper {
 
@@ -225,29 +223,15 @@ public class RenderHelper {
         GL11.glPopMatrix();
     }
 
-    private static String getModVersion() {
-        Optional<ModContainer> mod = Loader.instance()
-            .getActiveModList()
-            .stream()
-            .filter(
-                x -> x.getModId()
-                    .equals("appliedenergistics2"))
-            .findFirst();
-        if (mod.isPresent()) {
-            return mod.get()
-                .getVersion();
-        }
-        return "";
+    public static void disableStandardItemLighting() {
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_LIGHT0);
+        GL11.glDisable(GL11.GL_LIGHT1);
+        GL11.glDisable(GL11.GL_COLOR_MATERIAL);
     }
 
     private static void setCanDrawPlus() {
-        String version = getModVersion();
-        try {
-            int v = Integer.valueOf(version.split("-")[2]);
-            canDrawPlus = v < 536;
-        } catch (Exception ignored) {
-            canDrawPlus = false;
-        }
+        canDrawPlus = Util.getAEVersion() < 536;
     }
 
     static {

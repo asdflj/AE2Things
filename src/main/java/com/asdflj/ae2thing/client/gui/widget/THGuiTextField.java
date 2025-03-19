@@ -59,7 +59,7 @@ public class THGuiTextField extends GuiTextField {
         this.setBackgroundDrawing();
         this.setEnableBackgroundDrawing(false);
         this.setVisible(true);
-        this.setMaxStringLength(25);
+        this.setMaxStringLength(100);
     }
 
     public THGuiTextField(final int width, final int height, String tooltip) {
