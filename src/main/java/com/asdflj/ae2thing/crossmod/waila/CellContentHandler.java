@@ -30,10 +30,9 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import codechicken.lib.gui.GuiDraw;
 
-public class CellContentHandlerWaila extends mcp.mobius.waila.handlers.nei.TooltipHandlerWaila {
+public class CellContentHandler extends mcp.mobius.waila.handlers.nei.TooltipHandlerWaila {
 
     public static HashSet<Class<? extends Item>> blackList = new HashSet<>();
-    private static int id = 0;
     private static final List<IAEStack<?>> cellContent = new ArrayList<>();
     private static final int limit = 5;
     private static final GuiDraw.ITooltipLineHandler tooltipLineHandler = new GuiDraw.ITooltipLineHandler() {
@@ -116,7 +115,7 @@ public class CellContentHandlerWaila extends mcp.mobius.waila.handlers.nei.Toolt
     private void addTooltip(List<IAEStack<?>> list, List<String> currentToolTip) {
         if (!list.isEmpty()) {
             cellContent.addAll(list);
-            id = getTipLineId(tooltipLineHandler);
+            int id = getTipLineId(tooltipLineHandler);
             currentToolTip.add(currentToolTip.size() - 1, TOOLTIP_HANDLER + id);
         }
     }

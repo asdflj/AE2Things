@@ -8,7 +8,7 @@ import java.io.IOException;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.asdflj.ae2thing.crossmod.waila.CraftingStatePreviewWaila;
+import com.asdflj.ae2thing.crossmod.waila.CraftingStatePreview;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -58,7 +58,7 @@ public class SPacketCraftingStateUpdate implements IMessage {
 
         @Override
         public IMessage onMessage(SPacketCraftingStateUpdate message, MessageContext ctx) {
-            CraftingStatePreviewWaila.readFromNBT(message.craftingStates);
+            CraftingStatePreview.readFromNBT(message.craftingStates);
             return null;
         }
     }

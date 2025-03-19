@@ -3,6 +3,7 @@ package com.asdflj.ae2thing.client.gui;
 import static appeng.client.gui.AEBaseGui.aeRenderItem;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -22,6 +23,8 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.me.SlotME;
 import appeng.container.slot.SlotInaccessible;
+import appeng.container.slot.SlotPlayerHotBar;
+import appeng.container.slot.SlotPlayerInv;
 import appeng.util.item.AEItemStack;
 
 public interface IGuiDrawSlot {
@@ -40,6 +43,8 @@ public interface IGuiDrawSlot {
             display = true;
         } else if (slot instanceof SlotPatternFake) {
             stack = ((SlotPatternFake) slot).getAEStack();
+        } else if (slot instanceof SlotPlayerInv || slot instanceof SlotPlayerHotBar) {
+            stack = AEItemStack.create(drawStack);
         } else {
             return true;
         }
@@ -75,6 +80,10 @@ public interface IGuiDrawSlot {
                 slot.yDisplayPosition);
             GL11.glTranslatef(0.0f, 0.0f, -200.0f);
         }
+    }
+
+    default FontRenderer getFontRender() {
+        return Minecraft.getMinecraft().fontRenderer;
     }
 
     default void drawWidget(int posX, int posY, Fluid fluid) {

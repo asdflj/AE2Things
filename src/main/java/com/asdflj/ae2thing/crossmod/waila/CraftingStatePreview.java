@@ -28,9 +28,8 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.util.item.AEItemStack;
 import codechicken.lib.gui.GuiDraw;
 
-public class CraftingStatePreviewWaila extends mcp.mobius.waila.handlers.nei.TooltipHandlerWaila {
+public class CraftingStatePreview extends mcp.mobius.waila.handlers.nei.TooltipHandlerWaila {
 
-    private static int id = 0;
     private static final List<CPUCraftingPreview> cpus = new ArrayList<>();
     private static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
     private static int width;
@@ -77,7 +76,7 @@ public class CraftingStatePreviewWaila extends mcp.mobius.waila.handlers.nei.Too
                         new CPacketInventoryActionExtend(InventoryActionExtend.GET_CRAFTING_STATE, 0, 0, item));
                 }
                 if (!cpus.isEmpty()) {
-                    id = getTipLineId(tooltipLineHandler);
+                    int id = getTipLineId(tooltipLineHandler);
                     currentToolTip.add(currentToolTip.size() - 1, TOOLTIP_HANDLER + id);
                 }
             }
