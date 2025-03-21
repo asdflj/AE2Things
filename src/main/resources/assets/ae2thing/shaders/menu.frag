@@ -49,5 +49,5 @@ void main() {
 
     color = mix(color, vec3(0.2), borderAlpha);
 
-    gl_FragColor = vec4(color, mask);
+    gl_FragColor = vec4(color, mask * 0.5);
 }

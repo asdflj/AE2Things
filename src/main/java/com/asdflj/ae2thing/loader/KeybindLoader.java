@@ -46,9 +46,10 @@ public class KeybindLoader implements Runnable {
     }
 
     @SubscribeEvent
-    public void onKeyInput(InputEvent.KeyInputEvent event) {
+    public void onKeyInput(InputEvent event) {
         if (Minecraft.getMinecraft().currentScreen != null) return;
         EntityClientPlayerMP p = Minecraft.getMinecraft().thePlayer;
+        if (!(event instanceof InputEvent.KeyInputEvent) && !(event instanceof InputEvent.MouseInputEvent)) return;
         if (p.openContainer == null) {
             return;
         }
@@ -64,5 +65,6 @@ public class KeybindLoader implements Runnable {
             AE2ThingAPI.instance()
                 .openDualinterfaceTerminal();
         }
+
     }
 }
