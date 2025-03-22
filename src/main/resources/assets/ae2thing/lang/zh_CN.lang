@@ -121,6 +121,6 @@ nei.options.ae2thing.dual_interface_terminal_fill_search_names=二合一接口�
 nei.options.ae2thing.dual_interface_terminal_fill_search_names.true=是
 nei.options.ae2thing.dual_interface_terminal_fill_search_names.false=否
 
-nei.options.ae2thing.dual_interface_terminal_fill_zero_stack_damage=二合一接口终端自动填充合成菜单名字时,忽略电路编号
-nei.options.ae2thing.dual_interface_terminal_fill_zero_stack_damage.true=Yes
-nei.options.ae2thing.dual_interface_terminal_fill_zero_stack_damage.false=No
+nei.options.ae2thing.dual_interface_terminal_fill_circuit=二合一接口终端自动填充合成菜单名字时,忽略电路编号
+nei.options.ae2thing.dual_interface_terminal_fill_circuit.true=是
+nei.options.ae2thing.dual_interface_terminal_fill_circuit.false=否

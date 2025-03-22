@@ -131,6 +131,6 @@ nei.options.ae2thing.dual_interface_terminal_fill_search_names=Dual interface te
 nei.options.ae2thing.dual_interface_terminal_fill_search_names.true=Yes
 nei.options.ae2thing.dual_interface_terminal_fill_search_names.false=No
 
-nei.options.ae2thing.dual_interface_terminal_fill_zero_stack_damage=Dual interface terminal autofill recipe name to search field,ignore circuit
-nei.options.ae2thing.dual_interface_terminal_fill_zero_stack_damage.true=Yes
-nei.options.ae2thing.dual_interface_terminal_fill_zero_stack_damage.false=No
+nei.options.ae2thing.dual_interface_terminal_fill_circuit=Dual interface terminal autofill recipe name to search field,ignore circuit
+nei.options.ae2thing.dual_interface_terminal_fill_circuit.true=Yes
+nei.options.ae2thing.dual_interface_terminal_fill_circuit.false=No

@@ -32,10 +32,10 @@ public abstract class MixinSlotRestrictedInput extends AppEngSlot {
         at = @At(
             value = "INVOKE",
             target = "Lappeng/api/definitions/IDefinitions;items()Lappeng/api/definitions/IItems;",
-            shift = At.Shift.AFTER),
-        remap = false,
+            shift = At.Shift.AFTER,
+            remap = false),
         cancellable = true)
-    public void isItemValid(ItemStack i, CallbackInfoReturnable<Boolean> cir) {
+    private void isItemValid(ItemStack i, CallbackInfoReturnable<Boolean> cir) {
         if (this.which == VIEW_CELL && i != null && i.getItem() instanceof ItemViewCell) {
             cir.setReturnValue(true);
         }
