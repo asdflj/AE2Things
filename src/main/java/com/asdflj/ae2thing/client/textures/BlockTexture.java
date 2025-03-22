@@ -10,18 +10,18 @@ import com.asdflj.ae2thing.util.NameConst;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public enum Texture {
+public enum BlockTexture {
 
-    Block_ExIOPort_Side("ex_io_portSide"),
-    Block_ExIOPort_Side_Off("ex_io_port_offSide"),
-    Block_ExIOPort_Bottom("ex_io_portBottom"),
-    Block_ExIOPort_Top("ex_io_port"),
-    Block_ExIOPort_Top_Off("ex_io_port_off");
+    ExIOPort_Side("ex_io_portSide"),
+    ExIOPort_Side_Off("ex_io_port_offSide"),
+    ExIOPort_Bottom("ex_io_portBottom"),
+    ExIOPort_Top("ex_io_port"),
+    ExIOPort_Top_Off("ex_io_port_off");
 
     private final String name;
     public net.minecraft.util.IIcon IIcon;
 
-    Texture(final String name) {
+    BlockTexture(final String name) {
         this.name = name;
     }
 

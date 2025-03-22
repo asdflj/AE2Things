@@ -11,6 +11,7 @@ item.part_mana_import.name=ME Mana Import Bus
 item.wireless_dual_interface_terminal.name=ME Wireless Dual Interface Terminal
 item.wireless_connector_terminal.name=ME Wireless Connector Terminal
 item.crafting_debug_card.name=Crafting Debug Card
+item.toggleable_view_cell.name=Toggleable View Cell
 tile.fishbig.name=FishBig
 tile.MDDyue.name=MDDyue
 tile.essentia_discretizer.name=Essentia Discretizer
@@ -21,6 +22,7 @@ fluid.botania.mana=Mana
 
 ae2thing.tooltip.shift_for_more=§r> Hold §3Shift§r for more information
 ae2thing.tooltip.ctrl_for_more=§r> Hold §3Ctrl§r for more information
+ae2thing.tooltip.toggleable_view_cell.desc=Right click in view cell slot to toggle view cell
 ae2thing.tooltip.linked=Linked
 ae2thing.tooltip.backpack_terminal.desc=uh a new terminal?
 ae2thing.tooltip.wireless_dual_interface_terminal.desc=Dual interface terminal, support encode pattern
@@ -128,3 +130,7 @@ nei.options.ae2thing.pinned_bar_crafting_state.false=No
 nei.options.ae2thing.dual_interface_terminal_fill_search_names=Dual interface terminal autofill recipe name to search field
 nei.options.ae2thing.dual_interface_terminal_fill_search_names.true=Yes
 nei.options.ae2thing.dual_interface_terminal_fill_search_names.false=No
+
+nei.options.ae2thing.dual_interface_terminal_fill_circuit=Dual interface terminal autofill recipe name to search field,ignore circuit
+nei.options.ae2thing.dual_interface_terminal_fill_circuit.true=Yes
+nei.options.ae2thing.dual_interface_terminal_fill_circuit.false=No

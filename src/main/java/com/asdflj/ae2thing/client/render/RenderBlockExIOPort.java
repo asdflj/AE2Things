@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
-import com.asdflj.ae2thing.client.textures.Texture;
+import com.asdflj.ae2thing.client.textures.BlockTexture;
 import com.asdflj.ae2thing.common.block.BlockExIOPort;
 import com.asdflj.ae2thing.common.tile.TileExIOPort;
 
@@ -23,15 +23,15 @@ public class RenderBlockExIOPort extends BaseBlockRender<BlockExIOPort, TileExIO
         final TileExIOPort ti = block.getTileEntity(world, x, y, z);
         final BlockRenderInfo info = block.getRendererInstance();
         if (ti != null) {
-            final IIcon bottom = Texture.Block_ExIOPort_Bottom.getIcon();
+            final IIcon bottom = BlockTexture.ExIOPort_Bottom.getIcon();
             final IIcon side;
             final IIcon top;
             if (ti.isActive()) {
-                side = Texture.Block_ExIOPort_Side.getIcon();
-                top = Texture.Block_ExIOPort_Top.getIcon();
+                side = BlockTexture.ExIOPort_Side.getIcon();
+                top = BlockTexture.ExIOPort_Top.getIcon();
             } else {
-                side = Texture.Block_ExIOPort_Side_Off.getIcon();
-                top = Texture.Block_ExIOPort_Top_Off.getIcon();
+                side = BlockTexture.ExIOPort_Side_Off.getIcon();
+                top = BlockTexture.ExIOPort_Top_Off.getIcon();
             }
             info.setTemporaryRenderIcons(top, bottom, side, side, side, side);
         }

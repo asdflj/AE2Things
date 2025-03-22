@@ -29,6 +29,7 @@ import com.asdflj.ae2thing.util.BlockPos;
 import com.asdflj.ae2thing.util.CPUCraftingPreview;
 
 import appeng.api.AEApi;
+import appeng.api.implementations.tiles.IViewCellStorage;
 import appeng.api.networking.crafting.ICraftingCPU;
 import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.security.IActionHost;
@@ -38,6 +39,7 @@ import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
 import appeng.core.localization.GuiText;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
+import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -177,6 +179,17 @@ public class CPacketInventoryActionExtend implements IMessage {
                             }
                         }
                         AE2Thing.proxy.netHandler.sendTo(new SPacketCraftingStateUpdate(cpuData),ctx.getServerHandler().playerEntity);
+                    }
+                } else if (message.action == InventoryActionExtend.TOGGLE_VIEW_CELL && message.stack != null  && target instanceof IViewCellStorage viewCellStorage) {
+                    ItemStack viewCell = message.stack.getItemStack();
+                    for (int i=0;i<viewCellStorage.getViewCellStorage().getSizeInventory();i++){
+                        if(Platform.isSameItemPrecise(viewCellStorage.getViewCellStorage().getStackInSlot(i),viewCell)){
+                            NBTTagCompound data = Platform.openNbtData(viewCell);
+                            data.setBoolean(Constants.VIEW_CELL, !data.getBoolean(Constants.VIEW_CELL));
+                            viewCell.setTagCompound(data);
+                            viewCellStorage.getViewCellStorage().setInventorySlotContents(i,viewCell);
+                            break;
+                        }
                     }
                 }
             }

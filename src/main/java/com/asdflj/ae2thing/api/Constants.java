@@ -26,6 +26,7 @@ public interface Constants {
     String NEI_MOUSE_WHEEL = "nei.mouse_wheel";
     String SLOT = "slot";
     String SIZE = "size";
+    String VIEW_CELL = "view";
     int OUTPUT_COLOR = 0x4566ccff;
     int ERROR_COLOR = 0x45DA4527;
     int INACTIVE_COLOR = 0x45FFEA05;
