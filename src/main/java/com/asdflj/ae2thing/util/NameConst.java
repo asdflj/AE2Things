@@ -5,6 +5,7 @@ import com.asdflj.ae2thing.AE2Thing;
 public class NameConst {
 
     public static final String ITEM_BACKPACK_TERMINAL = "backpack_terminal";
+    public static final String ITEM_TOGGLEABLE_VIEW_CELL = "toggleable_view_cell";
     public static final String ITEM_INFINITY_CELL = "infinity_cell";
     public static final String ITEM_CREATIVE_FLUID_CELL = "creative_fluid_cell";
     public static final String ITEM_CREATIVE_FLUID_CELL_WATER = ITEM_CREATIVE_FLUID_CELL + ".water";
@@ -33,6 +34,7 @@ public class NameConst {
     public static final String TT_LINKED = TT_KEY + "linked";
     public static final String TT_BACKPACK_TERMINAL = TT_KEY + "backpack_terminal.";
     public static final String TT_BACKPACK_TERMINAL_DESC = TT_BACKPACK_TERMINAL + "desc";
+    public static final String TT_TOGGLEABLE_VIEW_CELL = TT_KEY + "toggleable_view_cell.desc";
     public static final String TT_CELL_LINK = TT_KEY + "cell_link.";
     public static final String TT_CELL_LINK_DISABLE = TT_CELL_LINK + "disable";
     public static final String TT_CELL_LINK_DESC = TT_CELL_LINK + "desc";

@@ -1,6 +1,7 @@
 package com.asdflj.ae2thing.util;
 
 import static com.asdflj.ae2thing.api.Constants.MessageType.UPDATE_PLAYER_ITEM;
+import static com.asdflj.ae2thing.nei.NEI_TH_Config.getConfigValue;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
 import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.nei.ButtonConstants;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
 import com.glodblock.github.nei.object.OrderStack;
 
@@ -50,7 +52,10 @@ public class GTUtil {
     }
 
     public static String getRecipeName(IRecipeHandler recipe, List<OrderStack<?>> in) {
-        if (recipe instanceof GTNEIDefaultHandler r) {
+        if (recipe instanceof GTNEIDefaultHandler) {
+            if (ModAndClassUtil.PH && getConfigValue(ButtonConstants.DUAL_INTERFACE_TERMINAL_FILL_CIRCUIT)) {
+                return recipe.getRecipeName();
+            }
             for (OrderStack<?> stack : in) {
                 if (stack.getStack() instanceof ItemStack is && is.stackSize == 0) {
                     return String.format("%s %s", recipe.getRecipeName(), is.getItemDamage());
