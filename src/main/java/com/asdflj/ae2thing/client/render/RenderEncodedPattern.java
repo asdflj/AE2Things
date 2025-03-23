@@ -65,10 +65,10 @@ public class RenderEncodedPattern implements ISlotRender {
                         16777215);
                 GL11.glEnable(GL11.GL_DEPTH_TEST);
             }
-            GL11.glTranslatef(0, 0, 200f);
+            GL11.glTranslatef(0, 0, 100f);
             GL11.glScalef(0.4f, 0.4f, 0.4f);
             drawItem((int) ((slot.xDisplayPosition + 10) * 2.5), (int) (slot.yDisplayPosition * 2.5), PATTERN);
-            GL11.glTranslatef(0, 0, -200f);
+            GL11.glTranslatef(0, 0, -100f);
             RenderHelper.disableStandardItemLighting();
             GL11.glPopMatrix();
             GL11.glPopAttrib();
