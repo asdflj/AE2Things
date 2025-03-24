@@ -58,7 +58,8 @@ public class ItemAndBlockHolder implements Runnable {
         lava_bucket).register();
     public static ItemCreativeCell ITEM_CREATIVE_COBBLESTONE_CELL = new ItemCreativeCell(
         NameConst.ITEM_CREATIVE_CELL_COBBLESTONE,
-        cobblestone).register();
+        cobblestone,
+        String.format("%s_%s", NameConst.ITEM_CREATIVE_CELL, "cobblestone")).register();
     public static BlockExIOPort EX_IO_PORT = new BlockExIOPort().register();
 
     public static BaseDollBlockContainer BLOCK_FISHBIG = new BaseDollBlockContainer(NameConst.BLOCK_FISHBIG).register();
