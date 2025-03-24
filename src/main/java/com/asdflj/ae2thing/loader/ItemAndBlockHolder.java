@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.loader;
 
+import static com.asdflj.ae2thing.common.item.ItemCreativeCell.cobblestone;
 import static com.asdflj.ae2thing.common.item.ItemCreativeFluidCell.lava_bucket;
 import static com.asdflj.ae2thing.common.item.ItemCreativeFluidCell.water_bucket;
 
@@ -10,6 +11,7 @@ import com.asdflj.ae2thing.common.block.BlockFluidPacketEncoder;
 import com.asdflj.ae2thing.common.block.BlockInfusionInterface;
 import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
 import com.asdflj.ae2thing.common.item.ItemCraftingDebugCard;
+import com.asdflj.ae2thing.common.item.ItemCreativeCell;
 import com.asdflj.ae2thing.common.item.ItemCreativeFluidCell;
 import com.asdflj.ae2thing.common.item.ItemInfinityStorageCell;
 import com.asdflj.ae2thing.common.item.ItemInfinityStorageFluidCell;
@@ -54,6 +56,9 @@ public class ItemAndBlockHolder implements Runnable {
     public static ItemCreativeFluidCell ITEM_CREATIVE_LAVA_CELL = new ItemCreativeFluidCell(
         NameConst.ITEM_CREATIVE_FLUID_CELL_LAVA,
         lava_bucket).register();
+    public static ItemCreativeCell ITEM_CREATIVE_COBBLESTONE_CELL = new ItemCreativeCell(
+        NameConst.ITEM_CREATIVE_CELL_COBBLESTONE,
+        cobblestone).register();
     public static BlockExIOPort EX_IO_PORT = new BlockExIOPort().register();
 
     public static BaseDollBlockContainer BLOCK_FISHBIG = new BaseDollBlockContainer(NameConst.BLOCK_FISHBIG).register();

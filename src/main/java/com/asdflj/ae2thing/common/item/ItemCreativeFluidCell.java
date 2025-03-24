@@ -38,6 +38,8 @@ public class ItemCreativeFluidCell extends BaseCellItem implements IStorageFluid
 
     public static final ItemStack water_bucket = new ItemStack(Items.water_bucket, 1);
     public static final ItemStack lava_bucket = new ItemStack(Items.lava_bucket, 1);
+    private final int perType = 1;
+    private final double idleDrain = 2000D;
 
     @Override
     public IMEInventoryHandler<IAEFluidStack> getInventoryHandler(ItemStack o, ISaveProvider container,
@@ -91,12 +93,12 @@ public class ItemCreativeFluidCell extends BaseCellItem implements IStorageFluid
 
     @Override
     public long getBytes(ItemStack cellItem) {
-        return Long.MAX_VALUE;
+        return Integer.MAX_VALUE;
     }
 
     @Override
     public int getBytesPerType(ItemStack cellItem) {
-        return 1;
+        return perType;
     }
 
     @Override
@@ -120,12 +122,12 @@ public class ItemCreativeFluidCell extends BaseCellItem implements IStorageFluid
 
     @Override
     public double getIdleDrain(ItemStack is) {
-        return 0;
+        return idleDrain;
     }
 
     @Override
     public int getTotalTypes(ItemStack cellItem) {
-        return 0;
+        return 1;
     }
 
     @Override

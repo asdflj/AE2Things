@@ -112,7 +112,7 @@ public class ItemInfinityStorageCell extends BaseCellItem implements IStorageCel
 
     @Override
     public long getBytesLong(final ItemStack cellItem) {
-        return Long.MAX_VALUE;
+        return Integer.MAX_VALUE;
     }
 
     @Override

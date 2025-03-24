@@ -64,7 +64,7 @@ public class CellContentHandler extends mcp.mobius.waila.handlers.nei.TooltipHan
             .registries()
             .cell()
             .isCellHandled(itemstack)
-            && currentToolTip.size() > 2
+            && currentToolTip.size() >= 2
             && (itemstack.getItem() != null && !blackList.contains(
                 itemstack.getItem()
                     .getClass()))) {

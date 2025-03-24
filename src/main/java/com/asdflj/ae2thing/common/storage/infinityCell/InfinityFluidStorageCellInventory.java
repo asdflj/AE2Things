@@ -216,7 +216,7 @@ public class InfinityFluidStorageCellInventory implements ITFluidCellInventory {
 
     @Override
     public long getFreeBytes() {
-        return Long.MAX_VALUE;
+        return Integer.MAX_VALUE;
     }
 
     @Override
@@ -231,12 +231,12 @@ public class InfinityFluidStorageCellInventory implements ITFluidCellInventory {
 
     @Override
     public long getRemainingFluidCount() {
-        return Long.MAX_VALUE;
+        return Integer.MAX_VALUE;
     }
 
     @Override
     public long getRemainingFluidTypes() {
-        return Long.MAX_VALUE;
+        return Integer.MAX_VALUE;
     }
 
     @Override
