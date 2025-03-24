@@ -135,7 +135,7 @@ public class InfinityItemStorageCellInventory implements ITCellInventory {
 
     @Override
     public long getFreeBytes() {
-        return Long.MAX_VALUE;
+        return Integer.MAX_VALUE;
     }
 
     @Override
@@ -160,12 +160,12 @@ public class InfinityItemStorageCellInventory implements ITCellInventory {
 
     @Override
     public long getRemainingItemTypes() {
-        return Long.MAX_VALUE;
+        return Integer.MAX_VALUE;
     }
 
     @Override
     public long getRemainingItemCount() {
-        return Long.MAX_VALUE;
+        return Integer.MAX_VALUE;
     }
 
     @Override

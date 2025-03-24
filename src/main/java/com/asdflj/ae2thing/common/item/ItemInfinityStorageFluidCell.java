@@ -56,7 +56,7 @@ public class ItemInfinityStorageFluidCell extends BaseCellItem implements IStora
 
     @Override
     public long getBytes(ItemStack cellItem) {
-        return Long.MAX_VALUE;
+        return Integer.MAX_VALUE;
     }
 
     @Override

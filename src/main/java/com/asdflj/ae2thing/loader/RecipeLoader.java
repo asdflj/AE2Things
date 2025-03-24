@@ -9,6 +9,7 @@ import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.EX_IO_PORT;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.FLUID_PACKET_ENCODER;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.INFUSION_INTERFACE;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.INFUSION_PATTERN_TERMINAL;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_CREATIVE_COBBLESTONE_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_CREATIVE_WATER_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_FLUID_CELL;
@@ -97,8 +98,22 @@ public class RecipeLoader implements Runnable {
         .maybeStack(1)
         .get();
 
+    public static final ItemStack AE2_ADV_HOUSING = AEApi.instance()
+        .definitions()
+        .materials()
+        .emptyAdvancedStorageCell()
+        .maybeStack(1)
+        .get();
+    public static final ItemStack AE2_64K_PART = AEApi.instance()
+        .definitions()
+        .materials()
+        .cell64kPart()
+        .maybeStack(1)
+        .get();
+
     @Override
     public void run() {
+        GameRegistry.addShapelessRecipe(ITEM_CREATIVE_COBBLESTONE_CELL.stack(), AE2_ADV_HOUSING, AE2_64K_PART);
         GameRegistry.addShapelessRecipe(CRAFTING_DEBUG_CARD.stack(), AE2_MEMORY_CARD, AE2_CRAFTING_CARD);
         GameRegistry.addRecipe(
             new ShapedOreRecipe(

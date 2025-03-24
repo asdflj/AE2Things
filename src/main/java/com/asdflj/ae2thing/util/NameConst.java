@@ -8,6 +8,8 @@ public class NameConst {
     public static final String ITEM_TOGGLEABLE_VIEW_CELL = "toggleable_view_cell";
     public static final String ITEM_INFINITY_CELL = "infinity_cell";
     public static final String ITEM_CREATIVE_FLUID_CELL = "creative_fluid_cell";
+    public static final String ITEM_CREATIVE_CELL = "creative_cell";
+    public static final String ITEM_CREATIVE_CELL_COBBLESTONE = ITEM_CREATIVE_CELL + ".cobblestone";
     public static final String ITEM_CREATIVE_FLUID_CELL_WATER = ITEM_CREATIVE_FLUID_CELL + ".water";
     public static final String ITEM_CREATIVE_FLUID_CELL_LAVA = ITEM_CREATIVE_FLUID_CELL + ".lava";
     public static final String ITEM_INFINITY_FLUID_CELL = "infinity_fluid_cell";

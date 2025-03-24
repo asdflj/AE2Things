@@ -76,7 +76,7 @@ public class CreativeFluidCellInventory implements ITFluidCellInventory {
 
     @Override
     public long getUsedBytes() {
-        return Long.MAX_VALUE;
+        return 0;
     }
 
     @Override
