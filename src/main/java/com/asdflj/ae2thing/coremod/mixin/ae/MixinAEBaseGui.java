@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,6 +27,7 @@ import com.asdflj.ae2thing.network.CPacketInventoryActionExtend;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
+import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.client.me.InternalSlotME;
 import appeng.client.me.SlotME;
 import appeng.container.slot.SlotRestrictedInput;
@@ -45,6 +47,9 @@ public abstract class MixinAEBaseGui extends GuiScreen {
 
     @Shadow(remap = false)
     protected abstract List<Slot> getInventorySlots();
+
+    @Shadow(remap = false)
+    protected abstract GuiScrollbar getScrollBar();
 
     @Inject(
         method = "drawGuiContainerBackgroundLayer",
@@ -116,6 +121,15 @@ public abstract class MixinAEBaseGui extends GuiScreen {
                     0,
                     AEItemStack.create(slot.getStack())));
             ci.cancel();
+        }
+    }
+
+    @Inject(method = "handleMouseInput", at = @At("HEAD"))
+    public void handleInput(CallbackInfo ci) {
+        if (this.getScrollBar() != null) {
+            if (!Mouse.isButtonDown(0)) {
+                ((AccessorGuiScrollbar) this.getScrollBar()).setIsLatestClickOnScrollbar(false);
+            }
         }
     }
 }
