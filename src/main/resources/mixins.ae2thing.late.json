@@ -24,7 +24,8 @@
     "tc.nei.MixinTemplateRecipeHandler",
     "wct.MixinRandomUtils",
     "ae.MixinSlotRestrictedInput",
-    "ae.MixinItemViewCell"
+    "ae.MixinItemViewCell",
+    "ae.AccessorGuiScrollbar"
   ],
   "server": [
     "ae.MixinContainerCraftConfirm",
