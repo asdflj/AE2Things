@@ -13,6 +13,7 @@ import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_CREATIVE_COBBLE
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_CREATIVE_WATER_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_INFINITY_FLUID_CELL;
+import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_PATTERN_MODIFIER;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_WIRELESS_CONNECTOR_TERMINAL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.MANA_EXPORT_BUS;
@@ -110,9 +111,33 @@ public class RecipeLoader implements Runnable {
         .cell64kPart()
         .maybeStack(1)
         .get();
+    public static final ItemStack AE2_BLANK_PATTERN = AEApi.instance()
+        .definitions()
+        .materials()
+        .blankPattern()
+        .maybeStack(1)
+        .get();
+    public static final ItemStack AE2_PROCESS_LOG = AEApi.instance()
+        .definitions()
+        .materials()
+        .logicProcessor()
+        .maybeStack(1)
+        .get();
 
     @Override
     public void run() {
+        GameRegistry.addRecipe(
+            new ShapedOreRecipe(
+                ITEM_PATTERN_MODIFIER.stack(),
+                "   ",
+                "GPG",
+                " L ",
+                'G',
+                "dyeGreen",
+                'P',
+                AE2_BLANK_PATTERN,
+                'L',
+                AE2_PROCESS_LOG));
         GameRegistry.addShapelessRecipe(ITEM_CREATIVE_COBBLESTONE_CELL.stack(), AE2_ADV_HOUSING, AE2_64K_PART);
         GameRegistry.addShapelessRecipe(CRAFTING_DEBUG_CARD.stack(), AE2_MEMORY_CARD, AE2_CRAFTING_CARD);
         GameRegistry.addRecipe(
