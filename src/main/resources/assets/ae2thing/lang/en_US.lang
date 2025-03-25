@@ -13,6 +13,7 @@ item.wireless_dual_interface_terminal.name=ME Wireless Dual Interface Terminal
 item.wireless_connector_terminal.name=ME Wireless Connector Terminal
 item.crafting_debug_card.name=Crafting Debug Card
 item.toggleable_view_cell.name=Toggleable View Cell
+item.pattern_modifier.name=Pattern Modifier
 tile.fishbig.name=FishBig
 tile.MDDyue.name=MDDyue
 tile.essentia_discretizer.name=Essentia Discretizer
@@ -58,6 +59,9 @@ ae2thing.magnet.backpack=Pickup to backpack
 ae2thing.magnet.current_mode=Magnet mode:
 
 ae2thing.gui.cell_link=Cell Link
+ae2thing.gui.pattern_modifier=Pattern Modifier
+ae2thing.gui.pattern_modifier.replace=Replace
+ae2thing.gui.pattern_modifier.clear=Clear
 ae2thing.gui.terminal.store_action=%s: Store %s
 ae2thing.gui.terminal.left_click=Left-Click
 ae2thing.gui.terminal.right_click=Right-Click

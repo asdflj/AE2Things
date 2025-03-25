@@ -29,6 +29,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.ContainerCraftAmount;
+import appeng.container.interfaces.IInventorySlotAware;
 import appeng.helpers.InventoryAction;
 import appeng.util.item.AEItemStack;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -166,7 +167,7 @@ public class CPacketInventoryAction implements IMessage {
                             InventoryHandler.openGui(
                                 sender,
                                 sender.getEntityWorld(),
-                                new BlockPos(((WirelessTerminal)target).getInventorySlot(),0,0),
+                                new BlockPos(((IInventorySlotAware)target).getInventorySlot(),0,0),
                                 Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
                                 GuiType.PATTERN_VALUE_SET_ITEM);
                         }

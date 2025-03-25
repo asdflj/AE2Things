@@ -23,6 +23,7 @@ import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiFluidPacketEncoder;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiManaIO;
+import com.asdflj.ae2thing.client.gui.GuiPatternModifier;
 import com.asdflj.ae2thing.client.gui.GuiPatternValueAmount;
 import com.asdflj.ae2thing.client.gui.GuiPatternValueName;
 import com.asdflj.ae2thing.client.gui.GuiRenamer;
@@ -35,6 +36,7 @@ import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerFluidPacketEncoder;
 import com.asdflj.ae2thing.client.gui.container.ContainerInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerManaIO;
+import com.asdflj.ae2thing.client.gui.container.ContainerPatternModifier;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueName;
 import com.asdflj.ae2thing.client.gui.container.ContainerRenamer;
@@ -66,6 +68,18 @@ public enum GuiType {
         @Override
         protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
             return new GuiCraftingTerminal(player.inventory, inv);
+        }
+    }),
+    PATTERN_MODIFIER(new ItemGuiFactory<>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerPatternModifier(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiPatternModifier(player.inventory, inv);
         }
     }),
     TERMINAL_MENU(new NullGuiFactory() {

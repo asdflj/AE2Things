@@ -13,6 +13,7 @@ item.wireless_dual_interface_terminal.name=ME无线二合一接口终端
 item.wireless_connector_terminal.name=ME无线连接终端
 item.crafting_debug_card.name=合成DEBUG卡
 item.toggleable_view_cell.name=可切换显示元件
+item.pattern_modifier.name=样板修改器
 tile.fishbig.name=鱼大
 tile.MDDyue.name=猫蛋蛋
 tile.essentia_discretizer.name=源质离散器
@@ -58,6 +59,9 @@ ae2thing.magnet.backpack=拾取到背包
 ae2thing.magnet.current_mode=磁铁模式:
 
 ae2thing.gui.cell_link=元件链接
+ae2thing.gui.pattern_modifier=样板修改器
+ae2thing.gui.pattern_modifier.replace=替换
+ae2thing.gui.pattern_modifier.clear=清除
 ae2thing.gui.terminal.store_action=%s：存入 %s
 ae2thing.gui.terminal.left_click=左键点击
 ae2thing.gui.terminal.right_click=右键点击

@@ -20,6 +20,7 @@ import com.asdflj.ae2thing.common.item.ItemManaImportBus;
 import com.asdflj.ae2thing.common.item.ItemPartInfusionPatternTerminal;
 import com.asdflj.ae2thing.common.item.ItemPartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.item.ItemPartWirelessConnectorTerminal;
+import com.asdflj.ae2thing.common.item.ItemPatternModifier;
 import com.asdflj.ae2thing.common.item.ItemPhial;
 import com.asdflj.ae2thing.common.item.ItemToggleableViewCell;
 import com.asdflj.ae2thing.common.item.ItemWirelessConnectorTerminal;
@@ -50,6 +51,7 @@ public class ItemAndBlockHolder implements Runnable {
         .register();
     public static ItemWirelessDualInterfaceTerminal ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL = new ItemWirelessDualInterfaceTerminal()
         .register();
+    public static ItemPatternModifier ITEM_PATTERN_MODIFIER = new ItemPatternModifier().register();
     public static ItemCreativeFluidCell ITEM_CREATIVE_WATER_CELL = new ItemCreativeFluidCell(
         NameConst.ITEM_CREATIVE_FLUID_CELL_WATER,
         water_bucket).register();

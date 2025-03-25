@@ -12,13 +12,13 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
-import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 import com.asdflj.ae2thing.util.BlockPos;
 import com.asdflj.ae2thing.util.Util;
 
 import appeng.client.gui.AEBaseGui;
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
+import appeng.container.interfaces.IInventorySlotAware;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -71,6 +71,14 @@ public class CPacketSwitchGuis implements IMessage {
             } else if (message.guiType == GuiType.TERMINAL_MENU) {
                 InventoryHandler.openGui(player, w, new BlockPos(0, 0, 0), ForgeDirection.UNKNOWN, message.guiType);
                 return null;
+            } else if (message.guiType == GuiType.PATTERN_MODIFIER) {
+                InventoryHandler.openGui(
+                    player,
+                    w,
+                    new BlockPos(player.inventory.currentItem, 0, 0),
+                    ForgeDirection.UNKNOWN,
+                    message.guiType);
+                return null;
             }
             if (cont instanceof AEBaseContainer c) {
                 ContainerOpenContext context = ((AEBaseContainer) cont).getOpenContext();
@@ -89,7 +97,7 @@ public class CPacketSwitchGuis implements IMessage {
                     InventoryHandler.openGui(
                         player,
                         player.getEntityWorld(),
-                        new BlockPos(((WirelessTerminal) (c.getTarget())).getInventorySlot(), 0, 0),
+                        new BlockPos(((IInventorySlotAware) (c.getTarget())).getInventorySlot(), 0, 0),
                         Objects.requireNonNull(context.getSide()),
                         message.guiType);
                 }

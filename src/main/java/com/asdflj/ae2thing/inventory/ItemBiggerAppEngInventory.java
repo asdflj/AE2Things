@@ -2,33 +2,70 @@ package com.asdflj.ae2thing.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
-import appeng.tile.inventory.BiggerAppEngInventory;
+import appeng.core.AELog;
+import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
 import appeng.util.Platform;
 
-public class ItemBiggerAppEngInventory extends BiggerAppEngInventory {
+public class ItemBiggerAppEngInventory extends AppEngInternalInventory {
 
     private final ItemStack is;
     private final String name;
     private final EntityPlayer player;
     private final int slot;
     private final IAEAppEngInventory terminal;
+    private static final int MAX_SIZE = 64;
 
     public ItemBiggerAppEngInventory(ItemStack is, String name, int size, EntityPlayer player, int slot) {
-        this(is, name, size, player, slot, null);
+        this(is, name, size, player, slot, null, MAX_SIZE);
     }
 
     public ItemBiggerAppEngInventory(ItemStack is, String name, int size, EntityPlayer player, int slot,
-        IAEAppEngInventory terminal) {
-        super(null, size);
+        IAEAppEngInventory terminal, int maxsize) {
+        super(null, size, maxsize);
         this.name = name;
         this.is = is;
         this.player = player;
         this.slot = slot;
         this.terminal = terminal;
         this.readFromNBT(Platform.openNbtData(is), name);
+        this.setMaxStackSize(maxsize);
+    }
+
+    public ItemBiggerAppEngInventory(ItemStack is, String name, int size, EntityPlayer player, int slot,
+        IAEAppEngInventory terminal) {
+        this(is, name, size, player, slot, terminal, MAX_SIZE);
+    }
+
+    protected void writeToNBT(final NBTTagCompound target) {
+        for (int x = 0; x < this.getSizeInventory(); x++) {
+            try {
+                final NBTTagCompound c = new NBTTagCompound();
+
+                if (this.inv[x] != null) {
+                    Platform.writeItemStackToNBT(this.inv[x], c);
+                }
+
+                target.setTag("#" + x, c);
+            } catch (final Exception ignored) {}
+        }
+    }
+
+    public void readFromNBT(final NBTTagCompound target) {
+        for (int x = 0; x < this.getSizeInventory(); x++) {
+            try {
+                final NBTTagCompound c = target.getCompoundTag("#" + x);
+
+                if (c != null) {
+                    this.inv[x] = Platform.loadItemStackFromNBT(c);
+                }
+            } catch (final Exception e) {
+                AELog.debug(e);
+            }
+        }
     }
 
     @Override

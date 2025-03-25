@@ -9,16 +9,16 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueAmount;
-import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
+import com.asdflj.ae2thing.client.gui.container.IPatternValueContainer;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
-import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 import com.asdflj.ae2thing.util.BlockPos;
 import com.asdflj.ae2thing.util.Util;
 import com.glodblock.github.common.item.ItemFluidPacket;
 
 import appeng.api.networking.IGridHost;
 import appeng.container.ContainerOpenContext;
+import appeng.container.interfaces.IInventorySlotAware;
 import appeng.container.slot.SlotFake;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -77,11 +77,11 @@ public class CPacketPatternValueSet implements IMessage {
                             InventoryHandler.openGui(
                                 player,
                                 player.getEntityWorld(),
-                                new BlockPos(((WirelessTerminal) target).getInventorySlot(), 0, 0),
+                                new BlockPos(((IInventorySlotAware) target).getInventorySlot(), 0, 0),
                                 Objects.requireNonNull(context.getSide()),
                                 message.originGui);
                         }
-                        if (player.openContainer instanceof IWidgetPatternContainer) {
+                        if (player.openContainer instanceof IPatternValueContainer) {
                             Slot slot = player.openContainer.getSlot(message.valueIndex);
                             if (slot instanceof SlotFake) {
                                 ItemStack stack = slot.getStack()
