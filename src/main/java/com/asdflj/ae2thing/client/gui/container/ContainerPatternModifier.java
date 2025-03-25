@@ -170,7 +170,16 @@ public class ContainerPatternModifier extends AEBaseContainer implements IPatter
         }
         fluidDetails.setInputs(in);
         fluidDetails.setOutputs(out);
-        patterns.setInventorySlotContents(slot, fluidDetails.writeToStack());
+        ItemStack pattern = fluidDetails.writeToStack();
+        patterns.setInventorySlotContents(slot, stampAuthor(pattern));
+    }
+
+    protected ItemStack stampAuthor(ItemStack patternStack) {
+        if (patternStack.stackTagCompound == null) {
+            patternStack.stackTagCompound = new NBTTagCompound();
+        }
+        patternStack.stackTagCompound.setString("author", this.getPlayerInv().player.getCommandSenderName());
+        return patternStack;
     }
 
     private void encode(ICraftingPatternDetails cpi, IAEItemStack[] in, IAEItemStack[] out, int slot) {
