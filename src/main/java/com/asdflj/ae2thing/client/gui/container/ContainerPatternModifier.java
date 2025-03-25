@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.fluids.FluidStack;
 
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.client.gui.container.slot.SlotEncodedPatternInput;
@@ -32,6 +33,7 @@ import appeng.container.slot.SlotFake;
 import appeng.container.slot.SlotRestrictedInput;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
+import codechicken.nei.recipe.StackInfo;
 
 public class ContainerPatternModifier extends AEBaseContainer implements IPatternValueContainer {
 
@@ -195,6 +197,21 @@ public class ContainerPatternModifier extends AEBaseContainer implements IPatter
         return nbtTagList;
     }
 
+    private boolean isSameItem(ItemStack stack1, ItemStack stack2) {
+        if (Util.isFluidPacket(stack1) || Util.isFluidPacket(stack2)) {
+            FluidStack fs1 = StackInfo.getFluid(stack1);
+            FluidStack fs2 = StackInfo.getFluid(stack2);
+            if (fs1 != null && fs2 != null) {
+                return fs1.getFluid()
+                    .equals(fs2.getFluid());
+            }
+            return false;
+
+        } else {
+            return Platform.isSameItemPrecise(stack1, stack2);
+        }
+    }
+
     private IAEItemStack[] replacePattern(IAEItemStack[] list, ItemStack source, ItemStack target,
         ICraftingPatternDetails details) {
         IAEItemStack[] results = new IAEItemStack[list.length];
@@ -204,12 +221,16 @@ public class ContainerPatternModifier extends AEBaseContainer implements IPatter
                 results[i] = null;
                 continue;
             }
-            if (Platform.isSameItemPrecise(item.getItemStack(), source)) {
+            if (isSameItem(item.getItemStack(), source)) {
                 if ((details.isCraftable() && target != null
                     && details.isValidItemForSlot(i, target, this.getPlayerInv().player.worldObj))
                     || (!details.isCraftable() && target != null)) {
                     if (Util.isFluidPacket(target)) {
-                        results[i] = ItemFluidDrop.newAeStack(ItemFluidPacket.getFluidStack(target));
+                        IAEItemStack fluidDrop = ItemFluidDrop.newAeStack(ItemFluidPacket.getFluidStack(target));
+                        if (fluidDrop != null) {
+                            fluidDrop.setStackSize(item.getStackSize());
+                        }
+                        results[i] = fluidDrop;
                         continue;
                     }
                     IAEItemStack t = AEItemStack.create(target);

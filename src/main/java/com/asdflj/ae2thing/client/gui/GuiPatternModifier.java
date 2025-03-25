@@ -17,8 +17,6 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.InventoryActionExtend;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternModifier;
 import com.asdflj.ae2thing.client.gui.container.slot.SlotEncodedPatternInput;
-import com.asdflj.ae2thing.client.gui.container.slot.SlotReplaceFake;
-import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.network.CPacketInventoryActionExtend;
 import com.asdflj.ae2thing.util.NameConst;
 
@@ -31,9 +29,7 @@ import appeng.core.localization.GuiColors;
 import appeng.core.localization.GuiText;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketNEIDragClick;
-import appeng.helpers.InventoryAction;
 import appeng.util.Platform;
-import appeng.util.item.AEItemStack;
 import codechicken.nei.VisiblityData;
 import codechicken.nei.api.INEIGuiHandler;
 import codechicken.nei.api.TaggedInventoryArea;
@@ -204,18 +200,18 @@ public class GuiPatternModifier extends AEBaseGui implements INEIGuiHandler {
 
     @Override
     protected void handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton) {
-        if (mouseButton == 3 && slot instanceof SlotReplaceFake && slot.getHasStack()) {
-            IAEItemStack stack = AEItemStack.create(slot.getStack());
-            this.container.setTargetStack(stack);
-            for (int i = 0; i < this.inventorySlots.inventorySlots.size(); i++) {
-                if (slot.equals(this.inventorySlots.inventorySlots.get(i))) {
-                    InventoryAction action = InventoryAction.SET_PATTERN_VALUE;
-                    AE2Thing.proxy.netHandler.sendToServer(new CPacketInventoryAction(action, i, 0, stack));
-                    return;
-                }
-            }
-        }
-
+        // maybe we don't need set value ?
+        // if (mouseButton == 3 && slot instanceof SlotReplaceFake && slot.getHasStack()) {
+        // IAEItemStack stack = AEItemStack.create(slot.getStack());
+        // this.container.setTargetStack(stack);
+        // for (int i = 0; i < this.inventorySlots.inventorySlots.size(); i++) {
+        // if (slot.equals(this.inventorySlots.inventorySlots.get(i))) {
+        // InventoryAction action = InventoryAction.SET_PATTERN_VALUE;
+        // AE2Thing.proxy.netHandler.sendToServer(new CPacketInventoryAction(action, i, 0, stack));
+        // return;
+        // }
+        // }
+        // }
         super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
     }
 }
