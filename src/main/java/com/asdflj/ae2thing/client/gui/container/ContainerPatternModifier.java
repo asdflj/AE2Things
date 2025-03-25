@@ -17,6 +17,7 @@ import com.asdflj.ae2thing.client.gui.container.slot.SlotReplaceFake;
 import com.asdflj.ae2thing.inventory.item.PatternModifierInventory;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
+import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.FluidPatternDetails;
 import com.glodblock.github.util.Util;
@@ -207,6 +208,10 @@ public class ContainerPatternModifier extends AEBaseContainer implements IPatter
                 if ((details.isCraftable() && target != null
                     && details.isValidItemForSlot(i, target, this.getPlayerInv().player.worldObj))
                     || (!details.isCraftable() && target != null)) {
+                    if (Util.isFluidPacket(target)) {
+                        results[i] = ItemFluidDrop.newAeStack(ItemFluidPacket.getFluidStack(target));
+                        continue;
+                    }
                     IAEItemStack t = AEItemStack.create(target);
                     t.setStackSize(item.getStackSize());
                     results[i] = t;
@@ -228,5 +233,10 @@ public class ContainerPatternModifier extends AEBaseContainer implements IPatter
             Util.writeItemStackToNBT(i, c);
         }
         return c;
+    }
+
+    @Override
+    public boolean isValidContainer() {
+        return true;
     }
 }

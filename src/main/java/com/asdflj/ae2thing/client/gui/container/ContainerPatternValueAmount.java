@@ -40,4 +40,9 @@ public class ContainerPatternValueAmount extends AEBaseContainer {
     public void setValueIndex(int valueIndex) {
         this.valueIndex = valueIndex;
     }
+
+    @Override
+    public boolean isValidContainer() {
+        return true;
+    }
 }

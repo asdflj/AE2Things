@@ -17,7 +17,9 @@ import com.asdflj.ae2thing.util.GTUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.asdflj.ae2thing.util.NameConst;
 
+import appeng.api.parts.IPart;
 import appeng.api.util.IInterfaceViewable;
+import appeng.tile.networking.TileCableBus;
 import appeng.util.Platform;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -62,6 +64,15 @@ public class ItemPatternModifier extends BaseItem implements IItemInventory {
                 host = h;
             } else if (ModAndClassUtil.GT5 || ModAndClassUtil.GT5NH) {
                 host = GTUtil.getIInterfaceViewable(te);
+            } else if (te instanceof TileCableBus bus) {
+                IPart part = bus.getPart(
+                    ForgeDirection.getOrientation(side)
+                        .getOpposite());
+                if (part instanceof IInterfaceViewable) {
+                    host = (IInterfaceViewable) part;
+                } else {
+                    host = null;
+                }
             } else {
                 host = null;
             }
