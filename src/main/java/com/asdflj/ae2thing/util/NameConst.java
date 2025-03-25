@@ -17,6 +17,7 @@ public class NameConst {
     public static final String ITEM_PART_THAUMATORIUM_INTERFACE = "part_thaumatorium_interface";
     public static final String ITEM_PART_WIRELESS_CONNECTOR_TERMINAL = "part_wireless_connector_terminal";
     public static final String ITEM_WIRELESS_CONNECTOR_TERMINAL = "wireless_connector_terminal";
+    public static final String ITEM_PATTERN_MODIFIER = "pattern_modifier";
     public static final String ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL = "wireless_dual_interface_terminal";
     public static final String ITEM_PHIAL = "phial";
     public static final String ITEM_PART_MANA_IMPORT = "part_mana_import";
@@ -60,6 +61,9 @@ public class NameConst {
 
     public static final String GUI_KEY = AE2Thing.MODID + ".gui.";
     public static final String GUI_CELL_LINK = GUI_KEY + "cell_link";
+    public static final String GUI_PATTERN_MODIFIER = GUI_KEY + "pattern_modifier";
+    public static final String GUI_PATTERN_MODIFIER_REPLACE = GUI_PATTERN_MODIFIER + ".replace";
+    public static final String GUI_PATTERN_MODIFIER_CLEAR = GUI_PATTERN_MODIFIER + ".clear";
     public static final String GUI_TERMINAL = GUI_KEY + "terminal.";
     public static final String GUI_INFUSION_INTERFACE = GUI_KEY + "infusion_interface";
     public static final String GUI_PART_THAUMATORIUM_INTERFACE = GUI_KEY + "part_thaumatorium_interface";

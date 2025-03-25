@@ -2,8 +2,11 @@ package com.asdflj.ae2thing.proxy;
 
 import static thaumicenergistics.common.fluids.GaseousEssentia.registerGases;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemWirelessCraftingTerminal;
@@ -24,10 +27,12 @@ import com.asdflj.ae2thing.api.adapter.terminal.AECraftingTerminal;
 import com.asdflj.ae2thing.api.adapter.terminal.FCCraftingTerminal;
 import com.asdflj.ae2thing.api.adapter.terminal.WCTCraftingTerminal;
 import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
+import com.asdflj.ae2thing.common.item.ItemPatternModifier;
 import com.asdflj.ae2thing.common.item.ItemWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.common.parts.PartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.common.tile.TileInfusionInterface;
+import com.asdflj.ae2thing.inventory.item.PatternModifierInventory;
 import com.asdflj.ae2thing.loader.BRLoader;
 import com.asdflj.ae2thing.loader.ItemAndBlockHolder;
 import com.asdflj.ae2thing.loader.PatternTerminalLoader;
@@ -42,6 +47,7 @@ import com.glodblock.github.common.item.ItemWirelessPatternTerminal;
 import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 
 import appeng.api.config.Upgrades;
+import appeng.api.implementations.ICraftingPatternItem;
 import appeng.core.features.registries.InterfaceTerminalRegistry;
 import appeng.util.Platform;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -193,6 +199,38 @@ public class CommonProxy {
                 .terminal()
                 .registerTerminalItem(ItemWirelessCraftingTerminal.class, new WCTWirelessCraftingTerminalHandler());
         }
+
+    }
+
+    @SubscribeEvent
+    public void pickUpEvent(EntityItemPickupEvent event) {
+        if (Platform.isClient() || event.entityPlayer == null) return;
+        try {
+            EntityPlayer player = event.entityPlayer;
+            ItemStack pattern = event.item.getEntityItem();
+            if (pattern.getItem() != null && pattern.getItem() instanceof ICraftingPatternItem) {
+                for (int i = 0; i < player.inventory.mainInventory.length; i++) {
+                    ItemStack item = player.inventory.mainInventory[i];
+                    if (item != null && item.getItem() != null && item.getItem() instanceof ItemPatternModifier) {
+                        PatternModifierInventory patternModifierInventory = new PatternModifierInventory(
+                            item,
+                            i,
+                            player);
+                        if (patternModifierInventory.injectItems(pattern)) {
+                            event.item.setDead();
+                            event.setCanceled(true);
+                            return;
+                        }
+                    }
+                }
+                if (player.inventory.addItemStackToInventory(pattern)) {
+                    event.item.setDead();
+                    event.setCanceled(true);
+                } else if (event.item.isEntityAlive()) {
+                    event.item.delayBeforeCanPickup = 20;
+                }
+            }
+        } catch (Exception ignored) {}
 
     }
 

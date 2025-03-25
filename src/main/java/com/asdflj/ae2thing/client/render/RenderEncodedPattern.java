@@ -52,7 +52,7 @@ public class RenderEncodedPattern implements ISlotRender {
             GL11.glDisable(GL11.GL_LIGHTING);
             if (stack.getStackSize() > 1) {
                 String s1 = String.valueOf(stack.getStackSize());
-                GL11.glDisable(GL11.GL_DEPTH_TEST);
+                GL11.glTranslatef(0, 0, 200f);
                 GL11.glDisable(GL11.GL_BLEND);
                 draw.getFontRender()
                     .drawStringWithShadow(
@@ -63,7 +63,7 @@ public class RenderEncodedPattern implements ISlotRender {
                                 .getStringWidth(s1),
                         slot.yDisplayPosition + 6 + 3,
                         16777215);
-                GL11.glEnable(GL11.GL_DEPTH_TEST);
+                GL11.glTranslatef(0, 0, -200f);
             }
             GL11.glTranslatef(0, 0, 100f);
             GL11.glScalef(0.4f, 0.4f, 0.4f);

@@ -21,6 +21,7 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.api.InventoryActionExtend;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerPatternModifier;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueName;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
@@ -57,11 +58,11 @@ public class CPacketInventoryActionExtend implements IMessage {
     public CPacketInventoryActionExtend() {}
 
     public CPacketInventoryActionExtend(final InventoryActionExtend action, final int slot, final int id) {
-        this.action = action;
-        this.slot = slot;
-        this.id = id;
-        this.stack = null;
-        this.isEmpty = true;
+        this(action, slot, id, null);
+    }
+
+    public CPacketInventoryActionExtend(final InventoryActionExtend action) {
+        this(action, 0, 0, null);
     }
 
     public CPacketInventoryActionExtend(final InventoryActionExtend action, final int slot, final int id,
@@ -191,6 +192,10 @@ public class CPacketInventoryActionExtend implements IMessage {
                             break;
                         }
                     }
+                } else if (message.action == InventoryActionExtend.CLEAR_PATTERN && baseContainer instanceof ContainerPatternModifier patternModifier) {
+                    patternModifier.clearPattern();
+                } else if (message.action == InventoryActionExtend.REPLACE_PATTERN && baseContainer instanceof ContainerPatternModifier patternModifier) {
+                    patternModifier.replacePattern();
                 }
             }
             return null;

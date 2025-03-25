@@ -32,6 +32,7 @@ public interface Constants {
     int INACTIVE_COLOR = 0x45FFEA05;
     int SELECTED_COLOR = 0x4545DA75;
     String PATTERN = "pattern";
+    String REPLACE = "replace";
     String CRAFTING = "crafting";
     String OUTPUT = "output";
     String CRAFTING_EX = "crafting_ex";
