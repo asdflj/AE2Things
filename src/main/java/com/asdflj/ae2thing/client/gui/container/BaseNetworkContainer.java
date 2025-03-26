@@ -3,7 +3,10 @@ package com.asdflj.ae2thing.client.gui.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
+import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
 import com.asdflj.ae2thing.inventory.item.INetworkTerminal;
 import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 
@@ -14,6 +17,7 @@ import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.storage.ITerminalHost;
 import appeng.container.AEBaseContainer;
 import appeng.container.guisync.GuiSync;
+import appeng.items.misc.ItemEncodedPattern;
 import appeng.me.helpers.ChannelPowerSrc;
 import appeng.util.Platform;
 
@@ -41,6 +45,34 @@ public class BaseNetworkContainer extends AEBaseContainer {
                     it.getGrid()
                         .getCache(IEnergyGrid.class)));
         }
+    }
+
+    private boolean transferPatternToSlot(EntityPlayer p, int idx, IPatternContainer container) {
+        Slot clickSlot = this.inventorySlots.get(idx);
+        ItemStack is = clickSlot.getStack();
+        if (is != null && !container.getPatternOutputSlot()
+            .getHasStack() && is.stackSize == 1 && is.getItem() instanceof ItemEncodedPattern) {
+            ItemStack output = is.copy();
+            container.getPatternOutputSlot()
+                .putStack(output);
+            p.inventory.setInventorySlotContents(clickSlot.getSlotIndex(), null);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer p, int idx) {
+        boolean didSomething = false;
+        if (this instanceof IPatternContainer patternContainer) {
+            didSomething = transferPatternToSlot(p, idx, patternContainer);
+        } else if (this instanceof IWidgetPatternContainer w) {
+            didSomething = transferPatternToSlot(p, idx, w.getContainer());
+        }
+        if (didSomething) {
+            return null;
+        }
+        return super.transferStackInSlot(p, idx);
     }
 
     public BaseNetworkContainer(InventoryPlayer ip, Object anchor) {
