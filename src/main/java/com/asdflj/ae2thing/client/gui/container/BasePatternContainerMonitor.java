@@ -2,6 +2,7 @@ package com.asdflj.ae2thing.client.gui.container;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.asdflj.ae2thing.api.Constants;
@@ -22,8 +23,8 @@ import appeng.me.helpers.ChannelPowerSrc;
 import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.util.IConfigManagerHost;
 
-public abstract class BasePatternContainerMonitor extends ContainerMonitor
-    implements IConfigurableObject, IConfigManagerHost, IAEAppEngInventory, IContainerCraftingPacket {
+public abstract class BasePatternContainerMonitor extends ContainerMonitor implements IConfigurableObject,
+    IConfigManagerHost, IAEAppEngInventory, IContainerCraftingPacket, IPatternContainer {
 
     protected SlotRestrictedInput patternSlotIN;
     protected SlotRestrictedInput patternSlotOUT;
@@ -77,5 +78,10 @@ public abstract class BasePatternContainerMonitor extends ContainerMonitor
                 this.setValidContainer(false);
             }
         }
+    }
+
+    @Override
+    public Slot getPatternOutputSlot() {
+        return this.patternSlotOUT;
     }
 }

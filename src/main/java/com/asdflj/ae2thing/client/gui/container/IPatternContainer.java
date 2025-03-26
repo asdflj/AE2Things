@@ -83,4 +83,6 @@ public interface IPatternContainer {
             }
         }
     }
+
+    Slot getPatternOutputSlot();
 }
