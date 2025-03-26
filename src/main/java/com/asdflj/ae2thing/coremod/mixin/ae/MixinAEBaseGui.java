@@ -23,6 +23,7 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.InventoryActionExtend;
 import com.asdflj.ae2thing.client.render.RenderHelper;
+import com.asdflj.ae2thing.common.item.ItemToggleableViewCell;
 import com.asdflj.ae2thing.network.CPacketInventoryActionExtend;
 
 import appeng.api.storage.data.IAEItemStack;
@@ -113,7 +114,12 @@ public abstract class MixinAEBaseGui extends GuiScreen {
 
     @Inject(method = "handleMouseClick", at = @At("HEAD"), cancellable = true)
     public void handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton, CallbackInfo ci) {
-        if (slot instanceof SlotRestrictedInput && ctrlDown == 1) {
+        if (slot instanceof SlotRestrictedInput && ctrlDown == 1
+            && slot.getHasStack()
+            && slot.getStack()
+                .getItem() != null
+            && slot.getStack()
+                .getItem() instanceof ItemToggleableViewCell) {
             AE2Thing.proxy.netHandler.sendToServer(
                 new CPacketInventoryActionExtend(
                     InventoryActionExtend.TOGGLE_VIEW_CELL,
@@ -125,7 +131,7 @@ public abstract class MixinAEBaseGui extends GuiScreen {
     }
 
     @Inject(method = "handleMouseInput", at = @At("HEAD"))
-    public void handleInput(CallbackInfo ci) {
+    public void handleMouseInput(CallbackInfo ci) {
         if (this.getScrollBar() != null) {
             if (!Mouse.isButtonDown(0)) {
                 ((AccessorGuiScrollbar) this.getScrollBar()).setIsLatestClickOnScrollbar(false);
