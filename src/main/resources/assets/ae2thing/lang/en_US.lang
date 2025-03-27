@@ -26,6 +26,7 @@ ae2thing.tooltip.shift_for_more=§r> Hold §3Shift§r for more information
 ae2thing.tooltip.ctrl_for_more=§r> Hold §3Ctrl§r for more information
 ae2thing.tooltip.toggleable_view_cell.desc=Right click in view cell slot to toggle view cell
 ae2thing.tooltip.linked=Linked
+ae2thing.tooltip.installed_card=Installed Card
 ae2thing.tooltip.backpack_terminal.desc=uh a new terminal?
 ae2thing.tooltip.wireless_dual_interface_terminal.desc=Dual interface terminal, support encode pattern
 ae2thing.tooltip.cell_link.desc=You can right click to open link gui to link other cell,\nIt will link every same uuid cell,\nAbuse cell link may lead to lag.

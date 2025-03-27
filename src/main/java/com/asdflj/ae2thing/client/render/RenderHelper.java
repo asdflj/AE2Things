@@ -10,7 +10,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.Fluid;
 
@@ -60,8 +59,11 @@ public class RenderHelper {
     }
 
     public static void renderAEStack(IAEStack<?> stack, int x, int y, float z) {
+        renderAEStack(stack, x, y, z, true);
+    }
+
+    public static void renderAEStack(IAEStack<?> stack, int x, int y, float z, boolean renderStackSize) {
         if (stack instanceof IAEItemStack itemStack) {
-            ItemStack is = itemStack.getItemStack();
             GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
             GL11.glPushMatrix();
             net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
@@ -73,18 +75,13 @@ public class RenderHelper {
                 Minecraft.getMinecraft().fontRenderer,
                 Minecraft.getMinecraft()
                     .getTextureManager(),
-                is,
+                itemStack.getItemStack(),
                 x,
                 y);
             GL11.glTranslatef(0f, 0f, 150);
-            aeRenderItem.setAeStack(itemStack);
-            aeRenderItem.renderItemOverlayIntoGUI(
-                Minecraft.getMinecraft().fontRenderer,
-                Minecraft.getMinecraft()
-                    .getTextureManager(),
-                is,
-                x,
-                y);
+            if (renderStackSize) {
+                drawStackSize(itemStack, x, y);
+            }
             GL11.glPopMatrix();
             GL11.glPopAttrib();
         } else if (stack instanceof IAEFluidStack fluidStack) {
@@ -109,30 +106,30 @@ public class RenderHelper {
                 IAEItemStack gas = fluidDrop.copy()
                     .setStackSize(stack.getStackSize() / AspectUtil.R);
                 GL11.glTranslatef(0f, 0f, 150f);
-                aeRenderItem.setAeStack(gas);
-                aeRenderItem.renderItemOverlayIntoGUI(
-                    Minecraft.getMinecraft().fontRenderer,
-                    Minecraft.getMinecraft()
-                        .getTextureManager(),
-                    gas.getItemStack(),
-                    x,
-                    y);
+                if (renderStackSize) {
+                    drawStackSize(gas, x, y);
+                }
             } else {
                 drawFluid(x, y, fluidStack.getFluid());
                 GL11.glTranslatef(0f, 0f, 150f);
-                aeRenderItem.setAeStack(fluidDrop);
-                aeRenderItem.renderItemOverlayIntoGUI(
-                    Minecraft.getMinecraft().fontRenderer,
-                    Minecraft.getMinecraft()
-                        .getTextureManager(),
-                    fluidDrop.getItemStack(),
-                    x,
-                    y);
+                if (renderStackSize) {
+                    drawStackSize(fluidDrop, x, y);
+                }
             }
             GL11.glPopMatrix();
             GL11.glPopAttrib();
         }
+    }
 
+    private static void drawStackSize(IAEItemStack item, int x, int y) {
+        aeRenderItem.setAeStack(item);
+        aeRenderItem.renderItemOverlayIntoGUI(
+            Minecraft.getMinecraft().fontRenderer,
+            Minecraft.getMinecraft()
+                .getTextureManager(),
+            item.getItemStack(),
+            x,
+            y);
     }
 
     private static void drawFluid(int posX, int posY, Fluid fluid) {

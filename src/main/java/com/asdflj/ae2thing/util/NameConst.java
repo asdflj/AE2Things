@@ -35,6 +35,7 @@ public class NameConst {
     public static final String TT_CTRL_FOR_MORE = TT_KEY + "ctrl_for_more";
 
     public static final String TT_LINKED = TT_KEY + "linked";
+    public static final String TT_INSTALLED_CARD = TT_KEY + "installed_card";
     public static final String TT_BACKPACK_TERMINAL = TT_KEY + "backpack_terminal.";
     public static final String TT_BACKPACK_TERMINAL_DESC = TT_BACKPACK_TERMINAL + "desc";
     public static final String TT_TOGGLEABLE_VIEW_CELL = TT_KEY + "toggleable_view_cell.desc";

@@ -26,6 +26,7 @@ ae2thing.tooltip.shift_for_more=§r> 按 §3Shift§r 显示更多信息
 ae2thing.tooltip.ctrl_for_more=§r> 按 §3Ctrl§r 显示更多信息
 ae2thing.tooltip.toggleable_view_cell.desc=在显示元件槽位上右击以切换
 ae2thing.tooltip.linked=已链接
+ae2thing.tooltip.installed_card=已安装的卡
 ae2thing.tooltip.backpack_terminal.desc=一个新终端?
 ae2thing.tooltip.wireless_dual_interface_terminal.desc=二合一接口终端,支持编写样板
 ae2thing.tooltip.cell_link.desc=你可以右键打开GUI去链接其他硬盘,\n它会链接所有相同uuid的元件,\n滥用元件链接可能导致tps低下.
