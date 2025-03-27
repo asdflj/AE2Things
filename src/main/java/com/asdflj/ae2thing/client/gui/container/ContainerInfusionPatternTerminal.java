@@ -53,7 +53,7 @@ import thaumicenergistics.common.items.ItemCraftingAspect;
 import thaumicenergistics.common.items.ItemEnum;
 
 public class ContainerInfusionPatternTerminal extends BasePatternContainerMonitor
-    implements IOptionalSlotHost, IPatternContainer, IWidgetPatternContainer {
+    implements IOptionalSlotHost, IWidgetPatternContainer {
 
     private static final int CRAFTING_GRID_PAGES = 2;
     private static final int CRAFTING_GRID_WIDTH = 4;
