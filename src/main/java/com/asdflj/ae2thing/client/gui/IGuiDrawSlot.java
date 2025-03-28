@@ -14,7 +14,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.client.render.ISlotRender;
-import com.asdflj.ae2thing.client.render.RenderHelper;
 import com.asdflj.ae2thing.client.render.SlotRender;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
@@ -56,16 +55,11 @@ public interface IGuiDrawSlot {
             if (slotRender.get()
                 .test(slot)) {
                 if (!slotRender.drawSlot(slot, stack, this, display)) {
-                    this.renderPinnedItem(slot);
                     return false;
                 }
             }
         }
         return true;
-    }
-
-    default void renderPinnedItem(Slot slotIn) {
-        RenderHelper.drawPinnedSlot(slotIn, this.getAEBaseGui());
     }
 
     default void renderStackSize(boolean display, IAEItemStack stack, Slot slot) {
