@@ -165,7 +165,7 @@ public class InfinityItemStorageCellInventory implements ITCellInventory {
 
     @Override
     public long getRemainingItemCount() {
-        return Integer.MAX_VALUE;
+        return Long.MAX_VALUE;
     }
 
     @Override
