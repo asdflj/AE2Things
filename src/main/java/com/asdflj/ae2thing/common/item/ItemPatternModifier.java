@@ -3,6 +3,7 @@ package com.asdflj.ae2thing.common.item;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -65,9 +66,8 @@ public class ItemPatternModifier extends BaseItem implements IItemInventory {
             } else if (ModAndClassUtil.GT5 || ModAndClassUtil.GT5NH) {
                 host = GTUtil.getIInterfaceViewable(te);
             } else if (te instanceof TileCableBus bus) {
-                IPart part = bus.getPart(
-                    ForgeDirection.getOrientation(side)
-                        .getOpposite());
+                Vec3 vec = Vec3.createVectorHelper(hitX, hitY, hitZ);
+                IPart part = bus.selectPart(vec).part;
                 if (part instanceof IInterfaceViewable) {
                     host = (IInterfaceViewable) part;
                 } else {

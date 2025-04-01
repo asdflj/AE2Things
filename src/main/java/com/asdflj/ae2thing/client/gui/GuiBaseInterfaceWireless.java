@@ -37,6 +37,7 @@ import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.widget.THGuiTextField;
 import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
+import com.asdflj.ae2thing.common.item.ItemPatternModifier;
 import com.asdflj.ae2thing.network.CPacketRenamer;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.util.GTUtil;
@@ -1427,6 +1428,19 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
             return inv;
         }
 
+        private NBTTagCompound getDimensionalCoordSide() {
+            Util.DimensionalCoordSide blockPos = new Util.DimensionalCoordSide(
+                x,
+                y,
+                z,
+                dim,
+                ForgeDirection.getOrientation(side),
+                this.dispName);
+            NBTTagCompound data = new NBTTagCompound();
+            blockPos.writeToNBT(data);
+            return data;
+        }
+
         public boolean mouseClicked(int mouseX, int mouseY, int btn) {
             if (!section.visible || btn < 0 || btn > 2) {
                 return false;
@@ -1459,20 +1473,14 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
                 && mouseY > Math.max(doubleButton.yPosition, InterfaceWirelessSection.TITLE_HEIGHT)
                 && mouseY <= Math.min(doubleButton.yPosition + doubleButton.height, viewHeight)) {
                     doubleButton.func_146113_a(mc.getSoundHandler());
-                    Util.DimensionalCoordSide blockPos = new Util.DimensionalCoordSide(
-                        x,
-                        y,
-                        z,
-                        dim,
-                        ForgeDirection.getOrientation(side),
-                        this.dispName);
-                    NBTTagCompound data = new NBTTagCompound();
-                    blockPos.writeToNBT(data);
                     final boolean backwards = Mouse.isButtonDown(1);
                     int val = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? 1 : 0;
                     if (backwards) val |= 0b10;
-                    AE2Thing.proxy.netHandler
-                        .sendToServer(new CPacketTerminalBtns("InterfaceTerminal.Double", String.valueOf(val), data));
+                    AE2Thing.proxy.netHandler.sendToServer(
+                        new CPacketTerminalBtns(
+                            "InterfaceTerminal.Double",
+                            String.valueOf(val),
+                            getDimensionalCoordSide()));
                 }
 
             int offsetY = mouseY - dispY - 1;
@@ -1487,31 +1495,33 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
                 // send packet to server, request an update
                 // TODO: Client prediction.
                 PacketInventoryAction packet = null;
-
+                ItemStack currentItem = mc.thePlayer.inventory.getItemStack();
                 if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
                     packet = new PacketInventoryAction(InventoryAction.MOVE_REGION, 0, id);
-                } else if (isShiftKeyDown() && (btn == 0 || btn == 1)) {
-                    packet = new PacketInventoryAction(InventoryAction.SHIFT_CLICK, slotIdx, id);
-                } else if (btn == 0 || btn == 1) {
-                    if ((ModAndClassUtil.GT5 || ModAndClassUtil.GT5NH) && GTUtil.isDataStick()) {
-                        Util.DimensionalCoordSide blockPos = new Util.DimensionalCoordSide(
-                            x,
-                            y,
-                            z,
-                            dim,
-                            ForgeDirection.getOrientation(side),
-                            this.dispName);
-                        NBTTagCompound data = new NBTTagCompound();
-                        blockPos.writeToNBT(data);
-                        AE2Thing.proxy.netHandler
-                            .sendToServer(new CPacketTerminalBtns("InterfaceTerminal.SetStick", "1", data));
-                    } else {
-                        packet = new PacketInventoryAction(InventoryAction.PICKUP_OR_SET_DOWN, slotIdx, id);
-                    }
+                } else if (isShiftKeyDown() && (btn == 0 || btn == 1)
+                    && !(currentItem != null && currentItem.getItem() instanceof ItemPatternModifier)) {
+                        packet = new PacketInventoryAction(InventoryAction.SHIFT_CLICK, slotIdx, id);
+                    } else if (btn == 0 || btn == 1) {
+                        if (currentItem != null && currentItem.getItem() instanceof ItemPatternModifier) {
+                            int val = slotIdx << 2;
+                            final boolean backwards = Mouse.isButtonDown(1);
+                            val |= Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? 1 : 0;
+                            if (backwards) val |= 0b10;
+                            AE2Thing.proxy.netHandler.sendToServer(
+                                new CPacketTerminalBtns(
+                                    "InterfaceTerminal.PatternModifier",
+                                    String.valueOf(val),
+                                    getDimensionalCoordSide()));
+                        } else if ((ModAndClassUtil.GT5 || ModAndClassUtil.GT5NH) && GTUtil.isDataStick()) {
+                            AE2Thing.proxy.netHandler.sendToServer(
+                                new CPacketTerminalBtns("InterfaceTerminal.SetStick", "1", getDimensionalCoordSide()));
+                        } else {
+                            packet = new PacketInventoryAction(InventoryAction.PICKUP_OR_SET_DOWN, slotIdx, id);
+                        }
 
-                } else {
-                    packet = new PacketInventoryAction(InventoryAction.CREATIVE_DUPLICATE, slotIdx, id);
-                }
+                    } else {
+                        packet = new PacketInventoryAction(InventoryAction.CREATIVE_DUPLICATE, slotIdx, id);
+                    }
                 if (packet != null) {
                     NetworkHandler.instance.sendToServer(packet);
                 }

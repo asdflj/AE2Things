@@ -22,11 +22,15 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.client.gui.container.widget.IWidgetPatternContainer;
 import com.asdflj.ae2thing.client.gui.container.widget.PatternContainer;
+import com.asdflj.ae2thing.common.item.ItemPatternModifier;
 import com.asdflj.ae2thing.inventory.IPatternTerminal;
 import com.asdflj.ae2thing.inventory.item.INetworkTerminal;
+import com.asdflj.ae2thing.inventory.item.PatternModifierInventory;
 import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 import com.asdflj.ae2thing.util.Ae2Reflect;
 import com.asdflj.ae2thing.util.GTUtil;
@@ -269,6 +273,12 @@ public class ContainerWirelessDualInterfaceTerminal extends ContainerMonitor
     }
 
     public void doubleStacks(int value, NBTTagCompound tag) {
+        ImmutablePair<World, IInterfaceViewable> result = getWorldAndHost(tag);
+        if (result == null) return;
+        doublePatterns(value, result.left, result.right);
+    }
+
+    private ImmutablePair<World, IInterfaceViewable> getWorldAndHost(NBTTagCompound tag) {
         Util.DimensionalCoordSide intMsg = Util.DimensionalCoordSide.readFromNBT(tag);
         World w = DimensionManager.getWorld(intMsg.getDimension());
         TileEntity tile = w.getTileEntity(intMsg.x, intMsg.y, intMsg.z);
@@ -279,11 +289,11 @@ public class ContainerWirelessDualInterfaceTerminal extends ContainerMonitor
             host = iv;
         } else if ((ModAndClassUtil.GT5 || ModAndClassUtil.GT5NH)) {
             host = GTUtil.getIInterfaceViewable(tile);
-            if (host == null) return;
+            if (host == null) return null;
         } else {
-            return;
+            return null;
         }
-        doublePatterns(value, w, host);
+        return ImmutablePair.of(w, host);
     }
 
     private void doublePatterns(int val, World w, IInterfaceViewable host) {
@@ -411,6 +421,55 @@ public class ContainerWirelessDualInterfaceTerminal extends ContainerMonitor
     public void setCrafting(boolean craftingMode) {
         this.craftingMode = craftingMode;
         this.it.setCraftingRecipe(craftingMode);
+    }
+
+    public void setModifier(int val, NBTTagCompound tag) {
+        ImmutablePair<World, IInterfaceViewable> result = this.getWorldAndHost(tag);
+        if (result == null) return;
+        ItemStack currentItem = this.player.inventory.getItemStack();
+        if (currentItem != null && currentItem.getItem() instanceof ItemPatternModifier) {
+            int slot = val >> 2;
+            boolean shift = (val & 1) != 0;
+            boolean backwards = (val & 2) != 0;
+            if (!backwards) {
+                // inject all item to pattern modifier
+                injectPatternToPatternModifier(result.right, slot, shift);
+            } else {
+                extractPatternToInterface(result.right);
+            }
+            this.sendToClient(result.right);
+        }
+    }
+
+    private void extractPatternToInterface(IInterfaceViewable host) {
+        PatternModifierInventory patternModifierInventory = new PatternModifierInventory(
+            this.player.inventory.getItemStack(),
+            -1,
+            player);
+        patternModifierInventory.extractToHost(host);
+    }
+
+    private void injectPatternToPatternModifier(IInterfaceViewable host, int slot, boolean shift) {
+        IInventory patterns = host.getPatterns();
+        PatternModifierInventory patternModifierInventory = new PatternModifierInventory(
+            this.player.inventory.getItemStack(),
+            -1,
+            player);
+        if (shift) {
+            for (int i = 0; i < patterns.getSizeInventory(); i++) {
+                ItemStack pattern = patterns.getStackInSlot(i);
+                if (patternModifierInventory.injectItems(pattern)) {
+                    patterns.setInventorySlotContents(i, null);
+                } else {
+                    break;
+                }
+            }
+        } else {
+            if (patternModifierInventory.injectItems(patterns.getStackInSlot(slot))) {
+                patterns.setInventorySlotContents(slot, null);
+            }
+        }
+
     }
 
 }
