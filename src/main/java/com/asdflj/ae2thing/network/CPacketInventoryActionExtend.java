@@ -143,7 +143,9 @@ public class CPacketInventoryActionExtend implements IMessage {
                 IAEItemStack requestItem = message.stack.copy();
                 extractItemFromME(sender,requestItem,message.slot);
                 message.stack.decStackSize(requestItem.getStackSize());
-                sender.inventory.setInventorySlotContents(message.slot,message.stack.getItemStack());
+                if(message.stack.getStackSize() > 0){
+                    sender.inventory.setInventorySlotContents(message.slot,message.stack.getItemStack());
+                }
                 return null;
             }
             if(sender.openContainer instanceof ContainerCraftingTerminal) {
