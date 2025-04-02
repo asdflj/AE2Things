@@ -23,17 +23,20 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergySource;
+import appeng.api.networking.security.IActionHost;
+import appeng.api.networking.security.PlayerSource;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.util.AECableType;
 import appeng.api.util.WorldCoord;
 import appeng.core.localization.PlayerMessages;
 import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.tile.networking.TileWireless;
 import appeng.util.Platform;
 
-public class WirelessObject {
+public class WirelessObject implements IActionHost {
 
     private final ItemStack item;
     private final World world;
@@ -47,6 +50,7 @@ public class WirelessObject {
     private IMEMonitor<IAEItemStack> itemInv;
     private IMEMonitor<IAEFluidStack> fluidInv;
     private WirelessTerminal wirelessTerminal;
+    private PlayerSource source;
 
     public WirelessObject(ItemStack item, World world, int x, int y, int z, EntityPlayer player)
         throws AppEngException {
@@ -68,6 +72,7 @@ public class WirelessObject {
                 .getCache(IStorageGrid.class);
             this.itemInv = iStorageGrid.getItemInventory();
             this.fluidInv = iStorageGrid.getFluidInventory();
+            this.source = new PlayerSource(this.player, this);
         }
     }
 
@@ -198,5 +203,31 @@ public class WirelessObject {
 
     public boolean hasEnergyCard() {
         return hasEnergyCard(item);
+    }
+
+    @Override
+    public IGridNode getActionableNode() {
+        return this.gridNode;
+    }
+
+    @Override
+    public IGridNode getGridNode(ForgeDirection dir) {
+        return this.gridNode;
+    }
+
+    @Override
+    public AECableType getCableConnectionType(ForgeDirection dir) {
+        return AECableType.NONE;
+    }
+
+    @Override
+    public void securityBreak() {
+        this.getGridNode(ForgeDirection.UNKNOWN)
+            .getMachine()
+            .securityBreak();
+    }
+
+    public PlayerSource getSource() {
+        return this.source;
     }
 }

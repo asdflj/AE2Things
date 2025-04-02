@@ -4,7 +4,9 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -38,6 +40,13 @@ public class BlockPos {
         this.w = te.getWorldObj();
     }
 
+    public BlockPos(@Nonnull MovingObjectPosition te, World w) {
+        this.x = te.blockX;
+        this.y = te.blockY;
+        this.z = te.blockZ;
+        this.w = w;
+    }
+
     public BlockPos(DimensionalCoord dimensionalCoord) {
         this(dimensionalCoord.x, dimensionalCoord.y, dimensionalCoord.z, dimensionalCoord.getWorld());
     }
@@ -59,6 +68,20 @@ public class BlockPos {
             return w.getTileEntity(x, y, z);
         }
         return null;
+    }
+
+    public Block getBlock() {
+        if (w != null) {
+            return w.getBlock(x, y, z);
+        }
+        return null;
+    }
+
+    public int getBlockPosMetaData() {
+        if (w != null) {
+            return w.getBlockMetadata(x, y, z);
+        }
+        throw new IllegalArgumentException("world is null");
     }
 
     public int getX() {

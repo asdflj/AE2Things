@@ -16,7 +16,6 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergySource;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.IActionHost;
-import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEFluidStack;
@@ -31,14 +30,12 @@ public abstract class WirelessTerminal
 
     protected final WirelessObject obj;
     protected final IAEItemPowerStorage ips;
-    protected final PlayerSource playerSource;
 
     public WirelessTerminal(WirelessObject obj) {
         this.obj = obj;
         this.ips = (ToolWirelessTerminal) obj.getItemStack()
             .getItem();
         this.obj.setEnergySource(this);
-        this.playerSource = new PlayerSource(this.obj.getPlayer(), this);
     }
 
     @Override
@@ -53,14 +50,12 @@ public abstract class WirelessTerminal
 
     @Override
     public AECableType getCableConnectionType(ForgeDirection dir) {
-        return AECableType.NONE;
+        return this.obj.getCableConnectionType(dir);
     }
 
     @Override
     public void securityBreak() {
-        this.getGridNode(ForgeDirection.UNKNOWN)
-            .getMachine()
-            .securityBreak();
+        this.obj.securityBreak();
     }
 
     @Override
@@ -107,7 +102,7 @@ public abstract class WirelessTerminal
     }
 
     public BaseActionSource getActionSource() {
-        return this.playerSource;
+        return this.obj.getSource();
     }
 
     @NotNull
