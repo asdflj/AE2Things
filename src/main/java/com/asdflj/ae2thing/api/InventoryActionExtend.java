@@ -5,5 +5,6 @@ public enum InventoryActionExtend {
     GET_CRAFTING_STATE,
     TOGGLE_VIEW_CELL,
     REPLACE_PATTERN,
-    CLEAR_PATTERN
+    CLEAR_PATTERN,
+    REQUEST_ITEM
 }

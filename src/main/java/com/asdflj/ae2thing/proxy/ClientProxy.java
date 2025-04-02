@@ -1,16 +1,13 @@
 package com.asdflj.ae2thing.proxy;
 
-import static codechicken.lib.gui.GuiDraw.getMousePosition;
 import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTerminal;
@@ -47,7 +44,6 @@ import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.client.gui.implementations.GuiPatternTerm;
 import appeng.client.gui.implementations.GuiPatternTermEx;
 import appeng.client.gui.implementations.GuiWirelessTerm;
-import codechicken.nei.LayoutManager;
 import codechicken.nei.api.API;
 import codechicken.nei.recipe.GuiOverlayButton;
 import codechicken.nei.recipe.GuiRecipe;
@@ -163,18 +159,6 @@ public class ClientProxy extends CommonProxy {
         AE2ThingAPI.instance()
             .terminal()
             .registerTerminalBlackList(GuiWirelessDualInterfaceTerminal.class);
-    }
-
-    private ItemStack getStackMouseOver(GuiContainer window) {
-        try {
-            Point mousePos = getMousePosition();
-            ItemStack item = LayoutManager.instance()
-                .getStackUnderMouse(window, mousePos.x, mousePos.y);
-            if (item != null) return item;
-        } catch (Exception ignored) {
-
-        }
-        return null;
     }
 
     @SubscribeEvent

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.api.InventoryActionExtend;
+import com.asdflj.ae2thing.api.WirelessObject;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternModifier;
 import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueName;
@@ -30,6 +32,8 @@ import com.asdflj.ae2thing.util.BlockPos;
 import com.asdflj.ae2thing.util.CPUCraftingPreview;
 
 import appeng.api.AEApi;
+import appeng.api.config.Actionable;
+import appeng.api.features.IWirelessTermHandler;
 import appeng.api.implementations.tiles.IViewCellStorage;
 import appeng.api.networking.crafting.ICraftingCPU;
 import appeng.api.networking.crafting.ICraftingGrid;
@@ -106,10 +110,42 @@ public class CPacketInventoryActionExtend implements IMessage {
 
     public static class Handler implements IMessageHandler<CPacketInventoryActionExtend, IMessage> {
 
+        private void extractItemFromME(EntityPlayer player, IAEItemStack requestItem, int slot) {
+            if (requestItem.getStackSize() <= 0) {
+                return;
+            }
+            for (int i = 0; i < player.inventory.mainInventory.length; i++) {
+                ItemStack item = player.inventory.mainInventory[i];
+                if (item != null && item.getItem() instanceof IWirelessTermHandler) {
+                    try {
+                        WirelessObject object = new WirelessObject(item, player.worldObj, slot, 0, 0, player);
+                        if (object.rangeCheck() && requestItem.getStackSize() > 0) {
+                            IAEItemStack result = object.getItemInventory()
+                                .extractItems(requestItem, Actionable.MODULATE, object.getSource());
+                            if (result != null) {
+                                requestItem.decStackSize(result.getStackSize());
+                            }
+                            if (requestItem.getStackSize() <= 0) {
+                                break;
+                            }
+                        }
+                    } catch (Exception ignored) {}
+                }
+            }
+        }
+
         @Nullable
         @Override
         public IMessage onMessage(CPacketInventoryActionExtend message, MessageContext ctx) {
             final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
+            if(message.action == InventoryActionExtend.REQUEST_ITEM && sender.inventory.mainInventory[message.slot] == null){
+                message.stack.setStackSize(message.stack.getItemStack().getMaxStackSize());
+                IAEItemStack requestItem = message.stack.copy();
+                extractItemFromME(sender,requestItem,message.slot);
+                message.stack.decStackSize(requestItem.getStackSize());
+                sender.inventory.setInventorySlotContents(message.slot,message.stack.getItemStack());
+                return null;
+            }
             if(sender.openContainer instanceof ContainerCraftingTerminal) {
                 return null;
             }
