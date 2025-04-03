@@ -5,6 +5,8 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -73,6 +75,14 @@ public class BlockPos {
     public Block getBlock() {
         if (w != null) {
             return w.getBlock(x, y, z);
+        }
+        return null;
+    }
+
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, EntityPlayer player) {
+        if (this.getBlock() != null) {
+            return this.getBlock()
+                .getPickBlock(target, world, this.x, this.y, this.z, player);
         }
         return null;
     }

@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -64,17 +63,15 @@ public class KeybindLoader implements Runnable {
         // middle click
         if (Mouse.isButtonDown(2) && !p.capabilities.isCreativeMode && p.inventory.getCurrentItem() == null) {
             // request item
-            BlockPos blockPos = getTargetBlock(p.getEntityWorld(), p);
-            if (blockPos != null) {
-                Item item = Item.getItemFromBlock(blockPos.getBlock());
-                ItemStack itemStack = new ItemStack(item, 1, blockPos.getBlockPosMetaData());
-                if (Util.findItemStack(p, itemStack) == -1) {
+            ItemStack block = getTargetBlock(p.getEntityWorld(), p);
+            if (block != null) {
+                if (Util.findItemStack(p, block) == -1) {
                     AE2Thing.proxy.netHandler.sendToServer(
                         new CPacketInventoryActionExtend(
                             InventoryActionExtend.REQUEST_ITEM,
                             p.inventory.currentItem,
                             0,
-                            AEItemStack.create(itemStack)));
+                            AEItemStack.create(block)));
                 }
             }
             return;
@@ -98,14 +95,14 @@ public class KeybindLoader implements Runnable {
 
     }
 
-    private static BlockPos getTargetBlock(World world, EntityPlayer player) {
+    private static ItemStack getTargetBlock(World world, EntityPlayer player) {
         Vec3 position = Vec3.createVectorHelper(player.posX, player.posY + player.getEyeHeight(), player.posZ);
         Vec3 look = player.getLookVec();
         Vec3 end = position.addVector(look.xCoord * 5.0, look.yCoord * 5.0, look.zCoord * 5.0);
         MovingObjectPosition hit = world.rayTraceBlocks(position, end);
 
         if (hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-            return new BlockPos(hit, world);
+            return new BlockPos(hit, world).getPickBlock(hit, world, player);
         }
         return null;
     }
