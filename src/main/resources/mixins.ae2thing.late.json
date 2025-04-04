@@ -25,12 +25,14 @@
     "wct.MixinRandomUtils",
     "ae.MixinSlotRestrictedInput",
     "ae.MixinItemViewCell",
-    "ae.AccessorGuiScrollbar"
+    "ae.AccessorGuiScrollbar",
+    "ae.MixinCraftingCPUCluster"
   ],
   "server": [
     "ae.MixinContainerCraftConfirm",
     "wct.MixinRandomUtils",
     "ae.MixinSlotRestrictedInput",
-    "ae.MixinItemViewCell"
+    "ae.MixinItemViewCell",
+    "ae.MixinCraftingCPUCluster"
   ]
 }

@@ -52,7 +52,8 @@ public interface Constants {
         UPDATE_PLAYER_ITEM(1),
         UPDATE_PLAYER_CURRENT_ITEM(-1),
         UPDATE_PINNED_ITEMS(-2),
-        ADD_PINNED_ITEM(-3);
+        ADD_PINNED_ITEM(-3),
+        NOTIFICATION(-4);
 
         public final byte type;
 

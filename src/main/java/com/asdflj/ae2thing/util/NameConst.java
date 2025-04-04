@@ -101,6 +101,7 @@ public class NameConst {
     public static final String NEI_FIND_CELL_ITEM_IN_OTHER_DIM = NEI_FIND_CELL_ITEM + "in_other_dim";
 
     public static final String MESSAGE_KEY = AE2Thing.MODID + ".message.";
+    public static final String MESSAGE_CRAFTING_COMPLETE = MESSAGE_KEY + "crafting_complete";
     public static final String MESSAGE_CRAFTING_DEBUG_CARD = MESSAGE_KEY + "crafting_debug_card.";
     public static final String MESSAGE_CRAFTING_DEBUG_CARD_REQUEST_TYPE = MESSAGE_CRAFTING_DEBUG_CARD + "request_type";
     public static final String MESSAGE_CRAFTING_DEBUG_CARD_REQUEST_TYPE_MACHINE = MESSAGE_CRAFTING_DEBUG_CARD_REQUEST_TYPE
