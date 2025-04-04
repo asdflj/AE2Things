@@ -34,6 +34,7 @@ ae2thing.tooltip.cell_link.disable=Link cell is disable
 ae2thing.tooltip.fluid_packet_encoder.desc=The Fluid Encoder can encode fluid packets. Use pipe to extract fluid packet. It has to be connected to a ME System and a place to store the liquid in otherwise it won't work.
 ae2thing.tooltip.crafting_debug_card.desc=Click ME Controller to display crafting history,\nShift click to switch request type
 ae2thing.tooltip.wireless.installed=Installed Card:
+ae2thing.message.crafting_complete=Auto-Crafting Complete
 ae2thing.message.crafting_debug_card.request_type=Request type: 
 ae2thing.message.crafting_debug_card.request_type.machine=Machine
 ae2thing.message.crafting_debug_card.request_type.player=Player
@@ -140,3 +141,7 @@ nei.options.ae2thing.dual_interface_terminal_fill_search_names.false=No
 nei.options.ae2thing.dual_interface_terminal_fill_circuit=Dual interface terminal autofill recipe name to search field,ignore circuit
 nei.options.ae2thing.dual_interface_terminal_fill_circuit.true=Yes
 nei.options.ae2thing.dual_interface_terminal_fill_circuit.false=No
+
+nei.options.ae2thing.crafting_notification=Notify about finished crafting jobs (requires wireless terminal)
+nei.options.ae2thing.crafting_notification.true=Yes
+nei.options.ae2thing.crafting_notification.false=No

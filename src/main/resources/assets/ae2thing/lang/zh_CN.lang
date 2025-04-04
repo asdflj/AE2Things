@@ -34,6 +34,7 @@ ae2thing.tooltip.cell_link.disable=链接功能已禁用
 ae2thing.tooltip.fluid_packet_encoder.desc=流体封包编码器可以编码液体数据包.使用管道来导出液体数据包.它必须与ME系统连接，并且网络内可以储存流体，否则它就无法工作.
 ae2thing.tooltip.crafting_debug_card.desc=右击ME控制器来显示合成历史记录,\nShift右击切换请求类型.
 ae2thing.tooltip.wireless.installed=已安装的卡:
+ae2thing.message.crafting_complete=自动合成完毕！
 ae2thing.message.crafting_debug_card.request_type=请求类型: 
 ae2thing.message.crafting_debug_card.request_type.machine=机器
 ae2thing.message.crafting_debug_card.request_type.player=玩家
@@ -130,3 +131,7 @@ nei.options.ae2thing.dual_interface_terminal_fill_search_names.false=否
 nei.options.ae2thing.dual_interface_terminal_fill_circuit=二合一接口终端自动填充合成菜单名字时,忽略电路编号
 nei.options.ae2thing.dual_interface_terminal_fill_circuit.true=是
 nei.options.ae2thing.dual_interface_terminal_fill_circuit.false=否
+
+nei.options.ae2thing.crafting_notification=自动合成完成时发送提醒(需要无线终端)
+nei.options.ae2thing.crafting_notification.true=是
+nei.options.ae2thing.crafting_notification.false=否

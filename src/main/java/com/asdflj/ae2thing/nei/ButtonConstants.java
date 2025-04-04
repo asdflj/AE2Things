@@ -11,4 +11,5 @@ public interface ButtonConstants {
     String ULTRA_TERMINAL_MODE = "ae2thing.ultra_terminal_mode";
     String DUAL_INTERFACE_TERMINAL = "ae2thing.dual_interface_terminal_fill_search_names";
     String DUAL_INTERFACE_TERMINAL_FILL_CIRCUIT = "ae2thing.dual_interface_terminal_fill_circuit";
+    String CRAFTING_NOTIFICATION = "ae2thing.crafting_notification";
 }

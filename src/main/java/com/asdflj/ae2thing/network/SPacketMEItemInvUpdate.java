@@ -53,33 +53,39 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
         @SuppressWarnings({ "unchecked", "rawtypes" })
         public IMessage onMessage(SPacketMEItemInvUpdate message, MessageContext ctx) {
             final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
-            if (message.ref == 0 && gs instanceof IGuiMonitorTerminal gmt) {
+            if (message.ref == Constants.MessageType.UPDATE_ITEMS.type && gs instanceof IGuiMonitorTerminal gmt) {
                 gmt.postUpdate((List) message.list);
-            } else if (message.ref == 1 && gs instanceof IGuiMonitorTerminal gmt) {
-                ItemStack is = null;
-                if (!message.isEmpty()) {
-                    is = ((IAEItemStack) message.list.get(0)).getItemStack();
-                }
-                gmt.setPlayerInv(is);
-            } else if (message.ref == -1) {
-                if (gs == null) {
-                    Minecraft mc = Minecraft.getMinecraft();
-                    EntityClientPlayerMP player = mc.thePlayer;
-                    IAEItemStack is = (IAEItemStack) message.list.get(0);
-                    if (is == null) return null;
-                    player.inventory.setInventorySlotContents(player.inventory.currentItem, is.getItemStack());
-                }
-            } else if (message.ref == -2) {
-                AE2ThingAPI.instance()
-                    .getPinned()
-                    .updatePinnedItems(ItemCraftingAspect2FluidDrop((List) message.list));
-            } else if (message.ref == -3) {
-                if (!message.isEmpty()) {
+            } else if (message.ref == Constants.MessageType.UPDATE_PLAYER_ITEM.type
+                && gs instanceof IGuiMonitorTerminal gmt) {
+                    ItemStack is = null;
+                    if (!message.isEmpty()) {
+                        is = ((IAEItemStack) message.list.get(0)).getItemStack();
+                    }
+                    gmt.setPlayerInv(is);
+                } else if (message.ref == Constants.MessageType.UPDATE_PLAYER_CURRENT_ITEM.type) {
+                    if (gs == null) {
+                        Minecraft mc = Minecraft.getMinecraft();
+                        EntityClientPlayerMP player = mc.thePlayer;
+                        IAEItemStack is = (IAEItemStack) message.list.get(0);
+                        if (is == null) return null;
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, is.getItemStack());
+                    }
+                } else if (message.ref == Constants.MessageType.UPDATE_PINNED_ITEMS.type) {
                     AE2ThingAPI.instance()
                         .getPinned()
-                        .add(((IAEItemStack) message.list.get(0)));
+                        .updatePinnedItems(ItemCraftingAspect2FluidDrop((List) message.list));
+                } else if (message.ref == Constants.MessageType.ADD_PINNED_ITEM.type) {
+                    if (!message.isEmpty()) {
+                        AE2ThingAPI.instance()
+                            .getPinned()
+                            .add(((IAEItemStack) message.list.get(0)));
+                    }
+                } else if (message.ref == Constants.MessageType.NOTIFICATION.type) {
+                    if (!message.isEmpty()) {
+                        AE2ThingAPI.instance()
+                            .addCraftingCompleteNotification(((IAEItemStack) message.list.get(0)));
+                    }
                 }
-            }
             return null;
         }
 

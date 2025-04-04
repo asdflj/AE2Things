@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.Fluid;
 
@@ -60,6 +61,25 @@ public class RenderHelper {
 
     public static void renderAEStack(IAEStack<?> stack, int x, int y, float z) {
         renderAEStack(stack, x, y, z, true);
+    }
+
+    public static void renderItemStack(ItemStack stack, int x, int y, float z) {
+        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+        GL11.glPushMatrix();
+        net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glTranslatef(0f, 0f, z);
+        itemRender.renderItemAndEffectIntoGUI(
+            Minecraft.getMinecraft().fontRenderer,
+            Minecraft.getMinecraft()
+                .getTextureManager(),
+            stack,
+            x,
+            y);
+        GL11.glPopMatrix();
+        GL11.glPopAttrib();
     }
 
     public static void renderAEStack(IAEStack<?> stack, int x, int y, float z, boolean renderStackSize) {
