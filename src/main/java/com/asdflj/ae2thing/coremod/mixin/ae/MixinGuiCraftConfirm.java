@@ -22,7 +22,6 @@ import appeng.api.storage.data.IItemList;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.implementations.GuiCraftConfirm;
 import appeng.client.gui.widgets.GuiAeButton;
-import appeng.container.implementations.ContainerCraftConfirm;
 import appeng.util.item.ItemList;
 
 @Mixin(GuiCraftConfirm.class)
@@ -82,12 +81,15 @@ public abstract class MixinGuiCraftConfirm extends AEBaseGui {
 
     @Inject(method = "drawFG", at = @At("HEAD"), remap = false)
     public void drawFG(CallbackInfo ci) {
-        if (this.inventorySlots instanceof ContainerCraftConfirm c && (c.isSimulation() || clickStart)) {
-            replan.visible = true;
-            start.visible = false;
-        } else {
-            replan.visible = false;
-            start.visible = true;
-        }
+        try {
+            if (clickStart || !start.enabled) {
+                replan.visible = true;
+                start.visible = false;
+            } else {
+                replan.visible = false;
+                start.visible = true;
+            }
+        } catch (Exception ignored) {}
+
     }
 }
