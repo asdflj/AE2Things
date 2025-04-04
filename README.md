@@ -6,15 +6,25 @@ This mod adds a new type of cell the DISK: Deep Item Storage disk. This cell has
 **Infinity cell**</br>
 Can set link mode to link other infinity cell. It will share stored items
 ![infinity_cell_link.png](blob/infinity_cell_link.png)
-
+**Toggleable view cell**</br>
+Right click to toggle view cell
+![toggleable_view_cell.gif](blob/toggleable_view_cell.gif)
 **Pinned Items**</br>
 Backport pinned items
 ![pinned.gif](blob/pinned.gif)
+**Crafting complete notification**</br>
+Backport crafting complete notification
+![crafting_notification.gif](blob/crafting_notification.gif)
 **Terminal menu**</br>
 ![terminal_menu.gif](blob/terminal_menu.gif)
 **NEI encode pattern**</br>
 nei support display encode pattern
 ![nei_encode_pattern.gif](blob/nei_encode_pattern.gif)
+**Cell Content**</br>
+Display cell content
+![cell_content.png](blob/cell_content.png)
+**Middle click to quick take item from me system**</br>
+![middle_click_quick_take_item.gif](blob/middle_click_quick_take_item.gif)
 **Backpack Terminal**</br>
 Can easily manage the items in the backpack, support magnet mode and fluid
 ![backpack_terminal.png](blob/backpack_terminal.png)
