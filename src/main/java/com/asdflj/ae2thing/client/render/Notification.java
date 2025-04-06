@@ -40,7 +40,8 @@ public class Notification {
             startTime = System.currentTimeMillis();
             endTime = startTime + DELAY;
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-            Minecraft.getMinecraft().theWorld.playSound((int)player.posX,(int)player.posY,(int)player.posZ,"random.levelup",0.25f,1,false);
+            Minecraft.getMinecraft().theWorld
+                .playSound((int) player.posX, (int) player.posY, (int) player.posZ, "random.levelup", 0.25f, 1, false);
         } else if (currentEvent != null && endTime > 0) {
             drawNotification(currentEvent);
         }
