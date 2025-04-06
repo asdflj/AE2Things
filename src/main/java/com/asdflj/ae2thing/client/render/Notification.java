@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import com.asdflj.ae2thing.AE2Thing;
@@ -38,6 +39,8 @@ public class Notification {
             currentEvent = events.remove(0);
             startTime = System.currentTimeMillis();
             endTime = startTime + DELAY;
+            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+            Minecraft.getMinecraft().theWorld.playSound((int)player.posX,(int)player.posY,(int)player.posZ,"random.levelup",0.25f,1,false);
         } else if (currentEvent != null && endTime > 0) {
             drawNotification(currentEvent);
         }
