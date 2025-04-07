@@ -9,6 +9,7 @@ import appeng.api.networking.crafting.ICraftingCPU;
 import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.security.IActionHost;
 import appeng.container.AEBaseContainer;
+import appeng.container.implementations.ContainerWirelessTerm;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -35,18 +36,26 @@ public class CPacketNetworkCraftingItems implements IMessage {
             EntityPlayerMP player = ctx.getServerHandler().playerEntity;
             try {
                 if (player.openContainer instanceof AEBaseContainer c && c.getTarget() instanceof IActionHost host) {
-                    ICraftingGrid craftingGrid = host.getActionableNode()
-                        .getGrid()
-                        .getCache(ICraftingGrid.class);
-                    SPacketMEItemInvUpdate piu = new SPacketMEItemInvUpdate(Constants.MessageType.UPDATE_PINNED_ITEMS);
-                    for (ICraftingCPU cpu : craftingGrid.getCpus()) {
-                        if (cpu.getFinalOutput() == null || !cpu.isBusy()) continue;
-                        piu.appendItem(cpu.getFinalOutput());
+                    sendToClient(host, player);
+                } else if (player.openContainer instanceof ContainerWirelessTerm o
+                    && o.getWirelessTerminalGUIObject() != null) {
+                        // for ae wireless terminal
+                        sendToClient(o.getWirelessTerminalGUIObject(), player);
                     }
-                    AE2Thing.proxy.netHandler.sendTo(piu, player);
-                }
             } catch (Exception ignored) {}
             return null;
+        }
+
+        private void sendToClient(IActionHost host, EntityPlayerMP player) {
+            ICraftingGrid craftingGrid = host.getActionableNode()
+                .getGrid()
+                .getCache(ICraftingGrid.class);
+            SPacketMEItemInvUpdate piu = new SPacketMEItemInvUpdate(Constants.MessageType.UPDATE_PINNED_ITEMS);
+            for (ICraftingCPU cpu : craftingGrid.getCpus()) {
+                if (cpu.getFinalOutput() == null || !cpu.isBusy()) continue;
+                piu.appendItem(cpu.getFinalOutput());
+            }
+            AE2Thing.proxy.netHandler.sendTo(piu, player);
         }
     }
 }
