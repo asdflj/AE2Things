@@ -69,7 +69,7 @@ public abstract class MixinCraftingCPUCluster {
         networkKey = 0;
     }
 
-    @Inject(method = "handleCraftBranchFailure", at = @At("HEAD"), remap = false)
+    @Inject(method = "handleCraftBranchFailure", at = @At("TAIL"), remap = false)
     private void handleCraftBranchFailure(CraftBranchFailure e, BaseActionSource src, CallbackInfo ci) {
         setAsNull();
     }
