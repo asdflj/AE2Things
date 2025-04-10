@@ -8,7 +8,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,14 +29,12 @@ import appeng.api.networking.crafting.ICraftingRequester;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.crafting.CraftBranchFailure;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
 import appeng.tile.misc.TileSecurity;
 
 @Mixin(CraftingCPUCluster.class)
 public abstract class MixinCraftingCPUCluster {
-
-    @Shadow(remap = false)
-    public abstract IAEItemStack getFinalOutput();
 
     @Unique
     private EntityPlayer player;
@@ -70,6 +67,11 @@ public abstract class MixinCraftingCPUCluster {
         player = null;
         output = null;
         networkKey = 0;
+    }
+
+    @Inject(method = "handleCraftBranchFailure", at = @At("HEAD"), remap = false)
+    private void handleCraftBranchFailure(CraftBranchFailure e, BaseActionSource src, CallbackInfo ci) {
+        setAsNull();
     }
 
     @Inject(method = "completeJob", at = @At("TAIL"), remap = false)
