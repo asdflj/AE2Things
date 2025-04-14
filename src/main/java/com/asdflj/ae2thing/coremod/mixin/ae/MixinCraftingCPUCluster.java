@@ -43,10 +43,11 @@ public abstract class MixinCraftingCPUCluster {
 
     private long networkKey = 0;
 
-    @Inject(method = "submitJob", at = @At("HEAD"), remap = false)
+    @Inject(method = "submitJob", at = @At("RETURN"), remap = false)
     private void submitJob(IGrid g, ICraftingJob job, BaseActionSource src, ICraftingRequester requestingMachine,
         CallbackInfoReturnable<ICraftingLink> cir) {
-        if (src instanceof PlayerSource ps) {
+        if (src instanceof PlayerSource ps && cir.getReturnValue() != null) {
+            // real submit job
             Iterator<IGridNode> iterator = g.getMachines(TileSecurity.class)
                 .iterator();
             if (iterator.hasNext()) {
