@@ -74,7 +74,9 @@ public abstract class MixinAEBaseGui extends GuiScreen {
             .stream()
             .filter(s -> s instanceof SlotME)
             .findFirst();
-        if (slot.isPresent()) {
+        if (slot.isPresent() && this.getScrollBar() != null
+            && this.getScrollBar()
+                .getCurrentScroll() == 0) {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             this.bindTexture();
             this.drawTexturedModalRect(
