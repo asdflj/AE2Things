@@ -73,9 +73,7 @@ public abstract class MixinGuiOverlayButton {
 
     @Inject(method = "overlayRecipe", at = @At("TAIL"), remap = false)
     public void overlayRecipe(boolean shift, CallbackInfo ci) {
-        if (GuiScreen.isShiftKeyDown() || GuiScreen.isCtrlKeyDown()) {
-            moveItems();
-        }
+        moveItems();
         if (!GuiScreen.isCtrlKeyDown() || !(firstGui instanceof AEBaseGui gui)) return;
         final List<PositionedStack> ingredients = this.handler.getIngredientStacks(recipeIndex);
         IItemList<IAEItemStack> list = null;
