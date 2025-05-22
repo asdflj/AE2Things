@@ -145,3 +145,7 @@ nei.options.ae2thing.dual_interface_terminal_fill_circuit.false=No
 nei.options.ae2thing.crafting_notification=Notify about finished crafting jobs (requires wireless terminal)
 nei.options.ae2thing.crafting_notification.true=Yes
 nei.options.ae2thing.crafting_notification.false=No
+
+nei.options.ae2thing.nei_take_item=Middle click NEI panel to quick take item from ae terminal 
+nei.options.ae2thing.nei_take_item.true=Yes
+nei.options.ae2thing.nei_take_item.false=No

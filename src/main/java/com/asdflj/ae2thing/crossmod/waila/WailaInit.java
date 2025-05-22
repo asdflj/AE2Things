@@ -18,6 +18,7 @@ public class WailaInit {
             GuiContainerManager.addTooltipHandler(new TooltipHandlerWaila());
             GuiContainerManager.addTooltipHandler(new CellContentHandler());
             GuiContainerManager.addTooltipHandler(new CraftingStatePreview());
+            GuiContainerManager.addTooltipHandler(new PatternPermutationToolTip());
             if (Util.getAEVersion() < 555) {
                 GuiContainerManager.addTooltipHandler(new EncodedPattern());
             }

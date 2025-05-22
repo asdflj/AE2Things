@@ -9,8 +9,11 @@ import org.lwjgl.input.Keyboard;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.ITooltip;
 import appeng.core.localization.GuiColors;
+import codechicken.nei.FormattedTextField;
+import codechicken.nei.SearchField;
+import codechicken.nei.SearchTextFormatter;
 
-public class THGuiTextField extends GuiTextField {
+public class THGuiTextField extends FormattedTextField {
 
     private static final int PADDING = 2;
     private final FontRenderer _fontRender;
@@ -28,6 +31,7 @@ public class THGuiTextField extends GuiTextField {
     public boolean forceDrawSuggestion = false;
     private final TooltipProvider tooltipProvider = new TooltipProvider();
     private String rawSuggestion;
+    private static final SearchTextFormatter formatter = new SearchTextFormatter(SearchField.searchParser);
 
     /**
      * Uses the values to instantiate a padded version of a text field. Pays attention to the '_' caret.
@@ -60,6 +64,7 @@ public class THGuiTextField extends GuiTextField {
         this.setEnableBackgroundDrawing(false);
         this.setVisible(true);
         this.setMaxStringLength(100);
+        this.setFormatter(formatter);
     }
 
     public THGuiTextField(final int width, final int height, String tooltip) {
@@ -167,7 +172,10 @@ public class THGuiTextField extends GuiTextField {
     @Override
     public void setText(String text) {
         super.setText(text);
-        onTextChange(text);
+        final String oldText = getText();
+        int currentCursorPos = this.getCursorPosition();
+        this.setCursorPosition(currentCursorPos);
+        onTextChange(oldText);
     }
 
     @Override

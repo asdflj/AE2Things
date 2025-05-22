@@ -60,6 +60,7 @@ public class NEI_TH_Config implements IConfigureNEI {
         API.addOption(new BaseToggleButton(ButtonConstants.PINNED_BAR_REMOVE));
         API.addOption(new BaseToggleButton(ButtonConstants.PINNED_BAR_CRAFTING_STATE));
         API.addOption(new BaseToggleButton(ButtonConstants.CRAFTING_NOTIFICATION));
+        API.addOption(new BaseToggleButton(ButtonConstants.NEI_TAKE_ITEM));
         if (ModAndClassUtil.PH) {
             API.addOption(new BaseToggleButton(ButtonConstants.DUAL_INTERFACE_TERMINAL_FILL_CIRCUIT, false));
         }

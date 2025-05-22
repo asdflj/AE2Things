@@ -62,6 +62,7 @@ import appeng.core.sync.packets.PacketValueConfig;
 import appeng.helpers.InventoryAction;
 import appeng.integration.IntegrationRegistry;
 import appeng.integration.IntegrationType;
+import appeng.integration.modules.NEI;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import codechicken.nei.util.TextHistory;
@@ -697,7 +698,7 @@ public abstract class GuiMonitor extends BaseMEGui
                     .getName(),
                 true);
         } else {
-            setSearchString(displayName, true);
+            setSearchString(NEI.searchField.getEscapedSearchText(displayName), true);
         }
         this.saveSearchString();
     }

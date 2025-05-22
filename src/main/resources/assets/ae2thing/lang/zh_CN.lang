@@ -135,3 +135,7 @@ nei.options.ae2thing.dual_interface_terminal_fill_circuit.false=否
 nei.options.ae2thing.crafting_notification=自动合成完成时发送提醒(需要无线终端)
 nei.options.ae2thing.crafting_notification.true=是
 nei.options.ae2thing.crafting_notification.false=否
+
+nei.options.ae2thing.nei_take_item=NEI中鼠标中键快速拿取终端中的物品 
+nei.options.ae2thing.nei_take_item.true=是
+nei.options.ae2thing.nei_take_item.false=否

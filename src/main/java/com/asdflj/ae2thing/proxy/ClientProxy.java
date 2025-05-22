@@ -77,6 +77,10 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
+    public static GuiRecipe<?> getRecipe() {
+        return recipe;
+    }
+
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);

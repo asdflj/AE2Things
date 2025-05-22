@@ -12,4 +12,5 @@ public interface ButtonConstants {
     String DUAL_INTERFACE_TERMINAL = "ae2thing.dual_interface_terminal_fill_search_names";
     String DUAL_INTERFACE_TERMINAL_FILL_CIRCUIT = "ae2thing.dual_interface_terminal_fill_circuit";
     String CRAFTING_NOTIFICATION = "ae2thing.crafting_notification";
+    String NEI_TAKE_ITEM = "ae2thing.nei_take_item";
 }

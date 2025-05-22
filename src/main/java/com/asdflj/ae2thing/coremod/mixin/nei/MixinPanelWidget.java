@@ -1,5 +1,7 @@
 package com.asdflj.ae2thing.coremod.mixin.nei;
 
+import static com.asdflj.ae2thing.nei.NEI_TH_Config.getConfigValue;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
@@ -11,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
+import com.asdflj.ae2thing.nei.ButtonConstants;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.Util;
 
@@ -56,23 +59,24 @@ public abstract class MixinPanelWidget extends Widget implements IContainerToolt
                         Util.setSearchFieldText(g, Platform.getItemDisplayName(is));
                         draggedStack = null;
                         cir.setReturnValue(true);
-                    } else if (g.inventorySlots instanceof AEBaseContainer c) {
-                        c.setTargetStack(AEItemStack.create(is));
-                        InventoryAction action;
-                        if (GuiScreen.isCtrlKeyDown()) {
-                            action = InventoryAction.PICKUP_SINGLE;
-                        } else {
-                            action = InventoryAction.PICKUP_OR_SET_DOWN;
+                    } else if (g.inventorySlots instanceof AEBaseContainer c
+                        && getConfigValue(ButtonConstants.NEI_TAKE_ITEM)) {
+                            c.setTargetStack(AEItemStack.create(is));
+                            InventoryAction action;
+                            if (GuiScreen.isCtrlKeyDown()) {
+                                action = InventoryAction.PICKUP_SINGLE;
+                            } else {
+                                action = InventoryAction.PICKUP_OR_SET_DOWN;
+                            }
+                            final PacketInventoryAction p = new PacketInventoryAction(
+                                action,
+                                Ae2ReflectClient.getInventorySlots(g)
+                                    .size(),
+                                gui instanceof GuiWirelessDualInterfaceTerminal ? -2 : 0);
+                            NetworkHandler.instance.sendToServer(p);
+                            draggedStack = null;
+                            cir.setReturnValue(true);
                         }
-                        final PacketInventoryAction p = new PacketInventoryAction(
-                            action,
-                            Ae2ReflectClient.getInventorySlots(g)
-                                .size(),
-                            gui instanceof GuiWirelessDualInterfaceTerminal ? -2 : 0);
-                        NetworkHandler.instance.sendToServer(p);
-                        draggedStack = null;
-                        cir.setReturnValue(true);
-                    }
                 }
             }
         } catch (Exception ignored) {}

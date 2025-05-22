@@ -50,6 +50,7 @@ import appeng.container.implementations.ContainerCraftConfirm;
 import appeng.core.AELog;
 import appeng.core.worlddata.WorldData;
 import appeng.crafting.v2.CraftingJobV2;
+import appeng.integration.modules.NEI;
 import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.me.cache.CraftingGridCache;
 import appeng.util.Platform;
@@ -321,18 +322,19 @@ public class Util {
     }
 
     public static void setSearchFieldText(AEBaseGui gui, String text) {
+        String displayName = NEI.searchField.getEscapedSearchText(text);
         if (gui instanceof IGuiMonitorTerminal gmt) {
             gmt.getSearchField()
-                .setText(text);
+                .setText(displayName);
             gmt.getRepo()
-                .setSearchString(text);
+                .setSearchString(displayName);
             gmt.getRepo()
                 .updateView();
         } else {
             IDisplayRepo repo = getDisplayRepo(gui);
             if (repo != null) {
-                setSearchFieldText(gui, gui.getClass(), text);
-                repo.setSearchString(text);
+                setSearchFieldText(gui, gui.getClass(), displayName);
+                repo.setSearchString(displayName);
                 repo.updateView();
             }
         }
