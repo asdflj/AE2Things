@@ -1,5 +1,6 @@
 package com.asdflj.ae2thing.crossmod.waila;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,10 +49,8 @@ public class PatternPermutationToolTip extends mcp.mobius.waila.handlers.nei.Too
         }
 
         public static PermutationTooltipLineHandler getInstance(PositionedStack pStack) {
-            final List<ItemStack> items = pStack.getFilteredPermutations();
-
-            if (items.size() > 1) {
-                return new PermutationTooltipLineHandler(pStack, items);
+            if (pStack.items.length > 0) {
+                return new PermutationTooltipLineHandler(pStack, Arrays.asList(pStack.items));
             }
 
             return null;
@@ -105,7 +104,7 @@ public class PatternPermutationToolTip extends mcp.mobius.waila.handlers.nei.Too
                 GuiOverlayButton btn = (GuiOverlayButton) guiButton.get();
                 List<PositionedStack> list = btn.handler.getIngredientStacks(btn.recipeIndex);
                 out: for (PositionedStack stack : list) {
-                    for (ItemStack item : stack.getFilteredPermutations()) {
+                    for (ItemStack item : stack.items) {
                         if (Platform.isSameItemType(slotItem, item)) {
                             focused = stack;
                             break out;
