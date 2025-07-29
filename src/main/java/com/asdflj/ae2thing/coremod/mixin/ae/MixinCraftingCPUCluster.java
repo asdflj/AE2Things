@@ -95,7 +95,7 @@ public abstract class MixinCraftingCPUCluster {
     private boolean isSameNetworkKey(ItemStack item) {
         if (item != null && item.getItem() instanceof INetworkEncodable encodable) {
             String key = encodable.getEncryptionKey(item);
-            if (key.equals(Long.toString(networkKey))) {
+            if (key != null && key.equals(Long.toString(networkKey))) {
                 SPacketMEItemInvUpdate piu = new SPacketMEItemInvUpdate(Constants.MessageType.NOTIFICATION);
                 piu.appendItem(output);
                 AE2Thing.proxy.netHandler.sendTo(piu, (EntityPlayerMP) this.player);
