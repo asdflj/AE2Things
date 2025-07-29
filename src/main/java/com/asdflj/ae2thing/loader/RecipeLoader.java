@@ -133,7 +133,7 @@ public class RecipeLoader implements Runnable {
 
     @Override
     public void run() {
-        GameRegistry.addShapelessRecipe(TOGGLE_VIEW_CELL.stack(), AE2_VIEW_CELL, AE2_PROCESS_LOG);
+//        GameRegistry.addShapelessRecipe(TOGGLE_VIEW_CELL.stack(), AE2_VIEW_CELL, AE2_PROCESS_LOG);
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
                 ITEM_PATTERN_MODIFIER.stack(),

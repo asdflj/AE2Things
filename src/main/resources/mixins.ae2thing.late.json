@@ -23,16 +23,12 @@
     "tc.nei.MixinLoadCraftingRecipes",
     "tc.nei.MixinTemplateRecipeHandler",
     "wct.MixinRandomUtils",
-    "ae.MixinSlotRestrictedInput",
-    "ae.MixinItemViewCell",
     "ae.AccessorGuiScrollbar",
     "ae.MixinCraftingCPUCluster"
   ],
   "server": [
     "ae.MixinContainerCraftConfirm",
     "wct.MixinRandomUtils",
-    "ae.MixinSlotRestrictedInput",
-    "ae.MixinItemViewCell",
     "ae.MixinCraftingCPUCluster"
   ]
 }

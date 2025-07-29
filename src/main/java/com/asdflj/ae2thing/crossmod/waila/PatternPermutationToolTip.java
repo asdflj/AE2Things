@@ -102,7 +102,7 @@ public class PatternPermutationToolTip extends mcp.mobius.waila.handlers.nei.Too
                 ItemStack slotItem = slot.getStack();
                 if (slotItem == null) return currenttip;
                 GuiOverlayButton btn = (GuiOverlayButton) guiButton.get();
-                List<PositionedStack> list = btn.handler.getIngredientStacks(btn.recipeIndex);
+                List<PositionedStack> list = btn.handlerRef.handler.getIngredientStacks(btn.handlerRef.recipeIndex);
                 out: for (PositionedStack stack : list) {
                     for (ItemStack item : stack.items) {
                         if (Platform.isSameItemType(slotItem, item)) {
