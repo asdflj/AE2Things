@@ -4,34 +4,16 @@ import static appeng.client.gui.AEBaseGui.aeRenderItem;
 import static net.minecraft.client.gui.Gui.drawRect;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.nio.IntBuffer;
-import java.nio.file.FileAlreadyExistsException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
-
-import javax.imageio.ImageIO;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.event.ClickEvent;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.Fluid;
 
-import org.apache.commons.io.FileUtils;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -47,15 +29,7 @@ import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
-import appeng.api.storage.data.IItemList;
 import appeng.client.me.SlotME;
-import appeng.core.AELog;
-import appeng.core.localization.GuiColors;
-import appeng.core.localization.GuiText;
-import appeng.util.ColorPickHelper;
-import appeng.util.Platform;
-import appeng.util.ReadableNumberConverter;
-import appeng.util.RoundHelper;
 
 public class RenderHelper {
 
@@ -63,13 +37,7 @@ public class RenderHelper {
     private static Color color;
     private static long lastRunTime;
     public static long interval = 30;
-    private static final int ROW_HEIGHT = 23;
-    private static final int ROW_SIZE = 9;
-    private static final int SCREENSHOT_ZOOM = 2;
     public static RenderItem itemRender = new RenderItem();
-    private static final DateTimeFormatter SCREENSHOT_DATE_FORMAT = DateTimeFormatter
-        .ofPattern("yyyy-MM-dd_HH.mm.ss", Locale.ROOT);
-    private static final Minecraft mc = Minecraft.getMinecraft();
 
     public static void drawPinnedSlot(Slot slotIn, GuiScreen gui) {
         if (!AE2ThingAPI.instance()
@@ -88,213 +56,6 @@ public class RenderHelper {
             if (info != null && !info.canPrune) {
                 updateColorAndDrawItemBorder(x, y);
             }
-        }
-    }
-
-    private static void drawCraftingItemState(IAEItemStack refStack, IAEItemStack stored, IAEItemStack pendingStack,
-        IAEItemStack missingStack, int x, int y) {
-        final FontRenderer fontRendererObj = mc.fontRenderer;
-        final int xo = -12;
-        final int yo = 4;
-        final int sectionLength = 32 * SCREENSHOT_ZOOM;
-        final int offY = ROW_HEIGHT;
-        GL11.glPushMatrix();
-        GL11.glScaled(0.5, 0.5, 0.5);
-
-        int lines = 0;
-
-        if (stored != null && stored.getStackSize() > 0) {
-            lines++;
-            if (missingStack == null && pendingStack == null) {
-                lines++;
-            }
-        }
-        if (missingStack != null && missingStack.getStackSize() > 0) {
-            lines++;
-        }
-        if (pendingStack != null && pendingStack.getStackSize() > 0) {
-            lines += 2;
-        }
-
-        final int negY = ((lines - 1) * 5) / 2;
-        int downY = 0;
-
-        if (stored != null && stored.getStackSize() > 0) {
-            String str = GuiText.FromStorage.getLocal() + ": "
-                + ReadableNumberConverter.INSTANCE.toWideReadableForm(stored.getStackSize());
-            final int w = 4 + fontRendererObj.getStringWidth(str);
-            fontRendererObj.drawString(
-                str,
-                (int) ((x * (1 + sectionLength) + xo + sectionLength - 19 - (w * 0.5)) * 2),
-                (y * offY + yo + 6 - negY + downY) * 2,
-                GuiColors.CraftConfirmFromStorage.getColor());
-
-            downY += 5;
-        }
-
-        boolean red = false;
-        if (missingStack != null && missingStack.getStackSize() > 0) {
-            String str = GuiText.Missing.getLocal() + ": "
-                + ReadableNumberConverter.INSTANCE.toWideReadableForm(missingStack.getStackSize());
-            final int w = 4 + fontRendererObj.getStringWidth(str);
-            fontRendererObj.drawString(
-                str,
-                (int) ((x * (1 + sectionLength) + xo + sectionLength - 19 - (w * 0.5)) * 2),
-                (y * offY + yo + 6 - negY + downY) * 2,
-                GuiColors.CraftConfirmMissing.getColor());
-
-            red = true;
-            downY += 5;
-        }
-
-        if (pendingStack != null && pendingStack.getStackSize() > 0) {
-            String str = GuiText.ToCraft.getLocal() + ": "
-                + ReadableNumberConverter.INSTANCE.toWideReadableForm(pendingStack.getStackSize());
-            int w = 4 + fontRendererObj.getStringWidth(str);
-            fontRendererObj.drawString(
-                str,
-                (int) ((x * (1 + sectionLength) + xo + sectionLength - 19 - (w * 0.5)) * 2),
-                (y * offY + yo + 6 - negY + downY) * 2,
-                GuiColors.CraftConfirmToCraft.getColor());
-
-            downY += 5;
-            str = GuiText.ToCraftRequests.getLocal() + ": "
-                + ReadableNumberConverter.INSTANCE.toWideReadableForm(pendingStack.getCountRequestableCrafts());
-            w = 4 + fontRendererObj.getStringWidth(str);
-            fontRendererObj.drawString(
-                str,
-                (int) ((x * (1 + sectionLength) + xo + sectionLength - 19 - (w * 0.5)) * 2),
-                (y * offY + yo + 6 - negY + downY) * 2,
-                GuiColors.CraftConfirmToCraft.getColor());
-
-        }
-
-        if (stored != null && stored.getStackSize() > 0 && missingStack == null && pendingStack == null) {
-            String str = GuiText.FromStoragePercent.getLocal() + ": "
-                + RoundHelper.toRoundedFormattedForm(stored.getUsedPercent(), 2)
-                + "%";
-            int w = 4 + fontRendererObj.getStringWidth(str);
-            fontRendererObj.drawString(
-                str,
-                (int) ((x * (1 + sectionLength) + xo + sectionLength - 19 - (w * 0.5)) * 2),
-                (y * offY + yo + 6 - negY + downY) * 2,
-                ColorPickHelper.selectColorFromThreshold(stored.getUsedPercent())
-                    .getColor());
-        }
-
-        GL11.glPopMatrix();
-        final int posX = x * (1 + sectionLength) + xo + sectionLength - 19;
-        final int posY = y * offY + yo;
-
-        if (red) {
-            final int startX = x * (1 + sectionLength) + xo;
-            final int startY = posY - 4;
-            drawRect(startX, startY, startX + sectionLength, startY + offY, 0x8AFF0000);
-        }
-        renderAEStack(refStack, posX, posY, 0, false);
-    }
-
-    public static void saveScreenshot(List<IAEItemStack> visual, IItemList<IAEItemStack> storage,
-        IItemList<IAEItemStack> pending, IItemList<IAEItemStack> missing) {
-        final Minecraft mc = Minecraft.getMinecraft();
-        if (!OpenGlHelper.isFramebufferEnabled()) {
-            AELog.error("Could not save crafting tree screenshot: FBOs disabled/unsupported");
-            mc.ingameGUI.getChatGUI()
-                .printChatMessage(new ChatComponentTranslation("chat.appliedenergistics2.FBOUnsupported"));
-            return;
-        }
-        try {
-
-            final File screenshotsDir = new File(mc.mcDataDir, "screenshots");
-            FileUtils.forceMkdir(screenshotsDir);
-            final int maxGlTexSize = GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE) / 2; // Divide by 2 to be safe
-            int imgWidth = SCREENSHOT_ZOOM * (ROW_SIZE * 2 * 32);
-            int imgHeight = (int) (SCREENSHOT_ZOOM * (Platform.ceilDiv(visual.size(), ROW_SIZE) * ROW_HEIGHT));
-            // Make sure the image can be actually allocated, worst case it'll be cropped
-            while ((long) imgWidth * (long) imgHeight >= (long) Integer.MAX_VALUE / 4) {
-                if (imgWidth > imgHeight) {
-                    imgWidth /= 2;
-                } else {
-                    imgHeight /= 2;
-                }
-            }
-
-            final int fbWidth = Math.min(imgWidth, maxGlTexSize);
-            final int fbHeight = Math.min(imgHeight, maxGlTexSize);
-            final BufferedImage outputImg = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
-            final IntBuffer downloadBuffer = BufferUtils.createIntBuffer(fbWidth * fbHeight);
-            GL11.glPushMatrix();
-            GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-            final Framebuffer fb = new Framebuffer(fbWidth, fbHeight, true);
-            GL11.glMatrixMode(GL11.GL_PROJECTION);
-            GL11.glLoadIdentity();
-            GL11.glOrtho(0, fbWidth / (float) SCREENSHOT_ZOOM, fbHeight / (float) SCREENSHOT_ZOOM, 0, 1000, 3000);
-            GL11.glMatrixMode(GL11.GL_MODELVIEW);
-            GL11.glLoadIdentity();
-            GL11.glDisable(GL11.GL_DEPTH_TEST);
-            try {
-                fb.bindFramebuffer(true);
-                final int xStart = 0;
-                final int yStart = 0;
-                final int xChunkSize = imgWidth - xStart;
-                final int yChunkSize = imgHeight - yStart;
-                GL11.glPushMatrix();
-                GL11.glTranslatef(0, 0, -2000.0f);
-                GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-                for (int i = 0; i < visual.size(); i++) {
-                    final IAEItemStack refStack = visual.get(i);
-                    drawCraftingItemState(
-                        refStack,
-                        storage.findPrecise(refStack),
-                        pending.findPrecise(refStack),
-                        missing.findPrecise(refStack),
-                        (i % ROW_SIZE),
-                        i / ROW_SIZE);
-                }
-                GL11.glPopMatrix();
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, fb.framebufferTexture);
-                GL11.glGetTexImage(
-                    GL11.GL_TEXTURE_2D,
-                    0,
-                    GL12.GL_BGRA,
-                    GL12.GL_UNSIGNED_INT_8_8_8_8_REV,
-                    downloadBuffer);
-                for (int y = 0; y < yChunkSize; y++) {
-                    for (int x = 0; x < xChunkSize; x++) {
-                        outputImg.setRGB(x + xStart, y + yStart, downloadBuffer.get((fbHeight - 1 - y) * fbWidth + x));
-                    }
-                }
-            } finally {
-                fb.deleteFramebuffer();
-                GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
-            }
-            GL11.glPopAttrib();
-            GL11.glPopMatrix();
-
-            final String date = SCREENSHOT_DATE_FORMAT.format(LocalDateTime.now());
-            String filename = String.format("%s-ae2.png", date);
-            File outFile = new File(screenshotsDir, filename);
-            for (int i = 1; outFile.exists() && i < 99; i++) {
-                filename = String.format("%s-ae2-%d.png", date, i);
-                outFile = new File(screenshotsDir, filename);
-            }
-            if (outFile.exists()) {
-                throw new FileAlreadyExistsException(filename);
-            }
-            ImageIO.write(outputImg, "png", outFile);
-
-            AELog.info("Saved crafting list screenshot to %s", filename);
-            ChatComponentText chatLink = new ChatComponentText(filename);
-            chatLink.getChatStyle()
-                .setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, outFile.getAbsolutePath()));
-            chatLink.getChatStyle()
-                .setUnderlined(Boolean.valueOf(true));
-            mc.ingameGUI.getChatGUI()
-                .printChatMessage(new ChatComponentTranslation("screenshot.success", chatLink));
-        } catch (Exception e) {
-            AELog.warn(e, "Could not save crafting list screenshot");
-            mc.ingameGUI.getChatGUI()
-                .printChatMessage(new ChatComponentTranslation("screenshot.failure", e.getMessage()));
         }
     }
 

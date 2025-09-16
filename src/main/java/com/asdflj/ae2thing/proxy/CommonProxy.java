@@ -13,19 +13,19 @@ import net.p455w0rd.wirelesscraftingterminal.items.ItemWirelessCraftingTerminal;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.api.adapter.crafting.AECraftingTerminal;
+import com.asdflj.ae2thing.api.adapter.crafting.FCCraftingTerminal;
+import com.asdflj.ae2thing.api.adapter.crafting.WCTCraftingTerminal;
 import com.asdflj.ae2thing.api.adapter.findit.EssentiaStorageBusAdapter;
 import com.asdflj.ae2thing.api.adapter.findit.FluidStorageBusAdapter;
 import com.asdflj.ae2thing.api.adapter.findit.MEChestAdapter;
 import com.asdflj.ae2thing.api.adapter.findit.MEDriverAdapter;
 import com.asdflj.ae2thing.api.adapter.findit.StorageBusAdapter;
-import com.asdflj.ae2thing.api.adapter.item.terminal.BackpackTerminalHandler;
-import com.asdflj.ae2thing.api.adapter.item.terminal.DualInterfaceTerminalHandler;
-import com.asdflj.ae2thing.api.adapter.item.terminal.FCBaseTerminalHandler;
-import com.asdflj.ae2thing.api.adapter.item.terminal.UltraTerminalHandler;
-import com.asdflj.ae2thing.api.adapter.item.terminal.WCTWirelessCraftingTerminalHandler;
-import com.asdflj.ae2thing.api.adapter.terminal.AECraftingTerminal;
-import com.asdflj.ae2thing.api.adapter.terminal.FCCraftingTerminal;
-import com.asdflj.ae2thing.api.adapter.terminal.WCTCraftingTerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.item.BackpackTerminalHandler;
+import com.asdflj.ae2thing.api.adapter.terminal.item.DualInterfaceTerminalHandler;
+import com.asdflj.ae2thing.api.adapter.terminal.item.FCBaseTerminalHandler;
+import com.asdflj.ae2thing.api.adapter.terminal.item.UltraTerminalHandler;
+import com.asdflj.ae2thing.api.adapter.terminal.item.WCTWirelessCraftingTerminalHandler;
 import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
 import com.asdflj.ae2thing.common.item.ItemPatternModifier;
 import com.asdflj.ae2thing.common.item.ItemWirelessDualInterfaceTerminal;
@@ -122,9 +122,9 @@ public class CommonProxy {
                 .addBackpackItem(ItemAdventureBackpack.class);
         }
         Upgrades.PATTERN_REFILLER.registerItem(ItemAndBlockHolder.ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL.stack(), 1);
-        Upgrades.ORE_FILTER.registerItem(ItemAndBlockHolder.TOGGLE_VIEW_CELL.stack(), 1);
-        Upgrades.FUZZY.registerItem(ItemAndBlockHolder.TOGGLE_VIEW_CELL.stack(), 1);
-        Upgrades.INVERTER.registerItem(ItemAndBlockHolder.TOGGLE_VIEW_CELL.stack(), 1);
+        // Upgrades.ORE_FILTER.registerItem(ItemAndBlockHolder.TOGGLE_VIEW_CELL.stack(), 1);
+        // Upgrades.FUZZY.registerItem(ItemAndBlockHolder.TOGGLE_VIEW_CELL.stack(), 1);
+        // Upgrades.INVERTER.registerItem(ItemAndBlockHolder.TOGGLE_VIEW_CELL.stack(), 1);
         if (ModAndClassUtil.THE) {
             Upgrades.PATTERN_REFILLER.registerItem(ItemAndBlockHolder.INFUSION_PATTERN_TERMINAL.stack(), 1);
             Upgrades.LOCK_CRAFTING.registerItem(ItemAndBlockHolder.INFUSION_INTERFACE.stack(), 1);

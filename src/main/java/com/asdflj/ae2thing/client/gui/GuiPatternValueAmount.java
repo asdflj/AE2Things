@@ -77,8 +77,10 @@ public class GuiPatternValueAmount extends GuiAmount {
         return "guis/craftAmt.png";
     }
 
+    @Override
     public void setAmount(int amount) {
         this.amountBox.setText(String.valueOf(amount));
+        this.amountBox.setCursorPositionEnd();
         this.amountBox.setSelectionPos(0);
     }
 }

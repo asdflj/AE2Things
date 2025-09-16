@@ -14,7 +14,7 @@ import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessC
 import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemWirelessCraftingTerminal;
 
-import com.asdflj.ae2thing.api.adapter.item.terminal.InventoryPlayerWrapper;
+import com.asdflj.ae2thing.api.adapter.terminal.item.InventoryPlayerWrapper;
 import com.asdflj.ae2thing.client.gui.GuiCellLink;
 import com.asdflj.ae2thing.client.gui.GuiCraftAmount;
 import com.asdflj.ae2thing.client.gui.GuiCraftConfirm;

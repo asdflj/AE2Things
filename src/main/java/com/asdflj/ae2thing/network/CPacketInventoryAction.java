@@ -111,6 +111,9 @@ public class CPacketInventoryAction implements IMessage {
                     if (context != null) {
                         final TileEntity te = context.getTile();
                         if (te != null || target instanceof WirelessTerminal) {
+                            if (message.stack == null){
+                                message.stack = baseContainer.getTargetStack();
+                            }
                             if(message.stack.getItem() instanceof ItemFluidDrop){
                                 IAEFluidStack fs = ItemFluidDrop.getAeFluidStack(message.stack);
                                 if(ModAndClassUtil.THE &&AspectUtil.isEssentiaGas(fs)){

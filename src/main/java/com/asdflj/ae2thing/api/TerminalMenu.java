@@ -6,13 +6,13 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 
-import com.asdflj.ae2thing.api.adapter.item.terminal.BackpackTerminal;
-import com.asdflj.ae2thing.api.adapter.item.terminal.DualInterfaceTerminal;
-import com.asdflj.ae2thing.api.adapter.item.terminal.FCBaseItemTerminal;
-import com.asdflj.ae2thing.api.adapter.item.terminal.FCUltraTerminal;
-import com.asdflj.ae2thing.api.adapter.item.terminal.IItemTerminal;
-import com.asdflj.ae2thing.api.adapter.item.terminal.TerminalItems;
-import com.asdflj.ae2thing.api.adapter.item.terminal.WCTWirelessCraftingTerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.item.BackpackTerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.item.DualInterfaceTerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.item.FCBaseItemTerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.item.FCUltraTerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.item.IItemTerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.item.TerminalItems;
+import com.asdflj.ae2thing.api.adapter.terminal.item.WCTWirelessCraftingTerminal;
 import com.asdflj.ae2thing.client.event.OpenTerminalEvent;
 
 import cpw.mods.fml.relauncher.Side;
@@ -53,10 +53,10 @@ public class TerminalMenu {
     }
 
     static {
-        terminalHandlers.add(new FCUltraTerminal());
-        terminalHandlers.add(new FCBaseItemTerminal());
-        terminalHandlers.add(new DualInterfaceTerminal());
-        terminalHandlers.add(new WCTWirelessCraftingTerminal());
-        terminalHandlers.add(new BackpackTerminal());
+        terminalHandlers.add(FCUltraTerminal.instance);
+        terminalHandlers.add(FCBaseItemTerminal.instance);
+        terminalHandlers.add(DualInterfaceTerminal.instance);
+        terminalHandlers.add(WCTWirelessCraftingTerminal.instance);
+        terminalHandlers.add(BackpackTerminal.instance);
     }
 }

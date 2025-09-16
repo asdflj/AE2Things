@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.api.adapter.terminal;
+package com.asdflj.ae2thing.api.adapter.crafting;
 
 import java.io.IOException;
 import java.util.LinkedList;

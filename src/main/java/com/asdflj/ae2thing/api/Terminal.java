@@ -10,13 +10,16 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 
+import com.asdflj.ae2thing.api.adapter.crafting.ICraftingTerminalAdapter;
 import com.asdflj.ae2thing.api.adapter.findit.IFindItAdapter;
-import com.asdflj.ae2thing.api.adapter.item.terminal.ITerminalHandler;
 import com.asdflj.ae2thing.api.adapter.pattern.IPatternTerminalAdapter;
-import com.asdflj.ae2thing.api.adapter.terminal.ICraftingTerminalAdapter;
+import com.asdflj.ae2thing.api.adapter.terminal.ITerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.item.ITerminalHandler;
+import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.widget.IGuiMonitor;
 import com.asdflj.ae2thing.nei.ButtonConstants;
 import com.asdflj.ae2thing.nei.NEI_TH_Config;
+import com.asdflj.ae2thing.util.Util;
 
 import appeng.api.AEApi;
 import appeng.api.networking.IGridHost;
@@ -39,6 +42,7 @@ public class Terminal {
     private static final HashMap<Class<? extends IGridHost>, IFindItAdapter> storageProviders = new HashMap<>();
     private static final HashMap<Class<? extends Container>, IPatternTerminalAdapter> patternTerminal = new HashMap<>();
     private static final HashMap<Class<? extends Item>, ITerminalHandler> terminalItem = new HashMap<>();
+    private static final HashSet<ITerminal> terminalSet = new HashSet<>();
 
     public void registerTerminal(Class<? extends AEBaseGui> clazz) {
         terminal.add(clazz);
@@ -46,6 +50,14 @@ public class Terminal {
 
     public HashSet<Class<? extends AEBaseGui>> getTerminal() {
         return terminal;
+    }
+
+    public HashSet<ITerminal> getTerminalSet() {
+        return terminalSet;
+    }
+
+    public void registerTerminalSet(ITerminal iTerminal) {
+        terminalSet.add(iTerminal);
     }
 
     public void registerTerminalBlackList(Class<? extends AEBaseGui> clazz) {
@@ -61,8 +73,15 @@ public class Terminal {
         return terminal.contains(gui.getClass());
     }
 
+    public boolean isBackPackTerminal(GuiScreen gui) {
+        return gui instanceof GuiCraftingTerminal;
+    }
+
     @SideOnly(Side.CLIENT)
     public boolean isPinTerminal(GuiScreen gui) {
+        if (Util.getAEVersion() >= 586) {
+            return false;
+        }
         if (!NEI_TH_Config.getConfigValue(ButtonConstants.PINNED_BAR)) return false;
         if (gui == null || terminalBlackList.contains(gui.getClass())) {
             return false;

@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.asdflj.ae2thing.api.adapter.item.terminal.InventoryPlayerWrapper;
+import com.asdflj.ae2thing.api.adapter.terminal.item.InventoryPlayerWrapper;
 
 @Mixin(RandomUtils.class)
 public class MixinRandomUtils {

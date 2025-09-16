@@ -146,6 +146,6 @@ nei.options.ae2thing.crafting_notification=Notify about finished crafting jobs (
 nei.options.ae2thing.crafting_notification.true=Yes
 nei.options.ae2thing.crafting_notification.false=No
 
-nei.options.ae2thing.nei_take_item=Middle click NEI panel to quick take item from ae terminal 
-nei.options.ae2thing.nei_take_item.true=Yes
-nei.options.ae2thing.nei_take_item.false=No
+nei.options.ae2thing.nei_craft_item=Middle click NEI panel to quick order item from ae terminal 
+nei.options.ae2thing.nei_craft_item.true=Yes
+nei.options.ae2thing.nei_craft_item.false=No

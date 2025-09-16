@@ -16,9 +16,17 @@ import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTermi
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.MouseWheelHandler;
+import com.asdflj.ae2thing.api.adapter.terminal.item.BackpackTerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.item.DualInterfaceTerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.item.FCBaseItemTerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.item.FCUltraTerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.item.WCTWirelessCraftingTerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.parts.AETerminal;
+import com.asdflj.ae2thing.api.adapter.terminal.parts.FCPatternTerminal;
 import com.asdflj.ae2thing.client.event.CraftTracking;
 import com.asdflj.ae2thing.client.event.NotificationEvent;
 import com.asdflj.ae2thing.client.event.OpenTerminalEvent;
+import com.asdflj.ae2thing.client.event.UpdateAmountTextEvent;
 import com.asdflj.ae2thing.client.gui.BaseMEGui;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
@@ -26,6 +34,7 @@ import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
 import com.asdflj.ae2thing.client.render.Notification;
 import com.asdflj.ae2thing.common.item.ItemPhial;
+import com.asdflj.ae2thing.coremod.mixin.nei.AccessorGuiOverlayButton;
 import com.asdflj.ae2thing.loader.KeybindLoader;
 import com.asdflj.ae2thing.loader.ListenerLoader;
 import com.asdflj.ae2thing.loader.RenderLoader;
@@ -102,6 +111,11 @@ public class ClientProxy extends CommonProxy {
     }
 
     @SubscribeEvent
+    public void updateCraftAmount(UpdateAmountTextEvent amount) {
+        amount.updateAmount();
+    }
+
+    @SubscribeEvent
     public boolean handleMouseWheelInput(GuiScrollEvent event) {
         if (mouseHandlers.isEmpty()) return false;
         for (MouseWheelHandler handler : mouseHandlers) {
@@ -166,6 +180,27 @@ public class ClientProxy extends CommonProxy {
         AE2ThingAPI.instance()
             .terminal()
             .registerTerminalBlackList(GuiWirelessDualInterfaceTerminal.class);
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerTerminalSet(BackpackTerminal.instance);
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerTerminalSet(DualInterfaceTerminal.instance);
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerTerminalSet(FCBaseItemTerminal.instance);
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerTerminalSet(FCUltraTerminal.instance);
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerTerminalSet(WCTWirelessCraftingTerminal.instance);
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerTerminalSet(new FCPatternTerminal());
+        AE2ThingAPI.instance()
+            .terminal()
+            .registerTerminalSet(new AETerminal());
     }
 
     @SubscribeEvent
@@ -180,6 +215,10 @@ public class ClientProxy extends CommonProxy {
         // nee handler overlayRecipe so i need other way
         if (event.button instanceof GuiOverlayButton && event.gui instanceof GuiRecipe<?>g) {
             recipe = g;
+            if (g.getFirstScreen() instanceof GuiCraftingTerminal
+                && event.button instanceof AccessorGuiOverlayButton btn) {
+                btn.setRequireShiftForOverlayRecipe(false);
+            }
         } else {
             recipe = null;
         }
@@ -194,6 +233,9 @@ public class ClientProxy extends CommonProxy {
             .terminal()
             .isCraftingTerminal(event.gui)) {
             MinecraftForge.EVENT_BUS.post(new CraftTracking());
+        }
+        if (UpdateAmountTextEvent.needUpdateAmountText()) {
+            MinecraftForge.EVENT_BUS.post(new UpdateAmountTextEvent());
         }
     }
 

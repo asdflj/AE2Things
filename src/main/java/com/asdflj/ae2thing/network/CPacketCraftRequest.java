@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
-import com.asdflj.ae2thing.api.adapter.terminal.ICraftingTerminalAdapter;
+import com.asdflj.ae2thing.api.adapter.crafting.ICraftingTerminalAdapter;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.inventory.item.WirelessTerminal;

@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.api.adapter.item.terminal;
+package com.asdflj.ae2thing.api.adapter.terminal.item;
 
 import static com.asdflj.ae2thing.nei.NEI_TH_Config.getConfigValue;
 
@@ -18,9 +18,12 @@ import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.NameConst;
 
+import appeng.helpers.InventoryAction;
 import appeng.util.Platform;
 
 public class FCUltraTerminal implements IItemTerminal {
+
+    public static FCUltraTerminal instance = new FCUltraTerminal();
 
     @Override
     public List<Class<? extends Item>> getClasses() {
@@ -81,4 +84,14 @@ public class FCUltraTerminal implements IItemTerminal {
         }
         return terminal;
     }
+
+    @Override
+    public void openCraftAmount() {
+        com.glodblock.github.network.CPacketInventoryAction packet = new com.glodblock.github.network.CPacketInventoryAction(
+            InventoryAction.AUTO_CRAFT,
+            0,
+            0);
+        com.glodblock.github.FluidCraft.proxy.netHandler.sendToServer(packet);
+    }
+
 }

@@ -38,6 +38,7 @@ public class GuiCraftAmount extends GuiAmount {
                 Settings.CRAFTING_MODE,
                 CraftingMode.STANDARD));
         this.amountBox.setText("1");
+        this.amountBox.setCursorPositionEnd();
         this.amountBox.setSelectionPos(0);
     }
 
@@ -101,5 +102,12 @@ public class GuiCraftAmount extends GuiAmount {
     @Override
     protected String getBackground() {
         return "guis/craftAmt.png";
+    }
+
+    @Override
+    public void setAmount(int amount) {
+        this.amountBox.setText(String.valueOf(amount));
+        this.amountBox.setCursorPositionEnd();
+        this.amountBox.setSelectionPos(0);
     }
 }
