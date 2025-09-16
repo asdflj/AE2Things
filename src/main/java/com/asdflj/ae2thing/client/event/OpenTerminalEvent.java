@@ -1,7 +1,7 @@
 package com.asdflj.ae2thing.client.event;
 
 import com.asdflj.ae2thing.AE2Thing;
-import com.asdflj.ae2thing.api.adapter.item.terminal.TerminalItems;
+import com.asdflj.ae2thing.api.adapter.terminal.item.TerminalItems;
 import com.asdflj.ae2thing.network.CPacketOpenTerminal;
 
 import cpw.mods.fml.common.eventhandler.Event;

@@ -125,7 +125,14 @@ public class THGuiTextField extends FormattedTextField {
             }
         }
         drawSuggestion();
-        super.drawTextBox();
+        try {
+            super.drawTextBox();
+        } catch (Exception e) {
+            // fix crash
+            String text = this.getText()
+                .replaceAll("[^a-zA-Z0-9\\s]", "");
+            this.setText(text);
+        }
     }
 
     public void setBackgroundDrawing() {
@@ -151,7 +158,7 @@ public class THGuiTextField extends FormattedTextField {
                 for (int i = 0; i < this.suggestion.toCharArray().length; i++) {
                     char s = this.suggestion.charAt(i);
                     int charWidth = this._fontRender.getCharWidth(s);
-                    if (w + charWidth < this._width) {
+                    if (w + charWidth * 3 < this._width) {
                         w += charWidth;
                         builder.append(s);
                     } else {

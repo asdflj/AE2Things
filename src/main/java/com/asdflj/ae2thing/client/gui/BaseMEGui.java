@@ -36,6 +36,7 @@ import com.glodblock.github.util.Util;
 import appeng.api.config.SearchBoxMode;
 import appeng.api.config.Settings;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
 import appeng.client.ActionKey;
@@ -98,28 +99,30 @@ public abstract class BaseMEGui extends AEBaseMEGui implements IGuiSelection {
     public boolean updateFluidContainer(Slot slot, int slotIdx, int ctrlDown, int mouseButton) {
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         if (slot instanceof SlotME sme) {
-            ItemStack cs = player.inventory.getItemStack();
-            if (ctrlDown == 0) {
-                if (sme.getHasStack() && sme.getStack()
-                    .getItem() instanceof ItemFluidDrop
-                    && sme.getAEStack()
-                        .getStackSize() != 0) {
-                    if (cs == null || isEmptyContainer(cs, ItemFluidDrop.getAeFluidStack(sme.getAEStack()))) {
-                        IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(sme.getAEStack());
-                        AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
-                        return true;
+            try {
+                ItemStack cs = player.inventory.getItemStack();
+                IAEItemStack item = sme.getHasStack() ? sme.getAEStack() : null;
+                if (ctrlDown == 0) {
+                    if (item != null && item.getItem() != null
+                        && item.getItem() instanceof ItemFluidDrop
+                        && item.getStackSize() != 0) {
+                        if (cs == null || isEmptyContainer(cs, ItemFluidDrop.getAeFluidStack(item))) {
+                            IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(item);
+                            AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(fluid, isShiftKeyDown()));
+                            return true;
+                        }
                     }
+                } else if (ctrlDown == 1 && isFilledContainer(cs)) {
+                    AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(null, isShiftKeyDown()));
+                    return true;
                 }
-            } else if (ctrlDown == 1 && isFilledContainer(cs)) {
-                AE2Thing.proxy.netHandler.sendToServer(new CPacketFluidUpdate(null, isShiftKeyDown()));
-                return true;
-            }
-            if (mouseButton == 3 && player.capabilities.isCreativeMode
-                && sme.getHasStack()
-                && !sme.getAEStack()
-                    .isCraftable()
-                && sme.getStack()
-                    .getItem() instanceof ItemFluidDrop) {
+                if (mouseButton == 3 && player.capabilities.isCreativeMode
+                    && item != null
+                    && !item.isCraftable()
+                    && item.getItem() instanceof ItemFluidDrop) {
+                    return false;
+                }
+            } catch (Exception e) {
                 return false;
             }
         }

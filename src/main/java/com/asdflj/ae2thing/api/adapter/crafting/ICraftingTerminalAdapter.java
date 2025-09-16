@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.api.adapter.terminal;
+package com.asdflj.ae2thing.api.adapter.crafting;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayerMP;

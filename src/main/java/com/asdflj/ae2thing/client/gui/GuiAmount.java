@@ -1,27 +1,28 @@
 package com.asdflj.ae2thing.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Keyboard;
 
+import com.asdflj.ae2thing.api.adapter.terminal.IGuiCraftAmount;
 import com.asdflj.ae2thing.inventory.InventoryHandler;
 import com.asdflj.ae2thing.inventory.gui.GuiType;
 
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiTabButton;
+import appeng.client.gui.widgets.MEGuiTextField;
 import appeng.container.AEBaseContainer;
 import appeng.core.AEConfig;
 import appeng.core.localization.GuiText;
 import appeng.util.calculators.ArithHelper;
 import appeng.util.calculators.Calculator;
 
-public abstract class GuiAmount extends AEBaseGui implements IGuiDrawSlot {
+public abstract class GuiAmount extends AEBaseGui implements IGuiDrawSlot, IGuiCraftAmount {
 
-    protected GuiTextField amountBox;
+    protected MEGuiTextField amountBox;
     protected GuiTabButton originalGuiBtn;
     protected GuiButton submit;
     protected GuiButton plus1;
@@ -72,17 +73,10 @@ public abstract class GuiAmount extends AEBaseGui implements IGuiDrawSlot {
                     itemRender));
             this.originalGuiBtn.setHideEdge(13);
         }
-
-        this.amountBox = new GuiTextField(
-            this.fontRendererObj,
-            this.guiLeft + 62,
-            this.guiTop + 57,
-            59,
-            this.fontRendererObj.FONT_HEIGHT);
-        this.amountBox.setEnableBackgroundDrawing(false);
+        this.amountBox = new MEGuiTextField(61, 12);
+        this.amountBox.x = this.guiLeft + 60;
+        this.amountBox.y = this.guiTop + 55;
         this.amountBox.setMaxStringLength(16);
-        this.amountBox.setTextColor(0xFFFFFF);
-        this.amountBox.setVisible(true);
         this.amountBox.setFocused(true);
     }
 
@@ -121,7 +115,7 @@ public abstract class GuiAmount extends AEBaseGui implements IGuiDrawSlot {
 
     protected void addQty(final int i) {
         try {
-            long resultI = getAmount();
+            int resultI = getAmount();
             if (resultI == 1 && i > 1) {
                 resultI = 0;
             }
@@ -138,7 +132,7 @@ public abstract class GuiAmount extends AEBaseGui implements IGuiDrawSlot {
 
     protected abstract String getBackground();
 
-    protected int getAmount() {
+    public int getAmount() {
         try {
             String out = this.amountBox.getText();
             double result = Calculator.conversion(out);

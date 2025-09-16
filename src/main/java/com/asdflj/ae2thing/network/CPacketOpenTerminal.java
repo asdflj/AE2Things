@@ -13,8 +13,8 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
-import com.asdflj.ae2thing.api.adapter.item.terminal.ITerminalHandler;
-import com.asdflj.ae2thing.api.adapter.item.terminal.TerminalItems;
+import com.asdflj.ae2thing.api.adapter.terminal.item.ITerminalHandler;
+import com.asdflj.ae2thing.api.adapter.terminal.item.TerminalItems;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;

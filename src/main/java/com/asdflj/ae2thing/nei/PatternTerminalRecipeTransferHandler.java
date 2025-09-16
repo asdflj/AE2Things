@@ -71,7 +71,8 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
                     ItemStack slotItem = slot.getStack();
                     if (slotItem == null) return false;
                     GuiOverlayButton btn = (GuiOverlayButton) guiButton.get();
-                    List<PositionedStack> list = btn.handler.getIngredientStacks(btn.recipeIndex);
+
+                    List<PositionedStack> list = btn.handlerRef.handler.getIngredientStacks(btn.handlerRef.recipeIndex);
                     for (PositionedStack stack : list) {
                         ItemStack result = findSameItem(
                             stack.items,
@@ -86,7 +87,7 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
                                 new CPacketTransferRecipe(
                                     in,
                                     out,
-                                    shouldCraft(btn.handler),
+                                    shouldCraft(btn.handlerRef.handler),
                                     isShiftKeyDown(),
                                     Constants.NEI_MOUSE_WHEEL));
                             return true;

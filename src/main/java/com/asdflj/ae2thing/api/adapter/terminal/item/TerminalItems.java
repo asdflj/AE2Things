@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.api.adapter.item.terminal;
+package com.asdflj.ae2thing.api.adapter.terminal.item;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

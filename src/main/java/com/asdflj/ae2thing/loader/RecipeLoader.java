@@ -19,7 +19,6 @@ import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.ITEM_WIRELESS_DUAL_I
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.MANA_EXPORT_BUS;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.MANA_IMPORT_BUS;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.THAUMATRIUM_INTERFACE;
-import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.TOGGLE_VIEW_CELL;
 import static com.asdflj.ae2thing.loader.ItemAndBlockHolder.WIRELESS_CONNECTOR_TERMINAL;
 import static com.glodblock.github.loader.ItemAndBlockHolder.CELL_HOUSING;
 import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_TERMINAL_EX;
@@ -133,7 +132,7 @@ public class RecipeLoader implements Runnable {
 
     @Override
     public void run() {
-        GameRegistry.addShapelessRecipe(TOGGLE_VIEW_CELL.stack(), AE2_VIEW_CELL, AE2_PROCESS_LOG);
+        // GameRegistry.addShapelessRecipe(TOGGLE_VIEW_CELL.stack(), AE2_VIEW_CELL, AE2_PROCESS_LOG);
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
                 ITEM_PATTERN_MODIFIER.stack(),

@@ -1,4 +1,4 @@
-package com.asdflj.ae2thing.api.adapter.item.terminal;
+package com.asdflj.ae2thing.api.adapter.terminal.item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,21 +7,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.asdflj.ae2thing.api.Constants;
+import com.asdflj.ae2thing.api.adapter.terminal.ITerminal;
 import com.asdflj.ae2thing.util.BaublesUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 
-public interface IItemTerminal {
+public interface IItemTerminal extends ITerminal {
 
     default boolean supportBaubles() {
         return false;
     }
-
-    List<Class<? extends Item>> getClasses();
 
     default List<TerminalItems> getTerminalItems() {
         List<TerminalItems> terminal = new ArrayList<>(this.getMainInvTerminals());

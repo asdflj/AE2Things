@@ -4,7 +4,9 @@ import static com.asdflj.ae2thing.nei.NEI_TH_Config.getConfigValue;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -12,17 +14,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
+import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.api.adapter.terminal.ITerminal;
+import com.asdflj.ae2thing.client.event.UpdateAmountTextEvent;
 import com.asdflj.ae2thing.nei.ButtonConstants;
-import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.Util;
 
+import appeng.api.implementations.guiobjects.IGuiItemObject;
+import appeng.api.parts.IPart;
+import appeng.api.parts.PartItemStack;
 import appeng.api.storage.data.IDisplayRepo;
 import appeng.client.gui.AEBaseGui;
 import appeng.container.AEBaseContainer;
-import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.PacketInventoryAction;
-import appeng.helpers.InventoryAction;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import codechicken.nei.NEIClientUtils;
@@ -39,47 +42,64 @@ public abstract class MixinPanelWidget extends Widget implements IContainerToolt
     @Shadow(remap = false)
     public ItemStack draggedStack;
 
-    @Inject(
-        method = "handleClick",
-        at = @At(
-            value = "INVOKE",
-            target = "Lcodechicken/nei/PanelWidget;getDraggedStackWithQuantity(I)Lnet/minecraft/item/ItemStack;",
-            shift = At.Shift.AFTER),
-        remap = false,
-        cancellable = true)
+    @Inject(method = "handleClick", at = @At(value = "HEAD"), remap = false, cancellable = true)
     public void handleClick(int mousex, int mousey, int button, CallbackInfoReturnable<Boolean> cir) {
+        if (button != 2) return;
         try {
             ItemStack is = this.getStackMouseOver(mousex, mousey);
-            if (is != null) {
-                GuiScreen gui = Minecraft.getMinecraft().currentScreen;
-                if (gui instanceof AEBaseGui g) {
-                    if (NEIClientUtils.altKey()) {
-                        IDisplayRepo repo = Util.getDisplayRepo(g);
-                        repo.setSearchString(is.getDisplayName());
-                        Util.setSearchFieldText(g, Platform.getItemDisplayName(is));
+            if (is == null) return;
+            GuiScreen gui = Minecraft.getMinecraft().currentScreen;
+            if (gui instanceof AEBaseGui g) {
+                IDisplayRepo repo = Util.getDisplayRepo(g);
+                if (repo == null) return;
+                if (NEIClientUtils.altKey()) {
+                    repo.setSearchString(is.getDisplayName());
+                    Util.setSearchFieldText(g, Platform.getItemDisplayName(is));
+                    draggedStack = null;
+                    cir.setReturnValue(true);
+                } else if (g.inventorySlots instanceof AEBaseContainer c
+                    && getConfigValue(ButtonConstants.NEI_CRAFT_ITEM)) {
+                        is = is.copy();
+                        if (is.stackSize <= 0) {
+                            is.stackSize = 1;
+                        }
+                        if (c.getTarget() instanceof IGuiItemObject o && o.getItemStack() != null
+                            && o.getItemStack()
+                                .getItem() != null) {
+                            openCraftAmount(
+                                o.getItemStack()
+                                    .getItem()
+                                    .getClass(),
+                                c,
+                                is);
+                        } else if (c.getTarget() instanceof IPart p) {
+                            ItemStack part = p.getItemStack(PartItemStack.Network);
+                            if (part != null && part.getItem() != null) {
+                                openCraftAmount(
+                                    part.getItem()
+                                        .getClass(),
+                                    c,
+                                    is);
+                            }
+                        }
                         draggedStack = null;
                         cir.setReturnValue(true);
-                    } else if (g.inventorySlots instanceof AEBaseContainer c
-                        && getConfigValue(ButtonConstants.NEI_TAKE_ITEM)) {
-                            c.setTargetStack(AEItemStack.create(is));
-                            InventoryAction action;
-                            if (GuiScreen.isCtrlKeyDown()) {
-                                action = InventoryAction.PICKUP_SINGLE;
-                            } else {
-                                action = InventoryAction.PICKUP_OR_SET_DOWN;
-                            }
-                            final PacketInventoryAction p = new PacketInventoryAction(
-                                action,
-                                Ae2ReflectClient.getInventorySlots(g)
-                                    .size(),
-                                gui instanceof GuiWirelessDualInterfaceTerminal ? -2 : 0);
-                            NetworkHandler.instance.sendToServer(p);
-                            draggedStack = null;
-                            cir.setReturnValue(true);
-                        }
-                }
+                    }
             }
         } catch (Exception ignored) {}
     }
 
+    private void openCraftAmount(Class<? extends Item> o, AEBaseContainer c, ItemStack is) {
+        for (ITerminal terminal : AE2ThingAPI.instance()
+            .terminal()
+            .getTerminalSet()) {
+            if (terminal.getClasses()
+                .contains(o)) {
+                c.setTargetStack(AEItemStack.create(is));
+                terminal.openCraftAmount();
+                MinecraftForge.EVENT_BUS.post(new UpdateAmountTextEvent(is.stackSize));
+                break;
+            }
+        }
+    }
 }
