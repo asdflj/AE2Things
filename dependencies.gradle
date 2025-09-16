@@ -34,14 +34,14 @@
  * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
-    api('com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-669-GTNH:dev')
-    api('com.github.GTNewHorizons:NotEnoughItems:2.7.69-GTNH:dev')
+    api('com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-684-GTNH:dev')
+    api('com.github.GTNewHorizons:NotEnoughItems:2.7.81-GTNH:dev')
     api('curse.maven:cofh-core-69162:2388751')
     api('com.github.GTNewHorizons:waila:1.8.2:dev')
-    api('com.github.GTNewHorizons:AE2FluidCraft-Rework:1.4.106-gtnh:dev') {
+    api('com.github.GTNewHorizons:AE2FluidCraft-Rework:1.4.113-gtnh:dev') {
         exclude group: 'com.github.GTNewHorizons', module: 'Applied-Energistics-2-Unofficial'
     }
-    api('com.github.GTNewHorizons:ae2stuff:0.9.6-GTNH:dev')
+    api('com.github.GTNewHorizons:ae2stuff:0.9.7-GTNH:dev')
 
     //wct
     compileOnly("com.github.GTNewHorizons:WirelessCraftingTerminal:1.12.7:dev")
@@ -49,7 +49,7 @@ dependencies {
     // nei findit
     compileOnly('com.github.GTNewHorizons:FindIt:1.4.0:dev')
     //nee
-    compile('com.github.GTNewHorizons:NotEnoughEnergistics:1.7.7:dev')
+    compile('com.github.GTNewHorizons:NotEnoughEnergistics:1.7.12:dev')
     //backpack
     compile('com.github.GTNewHorizons:AdventureBackpack2:1.3.9-GTNH:dev')
     compile('com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.5.4-GTNH:dev')
@@ -58,12 +58,12 @@ dependencies {
     compileOnly('com.github.GTNewHorizons:TinkersConstruct:1.13.46-GTNH:dev')
     // tc
     compileOnly('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
-    compileOnly('com.github.GTNewHorizons:ThaumicEnergistics:1.7.11-GTNH:dev') { transitive = false }
+    compileOnly('com.github.GTNewHorizons:ThaumicEnergistics:1.7.13-GTNH:dev') { transitive = false }
     compileOnly('com.github.GTNewHorizons:thaumicinsurgence:0.4.0:dev')
     compileOnly 'curse.maven:thaumcraft-nei-plugin-225095:2241913'
     compileOnly('com.github.GTNewHorizons:TCNEIAdditions:1.5.1:dev')
     // gt
-    compileOnly('com.github.GTNewHorizons:GT5-Unofficial:5.09.50.103:dev'){
+    compileOnly('com.github.GTNewHorizons:GT5-Unofficial:5.09.51.449:dev'){
         exclude group: 'com.github.GTNewHorizons', module: 'AE2FluidCraft-Rework'
     }
     //gt BlockRenderer6343
