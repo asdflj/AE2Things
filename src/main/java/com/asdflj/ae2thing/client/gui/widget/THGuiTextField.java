@@ -125,7 +125,14 @@ public class THGuiTextField extends FormattedTextField {
             }
         }
         drawSuggestion();
-        super.drawTextBox();
+        try {
+            super.drawTextBox();
+        } catch (Exception e) {
+            // fix crash
+            String text = this.getText()
+                .replaceAll("[^a-zA-Z0-9\\s]", "");
+            this.setText(text);
+        }
     }
 
     public void setBackgroundDrawing() {
