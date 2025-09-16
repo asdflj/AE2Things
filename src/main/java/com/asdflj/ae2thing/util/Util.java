@@ -11,7 +11,6 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -20,8 +19,6 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
-
-import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
@@ -306,18 +303,6 @@ public class Util {
             return field.getInt(Minecraft.getMinecraft());
         } catch (Exception ignored) {}
         return 0;
-    }
-
-    public static ItemStack getPotion(FluidStack fs) {
-        if (fs == null) return null;
-        MutablePair<Integer, ItemStack> fillStack = com.glodblock.github.util.Util.FluidUtil
-            .fillStack(AE2ThingAPI.GLASS_BOTTLE, fs);
-        if (fillStack != null && fillStack.getRight() != null
-            && fillStack.getRight()
-                .getItem() instanceof ItemPotion) {
-            return fillStack.right;
-        }
-        return null;
     }
 
     public static IDisplayRepo getDisplayRepo(AEBaseGui gui) {
