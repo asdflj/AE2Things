@@ -31,6 +31,7 @@ import com.asdflj.ae2thing.client.gui.BaseMEGui;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
+import com.asdflj.ae2thing.client.gui.IGuiMonitorTerminal;
 import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
 import com.asdflj.ae2thing.client.render.Notification;
 import com.asdflj.ae2thing.common.item.ItemPhial;
@@ -215,7 +216,7 @@ public class ClientProxy extends CommonProxy {
         // nee handler overlayRecipe so i need other way
         if (event.button instanceof GuiOverlayButton && event.gui instanceof GuiRecipe<?>g) {
             recipe = g;
-            if (g.getFirstScreen() instanceof GuiCraftingTerminal
+            if (g.getFirstScreen() instanceof IGuiMonitorTerminal
                 && event.button instanceof AccessorGuiOverlayButton btn) {
                 btn.setRequireShiftForOverlayRecipe(false);
             }

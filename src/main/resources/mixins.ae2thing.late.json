@@ -23,7 +23,8 @@
     "tc.nei.MixinTemplateRecipeHandler",
     "wct.MixinRandomUtils",
     "ae.AccessorGuiScrollbar",
-    "ae.MixinCraftingCPUCluster"
+    "ae.MixinCraftingCPUCluster",
+    "br.MixinBRUtil"
   ],
   "server": [
     "ae.MixinContainerCraftConfirm",

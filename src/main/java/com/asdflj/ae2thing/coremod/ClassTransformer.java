@@ -6,7 +6,6 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 
-import com.asdflj.ae2thing.coremod.transform.BRTransformer;
 import com.asdflj.ae2thing.coremod.transform.CraftingJobV2Transformer;
 import com.asdflj.ae2thing.coremod.transform.FluidConvertingInventoryAdaptorTransformer;
 import com.asdflj.ae2thing.coremod.transform.GuiDualInterfaceTransformer;
@@ -26,7 +25,6 @@ public class ClassTransformer implements IClassTransformer {
             case "com.glodblock.github.client.gui.GuiDualInterface" -> tform = GuiDualInterfaceTransformer.INSTANCE;
             case "appeng.tile.storage.TileIOPort" -> tform = TileIOPortTransformer.INSTANCE;
             case "appeng.crafting.v2.CraftingJobV2", "appeng.me.GridStorage" -> tform = CraftingJobV2Transformer.INSTANCE;
-            case "blockrenderer6343.client.utils.BRUtil", "blockrenderer6343.integration.nei.GuiMultiblockHandler" -> tform = BRTransformer.INSTANCE;
             default -> {
                 return code;
             }
