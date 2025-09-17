@@ -24,11 +24,13 @@
     "wct.MixinRandomUtils",
     "ae.AccessorGuiScrollbar",
     "ae.MixinCraftingCPUCluster",
+    "ae.MixinTileIOPort",
     "br.MixinBRUtil"
   ],
   "server": [
-    "ae.MixinContainerCraftConfirm",
     "wct.MixinRandomUtils",
+    "ae.MixinTileIOPort",
+    "ae.MixinContainerCraftConfirm",
     "ae.MixinCraftingCPUCluster"
   ]
 }
