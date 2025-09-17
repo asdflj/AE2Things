@@ -3,15 +3,18 @@ Neat little additions to AE2-GTNH
 
 This mod adds a new type of cell the DISK: Deep Item Storage disk. This cell has no type limits.
 
+## Downloads & Requirements
+| GTNH  | AE2T   | Download                                                                                                                   | Maintenance |
+|-------|--------|----------------------------------------------------------------------------------------------------------------------------|:-----------:|
+| 2.7.4 | 1.1.28 | [![1.1.28](https://img.shields.io/badge/release-v1.1.28-orange)](https://github.com/asdflj/AE2Things/releases/v1.1.28)     |     ❌️      |
+| 2.8.0 | 1.2.0+ | [![Latest](https://img.shields.io/github/v/release/asdflj/AE2Things)](https://github.com/asdflj/AE2Things/releases/latest) |    ✔️       |
+
+
 **Infinity cell**</br>
 Can set link mode to link other infinity cell. It will share stored items
 ![infinity_cell_link.png](blob/infinity_cell_link.png)
-**Toggleable view cell**</br>
-Right click to toggle view cell
-![toggleable_view_cell.gif](blob/toggleable_view_cell.gif)
-**Pinned Items**</br>
-Backport pinned items
-![pinned.gif](blob/pinned.gif)
+**Middle click to quick order item**</br>
+![order.gif](blob/order.gif)
 **Crafting complete notification**</br>
 Backport crafting complete notification
 ![crafting_notification.gif](blob/crafting_notification.gif)
@@ -56,6 +59,3 @@ Can easily manage ae2 stuff wireless connector
 FishBig and MDDyue
 ![doll_2.png](blob/doll_2.png)
 
-**Request missing items**</br>
-Rework crafting terminal request missing items,support ae2fc universal terminal
-![request_missing_items.gif](blob/request_missing_items.gif)
