@@ -23,8 +23,10 @@ import com.asdflj.ae2thing.util.Util;
 import appeng.api.implementations.guiobjects.IGuiItemObject;
 import appeng.api.parts.IPart;
 import appeng.api.parts.PartItemStack;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IDisplayRepo;
 import appeng.client.gui.AEBaseGui;
+import appeng.client.me.ItemRepo;
 import appeng.container.AEBaseContainer;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
@@ -55,38 +57,46 @@ public abstract class MixinPanelWidget extends Widget implements IContainerToolt
                 if (NEIClientUtils.altKey()) {
                     repo.setSearchString(is.getDisplayName());
                     Util.setSearchFieldText(g, Platform.getItemDisplayName(is));
-                    draggedStack = null;
-                    cir.setReturnValue(true);
-                } else if (g.inventorySlots instanceof AEBaseContainer c
-                    && getConfigValue(ButtonConstants.NEI_CRAFT_ITEM)) {
-                        is = is.copy();
-                        if (is.stackSize <= 0) {
-                            is.stackSize = 1;
-                        }
-                        if (c.getTarget() instanceof IGuiItemObject o && o.getItemStack() != null
-                            && o.getItemStack()
-                                .getItem() != null) {
-                            openCraftAmount(
-                                o.getItemStack()
-                                    .getItem()
-                                    .getClass(),
-                                c,
-                                is);
-                        } else if (c.getTarget() instanceof IPart p) {
-                            ItemStack part = p.getItemStack(PartItemStack.Network);
-                            if (part != null && part.getItem() != null) {
+                } else
+                    if (g.inventorySlots instanceof AEBaseContainer c && getConfigValue(ButtonConstants.NEI_CRAFT_ITEM)
+                        && repo instanceof ItemRepo itemRepo
+                        && canCraftItem(itemRepo, is)) {
+                            is = is.copy();
+                            if (is.stackSize <= 0) {
+                                is.stackSize = 1;
+                            }
+                            if (c.getTarget() instanceof IGuiItemObject o && o.getItemStack() != null
+                                && o.getItemStack()
+                                    .getItem() != null) {
                                 openCraftAmount(
-                                    part.getItem()
+                                    o.getItemStack()
+                                        .getItem()
                                         .getClass(),
                                     c,
                                     is);
+                            } else if (c.getTarget() instanceof IPart p) {
+                                ItemStack part = p.getItemStack(PartItemStack.Network);
+                                if (part != null && part.getItem() != null) {
+                                    openCraftAmount(
+                                        part.getItem()
+                                            .getClass(),
+                                        c,
+                                        is);
+                                }
                             }
                         }
-                        draggedStack = null;
-                        cir.setReturnValue(true);
-                    }
+                draggedStack = null;
+                cir.setReturnValue(true);
             }
         } catch (Exception ignored) {}
+    }
+
+    private boolean canCraftItem(ItemRepo repo, ItemStack is) {
+        if (repo == null || is == null) return false;
+        IAEItemStack item = repo.getAvailableItems()
+            .findPrecise(AEItemStack.create(is));
+        if (item == null) return false;
+        return item.isCraftable();
     }
 
     private void openCraftAmount(Class<? extends Item> o, AEBaseContainer c, ItemStack is) {
