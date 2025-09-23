@@ -6,7 +6,7 @@
 		"description": "",
 		"version": "${modVersion}",
 		"mcversion": "${minecraftVersion}",
-		"url": "",
+		"url": "https://github.com/asdflj/AE2Things",
 		"updateUrl": "",
 		"authorList": ["asdflj"],
 		"credits": "",
