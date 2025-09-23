@@ -3,6 +3,7 @@ package com.asdflj.ae2thing.common.item;
 import java.util.EnumSet;
 
 import net.bdew.ae2stuff.machines.wireless.TileWireless;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -25,8 +26,9 @@ import appeng.core.features.AEFeature;
 import appeng.core.localization.PlayerMessages;
 import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.util.Platform;
+import baubles.api.IBauble;
 
-public abstract class ItemBaseWirelessTerminal extends ToolWirelessTerminal implements IItemInventory {
+public abstract class ItemBaseWirelessTerminal extends ToolWirelessTerminal implements IItemInventory, IBauble {
 
     public ItemBaseWirelessTerminal() {
         super();
@@ -40,6 +42,11 @@ public abstract class ItemBaseWirelessTerminal extends ToolWirelessTerminal impl
     @Override
     public boolean canHandle(final ItemStack is) {
         return is != null && is.getItem() instanceof ItemBaseWirelessTerminal;
+    }
+
+    @Override
+    public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
+        return false;
     }
 
     @Override
