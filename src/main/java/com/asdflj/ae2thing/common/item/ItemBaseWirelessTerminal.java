@@ -39,7 +39,7 @@ public abstract class ItemBaseWirelessTerminal extends ToolWirelessTerminal impl
 
     @Override
     public boolean canHandle(final ItemStack is) {
-        return is.getItem() instanceof ItemBaseWirelessTerminal;
+        return is != null && is.getItem() instanceof ItemBaseWirelessTerminal;
     }
 
     @Override
