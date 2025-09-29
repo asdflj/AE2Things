@@ -33,12 +33,16 @@ import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.security.PlayerSource;
+import appeng.api.parts.IPart;
+import appeng.api.parts.PartItemStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.DimensionalCoord;
+import appeng.core.AELog;
 import appeng.crafting.v2.CraftingJobV2;
 import appeng.helpers.ICustomNameObject;
 import appeng.me.Grid;
 import appeng.me.GridStorage;
+import appeng.me.helpers.IGridProxyable;
 import appeng.parts.AEBasePart;
 import appeng.util.Platform;
 
@@ -104,6 +108,13 @@ public class CraftingDebugHelper implements ICraftingCallback {
                         part.getItemStack()
                             .getDisplayName());
                     this.direction = part.getSide();
+                } else if (ms.via instanceof IPart part) {
+                    if (part instanceof IGridProxyable p) {
+                        this.pos = p.getLocation();
+                    } else {
+                        this.pos = null;
+                    }
+                    this.name = getName(ms.via, Platform.getItemDisplayName(part.getItemStack(PartItemStack.Pick)));
                 } else if (ms.via instanceof TileEntity te) {
                     this.pos = new DimensionalCoord(te);
                     this.name = getName(
@@ -111,10 +122,12 @@ public class CraftingDebugHelper implements ICraftingCallback {
                         te.getBlockType()
                             .getLocalizedName());
                 } else {
-                    throw new RuntimeException("Unknown action source");
+                    AELog.error("Unknown action source");
+                    this.pos = null;
                 }
             } else {
-                throw new RuntimeException("Unknown action source");
+                AELog.error("Unknown action source");
+                this.pos = null;
             }
             this.id = id;
             this.mode = mode;
@@ -196,7 +209,7 @@ public class CraftingDebugHelper implements ICraftingCallback {
             boolean simulation = tag.getBoolean("simulation");
             Constants.State state = Constants.State.values()[tag.getByte("state")];
             DimensionalCoord pos = null;
-            if (!isPlayer) {
+            if (!isPlayer && tag.hasKey("dim")) {
                 pos = DimensionalCoord.readFromNBT(tag);
             }
             return new CraftingInfo(
