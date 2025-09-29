@@ -152,9 +152,17 @@ public class AdvItemRepo extends ItemRepo implements Runnable {
 
     @Override
     public void setPaused(boolean paused) {
-        if (hasCache()) {
-            repo.setPaused(paused);
+        if (hasCache() && this.repo instanceof IDisplayRepoExtend dre) {
+            dre.setAdvRepoPause(paused);
+            if (!paused) {
+                try {
+                    pool.execute(this);
+                } catch (Exception ignored) {
+
+                }
+            }
+        } else {
+            super.setPaused(paused);
         }
-        super.setPaused(paused);
     }
 }

@@ -43,6 +43,9 @@ public abstract class MixinItemRepo implements IDisplayRepo, IDisplayRepoExtend 
     @Final
     private IItemList<IAEItemStack> list;
 
+    @Shadow(remap = false)
+    private boolean paused;
+
     private void setAsEmpty(int i) {
         this.view.add(i, null);
         this.dsp.add(i, null);
@@ -141,5 +144,10 @@ public abstract class MixinItemRepo implements IDisplayRepo, IDisplayRepoExtend 
             }
             this.setAsEmpty(i);
         }
+    }
+
+    @Override
+    public void setAdvRepoPause(boolean pause) {
+        this.paused = pause;
     }
 }
