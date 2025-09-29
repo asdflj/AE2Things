@@ -758,9 +758,9 @@ public abstract class GuiMonitor extends BaseMEGui
 
     @Override
     public void handleKeyboardInput() {
-        this.getRepo()
-            .setPausedMethod();
         super.handleKeyboardInput();
+        this.getRepo()
+            .setPaused(hasShiftDown());
     }
 
     @Override

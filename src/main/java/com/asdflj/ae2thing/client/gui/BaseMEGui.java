@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fluids.FluidStack;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -79,6 +80,10 @@ public abstract class BaseMEGui extends AEBaseMEGui implements IGuiSelection {
         } else {
             return is.getDisplayName();
         }
+    }
+
+    public boolean hasShiftDown() {
+        return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
     }
 
     protected boolean isFilledContainer(ItemStack is) {

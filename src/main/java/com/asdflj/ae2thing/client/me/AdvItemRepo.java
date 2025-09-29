@@ -1,9 +1,5 @@
 package com.asdflj.ae2thing.client.me;
 
-import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -63,20 +59,9 @@ public class AdvItemRepo extends ItemRepo implements Runnable {
     protected final Set<IAEItemStack> cache = Collections.synchronizedSet(new HashSet<>());
     protected IGuiMonitor gui;
     private static final Lock lock = new ReentrantLock();
-    protected Method setPaused = null;
-    protected Field setPausedBoolean = null;
 
     public AdvItemRepo(IScrollSource src, ISortSource sortSrc) {
         super(src, sortSrc);
-        try {
-            this.setPaused = this.getClass()
-                .getMethod("setPaused", boolean.class);
-            this.setPausedBoolean = this.getClass()
-                .getSuperclass()
-                .getDeclaredField("paused");
-            this.setPausedBoolean.setAccessible(true);
-        } catch (Exception ignored) {}
-
     }
 
     public AdvItemRepo(ISortSource sortSrc) {
@@ -165,18 +150,4 @@ public class AdvItemRepo extends ItemRepo implements Runnable {
         }
     }
 
-    public void setPausedMethod() {
-        // support 521 Shift to pause terminal view movement
-        try {
-            if (this.hasCache() && this.repo.setPaused != null && this.repo.setPausedBoolean != null) {
-                boolean isShiftKeyDown = isShiftKeyDown();
-                this.setPausedBoolean.set(this.repo, isShiftKeyDown);
-                if (!isShiftKeyDown) {
-                    this.updateView();
-                }
-            } else if (this.setPaused != null && this.repo.setPausedBoolean != null) {
-                this.setPaused.invoke(this, isShiftKeyDown());
-            }
-        } catch (Exception ignored) {}
-    }
 }

@@ -382,9 +382,9 @@ public class GuiWirelessDualInterfaceTerminal extends GuiBaseInterfaceWireless i
 
     @Override
     public void handleKeyboardInput() {
+        super.handleKeyboardInput();
         if (this.itemPanel != null) {
             this.itemPanel.handleKeyboardInput();
         }
-        super.handleKeyboardInput();
     }
 }
