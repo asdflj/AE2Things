@@ -650,7 +650,7 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
     @Override
     public void handleKeyboardInput() {
         this.getRepo()
-            .setPausedMethod();
+            .setPaused(this.parent.hasShiftDown());
     }
 
     @Override
