@@ -284,11 +284,11 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
         Slot slot = this.getSlotAtPosition(xCoord, yCoord);
         if (slot != null && (btn == 0 || btn == 1 || flag)) {
             if (btn == this.parent.mc.gameSettings.keyBindPickBlock.getKeyCode() + 100) {
-                this.handleMouseClick(slot, slot.getSlotIndex(), btn, 3);
+                this.mouseClick(slot, slot.getSlotIndex(), btn, 3);
             } else if (isShiftKeyDown()) {
-                this.handleMouseClick(slot, slot.getSlotIndex(), btn, 1);
+                this.mouseClick(slot, slot.getSlotIndex(), btn, 1);
             } else {
-                this.handleMouseClick(slot, slot.getSlotIndex(), btn, 0);
+                this.mouseClick(slot, slot.getSlotIndex(), btn, 0);
             }
         }
     }
@@ -352,8 +352,7 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
         this.saveSearchString();
     }
 
-    @Override
-    public boolean handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton) {
+    private boolean mouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton) {
         if (slotIdx < 0) return false;
         // Temporary solution
         if (lastClickTime == Minecraft.getMinecraft().thePlayer.ticksExisted) {
@@ -434,6 +433,11 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton) {
+        return slot instanceof SlotME;
     }
 
     @Override
