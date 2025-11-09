@@ -25,7 +25,6 @@ import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTe
 import com.asdflj.ae2thing.client.me.AdvItemRepo;
 import com.asdflj.ae2thing.network.CPacketInventoryAction;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
-import com.asdflj.ae2thing.util.GTUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
@@ -82,6 +81,7 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
     private GuiImgButton searchBoxSettings;
     private static String memoryText = "";
     private final TextHistory history;
+    private int lastClickTime = 0;
 
     public ItemPanel(IWidgetGui gui, ContainerWirelessDualInterfaceTerminal container, IConfigManager configSrc,
         ISortSource source) {
@@ -276,10 +276,10 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
             setSearchString("", true);
         }
         this.scrollbar.click(this.parent, xCoord - this.parent.getGuiLeft(), yCoord - this.parent.getGuiTop());
-
-        if (ModAndClassUtil.CORE_MOD && GTUtil.compareVersion(GTUtil.CoreModVersion) == 1) {
-            return;
-        }
+        // remove
+        // if (ModAndClassUtil.CORE_MOD && GTUtil.compareVersion(GTUtil.CoreModVersion) == 1) {
+        // return;
+        // }
         boolean flag = btn == this.parent.mc.gameSettings.keyBindPickBlock.getKeyCode() + 100;
         Slot slot = this.getSlotAtPosition(xCoord, yCoord);
         if (slot != null && (btn == 0 || btn == 1 || flag)) {
@@ -355,6 +355,11 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
     @Override
     public boolean handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton) {
         if (slotIdx < 0) return false;
+        // Temporary solution
+        if (lastClickTime == Minecraft.getMinecraft().thePlayer.ticksExisted) {
+            return false;
+        }
+        lastClickTime = Minecraft.getMinecraft().thePlayer.ticksExisted;
         saveSearchString();
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         if (this.parent.updateFluidContainer(slot, slotIdx, ctrlDown, mouseButton)) return true;
