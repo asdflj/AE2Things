@@ -3,3 +3,10 @@
 plugins {
     id 'com.gtnewhorizons.gtnhconvention'
 }
+repositories {
+    maven {
+        name = "glee8e maven"
+        url = "https://maven.glease.net/repos/releases/"
+    }
+
+}
