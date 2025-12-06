@@ -20,6 +20,7 @@ public class Config {
     public static int exIOPortTransferContentsRate;
     public static boolean backpackTerminalAddTicSupport = false;
     public static int craftingHistorySize = 200;
+    public static boolean dualInterfaceTerminalAppendCircuitDamage = true;
 
     public static void run() {
         loadCategory();
@@ -54,6 +55,11 @@ public class Config {
             .getBoolean("Tic", AE2Thing.NAME, false, "Let Backpack Terminal can forge tic tool");
         craftingHistorySize = Config
             .getInt("crafting history size", AE2Thing.NAME, 200, 100, 300, "crafting history size");
+        dualInterfaceTerminalAppendCircuitDamage = Config.getBoolean(
+            "Dual interface terminal append circuit damage",
+            AE2Thing.NAME,
+            true,
+            "Append circuit damage value to recipe name when auto-filling dual interface terminal search.");
         if (Config.hasChanged()) Config.save();
     }
 

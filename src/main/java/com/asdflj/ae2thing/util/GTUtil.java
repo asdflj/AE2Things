@@ -16,6 +16,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
 import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.nei.ButtonConstants;
 import com.asdflj.ae2thing.network.SPacketMEItemInvUpdate;
 import com.glodblock.github.nei.object.OrderStack;
@@ -58,7 +59,9 @@ public class GTUtil {
             }
             for (OrderStack<?> stack : in) {
                 if (stack.getStack() instanceof ItemStack is && is.stackSize == 0) {
-                    return String.format("%s %s", recipe.getRecipeName(), is.getItemDamage());
+                    return Config.dualInterfaceTerminalAppendCircuitDamage
+                        ? String.format("%s %s", recipe.getRecipeName(), is.getItemDamage())
+                        : recipe.getRecipeName();
                 }
             }
         }
