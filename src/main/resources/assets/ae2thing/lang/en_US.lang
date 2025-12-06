@@ -142,6 +142,10 @@ nei.options.ae2thing.dual_interface_terminal_fill_circuit=Dual interface termina
 nei.options.ae2thing.dual_interface_terminal_fill_circuit.true=Yes
 nei.options.ae2thing.dual_interface_terminal_fill_circuit.false=No
 
+nei.options.ae2thing.dual_interface_terminal_append_circuit_damage=Dual interface terminal append NC items (molds, circuit boards, etc.) to recipe name
+nei.options.ae2thing.dual_interface_terminal_append_circuit_damage.true=Yes
+nei.options.ae2thing.dual_interface_terminal_append_circuit_damage.false=No
+
 nei.options.ae2thing.crafting_notification=Notify about finished crafting jobs (requires wireless terminal)
 nei.options.ae2thing.crafting_notification.true=Yes
 nei.options.ae2thing.crafting_notification.false=No
