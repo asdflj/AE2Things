@@ -132,6 +132,10 @@ nei.options.ae2thing.dual_interface_terminal_fill_circuit=二合一接口终端�
 nei.options.ae2thing.dual_interface_terminal_fill_circuit.true=是
 nei.options.ae2thing.dual_interface_terminal_fill_circuit.false=否
 
+nei.options.ae2thing.dual_interface_terminal_append_circuit_damage=二合一接口终端将nc物品(模头，电路板等)追加到配方名称
+nei.options.ae2thing.dual_interface_terminal_append_circuit_damage.true=是
+nei.options.ae2thing.dual_interface_terminal_append_circuit_damage.false=否
+
 nei.options.ae2thing.crafting_notification=自动合成完成时发送提醒(需要无线终端)
 nei.options.ae2thing.crafting_notification.true=是
 nei.options.ae2thing.crafting_notification.false=否

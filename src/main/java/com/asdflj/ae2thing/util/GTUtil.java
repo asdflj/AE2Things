@@ -58,7 +58,9 @@ public class GTUtil {
             }
             for (OrderStack<?> stack : in) {
                 if (stack.getStack() instanceof ItemStack is && is.stackSize == 0) {
-                    return String.format("%s %s", recipe.getRecipeName(), is.getItemDamage());
+                    return getConfigValue(ButtonConstants.DUAL_INTERFACE_TERMINAL_APPEND_CIRCUIT_DAMAGE)
+                        ? String.format("%s %s", recipe.getRecipeName(), is.getItemDamage())
+                        : recipe.getRecipeName();
                 }
             }
         }
