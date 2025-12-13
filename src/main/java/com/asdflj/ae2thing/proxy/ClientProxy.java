@@ -24,6 +24,7 @@ import com.asdflj.ae2thing.api.adapter.terminal.item.WCTWirelessCraftingTerminal
 import com.asdflj.ae2thing.api.adapter.terminal.parts.AETerminal;
 import com.asdflj.ae2thing.api.adapter.terminal.parts.FCPatternTerminal;
 import com.asdflj.ae2thing.client.event.CraftTracking;
+import com.asdflj.ae2thing.client.event.GuiOverlayButtonEvent;
 import com.asdflj.ae2thing.client.event.NotificationEvent;
 import com.asdflj.ae2thing.client.event.OpenTerminalEvent;
 import com.asdflj.ae2thing.client.event.UpdateAmountTextEvent;
@@ -31,11 +32,9 @@ import com.asdflj.ae2thing.client.gui.BaseMEGui;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
-import com.asdflj.ae2thing.client.gui.IGuiMonitorTerminal;
 import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
 import com.asdflj.ae2thing.client.render.Notification;
 import com.asdflj.ae2thing.common.item.ItemPhial;
-import com.asdflj.ae2thing.coremod.mixin.nei.AccessorGuiOverlayButton;
 import com.asdflj.ae2thing.loader.KeybindLoader;
 import com.asdflj.ae2thing.loader.ListenerLoader;
 import com.asdflj.ae2thing.loader.RenderLoader;
@@ -60,6 +59,7 @@ import appeng.client.gui.implementations.GuiWirelessTerm;
 import codechicken.nei.api.API;
 import codechicken.nei.recipe.GuiOverlayButton;
 import codechicken.nei.recipe.GuiRecipe;
+import codechicken.nei.recipe.GuiRecipeButton;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -69,7 +69,7 @@ import cpw.mods.fml.common.network.FMLNetworkEvent;
 
 public class ClientProxy extends CommonProxy {
 
-    private static GuiRecipe<?> recipe = null;
+    private static GuiOverlayButton overlayButton = null;
     public static List<MouseWheelHandler> mouseHandlers = new ArrayList<>();
 
     @Override
@@ -87,8 +87,8 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
-    public static GuiRecipe<?> getRecipe() {
-        return recipe;
+    public static GuiOverlayButton getOverlayButton() {
+        return overlayButton;
     }
 
     @Override
@@ -120,7 +120,7 @@ public class ClientProxy extends CommonProxy {
     public boolean handleMouseWheelInput(GuiScrollEvent event) {
         if (mouseHandlers.isEmpty()) return false;
         for (MouseWheelHandler handler : mouseHandlers) {
-            if (handler.handleMouseWheel(event, recipe)) {
+            if (handler.handleMouseWheel(event, overlayButton)) {
                 return true;
             }
         }
@@ -212,17 +212,19 @@ public class ClientProxy extends CommonProxy {
     }
 
     @SubscribeEvent
-    public void onActionPerformedEventPre(GuiScreenEvent.ActionPerformedEvent.Pre event) {
-        // nee handler overlayRecipe so i need other way
-        if (event.button instanceof GuiOverlayButton && event.gui instanceof GuiRecipe<?>g) {
-            recipe = g;
-            if (g.getFirstScreen() instanceof IGuiMonitorTerminal
-                && event.button instanceof AccessorGuiOverlayButton btn) {
-                btn.setRequireShiftForOverlayRecipe(false);
+    public void onActionPerformedEventPost(GuiRecipeButton.UpdateRecipeButtonsEvent.Post event) {
+        if (!(event.gui instanceof GuiRecipe<?>)) return;
+        overlayButton = null;
+        for (GuiRecipeButton btn : event.buttonList) {
+            if (btn instanceof GuiOverlayButton gob) {
+                gob.setRequireShiftForOverlayRecipe(false);
             }
-        } else {
-            recipe = null;
         }
+    }
+
+    @SubscribeEvent
+    public void onActionOverlayButton(GuiOverlayButtonEvent event) {
+        overlayButton = event.getButton();
     }
 
     @SubscribeEvent
