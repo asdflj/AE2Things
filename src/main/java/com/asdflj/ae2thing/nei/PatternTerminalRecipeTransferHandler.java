@@ -7,10 +7,8 @@ import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
@@ -22,6 +20,7 @@ import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.nei.object.OrderStack;
 import com.asdflj.ae2thing.nei.recipes.FluidRecipe;
 import com.asdflj.ae2thing.network.CPacketTransferRecipe;
+import com.asdflj.ae2thing.proxy.ClientProxy;
 import com.asdflj.ae2thing.util.GTUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.asdflj.ae2thing.util.PHUtil;
@@ -61,16 +60,13 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
     }
 
     public PatternTerminalRecipeTransferHandler() {
-        mouseHandlers.add((event, recipe) -> {
+        mouseHandlers.add((event, overlayButton) -> {
             GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-            if (screen instanceof AEBaseGui g && recipe != null && GuiScreen.isShiftKeyDown()) {
-                Optional<GuiButton> guiButton = recipe.getOverlayButtons()
-                    .stream()
-                    .findFirst();
-                if (guiButton.isPresent() && g.theSlot instanceof SlotFake slot) {
+            if (screen instanceof AEBaseGui g && overlayButton != null && GuiScreen.isShiftKeyDown()) {
+                GuiOverlayButton btn = ClientProxy.getOverlayButton();
+                if (btn != null && g.theSlot instanceof SlotFake slot) {
                     ItemStack slotItem = slot.getStack();
                     if (slotItem == null) return false;
-                    GuiOverlayButton btn = (GuiOverlayButton) guiButton.get();
 
                     List<PositionedStack> list = btn.handlerRef.handler.getIngredientStacks(btn.handlerRef.recipeIndex);
                     for (PositionedStack stack : list) {
