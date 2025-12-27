@@ -30,6 +30,7 @@ import com.asdflj.ae2thing.inventory.gui.GuiType;
 import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 import com.asdflj.ae2thing.util.BlockPos;
 import com.asdflj.ae2thing.util.CPUCraftingPreview;
+import com.asdflj.ae2thing.util.InvUtil;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -112,23 +113,22 @@ public class CPacketInventoryActionExtend implements IMessage {
             if (requestItem.getStackSize() <= 0) {
                 return;
             }
-            for (int i = 0; i < player.inventory.mainInventory.length; i++) {
-                ItemStack item = player.inventory.mainInventory[i];
-                if (item != null && item.getItem() instanceof IWirelessTermHandler) {
-                    try {
-                        WirelessObject object = new WirelessObject(item, player.worldObj, slot, 0, 0, player);
-                        if (object.rangeCheck() && requestItem.getStackSize() > 0) {
-                            IAEItemStack result = object.getItemInventory()
-                                .extractItems(requestItem, Actionable.MODULATE, object.getSource());
-                            if (result != null) {
-                                requestItem.decStackSize(result.getStackSize());
-                            }
-                            if (requestItem.getStackSize() <= 0) {
-                                break;
-                            }
+            List<ItemStack> items = InvUtil
+                .matcher(player, stack -> stack != null && stack.getItem() instanceof IWirelessTermHandler);
+            for (ItemStack item : items) {
+                try {
+                    WirelessObject object = new WirelessObject(item, player.worldObj, slot, 0, 0, player);
+                    if (object.rangeCheck() && requestItem.getStackSize() > 0) {
+                        IAEItemStack result = object.getItemInventory()
+                            .extractItems(requestItem, Actionable.MODULATE, object.getSource());
+                        if (result != null) {
+                            requestItem.decStackSize(result.getStackSize());
                         }
-                    } catch (Exception ignored) {}
-                }
+                        if (requestItem.getStackSize() <= 0) {
+                            break;
+                        }
+                    }
+                } catch (Exception ignored) {}
             }
         }
 

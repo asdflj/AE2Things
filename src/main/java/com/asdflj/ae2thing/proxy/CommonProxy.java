@@ -34,6 +34,7 @@ import com.asdflj.ae2thing.common.storage.StorageManager;
 import com.asdflj.ae2thing.common.tile.TileInfusionInterface;
 import com.asdflj.ae2thing.inventory.item.PatternModifierInventory;
 import com.asdflj.ae2thing.loader.BRLoader;
+import com.asdflj.ae2thing.loader.InvLoader;
 import com.asdflj.ae2thing.loader.ItemAndBlockHolder;
 import com.asdflj.ae2thing.loader.PatternTerminalLoader;
 import com.asdflj.ae2thing.loader.PatternTerminalMouseWheelLoader;
@@ -105,6 +106,7 @@ public class CommonProxy {
         }
         new PatternTerminalMouseWheelLoader().run();
         new PatternTerminalLoader().run();
+        new InvLoader().run();
 
     }
 
