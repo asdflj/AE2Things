@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 public class InvUtil {
@@ -37,19 +38,20 @@ public class InvUtil {
         return false;
     }
 
-    public ImmutablePair<Integer,ItemStack> find(Predicate<ItemStack> item){
+    public ImmutablePair<Integer, ItemStack> find(Predicate<ItemStack> item) {
         for (IInv obj : INVENTORY) {
             IInventory inv = obj.getInventory(player);
             for (int i = 0; i < inv.getSizeInventory(); i++) {
                 ItemStack stack = inv.getStackInSlot(i);
                 if (item.test(stack)) {
-                    return new ImmutablePair<>(i,stack);
+                    return new ImmutablePair<>(i, stack);
                 }
             }
         }
         return null;
     }
-    public static ImmutablePair<Integer,ItemStack> find(EntityPlayer player, Predicate<ItemStack> item){
+
+    public static ImmutablePair<Integer, ItemStack> find(EntityPlayer player, Predicate<ItemStack> item) {
         return new InvUtil(player).find(item);
     }
 
