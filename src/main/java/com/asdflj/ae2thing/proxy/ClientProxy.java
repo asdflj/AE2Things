@@ -24,14 +24,17 @@ import com.asdflj.ae2thing.api.adapter.terminal.item.WCTWirelessCraftingTerminal
 import com.asdflj.ae2thing.api.adapter.terminal.parts.AETerminal;
 import com.asdflj.ae2thing.api.adapter.terminal.parts.FCPatternTerminal;
 import com.asdflj.ae2thing.client.event.CraftTracking;
+import com.asdflj.ae2thing.client.event.EncodeEvent;
 import com.asdflj.ae2thing.client.event.GuiOverlayButtonEvent;
 import com.asdflj.ae2thing.client.event.NotificationEvent;
 import com.asdflj.ae2thing.client.event.OpenTerminalEvent;
 import com.asdflj.ae2thing.client.event.UpdateAmountTextEvent;
 import com.asdflj.ae2thing.client.gui.BaseMEGui;
+import com.asdflj.ae2thing.client.gui.GuiBaseInterfaceWireless;
 import com.asdflj.ae2thing.client.gui.GuiCraftingTerminal;
 import com.asdflj.ae2thing.client.gui.GuiInfusionPatternTerminal;
 import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
 import com.asdflj.ae2thing.client.render.Notification;
 import com.asdflj.ae2thing.common.item.ItemPhial;
@@ -40,6 +43,7 @@ import com.asdflj.ae2thing.loader.ListenerLoader;
 import com.asdflj.ae2thing.loader.RenderLoader;
 import com.asdflj.ae2thing.nei.recipes.DefaultExtractorLoader;
 import com.asdflj.ae2thing.network.CPacketCraftRequest;
+import com.asdflj.ae2thing.network.CPacketTerminalBtns;
 import com.asdflj.ae2thing.util.FindITUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.glodblock.github.client.gui.GuiFluidCraftingWireless;
@@ -71,6 +75,16 @@ public class ClientProxy extends CommonProxy {
 
     private static GuiOverlayButton overlayButton = null;
     public static List<MouseWheelHandler> mouseHandlers = new ArrayList<>();
+    private static GuiBaseInterfaceWireless.InterfaceWirelessEntryWrapper entryWrapper = null;
+
+    public static void setInterfaceHighlightEntry(
+        GuiBaseInterfaceWireless.InterfaceWirelessEntryWrapper interfaceWirelessEntryWrapper) {
+        entryWrapper = interfaceWirelessEntryWrapper;
+    }
+
+    public static GuiBaseInterfaceWireless.InterfaceWirelessEntryWrapper getInterfaceHighlightEntry() {
+        return entryWrapper;
+    }
 
     @Override
     public void onLoadComplete(FMLLoadCompleteEvent event) {
@@ -209,6 +223,28 @@ public class ClientProxy extends CommonProxy {
         AE2ThingAPI.instance()
             .getPinned()
             .updateCraftingItems();
+        GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
+
+        if (EncodeEvent.encode && getInterfaceHighlightEntry() != null
+            && currentScreen instanceof GuiBaseInterfaceWireless interfaceWireless) {
+            ContainerWirelessDualInterfaceTerminal container = (ContainerWirelessDualInterfaceTerminal) interfaceWireless.inventorySlots;
+            if (container.getContainer()
+                .getPatternOutputSlot()
+                .getHasStack()) {
+                AE2Thing.proxy.netHandler.sendToServer(
+                    new CPacketTerminalBtns(
+                        "InterfaceTerminal.PlacePattern",
+                        getInterfaceHighlightEntry().slot,
+                        getInterfaceHighlightEntry().getDimensionalCoordSide()));
+                EncodeEvent.encode = false;
+                setInterfaceHighlightEntry(null);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void encodeEvent(EncodeEvent event) {
+        EncodeEvent.encode = true;
     }
 
     @SubscribeEvent

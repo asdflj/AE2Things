@@ -40,6 +40,7 @@ import com.asdflj.ae2thing.client.render.BlockPosHighlighter;
 import com.asdflj.ae2thing.common.item.ItemPatternModifier;
 import com.asdflj.ae2thing.network.CPacketRenamer;
 import com.asdflj.ae2thing.network.CPacketTerminalBtns;
+import com.asdflj.ae2thing.proxy.ClientProxy;
 import com.asdflj.ae2thing.util.GTUtil;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.asdflj.ae2thing.util.NeCharUtil;
@@ -615,6 +616,7 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
             entry.doubleButton.yPosition = -1;
         }
         /* PASS 2: Items */
+        boolean drawHighlightSlot = true;
         for (int row = 0; row < entry.rows; ++row) {
             final int rowYTop = row * 18;
             final int rowYBot = rowYTop + 18;
@@ -666,6 +668,9 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
                     GL11.glTranslatef(colLeft, viewY + rowYTop + 1, ITEM_STACK_OVERLAY_Z);
                     drawRect(0, 0, 16, 16, GuiColors.ItemSlotOverlayUnpowered.getColor());
                     GL11.glPopMatrix();
+                } else if (drawHighlightSlot) {
+                    // draw first slot bg
+                    drawHighlightSlot = !this.drawFirstHighlightSlotBG(entry, colLeft, viewY + 1 + rowYTop, slotIdx);
                 }
                 if (tooltip) {
                     // overlay highlight
@@ -681,6 +686,15 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
         }
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         return relY + 1;
+    }
+
+    private boolean drawFirstHighlightSlotBG(InterfaceWirelessEntry entry, int x, int y, int slot) {
+        if (ClientProxy.getInterfaceHighlightEntry() != null && entry == ClientProxy.getInterfaceHighlightEntry().entry
+            && slot == ClientProxy.getInterfaceHighlightEntry().slot) {
+            com.asdflj.ae2thing.client.render.RenderHelper.updateColorAndDrawItemBorder(x, y);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -1010,6 +1024,35 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
         }
     }
 
+    public void setHighlightSlot() {
+        for (InterfaceWirelessSection section : this.masterList.getVisibleSections()) {
+            for (InterfaceWirelessEntry entry : section.entries) {
+                for (int i = 0; i < entry.inv.getSizeInventory(); i++) {
+                    ItemStack item = entry.inv.getStackInSlot(i);
+                    if (item == null) {
+                        ClientProxy.setInterfaceHighlightEntry(new InterfaceWirelessEntryWrapper(entry, i));
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public static class InterfaceWirelessEntryWrapper {
+
+        public InterfaceWirelessEntry entry;
+        public int slot;
+
+        public InterfaceWirelessEntryWrapper(InterfaceWirelessEntry entry, int slot) {
+            this.entry = entry;
+            this.slot = slot;
+        }
+
+        public NBTTagCompound getDimensionalCoordSide() {
+            return this.entry.getDimensionalCoordSide();
+        }
+    }
+
     /**
      * Tracks the list of entries.
      */
@@ -1281,7 +1324,7 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
     /**
      * This class keeps track of an entry and its widgets.
      */
-    private class InterfaceWirelessEntry {
+    public class InterfaceWirelessEntry {
 
         String dispName;
         AppEngInternalInventory inv;

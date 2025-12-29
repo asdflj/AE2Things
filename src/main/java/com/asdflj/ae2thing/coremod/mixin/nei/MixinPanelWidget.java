@@ -17,7 +17,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.adapter.terminal.ITerminal;
 import com.asdflj.ae2thing.client.event.UpdateAmountTextEvent;
+import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.nei.ButtonConstants;
+import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.Util;
 
 import appeng.api.implementations.guiobjects.IGuiItemObject;
@@ -28,6 +30,9 @@ import appeng.api.storage.data.IDisplayRepo;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.me.ItemRepo;
 import appeng.container.AEBaseContainer;
+import appeng.core.sync.network.NetworkHandler;
+import appeng.core.sync.packets.PacketInventoryAction;
+import appeng.helpers.InventoryAction;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import codechicken.nei.NEIClientUtils;
@@ -57,9 +62,13 @@ public abstract class MixinPanelWidget extends Widget implements IContainerToolt
                 if (NEIClientUtils.altKey()) {
                     repo.setSearchString(is.getDisplayName());
                     Util.setSearchFieldText(g, Platform.getItemDisplayName(is));
-                } else
-                    if (g.inventorySlots instanceof AEBaseContainer c && getConfigValue(ButtonConstants.NEI_CRAFT_ITEM)
-                        && repo instanceof ItemRepo itemRepo
+                } else if (g.inventorySlots instanceof AEBaseContainer c) {
+                    InventoryAction action = null;
+                    if (NEIClientUtils.shiftKey()) {
+                        action = InventoryAction.PICKUP_OR_SET_DOWN;
+                    } else if (GuiScreen.isCtrlKeyDown()) {
+                        action = InventoryAction.PICKUP_SINGLE;
+                    } else if (getConfigValue(ButtonConstants.NEI_CRAFT_ITEM) && repo instanceof ItemRepo itemRepo
                         && canCraftItem(itemRepo, is)) {
                             is = is.copy();
                             if (is.stackSize <= 0) {
@@ -85,6 +94,16 @@ public abstract class MixinPanelWidget extends Widget implements IContainerToolt
                                 }
                             }
                         }
+                    if (action != null) {
+                        c.setTargetStack(AEItemStack.create(is));
+                        final PacketInventoryAction p = new PacketInventoryAction(
+                            action,
+                            Ae2ReflectClient.getInventorySlots(g)
+                                .size(),
+                            c instanceof ContainerWirelessDualInterfaceTerminal ? -2 : 0);
+                        NetworkHandler.instance.sendToServer(p);
+                    }
+                }
                 draggedStack = null;
                 cir.setReturnValue(true);
             }
