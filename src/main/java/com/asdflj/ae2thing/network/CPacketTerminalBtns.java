@@ -31,8 +31,12 @@ public class CPacketTerminalBtns implements IMessage {
         this(name, value ? 1 : 0);
     }
 
-    public CPacketTerminalBtns(final String name, final Integer value) {
-        this(name, value.toString(), null);
+    public CPacketTerminalBtns(final String name, final int value) {
+        this(name, Integer.toString(value), null);
+    }
+
+    public CPacketTerminalBtns(final String name, final int value, final NBTTagCompound tag) {
+        this(name, Integer.toString(value), tag);
     }
 
     public CPacketTerminalBtns(final String name, final String value, final NBTTagCompound tag) {
@@ -149,6 +153,7 @@ public class CPacketTerminalBtns implements IMessage {
                     case "InterfaceTerminal.Double" -> ciw.doubleStacks(Integer.parseInt(value), tag);
                     case "InterfaceTerminal.SetStick" -> ciw.setStick(tag);
                     case "InterfaceTerminal.PatternModifier" -> ciw.setModifier(Integer.parseInt(value), tag);
+                    case "InterfaceTerminal.PlacePattern" -> ciw.PlacePattern(Integer.parseInt(value), tag);
                 }
 
             }

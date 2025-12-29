@@ -11,12 +11,14 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.InventoryActionExtend;
+import com.asdflj.ae2thing.client.event.EncodeEvent;
 import com.asdflj.ae2thing.client.gui.IWidgetGui;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
@@ -47,6 +49,7 @@ import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
 import appeng.util.item.AEItemStack;
+import codechicken.nei.NEIClientUtils;
 
 public class PatternPanel implements IAEBasePanel {
 
@@ -424,10 +427,11 @@ public class PatternPanel implements IAEBasePanel {
                     this.tabProcessButton == btn ? MODE_CRAFTING : MODE_PROCESSING));
             return true;
         } else if (this.encodeBtn == btn) {
-            AE2Thing.proxy.netHandler.sendToServer(
-                new CPacketTerminalBtns(
-                    "PatternTerminal.Encode",
-                    (isCtrlKeyDown() ? 1 : 0) << 1 | (isShiftKeyDown() ? 1 : 0)));
+            int value = (isCtrlKeyDown() ? 1 : 0) << 1 | (isShiftKeyDown() ? 1 : 0);
+            AE2Thing.proxy.netHandler.sendToServer(new CPacketTerminalBtns("PatternTerminal.Encode", value));
+            if (value == 0 && NEIClientUtils.altKey()) {
+                MinecraftForge.EVENT_BUS.post(new EncodeEvent(true));
+            }
             return true;
         } else if (this.clearBtn == btn) {
             AE2Thing.proxy.netHandler.sendToServer(new CPacketTerminalBtns("PatternTerminal.Clear", 1));

@@ -66,6 +66,7 @@ import appeng.tile.inventory.InvOperation;
 import appeng.tile.networking.TileCableBus;
 import appeng.util.PatternMultiplierHelper;
 import appeng.util.Platform;
+import codechicken.nei.recipe.StackInfo;
 
 public class ContainerWirelessDualInterfaceTerminal extends ContainerMonitor
     implements IContainerCraftingPacket, IWidgetPatternContainer, IConfigurableObject {
@@ -472,4 +473,31 @@ public class ContainerWirelessDualInterfaceTerminal extends ContainerMonitor
 
     }
 
+    public void PlacePattern(int slot, NBTTagCompound tag) {
+        ImmutablePair<World, IInterfaceViewable> result = getWorldAndHost(tag);
+        if (result == null) return;
+        ItemStack item = result.right.getPatterns()
+            .getStackInSlot(slot);
+        if (item != null) return;
+        if (!this.getContainer()
+            .getPatternOutputSlot()
+            .getHasStack()) return;
+        ItemStack pattern = this.getContainer()
+            .getPatternOutputSlot()
+            .getStack();
+        for (int i = 0; i < result.right.getPatterns()
+            .getSizeInventory(); i++) {
+            ItemStack slotStack = result.right.getPatterns()
+                .getStackInSlot(i);
+            if (StackInfo.equalItemAndNBT(slotStack, pattern, true)) {
+                return;
+            }
+        }
+        result.right.getPatterns()
+            .setInventorySlotContents(slot, pattern);
+        this.getContainer()
+            .getPatternOutputSlot()
+            .putStack(null);
+        this.sendToClient(result.right);
+    }
 }

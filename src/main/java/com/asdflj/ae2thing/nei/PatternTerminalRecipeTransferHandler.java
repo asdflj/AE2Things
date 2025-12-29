@@ -138,6 +138,7 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
         }
         if (getConfigValue(ButtonConstants.DUAL_INTERFACE_TERMINAL)) {
             gui.setSearchFieldText(suggestion);
+            gui.setHighlightSlot();
         } else {
             gui.setSearchFieldSuggestion(suggestion);
         }
