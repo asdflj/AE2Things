@@ -91,7 +91,7 @@ public class SPacketMEItemInvUpdate extends SPacketMEBaseInvUpdate implements IM
 
         private static List<IAEItemStack> ItemCraftingAspect2FluidDrop(List<IAEItemStack> items) {
             if (!ModAndClassUtil.THE) {
-                return new ArrayList<>(items);
+                return items;
             }
             List<IAEItemStack> list = new ArrayList<>();
             for (IAEItemStack item : items) {
