@@ -76,6 +76,7 @@ import appeng.helpers.PatternHelper;
 import appeng.integration.IntegrationRegistry;
 import appeng.integration.IntegrationType;
 import appeng.items.misc.ItemEncodedPattern;
+import appeng.me.cluster.implementations.CraftingCPUCluster;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
@@ -1352,16 +1353,7 @@ public class GuiBaseInterfaceWireless extends BaseMEGui implements IDropToFillTe
 
         InterfaceWirelessEntry(long id, String name, int rows, int rowSize, boolean online, boolean p2pOutput) {
             this.id = id;
-            if (StatCollector.canTranslate(name)) {
-                this.dispName = StatCollector.translateToLocal(name);
-            } else {
-                String fallback = name + ".name"; // its whatever. save some bytes on network but looks ugly
-                if (StatCollector.canTranslate(fallback)) {
-                    this.dispName = StatCollector.translateToLocal(fallback);
-                } else {
-                    this.dispName = StatCollector.translateToFallback(name);
-                }
-            }
+            this.dispName = CraftingCPUCluster.translateFromNetwork(name);
             this.inv = new AppEngInternalInventory(null, rows * rowSize, 1);
             this.rows = rows;
             this.rowSize = rowSize;
