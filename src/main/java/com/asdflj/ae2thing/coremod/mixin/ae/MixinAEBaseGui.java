@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -21,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.client.event.AEGuiCloseEvent;
 import com.asdflj.ae2thing.client.render.RenderHelper;
 
 import appeng.api.storage.data.IAEItemStack;
@@ -83,6 +85,11 @@ public abstract class MixinAEBaseGui extends GuiScreen {
                 18);
         }
 
+    }
+
+    @Inject(method = "onGuiClosed", at = @At(value = "HEAD"))
+    public void onGuiClosed(CallbackInfo ci) {
+        MinecraftForge.EVENT_BUS.post(new AEGuiCloseEvent((AEBaseGui) (Object) this));
     }
 
     @Inject(method = "drawAESlot", at = @At("HEAD"), remap = false)

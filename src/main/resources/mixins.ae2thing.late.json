@@ -16,6 +16,7 @@
     "ae.MixinGuiCraftConfirm",
     "ae.MixinItemRepo",
     "ae.MixinTileIOPort",
+    "ae.MixinContainerCraftAmount",
     "br.MixinBRUtil",
     "fc.MixinGuiFluidCraftAmount",
     "nei.MixinGuiContainerManager",
@@ -31,6 +32,7 @@
     "ae.MixinContainerCraftConfirm",
     "ae.MixinCraftingCPUCluster",
     "ae.MixinTileIOPort",
+    "ae.MixinContainerCraftAmount",
     "wct.MixinRandomUtils"
   ]
 }

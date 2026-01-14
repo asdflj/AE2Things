@@ -5,11 +5,13 @@ import static net.minecraft.init.Items.glass_bottle;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -58,6 +60,7 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
     public static final int CRAFTING_HISTORY_SIZE = Config.craftingHistorySize;
     private static final Set<Class<? extends Item>> backpackItems = new HashSet<>();
     private StorageManager storageManager = null;
+    private static final HashMap<Class<?>, String> inputFields = new HashMap<>();
 
     private static ItemStack fluidContainer = BUCKET;
     public static final ReadableNumberConverter readableNumber = ReadableNumberConverter.INSTANCE;
@@ -71,6 +74,33 @@ public final class AE2ThingAPI implements IAE2ThingAPI {
             return AspectUtil.HELPER.createEmptyPhial();
         }
         return null;
+    }
+
+    @Override
+    public void putText(String text) {
+        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+        if (screen != null) {
+            putText(screen.getClass(), text);
+        }
+    }
+
+    @Override
+    public void putText(Class<?> cls, String text) {
+        inputFields.put(cls, text);
+    }
+
+    @Override
+    public String getText(Class<?> cls) {
+        return inputFields.getOrDefault(cls, "");
+    }
+
+    @Override
+    public String getText() {
+        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+        if (screen != null) {
+            return getText(screen.getClass());
+        }
+        return "";
     }
 
     public Terminal terminal() {

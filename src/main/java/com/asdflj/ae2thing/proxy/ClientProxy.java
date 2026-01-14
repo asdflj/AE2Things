@@ -23,6 +23,7 @@ import com.asdflj.ae2thing.api.adapter.terminal.item.FCUltraTerminal;
 import com.asdflj.ae2thing.api.adapter.terminal.item.WCTWirelessCraftingTerminal;
 import com.asdflj.ae2thing.api.adapter.terminal.parts.AETerminal;
 import com.asdflj.ae2thing.api.adapter.terminal.parts.FCPatternTerminal;
+import com.asdflj.ae2thing.client.event.AEGuiCloseEvent;
 import com.asdflj.ae2thing.client.event.CraftTracking;
 import com.asdflj.ae2thing.client.event.EncodeEvent;
 import com.asdflj.ae2thing.client.event.GuiOverlayButtonEvent;
@@ -218,13 +219,8 @@ public class ClientProxy extends CommonProxy {
             .registerTerminalSet(new AETerminal());
     }
 
-    @SubscribeEvent
-    public void tickEvent(TickEvent.PlayerTickEvent event) {
-        AE2ThingAPI.instance()
-            .getPinned()
-            .updateCraftingItems();
+    private void placePattern() {
         GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
-
         if (EncodeEvent.encode && getInterfaceHighlightEntry() != null
             && currentScreen instanceof GuiBaseInterfaceWireless interfaceWireless) {
             ContainerWirelessDualInterfaceTerminal container = (ContainerWirelessDualInterfaceTerminal) interfaceWireless.inventorySlots;
@@ -240,6 +236,14 @@ public class ClientProxy extends CommonProxy {
                 setInterfaceHighlightEntry(null);
             }
         }
+    }
+
+    @SubscribeEvent
+    public void tickEvent(TickEvent.PlayerTickEvent event) {
+        AE2ThingAPI.instance()
+            .getPinned()
+            .updateCraftingItems();
+        placePattern();
     }
 
     @SubscribeEvent
@@ -287,6 +291,11 @@ public class ClientProxy extends CommonProxy {
                 .getPinned()
                 .prune();
         }
+    }
+
+    @SubscribeEvent
+    public void aeBaseGuiClose(AEGuiCloseEvent event) {
+
     }
 
     @SubscribeEvent

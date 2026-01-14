@@ -17,6 +17,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SuppressWarnings("unused")
 public interface IAE2ThingAPI {
 
+    void putText(String text);
+
+    void putText(Class<?> cls, String text);
+
+    String getText(Class<?> cls);
+
+    String getText();
+
     boolean isBlacklistedInStorage(Item item);
 
     void blacklistItemInStorage(Class<? extends Item> item);

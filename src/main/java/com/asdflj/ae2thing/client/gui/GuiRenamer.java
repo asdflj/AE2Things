@@ -46,7 +46,6 @@ public class GuiRenamer extends AEBaseGui implements IDropToFillTextField {
     @Override
     public void initGui() {
         super.initGui();
-        AE2Thing.proxy.netHandler.sendToServer(new CPacketRenamer(CPacketRenamer.Action.GET_TEXT));
         if (host instanceof WirelessDualInterfaceTerminalInventory) {
             icon = ItemAndBlockHolder.ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL.stack();
             originalGui = GuiType.WIRELESS_DUAL_INTERFACE_TERMINAL;
@@ -64,6 +63,7 @@ public class GuiRenamer extends AEBaseGui implements IDropToFillTextField {
         this.textField.x = this.guiLeft + 12;
         this.textField.y = this.guiTop + 35;
         this.textField.setFocused(true);
+        AE2Thing.proxy.netHandler.sendToServer(new CPacketRenamer(CPacketRenamer.Action.GET_TEXT));
     }
 
     @Override
@@ -118,5 +118,6 @@ public class GuiRenamer extends AEBaseGui implements IDropToFillTextField {
 
     public void postUpdate(String text) {
         this.textField.setText(text);
+        this.textField.setCursorPositionEnd();
     }
 }

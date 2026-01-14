@@ -13,8 +13,10 @@ import com.asdflj.ae2thing.inventory.item.WirelessTerminal;
 import com.asdflj.ae2thing.util.BlockPos;
 import com.asdflj.ae2thing.util.Util;
 
+import appeng.api.util.IInterfaceViewable;
 import appeng.container.AEBaseContainer;
 import appeng.helpers.ICustomNameObject;
+import appeng.me.cluster.implementations.CraftingCPUCluster;
 import appeng.tile.networking.TileCableBus;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -96,19 +98,27 @@ public class CPacketRenamer implements IMessage {
 
     public static class Handler implements IMessageHandler<CPacketRenamer, IMessage> {
 
-        private String getName(ICustomNameObject obj) {
-            return obj.hasCustomName() ? obj.getCustomName() : "";
+        private String getName(Object obj) {
+            String name = "";
+            if (obj instanceof ICustomNameObject cno && cno.hasCustomName()) {
+                name = cno.getCustomName();
+            }
+            if (name.isEmpty() && obj instanceof IInterfaceViewable iv) {
+                name = CraftingCPUCluster.translateFromNetwork(iv.getName());
+            }
+            return name;
         }
 
         private String getName(TileEntity tile, ForgeDirection side) {
             if (tile instanceof TileCableBus) {
-                return getName((ICustomNameObject) ((TileCableBus) tile).getPart(side));
+                return getName(((TileCableBus) tile).getPart(side));
             } else {
-                return getName((ICustomNameObject) tile);
+                return getName(tile);
             }
         }
 
         private void setName(TileEntity tile, ForgeDirection side, String text) {
+            if (text.isEmpty()) return;
             if (tile instanceof TileCableBus) {
                 ((ICustomNameObject) ((TileCableBus) tile).getPart(side)).setCustomName(text);
             } else {
