@@ -15,12 +15,14 @@ import org.lwjgl.opengl.GL11;
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.client.render.ISlotRender;
 import com.asdflj.ae2thing.client.render.SlotRender;
+import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
 import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.me.SlotME;
+import appeng.container.slot.SlotFakeCraftingMatrix;
 import appeng.container.slot.SlotInaccessible;
 import appeng.container.slot.SlotPlayerHotBar;
 import appeng.container.slot.SlotPlayerInv;
@@ -44,22 +46,37 @@ public interface IGuiDrawSlot {
             stack = ((SlotPatternFake) slot).getAEStack();
         } else if (slot instanceof SlotPlayerInv || slot instanceof SlotPlayerHotBar) {
             stack = AEItemStack.create(drawStack);
+        } else if (slot instanceof SlotFakeCraftingMatrix) {
+            stack = ((SlotFakeCraftingMatrix) slot).getAEStack();
         } else {
             return true;
         }
         if (stack == null || stack.getItem() == null) {
             return true;
         }
+        boolean result = true;
         for (ISlotRender slotRender : SlotRender.instance()
             .getRenders()) {
             if (slotRender.get()
                 .test(slot)) {
                 if (!slotRender.drawSlot(slot, stack, this, display)) {
-                    return false;
+                    result = false;
+                    break;
                 }
             }
         }
-        return true;
+        if (result) {
+            Ae2ReflectClient.drawSlot(this.getAEBaseGui(), slot);
+        }
+
+        for (ISlotRender slotRender : SlotRender.instance()
+            .getRenders()) {
+            if (slotRender.get()
+                .test(slot)) {
+                slotRender.drawCallback(slot, stack, this, display);
+            }
+        }
+        return false; // always is false;
     }
 
     default void renderStackSize(boolean display, IAEItemStack stack, Slot slot) {

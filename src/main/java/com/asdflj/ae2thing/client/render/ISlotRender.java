@@ -13,4 +13,6 @@ public interface ISlotRender {
     Predicate<Slot> get();
 
     boolean drawSlot(Slot slot, IAEItemStack stack, IGuiDrawSlot draw, boolean display);
+
+    default void drawCallback(Slot slot, IAEItemStack stack, IGuiDrawSlot draw, boolean display) {}
 }

@@ -2,8 +2,10 @@ package com.asdflj.ae2thing.util;
 
 import static com.glodblock.github.util.Ae2Reflect.readField;
 import static com.glodblock.github.util.Ae2Reflect.reflectField;
+import static com.glodblock.github.util.Ae2Reflect.reflectMethod;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +32,7 @@ public class Ae2ReflectClient {
 
     private static final Field fSearchField_history;
     private static final Field fTextHistory_history;
+    private static final Method mAEBaseGui_drawSlot;
     private static final Field fItemRepo_view;
     private static final Field fItemRepo_dsp;
     private static final Field fItemRepo_list;
@@ -43,7 +46,8 @@ public class Ae2ReflectClient {
             fGuiDualInterface_host = reflectField(GuiDualInterface.class, "host");
             fSearchField_history = reflectField(SearchField.class, "history");
             fTextHistory_history = reflectField(TextHistory.class, "history");
-        } catch (NoSuchFieldException e) {
+            mAEBaseGui_drawSlot = reflectMethod(AEBaseGui.class, "drawSlot", Slot.class);
+        } catch (NoSuchFieldException | NoSuchMethodException | SecurityException e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
     }
@@ -83,6 +87,14 @@ public class Ae2ReflectClient {
 
     public static IItemList<IAEItemStack> getList(ItemRepo repo) {
         return readField(repo, fItemRepo_list);
+    }
+
+    public static void drawSlot(AEBaseGui gui, Slot slot) {
+        try {
+            mAEBaseGui_drawSlot.invoke(gui, slot);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to invoke method: " + mAEBaseGui_drawSlot, e);
+        }
     }
 
     public static IInterfaceHost getHost(GuiDualInterface gui) {
