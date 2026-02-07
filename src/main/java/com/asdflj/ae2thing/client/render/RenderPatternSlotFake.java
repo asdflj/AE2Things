@@ -13,6 +13,8 @@ import com.asdflj.ae2thing.client.gui.IGuiDrawSlot;
 import com.asdflj.ae2thing.client.gui.container.slot.SlotPatternFake;
 import com.asdflj.ae2thing.util.Ae2ReflectClient;
 import com.asdflj.ae2thing.util.Util;
+import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.common.item.ItemFluidPacket;
 
 import appeng.api.AEApi;
 import appeng.api.storage.data.IAEItemStack;
@@ -20,6 +22,7 @@ import appeng.api.storage.data.IDisplayRepo;
 import appeng.api.storage.data.IItemList;
 import appeng.client.me.ItemRepo;
 import appeng.container.slot.SlotFakeCraftingMatrix;
+import appeng.util.item.AEItemStack;
 
 public class RenderPatternSlotFake implements ISlotRender {
 
@@ -46,7 +49,10 @@ public class RenderPatternSlotFake implements ISlotRender {
             IDisplayRepo iDisplayRepo = Util.getDisplayRepo(draw.getAEBaseGui());
             if (iDisplayRepo instanceof ItemRepo repo) {
                 IItemList<IAEItemStack> list = Ae2ReflectClient.getList(repo);
-                IAEItemStack storedItem = list.findPrecise(stack);
+                IAEItemStack what = (stack.getItem() instanceof ItemFluidPacket)
+                    ? AEItemStack.create(ItemFluidDrop.newDisplayStack(ItemFluidPacket.getFluidStack(stack)))
+                    : stack;
+                IAEItemStack storedItem = list.findPrecise(what);
                 if (storedItem != null && storedItem.isCraftable()) {
                     GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_LIGHTING_BIT);
                     GL11.glPushMatrix();
