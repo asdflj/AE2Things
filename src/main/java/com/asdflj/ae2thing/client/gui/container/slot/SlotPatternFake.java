@@ -22,4 +22,8 @@ public class SlotPatternFake extends OptionalSlotFake {
             this.xDisplayPosition += (hide ? -1 : 1) * POSITION_SHIFT;
         }
     }
+
+    public boolean isHidden() {
+        return this.hidden;
+    }
 }
