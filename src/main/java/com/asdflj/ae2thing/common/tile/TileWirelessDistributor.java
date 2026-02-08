@@ -11,6 +11,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -40,9 +41,11 @@ public class TileWirelessDistributor extends AENetworkTile implements IGridTicka
 
         public BlockPos pos;
         public IGridConnection connection;
+        public TileEntity tile;
 
-        public GridConnectionWrapper(BlockPos pos, IGridConnection connection) {
-            this.pos = pos;
+        public GridConnectionWrapper(TileEntity tile, IGridConnection connection) {
+            this.pos = new BlockPos(tile);
+            this.tile = tile;
             this.connection = connection;
         }
     }
@@ -126,7 +129,8 @@ public class TileWirelessDistributor extends AENetworkTile implements IGridTicka
             .getTickCounter();
         List<GridConnectionWrapper> list = new ArrayList<>();
         for (GridConnectionWrapper wrapper : grids) {
-            if (wrapper.pos.getTileEntity() == null) {
+            if (wrapper.pos.getTileEntity() == null || wrapper.tile == null
+                || wrapper.pos.getTileEntity() != wrapper.tile) {
                 wrapper.connection.destroy();
             } else {
                 list.add(wrapper);
@@ -167,7 +171,7 @@ public class TileWirelessDistributor extends AENetworkTile implements IGridTicka
                     try {
                         grids.add(
                             new GridConnectionWrapper(
-                                new BlockPos(tile),
+                                tile,
                                 AEApi.instance()
                                     .createGridConnection(
                                         this.getActionableNode(),
