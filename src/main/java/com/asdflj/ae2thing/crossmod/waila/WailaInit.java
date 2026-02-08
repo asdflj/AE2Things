@@ -24,12 +24,10 @@ public class WailaInit {
             if (Util.getAEVersion() < 555) {
                 GuiContainerManager.addTooltipHandler(new EncodedPattern());
             }
-
-            final IWailaDataProvider tile = new TileWailaDataProvider();
-            registrar.registerBodyProvider(tile, AEBaseTile.class);
-            registrar.registerNBTProvider(tile, AEBaseTile.class);
-
         }
+        final IWailaDataProvider tile = new TileWailaDataProvider();
+        registrar.registerBodyProvider(tile, AEBaseTile.class);
+        registrar.registerNBTProvider(tile, AEBaseTile.class);
 
     }
 }

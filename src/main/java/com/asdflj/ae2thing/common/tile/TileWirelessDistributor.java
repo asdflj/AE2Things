@@ -10,7 +10,6 @@ import java.util.List;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -53,7 +52,6 @@ public class TileWirelessDistributor extends AENetworkTile implements IGridTicka
     private final List<GridConnectionWrapper> grids = new ArrayList<>();
 
     private final List<DimensionalCoord> dimensionalCoords = new ArrayList<>();
-    private static int tick = 0;
     private int usedChannels = 0;
 
     public TileWirelessDistributor() {
@@ -121,12 +119,6 @@ public class TileWirelessDistributor extends AENetworkTile implements IGridTicka
 
     @MENetworkEventSubscribe
     public void onChannelUpdate(MENetworkChannelsChanged event) {
-        if (MinecraftServer.getServer()
-            .getTickCounter() == tick) {
-            return;
-        }
-        tick = MinecraftServer.getServer()
-            .getTickCounter();
         List<GridConnectionWrapper> list = new ArrayList<>();
         for (GridConnectionWrapper wrapper : grids) {
             if (wrapper.pos.getTileEntity() == null || wrapper.tile == null
