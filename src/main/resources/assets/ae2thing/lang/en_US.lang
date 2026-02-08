@@ -20,6 +20,7 @@ tile.essentia_discretizer.name=Essentia Discretizer
 tile.infusion_interface.name=ME Infusion Interface
 tile.ex_io_port.name=ME Extended IO Port
 tile.fluid_packet_encoder.name=ME Fluid Packet Encoder
+tile.wireless_distributor.name=ME Wireless Distributor(GT ME Hatch)
 fluid.botania.mana=Mana
 
 ae2thing.tooltip.shift_for_more=§r> Hold §3Shift§r for more information

@@ -26,6 +26,7 @@ public class NameConst {
     public static final String BLOCK_FISHBIG = "fishbig";
     public static final String BLOCK_MDDyue = "MDDyue";
     public static final String BLOCK_ESSENTIA_DISCRETIZER = "essentia_discretizer";
+    public static final String BLOCK_WIRELESS_DISTRIBUTOR = "wireless_distributor";
     public static final String BLOCK_FLUID_PACKET_ENCODER = "fluid_packet_encoder";
     public static final String BLOCK_INFUSION_INTERFACE = "infusion_interface";
     public static final String BLOCK_EX_IO_PORT = "ex_io_port";
