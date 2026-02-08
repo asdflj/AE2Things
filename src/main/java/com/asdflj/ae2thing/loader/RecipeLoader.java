@@ -130,6 +130,15 @@ public class RecipeLoader implements Runnable {
         .maybeStack(1)
         .get();
 
+    public static final ItemStack AE2_WIRELESS = AEApi.instance()
+        .definitions()
+        .blocks()
+        .wireless()
+        .maybeStack(1)
+        .get();
+
+    public static final ItemStack AE2_BLOCK_WIRELESS = GameRegistry.findItemStack("ae2stuff", "Wireless", 1);
+
     @Override
     public void run() {
         // GameRegistry.addShapelessRecipe(TOGGLE_VIEW_CELL.stack(), AE2_VIEW_CELL, AE2_PROCESS_LOG);
@@ -239,6 +248,10 @@ public class RecipeLoader implements Runnable {
             GameRegistry.addShapelessRecipe(
                 com.glodblock.github.loader.ItemAndBlockHolder.FLUID_EXPORT_BUS.stack(),
                 MANA_EXPORT_BUS.stack());
+        }
+        if (ModAndClassUtil.GT5 || ModAndClassUtil.GT5NH) {
+            GameRegistry
+                .addShapelessRecipe(ItemAndBlockHolder.WIRELESS_DISTRIBUTOR.stack(), AE2_BLOCK_WIRELESS, AE2_WIRELESS);
         }
         WirelessTerminalQuantumBridgeRecipe.register(ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL.stack());
         WirelessTerminalEnergyRecipe.register(ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL.stack());

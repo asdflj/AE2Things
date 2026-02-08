@@ -9,6 +9,7 @@ import com.asdflj.ae2thing.common.block.BlockEssentiaDiscretizer;
 import com.asdflj.ae2thing.common.block.BlockExIOPort;
 import com.asdflj.ae2thing.common.block.BlockFluidPacketEncoder;
 import com.asdflj.ae2thing.common.block.BlockInfusionInterface;
+import com.asdflj.ae2thing.common.block.BlockWirelessDistributor;
 import com.asdflj.ae2thing.common.item.ItemBackpackTerminal;
 import com.asdflj.ae2thing.common.item.ItemCraftingDebugCard;
 import com.asdflj.ae2thing.common.item.ItemCreativeCell;
@@ -42,6 +43,7 @@ public class ItemAndBlockHolder implements Runnable {
     public static ItemManaExportBus MANA_EXPORT_BUS;
     public static BlockEssentiaDiscretizer ESSENTIA_DISCRETIZER;
     public static BlockFluidPacketEncoder FLUID_PACKET_ENCODER = new BlockFluidPacketEncoder().register();
+    public static BlockWirelessDistributor WIRELESS_DISTRIBUTOR;
     public static ItemInfinityStorageCell ITEM_INFINITY_CELL = new ItemInfinityStorageCell().register();
     public static ItemInfinityStorageFluidCell ITEM_INFINITY_FLUID_CELL = new ItemInfinityStorageFluidCell().register();
     public static ItemPartWirelessConnectorTerminal WIRELESS_CONNECTOR_TERMINAL = new ItemPartWirelessConnectorTerminal()
@@ -79,6 +81,9 @@ public class ItemAndBlockHolder implements Runnable {
         if (ModAndClassUtil.BOTANIA) {
             MANA_IMPORT_BUS = new ItemManaImportBus().register();
             MANA_EXPORT_BUS = new ItemManaExportBus().register();
+        }
+        if (ModAndClassUtil.GT5 || ModAndClassUtil.GT5NH) {
+            WIRELESS_DISTRIBUTOR = new BlockWirelessDistributor().register();
         }
     }
 }

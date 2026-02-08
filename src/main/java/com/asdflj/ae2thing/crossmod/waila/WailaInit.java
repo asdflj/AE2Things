@@ -2,9 +2,11 @@ package com.asdflj.ae2thing.crossmod.waila;
 
 import com.asdflj.ae2thing.util.Util;
 
+import appeng.tile.AEBaseTile;
 import appeng.util.Platform;
 import codechicken.nei.guihook.GuiContainerManager;
 import cpw.mods.fml.common.event.FMLInterModComms;
+import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
 
 public class WailaInit {
@@ -22,6 +24,10 @@ public class WailaInit {
             if (Util.getAEVersion() < 555) {
                 GuiContainerManager.addTooltipHandler(new EncodedPattern());
             }
+
+            final IWailaDataProvider tile = new TileWailaDataProvider();
+            registrar.registerBodyProvider(tile, AEBaseTile.class);
+            registrar.registerNBTProvider(tile, AEBaseTile.class);
 
         }
 

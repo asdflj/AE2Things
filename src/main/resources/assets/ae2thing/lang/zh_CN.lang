@@ -20,6 +20,7 @@ tile.essentia_discretizer.name=源质离散器
 tile.infusion_interface.name=ME注魔接口
 tile.ex_io_port.name=ME扩展IO端口
 tile.fluid_packet_encoder.name=ME流体封包编码器
+tile.wireless_distributor.name=ME无线网络分配器(GT ME仓室)
 fluid.botania.mana=魔力
 
 ae2thing.tooltip.shift_for_more=§r> 按 §3Shift§r 显示更多信息
