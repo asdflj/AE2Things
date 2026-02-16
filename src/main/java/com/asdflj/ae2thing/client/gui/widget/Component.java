@@ -3,14 +3,11 @@ package com.asdflj.ae2thing.client.gui.widget;
 import static com.asdflj.ae2thing.api.Constants.INACTIVE_COLOR;
 import static com.asdflj.ae2thing.api.Constants.SELECTED_COLOR;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import com.asdflj.ae2thing.client.gui.GuiWirelessConnectorTerminal;
@@ -118,38 +115,23 @@ public class Component implements IClickable {
         GuiTextField.drawRect(9, 18 + (idx * offsetY), 169, 18 + offsetY * (idx + 1), color);
     }
 
-    public static class MousePos {
-
-        public final int x;
-        public final int y;
-
-        public MousePos() {
-            Minecraft mc = Minecraft.getMinecraft();
-            final ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-            int i = scaledresolution.getScaledWidth();
-            int j = scaledresolution.getScaledHeight();
-            x = Mouse.getX() * i / mc.displayWidth;
-            y = j - Mouse.getY() * j / mc.displayHeight - 1;
-        }
-    }
-
     public Info getInfo() {
         return repo.getInfo(idx);
     }
 
-    public void drawUnbindBtn(MousePos mouse) {
+    public void drawUnbindBtn(Util.MousePos mouse) {
         this.unbind.visible = true;
         this.bind.visible = false;
         this.unbind.drawButton(this.gui.mc, mouse.x - this.gui.getGuiLeft(), mouse.y - this.gui.getGuiTop());
     }
 
-    public void drawBindBtn(MousePos mouse) {
+    public void drawBindBtn(Util.MousePos mouse) {
         this.unbind.visible = false;
         this.bind.visible = true;
         this.bind.drawButton(this.gui.mc, mouse.x - this.gui.getGuiLeft(), mouse.y - this.gui.getGuiTop());
     }
 
-    private void drawSelection(MousePos mouse) {
+    private void drawSelection(Util.MousePos mouse) {
         this.drawSelection(mouse.x, mouse.y);
     }
 
@@ -162,7 +144,7 @@ public class Component implements IClickable {
     public void draw() {
         Info info = getInfo();
         if (info == null) return;
-        MousePos mouse = new MousePos();
+        Util.MousePos mouse = new Util.MousePos();
         this.highLightBtn.setWidth(render.getStringWidth(info.getPosString()));
         if (this.textField.isVisible()) {
             this.textField.drawTextBox();

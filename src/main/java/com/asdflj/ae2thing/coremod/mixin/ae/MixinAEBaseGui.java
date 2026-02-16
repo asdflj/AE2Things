@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -22,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.api.TerminalMenu;
 import com.asdflj.ae2thing.client.event.AEGuiCloseEvent;
 import com.asdflj.ae2thing.client.render.RenderHelper;
 
@@ -30,9 +33,16 @@ import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.client.me.InternalSlotME;
 import appeng.client.me.SlotME;
+import appeng.container.slot.SlotPlayerHotBar;
+import appeng.container.slot.SlotPlayerInv;
+import codechicken.nei.recipe.StackInfo;
 
 @Mixin(value = AEBaseGui.class)
-public abstract class MixinAEBaseGui extends GuiScreen {
+public abstract class MixinAEBaseGui extends GuiContainer {
+
+    public MixinAEBaseGui(Container container) {
+        super(container);
+    }
 
     @Shadow(remap = false)
     public abstract int getGuiLeft();
@@ -85,6 +95,27 @@ public abstract class MixinAEBaseGui extends GuiScreen {
                 18);
         }
 
+    }
+
+    @Inject(method = "handleMouseClick", at = @At(value = "HEAD"), cancellable = true)
+    protected void handleMouseClick(Slot slot, int slotIdx, int ctrlDown, int mouseButton, CallbackInfo ci) {
+        if (ctrlDown == 1 && mouseButton == 0
+            && (slot instanceof SlotPlayerInv || slot instanceof SlotPlayerHotBar)
+            && slot.getHasStack()) {
+            ItemStack item = slot.getStack();
+            TerminalMenu menu = new TerminalMenu();
+            for (int i = 0; i < menu.getItems()
+                .size(); i++) {
+                ItemStack term = menu.getItems()
+                    .get(i);
+                if (StackInfo.equalItemAndNBT(term, item, true)) {
+                    menu.openTerminal(i);
+                    ci.cancel();
+                    break;
+                }
+            }
+
+        }
     }
 
     @Inject(method = "onGuiClosed", at = @At(value = "HEAD"))

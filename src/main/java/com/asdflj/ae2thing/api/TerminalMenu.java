@@ -42,7 +42,7 @@ public class TerminalMenu {
         return terminalItems;
     }
 
-    public void OpenTerminal(int index) {
+    public void openTerminal(int index) {
         try {
             if (index < 0 || index >= terminalItems.size()) {
                 return;

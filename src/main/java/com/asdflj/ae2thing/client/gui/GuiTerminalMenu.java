@@ -126,7 +126,7 @@ public class GuiTerminalMenu extends GuiContainer implements INEIGuiHandler {
 
         if (isKeyReleased) {
             Minecraft.getMinecraft().thePlayer.closeScreen();
-            menu.OpenTerminal(currentIndex);
+            menu.openTerminal(currentIndex);
         }
     }
 
