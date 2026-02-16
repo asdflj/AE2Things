@@ -45,7 +45,6 @@ import appeng.container.AEBaseContainer;
 import appeng.container.slot.SlotPatternTerm;
 import appeng.core.AEConfig;
 import appeng.core.AELog;
-import appeng.core.localization.ButtonToolTips;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.core.sync.packets.PacketValueConfig;
@@ -163,7 +162,7 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
         this.searchField.setMaxStringLength(25);
         this.searchField.setTextColor(0xFFFFFF);
         this.searchField.setVisible(true);
-        this.searchField.setMessage(ButtonToolTips.SearchStringTooltip.getLocal());
+        // this.searchField.setMessage(ButtonToolTips.SearchStringTooltip.getLocal());
         this.gui.getMeSlots()
             .clear();
         final List<Slot> slots = this.getInventorySlots();

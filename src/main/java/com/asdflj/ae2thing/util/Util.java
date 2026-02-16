@@ -10,6 +10,7 @@ import java.util.concurrent.Future;
 import javax.annotation.Nonnull;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +20,8 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
+
+import org.lwjgl.input.Mouse;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
 import com.asdflj.ae2thing.api.Constants;
@@ -406,5 +409,20 @@ public class Util {
                 data.getString(Constants.NAME));
         }
 
+    }
+
+    public static class MousePos {
+
+        public final int x;
+        public final int y;
+
+        public MousePos() {
+            Minecraft mc = Minecraft.getMinecraft();
+            final ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+            int i = scaledresolution.getScaledWidth();
+            int j = scaledresolution.getScaledHeight();
+            x = Mouse.getX() * i / mc.displayWidth;
+            y = j - Mouse.getY() * j / mc.displayHeight - 1;
+        }
     }
 }

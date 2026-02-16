@@ -1,5 +1,7 @@
 package com.asdflj.ae2thing.client.gui;
 
+import java.text.NumberFormat;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -73,7 +75,16 @@ public abstract class GuiAmount extends AEBaseGui implements IGuiDrawSlot, IGuiC
                     itemRender));
             this.originalGuiBtn.setHideEdge(13);
         }
-        this.amountBox = new MEGuiTextField(61, 12);
+        this.amountBox = new MEGuiTextField(61, 12) {
+
+            @Override
+            public void onTextChange(String oldText) {
+                this.setMessage(
+                    "= " + NumberFormat.getInstance()
+                        .format(getAmount()));
+            }
+
+        };
         this.amountBox.x = this.guiLeft + 60;
         this.amountBox.y = this.guiTop + 55;
         this.amountBox.setMaxStringLength(16);
@@ -89,12 +100,56 @@ public abstract class GuiAmount extends AEBaseGui implements IGuiDrawSlot, IGuiC
     @Override
     protected void keyTyped(final char character, final int key) {
         if (!this.checkHotbarKeys(key)) {
-            if (key == Keyboard.KEY_RETURN || key == Keyboard.KEY_NUMPADENTER) {
+            if (key == Keyboard.KEY_TAB) {
+                this.amountBox.setFocused(true);
+            } else if (key == Keyboard.KEY_RETURN || key == Keyboard.KEY_NUMPADENTER) {
                 this.actionPerformed(this.submit);
             }
             this.amountBox.textboxKeyTyped(character, key);
             super.keyTyped(character, key);
         }
+    }
+
+    public enum Operator {
+
+        PLUS("+"),
+        MINUS("-"),
+        MULTIPLY("*"),
+        DIVIDE("/"),
+        MOD("%"),
+        POWER("^"),
+        SCIENTIFIC("e");
+
+        public final String sign;
+
+        Operator(String sign) {
+            this.sign = sign;
+        }
+
+        @Override
+        public String toString() {
+            return sign;
+        }
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float btn) {
+        super.drawScreen(mouseX, mouseY, btn);
+        if (this.amountBox.isVisible() && this.amountBox.isMouseIn(mouseX, mouseY)) {
+            for (var i : Operator.values()) {
+                if (this.amountBox.getText()
+                    .contains(i.sign)) {
+                    this.drawTooltip(mouseX, mouseY, this.amountBox.getMessage());
+                    break;
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void mouseClicked(int xCoord, int yCoord, int btn) {
+        super.mouseClicked(xCoord, yCoord, btn);
+        this.amountBox.mouseClicked(xCoord, yCoord, btn);
     }
 
     @Override
@@ -110,6 +165,7 @@ public abstract class GuiAmount extends AEBaseGui implements IGuiDrawSlot, IGuiC
 
         if (isPlus || isMinus) {
             this.addQty(this.getQty(btn));
+            this.amountBox.setCursorPositionEnd();
         }
     }
 

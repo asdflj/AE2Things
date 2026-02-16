@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.asdflj.ae2thing.api.AE2ThingAPI;
+import com.asdflj.ae2thing.api.adapter.terminal.IGuiCraftAmount;
 import com.asdflj.ae2thing.api.adapter.terminal.ITerminal;
 import com.asdflj.ae2thing.client.event.UpdateAmountTextEvent;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
@@ -56,7 +57,11 @@ public abstract class MixinPanelWidget extends Widget implements IContainerToolt
             ItemStack is = this.getStackMouseOver(mousex, mousey);
             if (is == null) return;
             GuiScreen gui = Minecraft.getMinecraft().currentScreen;
-            if (gui instanceof AEBaseGui g) {
+            if (gui instanceof IGuiCraftAmount g) {
+                g.setAmount(Math.max(is.stackSize, 1));
+                draggedStack = null;
+                cir.setReturnValue(true);
+            } else if (gui instanceof AEBaseGui g) {
                 IDisplayRepo repo = Util.getDisplayRepo(g);
                 if (repo == null) return;
                 if (NEIClientUtils.altKey()) {
