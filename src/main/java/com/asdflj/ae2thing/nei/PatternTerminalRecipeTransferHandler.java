@@ -34,6 +34,7 @@ import codechicken.nei.api.IOverlayHandler;
 import codechicken.nei.recipe.GuiOverlayButton;
 import codechicken.nei.recipe.IRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler;
+import reobf.proghatches.item.ItemProgrammingToolkit;
 
 public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
 
@@ -131,17 +132,18 @@ public class PatternTerminalRecipeTransferHandler implements IOverlayHandler {
             } else {
                 suggestion = "";
             }
-        } else if (ModAndClassUtil.GT5NH || ModAndClassUtil.GT5) {
-            suggestion = GTUtil.getRecipeName(recipe, in);
-        } else {
-            suggestion = recipe.getRecipeName();
-        }
+        } else if ((ModAndClassUtil.GT5NH || ModAndClassUtil.GT5)
+            && (!ModAndClassUtil.PH || !ItemProgrammingToolkit.holding())) {
+                suggestion = GTUtil.getRecipeName(recipe, in);
+            } else {
+                suggestion = recipe.getRecipeName();
+            }
         if (getConfigValue(ButtonConstants.DUAL_INTERFACE_TERMINAL)) {
             gui.setSearchFieldText(suggestion);
-            gui.setHighlightSlot();
         } else {
             gui.setSearchFieldSuggestion(suggestion);
         }
+        gui.setHighlightSlot();
     }
 
     private boolean notUseOther(IRecipeHandler recipeHandler) {

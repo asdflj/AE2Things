@@ -61,7 +61,7 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
     private final IWidgetGui gui;
     private final ContainerWirelessDualInterfaceTerminal container;
     private final int perRow;
-    private final int rows;
+    private int rows;
     protected THGuiTextField searchField;
     private final AEBaseContainer inventorySlots;
     private final AdvItemRepo repo;
@@ -70,7 +70,7 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
     private int absX;
     private int absY;
     private final int w;
-    private final int h;
+    private int h;
     private int offsetY;
     private final boolean showViewBtn = true;
     private GuiImgButton SortByBox;
@@ -78,6 +78,8 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
     private GuiImgButton typeFilter;
     private GuiImgButton SortDirBox;
     private GuiImgButton searchBoxSettings;
+    private GuiImgButton terminalStyleBox;
+    private TerminalStyle panelStyle = TerminalStyle.SMALL;
     private static String memoryText = "";
     private final TextHistory history;
     private int lastClickTime = 0;
@@ -144,7 +146,11 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
     @Override
     public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
         this.bindTextureBack(getBackground());
-        this.parent.drawTexturedModalRect(absX, absY, 0, 0, 101, 96);
+        this.parent.drawTexturedModalRect(absX, absY, 0, 0, 101, 18);
+        for (int row = 0; row < this.rows; row++) {
+            this.parent.drawTexturedModalRect(absX, absY + 18 + row * 18, 0, 18, 101, 18);
+        }
+        this.parent.drawTexturedModalRect(absX, absY + 18 + this.rows * 18, 0, 90, 101, 6);
         if (this.searchField != null) {
             this.searchField.drawTextBox();
         }
@@ -155,8 +161,9 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
 
     @Override
     public void initGui() {
-        this.absX = this.parent.getGuiLeft() - 101;
-        this.absY = this.parent.getGuiTop() + this.parent.getYSize() - 96;
+        this.recalculateRows();
+        this.absX = this.parent.getGuiLeft() - 101 - (this.isLongStyle() ? 18 : 0);
+        this.absY = this.parent.getGuiTop() + this.parent.getYSize() - this.h;
         this.searchField = new THGuiTextField(this.parent.getFontRenderer(), absX + 3, absY + 4, 72, 12);
         this.searchField.setEnableBackgroundDrawing(false);
         this.searchField.setMaxStringLength(25);
@@ -229,6 +236,14 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
                     Settings.SEARCH_MODE,
                     AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE)));
         this.offsetY += 20;
+
+        this.gui.getButtonList()
+            .add(
+                this.terminalStyleBox = new GuiImgButton(
+                    this.absX - 36,
+                    this.absY,
+                    Settings.TERMINAL_STYLE,
+                    this.panelStyle));
         final Enum<?> searchMode = AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE);
 
         if (searchMode == SearchBoxMode.AUTOSEARCH || searchMode == SearchBoxMode.NEI_AUTOSEARCH) {
@@ -250,7 +265,7 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
     @Override
     public boolean hideItemPanelSlot(int tx, int ty, int tw, int th) {
         int rw = 101;
-        int rh = 96;
+        int rh = this.h;
         if (tw <= 0 || th <= 0) {
             return false;
         }
@@ -448,6 +463,19 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
                 final Enum<?> next = Platform.rotateEnum(cv, backwards, iBtn.getSetting().getPossibleValues());
                 if (btn == this.searchBoxSettings) {
                     AEConfig.instance.settings.putSetting(iBtn.getSetting(), next);
+                    iBtn.set(next);
+                    if (next.getClass() == SearchBoxMode.class || next.getClass() == TerminalStyle.class) {
+                        this.reInitalize();
+                    }
+                    return true;
+                } else if (btn == this.terminalStyleBox) {
+                    if (next instanceof TerminalStyle) {
+                        this.panelStyle = (TerminalStyle) next;
+                    } else {
+                        this.panelStyle = TerminalStyle.SMALL;
+                    }
+                    this.reInitalize();
+                    return true;
                 } else if (btn == this.SortByBox || btn == this.SortDirBox || btn == this.ViewBox || btn == this.typeFilter) {
                     try {
                         NetworkHandler.instance
@@ -467,9 +495,25 @@ public class ItemPanel implements IAEBasePanel, IGuiMonitorTerminal, IConfigMana
     }
 
     private void reInitalize() {
-        this.gui.getButtonList()
-            .clear();
-        this.initGui();
+        this.parent.initGui();
+    }
+
+    private void recalculateRows() {
+        final int maxRows = this.getMaxRows();
+        final int panelTopPadding = this.isLongStyle() ? 28 : 8;
+        final int panelFixedHeight = 24; // 18px search area + 6px bottom frame
+        final int maxRowsByScreen = Math
+            .max(4, (this.parent.getGuiTop() + this.parent.getYSize() - panelTopPadding - panelFixedHeight) / 18);
+        this.rows = Math.max(4, Math.min(maxRows, maxRowsByScreen));
+        this.h = panelFixedHeight + this.rows * 18;
+    }
+
+    private int getMaxRows() {
+        return this.panelStyle == TerminalStyle.SMALL ? 4 : Integer.MAX_VALUE;
+    }
+
+    private boolean isLongStyle() {
+        return this.panelStyle != TerminalStyle.SMALL;
     }
 
     @Override
