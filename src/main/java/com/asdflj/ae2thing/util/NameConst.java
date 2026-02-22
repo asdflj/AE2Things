@@ -5,6 +5,7 @@ import com.asdflj.ae2thing.AE2Thing;
 public class NameConst {
 
     public static final String ITEM_BACKPACK_TERMINAL = "backpack_terminal";
+    public static final String ITEM_WIRE_CUTTER = "wire_cutter";
     public static final String ITEM_TOGGLEABLE_VIEW_CELL = "toggleable_view_cell";
     public static final String ITEM_INFINITY_CELL = "infinity_cell";
     public static final String ITEM_CREATIVE_FLUID_CELL = "creative_fluid_cell";
@@ -37,6 +38,8 @@ public class NameConst {
 
     public static final String TT_LINKED = TT_KEY + "linked";
     public static final String TT_INSTALLED_CARD = TT_KEY + "installed_card";
+    public static final String TT_WIRELESS_DISTRIBUTOR = TT_KEY + "wireless_distributor.";
+    public static final String TT_WIRELESS_DISTRIBUTOR_DESC = TT_WIRELESS_DISTRIBUTOR + "desc";
     public static final String TT_BACKPACK_TERMINAL = TT_KEY + "backpack_terminal.";
     public static final String TT_BACKPACK_TERMINAL_DESC = TT_BACKPACK_TERMINAL + "desc";
     public static final String TT_TOGGLEABLE_VIEW_CELL = TT_KEY + "toggleable_view_cell.desc";
@@ -102,6 +105,7 @@ public class NameConst {
     public static final String NEI_FIND_CELL_ITEM_IN_OTHER_DIM = NEI_FIND_CELL_ITEM + "in_other_dim";
 
     public static final String MESSAGE_KEY = AE2Thing.MODID + ".message.";
+    public static final String MESSAGE_SCANNING = MESSAGE_KEY + "scanning";
     public static final String MESSAGE_CRAFTING_COMPLETE = MESSAGE_KEY + "crafting_complete";
     public static final String MESSAGE_CRAFTING_DEBUG_CARD = MESSAGE_KEY + "crafting_debug_card.";
     public static final String MESSAGE_CRAFTING_DEBUG_CARD_REQUEST_TYPE = MESSAGE_CRAFTING_DEBUG_CARD + "request_type";

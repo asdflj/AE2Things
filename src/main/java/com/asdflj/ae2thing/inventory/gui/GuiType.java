@@ -29,6 +29,7 @@ import com.asdflj.ae2thing.client.gui.GuiPatternValueName;
 import com.asdflj.ae2thing.client.gui.GuiRenamer;
 import com.asdflj.ae2thing.client.gui.GuiTerminalMenu;
 import com.asdflj.ae2thing.client.gui.GuiWirelessConnectorTerminal;
+import com.asdflj.ae2thing.client.gui.GuiWirelessDistributor;
 import com.asdflj.ae2thing.client.gui.GuiWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.client.gui.container.ContainerCellLink;
 import com.asdflj.ae2thing.client.gui.container.ContainerCraftConfirm;
@@ -42,10 +43,12 @@ import com.asdflj.ae2thing.client.gui.container.ContainerPatternValueName;
 import com.asdflj.ae2thing.client.gui.container.ContainerRenamer;
 import com.asdflj.ae2thing.client.gui.container.ContainerTerminalMenu;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDistributor;
 import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.common.parts.SharedManaBus;
 import com.asdflj.ae2thing.common.parts.THPart;
 import com.asdflj.ae2thing.common.tile.TileFluidPacketEncoder;
+import com.asdflj.ae2thing.common.tile.TileWirelessDistributor;
 import com.asdflj.ae2thing.inventory.ItemCellLinkInventory;
 import com.google.common.collect.ImmutableList;
 
@@ -309,6 +312,18 @@ public enum GuiType {
         @Override
         protected Object createClientGui(EntityPlayer player, TileFluidPacketEncoder inv) {
             return new GuiFluidPacketEncoder(player.inventory, inv);
+        }
+    }),
+    WIRELESS_DISTRIBUTOR(new TileGuiFactory<>(TileWirelessDistributor.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, TileWirelessDistributor inv) {
+            return new ContainerWirelessDistributor(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, TileWirelessDistributor inv) {
+            return new GuiWirelessDistributor(player.inventory, inv);
         }
     }),
     WCT_CRAFTING_TERMINAL_BRIDGE(new ItemGuiBridge<>(ItemWirelessCraftingTerminal.class) {

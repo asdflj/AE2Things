@@ -13,7 +13,7 @@ import org.lwjgl.input.Keyboard;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.Constants;
-import com.asdflj.ae2thing.client.gui.container.ContainerWirelessConnectorTerminal;
+import com.asdflj.ae2thing.client.gui.container.ContainerWirelessDistributor;
 import com.asdflj.ae2thing.client.gui.widget.Component;
 import com.asdflj.ae2thing.client.gui.widget.IClickable;
 import com.asdflj.ae2thing.client.gui.widget.IScrollable;
@@ -21,12 +21,12 @@ import com.asdflj.ae2thing.client.gui.widget.METextField;
 import com.asdflj.ae2thing.client.gui.widget.THGuiTextField;
 import com.asdflj.ae2thing.client.me.IDisplayRepo;
 import com.asdflj.ae2thing.client.me.WirelessConnectorRepo;
+import com.asdflj.ae2thing.common.tile.TileWirelessDistributor;
 import com.asdflj.ae2thing.util.Info;
 import com.asdflj.ae2thing.util.NameConst;
 
 import appeng.api.config.Settings;
 import appeng.api.config.TerminalStyle;
-import appeng.api.storage.ITerminalHost;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
 import appeng.client.gui.AEBaseGui;
@@ -37,7 +37,7 @@ import appeng.core.localization.GuiText;
 import appeng.integration.IntegrationRegistry;
 import appeng.integration.IntegrationType;
 
-public class GuiWirelessConnectorTerminal extends AEBaseGui implements IInfoTerminal {
+public class GuiWirelessDistributor extends AEBaseGui implements IInfoTerminal {
 
     private final int reservedSpace;
     public static String memoryText = "";
@@ -50,11 +50,9 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui implements IInfoTerm
     private final List<Component> components = new ArrayList<>();
     private final List<IClickable> clickables = new ArrayList<>();
     private final List<IScrollable> scrollables = new ArrayList<>();
-    private final ContainerWirelessConnectorTerminal container;
 
-    public GuiWirelessConnectorTerminal(InventoryPlayer inventory, ITerminalHost inv) {
-        super(new ContainerWirelessConnectorTerminal(inventory, inv));
-        this.container = (ContainerWirelessConnectorTerminal) this.inventorySlots;
+    public GuiWirelessDistributor(InventoryPlayer inventoryPlayer, TileWirelessDistributor te) {
+        super(new ContainerWirelessDistributor(inventoryPlayer, te));
         this.xSize = 195;
         this.ySize = 204;
         this.standardSize = this.xSize;
@@ -62,7 +60,6 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui implements IInfoTerm
         final GuiScrollbar scrollbar = new GuiScrollbar();
         this.setScrollBar(scrollbar);
         this.repo = new WirelessConnectorRepo(scrollbar);
-
     }
 
     @Override
@@ -92,7 +89,6 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui implements IInfoTerm
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void initGui() {
         Keyboard.enableRepeatEvents(true);
         this.maxRows = this.getMaxRows();
@@ -258,36 +254,21 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui implements IInfoTerm
         return "gui/wireless_connector.png";
     }
 
-    @Override
-    public void postUpdate(NBTTagCompound data) {
+    public void postUpdate(List<Info> list) {
         this.repo.clear();
-        NBTTagList list = data.getTagList(Constants.TILE_ENTRIES, 10);
-        for (int x = 0; x < list.tagCount(); x++) {
-            final NBTTagCompound tag = list.getCompoundTagAt(x);
-            DimensionalCoord a = DimensionalCoord.readFromNBT(tag);
-            String name = tag.getString(Constants.NAME);
-            AEColor color = AEColor.values()[tag.getInteger(Constants.COLOR)];
-            boolean is_linked = tag.getBoolean(Constants.IS_LINKED);
-            int used = tag.getInteger(Constants.USED_CHANNELS);
-            this.repo.postUpdate(
-                new Info(
-                    a,
-                    tag.hasKey(Constants.LINK)
-                        ? DimensionalCoord.readFromNBT((NBTTagCompound) tag.getTag(Constants.LINK))
-                        : null,
-                    name,
-                    color,
-                    is_linked,
-                    used));
+        for (Info info : list) {
+            this.repo.postUpdate(info);
         }
         this.repo.updateView();
         this.setScrollBar();
     }
 
+    @Override
     public List<IClickable> getClickables() {
         return this.clickables;
     }
 
+    @Override
     public List<IScrollable> getScrollables() {
         return this.scrollables;
     }
@@ -298,7 +279,18 @@ public class GuiWirelessConnectorTerminal extends AEBaseGui implements IInfoTerm
     }
 
     @Override
-    protected boolean isPowered() {
-        return this.container.hasPower;
+    public void postUpdate(NBTTagCompound data) {
+        this.repo.clear();
+        NBTTagList list = data.getTagList(Constants.TILE_ENTRIES, 10);
+        for (int x = 0; x < list.tagCount(); x++) {
+            final NBTTagCompound tag = list.getCompoundTagAt(x);
+            DimensionalCoord a = DimensionalCoord.readFromNBT(tag);
+            String name = tag.getString(Constants.NAME);
+            AEColor color = AEColor.values()[tag.getInteger(Constants.COLOR)];
+            boolean is_linked = tag.getBoolean(Constants.IS_LINKED);
+            this.repo.postUpdate(new Info(a, null, name, color, is_linked, 0));
+        }
+        this.repo.updateView();
+        this.setScrollBar();
     }
 }

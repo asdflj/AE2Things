@@ -4,19 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.bdew.ae2stuff.grid.Security;
+import net.bdew.ae2stuff.machines.wireless.BlockWireless;
 import net.bdew.ae2stuff.machines.wireless.TileWireless;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 import com.asdflj.ae2thing.AE2Thing;
 import com.asdflj.ae2thing.api.Constants;
 import com.asdflj.ae2thing.inventory.item.INetworkTerminal;
-import com.asdflj.ae2thing.network.SPacketWirelessConnectorUpdate;
+import com.asdflj.ae2thing.network.SPacketNBTDataUpdate;
 import com.asdflj.ae2thing.util.Util;
 
 import appeng.api.networking.IGrid;
@@ -28,6 +30,7 @@ import appeng.api.util.DimensionalCoord;
 import appeng.hooks.TickHandler;
 import appeng.me.Grid;
 import appeng.util.Platform;
+import scala.Option;
 
 public class ContainerWirelessConnectorTerminal extends BaseNetworkContainer implements INetworkTerminal {
 
@@ -64,7 +67,43 @@ public class ContainerWirelessConnectorTerminal extends BaseNetworkContainer imp
     }
 
     private void sendToPlayer() {
-        AE2Thing.proxy.netHandler.sendTo(new SPacketWirelessConnectorUpdate(wirelessTiles), (EntityPlayerMP) player);
+        NBTTagCompound data = new NBTTagCompound();
+        this.writeToNBT(data);
+        AE2Thing.proxy.netHandler.sendTo(new SPacketNBTDataUpdate(data), (EntityPlayerMP) player);
+    }
+
+    private void writeToNBT(NBTTagCompound tag) {
+        NBTTagList list = new NBTTagList();
+        tag.setTag(Constants.TILE_ENTRIES, list);
+        for (TileWireless tile : this.wirelessTiles) {
+            // name color other side
+            NBTTagCompound data = new NBTTagCompound();
+            tile.getLocation()
+                .writeToNBT(data);
+            data.setString(
+                Constants.NAME,
+                tile.hasCustomName() ? tile.getCustomName() : BlockWireless.getLocalizedName());
+            data.setInteger(
+                Constants.COLOR,
+                tile.getColor()
+                    .ordinal());
+            data.setBoolean(Constants.IS_LINKED, tile.isLinked());
+            data.setInteger(
+                Constants.USED_CHANNELS,
+                tile.connection() != null ? tile.connection()
+                    .getUsedChannels() : 0);
+            if (tile.isLinked()) {
+                NBTTagCompound t = new NBTTagCompound();
+                Option<TileWireless> other = tile.getLink();
+                if (!other.isEmpty()) {
+                    other.get()
+                        .getLocation()
+                        .writeToNBT(t);
+                    data.setTag(Constants.LINK, t);
+                }
+            }
+            list.appendTag(data);
+        }
     }
 
     @Override

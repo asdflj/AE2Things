@@ -3,21 +3,24 @@ package com.asdflj.ae2thing.client.gui.widget;
 import static com.asdflj.ae2thing.api.Constants.INACTIVE_COLOR;
 import static com.asdflj.ae2thing.api.Constants.SELECTED_COLOR;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import com.asdflj.ae2thing.client.gui.GuiWirelessConnectorTerminal;
+import com.asdflj.ae2thing.AE2Thing;
+import com.asdflj.ae2thing.client.gui.IInfoTerminal;
 import com.asdflj.ae2thing.client.me.IDisplayRepo;
-import com.asdflj.ae2thing.common.Config;
 import com.asdflj.ae2thing.util.Info;
 import com.asdflj.ae2thing.util.NameConst;
 import com.asdflj.ae2thing.util.Util;
 
 import appeng.api.util.AEColor;
+import appeng.client.gui.AEBaseGui;
 
 public class Component implements IClickable {
 
@@ -29,16 +32,22 @@ public class Component implements IClickable {
     private final FontRenderer render;
     private final int x;
     private final int y;
-    private final GuiWirelessConnectorTerminal gui;
+    private final AEBaseGui gui;
     private final METextField textField;
     private final THGuiButton unbind;
     private final THGuiButton bind;
     private final HighLightButton highLightBtn;
     private THGuiSelection selection;
+    private final IInfoTerminal infoTerminal;
 
-    public Component(IDisplayRepo repo, int idx, GuiWirelessConnectorTerminal gui, int x, int y) {
+    public Component(IDisplayRepo repo, int idx, IInfoTerminal infoTerminal, int x, int y) {
+        this(repo, idx, infoTerminal, x, y, true);
+    }
+
+    public Component(IDisplayRepo repo, int idx, IInfoTerminal infoTerminal, int x, int y, boolean scrollable) {
+        this.infoTerminal = infoTerminal;
+        this.gui = infoTerminal.getGui();
         this.textField = new METextField(110, 12, this, gui.getGuiLeft(), gui.getGuiTop());
-        this.gui = gui;
         this.repo = repo;
         this.idx = idx;
         this.render = gui.getFontRenderer();
@@ -77,17 +86,17 @@ public class Component implements IClickable {
             gui.getGuiLeft(),
             gui.getGuiTop(),
             this);
-        this.gui.getClickables()
+        this.infoTerminal.getClickables()
             .add(this);
-        this.gui.getClickables()
+        this.infoTerminal.getClickables()
             .add(this.bind);
-        this.gui.getClickables()
+        this.infoTerminal.getClickables()
             .add(this.unbind);
-        this.gui.getClickables()
+        this.infoTerminal.getClickables()
             .add(this.textField);
-        this.gui.getClickables()
+        this.infoTerminal.getClickables()
             .add(this.highLightBtn);
-        if (Config.wirelessConnectorTerminalColorSelection) {
+        if (scrollable) {
             this.selection = new THGuiSelection(
                 x + 85,
                 this.y + 11,
@@ -97,16 +106,38 @@ public class Component implements IClickable {
                 gui.getGuiTop(),
                 this,
                 "WirelessConnectorTerminal.Color");
-            this.gui.getClickables()
+            this.infoTerminal.getClickables()
                 .add(this.selection);
-            this.gui.getScrollables()
+            this.infoTerminal.getScrollables()
                 .add(this.selection);
         }
     }
 
     private String getName(Info info) {
         String name = I18n.format(NameConst.GUI_WIRELESS_CONNECTOR_TERMINAL_NAME) + ": ";
-        return this.textField.isVisible() ? name : name + info.getName();
+        String fullNmae = this.textField.isVisible() ? name : name + info.getName();
+        String drawString = fullNmae;
+        // if (this.getRender().getStringWidth(fullNmae) > this.textField.w) {
+        // int w = this.getRender().getStringWidth(this.getText());
+        // StringBuilder builder = new StringBuilder();
+        // for (int i = 0; i < this.suggestion.toCharArray().length; i++) {
+        // char s = this.suggestion.charAt(i);
+        // int charWidth = this._fontRender.getCharWidth(s);
+        // if (w + charWidth * 3 < this._width) {
+        // w += charWidth;
+        // builder.append(s);
+        // } else {
+        // break;
+        // }
+        // }
+        // drawString = builder.toString();
+
+        // StringBuilder builder = new StringBuilder();
+        // for (int i = 0; i < fullNmae.length(); i++) {
+        // char c = fullNmae.charAt(i);
+        // if( this.textField.w ) {}
+        // }
+        return fullNmae;
     }
 
     public void drawBackground(int color) {
@@ -187,7 +218,7 @@ public class Component implements IClickable {
 
     private void drawWirelessConnector(Info info) {
         GL11.glColor4f(255, 255, 255, 255);
-        this.gui.bindTextureBack(this.gui.getBackground());
+        this.bindBG(this.infoTerminal.getBackground());
         if (this.selection != null) {
             this.gui.drawTexturedModalRect(this.selection.xPosition, this.selection.yPosition, 224, 32, 16, 16);
         }
@@ -209,6 +240,13 @@ public class Component implements IClickable {
             this.gui.drawTexturedModalRect(10, 40 + offsetY * idx, 240, 0, 16, 16);
             this.gui.drawTexturedModalRect(10, 20 + offsetY * idx, 240, 16, 16, 16);
         }
+    }
+
+    public void bindBG(final String file) {
+        final ResourceLocation loc = new ResourceLocation(AE2Thing.MODID, "textures/" + file);
+        Minecraft.getMinecraft()
+            .getTextureManager()
+            .bindTexture(loc);
     }
 
     public boolean isFocused() {
@@ -246,7 +284,7 @@ public class Component implements IClickable {
         activeInfo = info;
     }
 
-    public GuiWirelessConnectorTerminal getGui() {
+    public AEBaseGui getGui() {
         return gui;
     }
 

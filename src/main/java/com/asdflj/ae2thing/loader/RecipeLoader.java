@@ -43,6 +43,7 @@ import com.asdflj.ae2thing.util.TicUtil;
 import com.glodblock.github.common.storage.CellType;
 
 import appeng.api.AEApi;
+import appeng.api.util.AEColor;
 import cpw.mods.fml.common.registry.GameRegistry;
 import thaumcraft.common.config.ConfigBlocks;
 
@@ -134,6 +135,12 @@ public class RecipeLoader implements Runnable {
         .definitions()
         .blocks()
         .wireless()
+        .maybeStack(1)
+        .get();
+    public static final ItemStack AE2_CERTUS = AEApi.instance()
+        .definitions()
+        .items()
+        .certusQuartzWrench()
         .maybeStack(1)
         .get();
 
@@ -252,6 +259,12 @@ public class RecipeLoader implements Runnable {
         if (ModAndClassUtil.GT5 || ModAndClassUtil.GT5NH) {
             GameRegistry
                 .addShapelessRecipe(ItemAndBlockHolder.WIRELESS_DISTRIBUTOR.stack(), AE2_BLOCK_WIRELESS, AE2_WIRELESS);
+            for (int i = 0; i < AEColor.values().length; i++) {
+                GameRegistry.addShapelessRecipe(
+                    ItemAndBlockHolder.WIRELESS_DISTRIBUTOR.stack(),
+                    ItemAndBlockHolder.WIRELESS_DISTRIBUTOR.stack(i));
+            }
+            GameRegistry.addShapelessRecipe(ItemAndBlockHolder.WIRE_CUTTER.stack(), AE2_WIRELESS, AE2_CERTUS);
         }
         WirelessTerminalQuantumBridgeRecipe.register(ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL.stack());
         WirelessTerminalEnergyRecipe.register(ITEM_WIRELESS_DUAL_INTERFACE_TERMINAL.stack());

@@ -27,6 +27,11 @@ public interface Constants {
     String SLOT = "slot";
     String SIZE = "size";
     String VIEW_CELL = "view";
+    String CONNECTIONS = "connections";
+    String TILE_ENTRIES = "tile_entries";
+    String TIER = "tier";
+    String POWERED = "powered";
+    String TARGET = "target";
     int OUTPUT_COLOR = 0x4566ccff;
     int ERROR_COLOR = 0x45DA4527;
     int INACTIVE_COLOR = 0x45FFEA05;
@@ -81,6 +86,27 @@ public interface Constants {
 
         MouseWheel(int direction) {
             this.direction = direction;
+        }
+    }
+
+    enum Radius {
+
+        Tier1(1),
+        Tier2(3);
+
+        public final int radius;
+
+        Radius(int radius) {
+            this.radius = radius;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%s x %s", this.radius, this.radius);
+        }
+
+        public int getValue() {
+            return this.radius;
         }
     }
 }
