@@ -24,6 +24,10 @@ public abstract class BaseTileBlock extends AEBaseTileBlock {
         return new ItemStack(this, 1);
     }
 
+    public ItemStack stack(int meta) {
+        return new ItemStack(this, 1, meta);
+    }
+
     @Override
     public void setTileEntity(final Class<? extends TileEntity> clazz) {
         AEBaseTile.registerTileItem(clazz, new BlockStackSrc(this, 0, ActivityState.Enabled));

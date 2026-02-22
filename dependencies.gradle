@@ -63,7 +63,7 @@ dependencies {
     compileOnly 'curse.maven:thaumcraft-nei-plugin-225095:2241913'
     compileOnly('com.github.GTNewHorizons:TCNEIAdditions:1.5.1:dev')
     // gt
-    compileOnly('com.github.GTNewHorizons:GT5-Unofficial:5.09.51.482:dev'){
+    compile('com.github.GTNewHorizons:GT5-Unofficial:5.09.51.482:dev'){
         exclude group: 'com.github.GTNewHorizons', module: 'AE2FluidCraft-Rework'
     }
     //gt BlockRenderer6343
@@ -74,8 +74,8 @@ dependencies {
 //    runtimeOnlyNonPublishable("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
     // lib
     compile('com.github.GTNewHorizons:Baubles-Expanded:2.1.15-GTNH:dev')
-    compileOnly("com.github.GTNewHorizons:GTNHLib:0.8.20:dev") { transitive = false }
-    compileOnly("com.github.GTNewHorizons:Hodgepodge:2.7.18:dev") { transitive = false }
+    compile("com.github.GTNewHorizons:GTNHLib:0.8.20:dev") { transitive = false }
+    compile("com.github.GTNewHorizons:Hodgepodge:2.7.18:dev") { transitive = false }
     compileOnly('com.github.GTNewHorizons:BetterP2P:1.2.1:dev')
     compileOnly('com.github.GTNewHorizons:Angelica:1.0.0-beta66:dev')
     // other

@@ -23,6 +23,7 @@ import com.asdflj.ae2thing.common.item.ItemPartThaumatoriumInterface;
 import com.asdflj.ae2thing.common.item.ItemPartWirelessConnectorTerminal;
 import com.asdflj.ae2thing.common.item.ItemPatternModifier;
 import com.asdflj.ae2thing.common.item.ItemPhial;
+import com.asdflj.ae2thing.common.item.ItemWireCutter;
 import com.asdflj.ae2thing.common.item.ItemWirelessConnectorTerminal;
 import com.asdflj.ae2thing.common.item.ItemWirelessDualInterfaceTerminal;
 import com.asdflj.ae2thing.util.ModAndClassUtil;
@@ -37,6 +38,7 @@ public class ItemAndBlockHolder implements Runnable {
     public static ItemPartThaumatoriumInterface THAUMATRIUM_INTERFACE;
     public static ItemCraftingDebugCard CRAFTING_DEBUG_CARD = new ItemCraftingDebugCard().register();
     // public static ItemToggleableViewCell TOGGLE_VIEW_CELL = new ItemToggleableViewCell().register();
+    public static ItemWireCutter WIRE_CUTTER;
     public static BlockInfusionInterface INFUSION_INTERFACE;
     public static ItemPhial PHIAL;
     public static ItemManaImportBus MANA_IMPORT_BUS;
@@ -84,6 +86,7 @@ public class ItemAndBlockHolder implements Runnable {
         }
         if (ModAndClassUtil.GT5 || ModAndClassUtil.GT5NH) {
             WIRELESS_DISTRIBUTOR = new BlockWirelessDistributor().register();
+            WIRE_CUTTER = new ItemWireCutter().register();
         }
     }
 }
